@@ -472,10 +472,10 @@ async function startCamera() {
     updateDetectionStatus('active', 'Kamera aktif — arahkan ke bahan makanan');
 
   } catch (err) {
-    btn.textContent = '📷 Aktifkan Kamera';
+    btn.textContent = 'Buka kamera';
     btn.disabled = false;
-    updateDetectionStatus('idle', 'Akses kamera ditolak. Gunakan Mode Demo.');
-    showToast('Tidak bisa mengakses kamera. Coba Mode Demo!', 'error');
+    updateDetectionStatus('idle', 'Kamera tidak tersedia. Kamu bisa menambahkan bahan sendiri.');
+    showToast('Kamera tidak tersedia di perangkat ini.', 'error');
   }
 }
 
@@ -492,7 +492,7 @@ function runDemo() {
   overlay.style.display = 'block';
   detBoxes.innerHTML = '';
 
-  updateDetectionStatus('active', 'Mode Demo — AI sedang mendeteksi bahan...');
+  updateDetectionStatus('active', 'Menyiapkan contoh bahan...');
 
   const demoItems = [
     { emoji: '🌽', name: 'Jagung', conf: 97, box: { top: '15%', left: '8%', width: '38%', height: '38%' } },
