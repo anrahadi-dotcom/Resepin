@@ -175,6 +175,86 @@ const RECIPES_DB = [
     tags: ["Tradisional", "Berkuah", "Sulawesi"],
     ingredients: ["🥩 Daging sapi", "🥜 Kacang tanah sangrai", "🧅 Bawang merah", "🧄 Bawang putih", "🌿 Serai dan lengkuas", "🌾 Ketumbar, jintan, dan merica", "🧂 Garam", "🍚 Air cucian beras (opsional)"],
     steps: ["Rebus daging sapi sampai empuk; sisihkan kaldunya dan potong daging", "Sangrai kacang tanah, lalu haluskan", "Haluskan bawang merah, bawang putih, ketumbar, jintan, merica, dan lengkuas", "Tumis bumbu bersama serai hingga harum, lalu masukkan ke dalam kaldu", "Masukkan kacang halus dan daging; masak perlahan sampai kuah menyatu, bumbui garam", "Sajikan hangat dengan buras atau ketupat, jeruk nipis, dan sambal"]
+  },
+  {
+    id: 14, title: "Babi Guling Bali (Versi Rumahan)", emoji: "🐖🔥", gradient: "linear-gradient(135deg,#a8432e,#66352b)", time: "150 mnt", servings: "6 Porsi", calories: "480 kal", difficulty: "Sulit", tags: ["Bali", "Tradisional", "Lauk"],
+    ingredients: ["🐖 Daging babi dengan kulit", "🧄 Bawang putih", "🧅 Bawang merah", "🌶️ Cabai", "🫚 Kunyit dan jahe", "🌿 Serai dan daun jeruk", "🧂 Garam", "🍋 Jeruk limau"],
+    steps: ["Haluskan bawang, cabai, kunyit, jahe, dan garam sebagai bumbu genep sederhana", "Sayat bagian daging agar bumbu meresap, lalu lumuri daging dan bagian dalamnya", "Diamkan di kulkas minimal 2 jam agar bumbu meresap", "Panggang potongan daging berbumbu dalam oven 180°C sampai matang; sesekali olesi minyak", "Naikkan panas sebentar di akhir untuk membantu kulit garing, awasi agar tidak gosong", "Istirahatkan daging 10 menit sebelum dipotong; sajikan dengan nasi, lawar, dan sambal" ]
+  },
+  {
+    id: 15, title: "Ayam Betutu Bali", emoji: "🍗🌶️", gradient: "linear-gradient(135deg,#b55a31,#6f3b2d)", time: "120 mnt", servings: "4 Porsi", calories: "390 kal", difficulty: "Sedang", tags: ["Bali", "Tradisional", "Pedas"],
+    ingredients: ["🍗 Ayam utuh atau potongan", "🧅 Bawang merah", "🧄 Bawang putih", "🌶️ Cabai", "🫚 Jahe dan kunyit", "🌿 Serai dan daun jeruk", "🥥 Minyak atau sedikit santan", "🧂 Garam"],
+    steps: ["Haluskan bawang, cabai, jahe, kunyit, dan garam; tumis hingga harum", "Lumuri ayam dengan bumbu sampai merata, termasuk bagian bawah kulit", "Bungkus rapat dengan daun pisang atau tutup loyang", "Panggang pada 170°C sekitar 90 menit, atau kukus lalu panggang sampai ayam matang dan empuk", "Buka bungkus dengan hati-hati, siram ayam dengan sari bumbunya", "Sajikan dengan nasi hangat dan sayur urap" ]
+  },
+  {
+    id: 16, title: "Ayam Sere Lemo (Ayam Sisit Bali)", emoji: "🍗🍋", gradient: "linear-gradient(135deg,#df7044,#9b3f30)", time: "40 mnt", servings: "3 Porsi", calories: "290 kal", difficulty: "Mudah", tags: ["Bali", "Pedas", "Cepat"],
+    ingredients: ["🍗 Ayam rebus suwir", "🌶️ Cabai merah dan rawit", "🦐 Terasi bakar (sere)", "🍋 Jeruk lemo/limau", "🧄 Bawang putih", "🧅 Bawang merah", "🌿 Serai", "🧂 Garam"],
+    steps: ["Rebus ayam dengan garam sampai matang, dinginkan lalu suwir-suwir", "Ulek cabai, bawang, dan terasi bakar; tumis bersama serai sampai matang", "Masukkan ayam suwir dan aduk sampai bumbu melapisi ayam", "Koreksi garam dan matikan api", "Peras jeruk lemo setelah api mati agar aromanya tetap segar", "Nikmati dengan nasi hangat dan sayur" ]
+  },
+  {
+    id: 17, title: "Ayam Bakar Bumbu Bali", emoji: "🍗🔥", gradient: "linear-gradient(135deg,#d6652f,#8c3a27)", time: "55 mnt", servings: "4 Porsi", calories: "330 kal", difficulty: "Sedang", tags: ["Bali", "Bakar", "Lauk"],
+    ingredients: ["🍗 Paha ayam", "🧅 Bawang merah", "🧄 Bawang putih", "🌶️ Cabai", "🫚 Kunyit dan jahe", "🌿 Serai dan daun jeruk", "🫙 Kecap manis", "🧂 Garam"],
+    steps: ["Haluskan bawang, cabai, kunyit, jahe, dan garam", "Tumis bumbu bersama serai dan daun jeruk sampai harum", "Masukkan ayam dan sedikit air; ungkep tertutup sampai empuk", "Tambahkan kecap, masak sampai bumbu mengental", "Bakar ayam sambil dioles sisa bumbu sampai ada bagian kecokelatan", "Sajikan dengan sambal matah atau lalapan" ]
+  },
+  {
+    id: 18, title: "Lawar Sayur Bali", emoji: "🥬🥥", gradient: "linear-gradient(135deg,#558b48,#315a3a)", time: "35 mnt", servings: "4 Porsi", calories: "210 kal", difficulty: "Sedang", tags: ["Bali", "Sayur", "Tradisional", "Vegetarian"],
+    ingredients: ["🥬 Kacang panjang", "🥬 Nangka muda atau tauge", "🥥 Kelapa parut", "🧄 Bawang putih", "🧅 Bawang merah", "🌶️ Cabai", "🌿 Kencur dan daun jeruk", "🧂 Garam dan jeruk limau"],
+    steps: ["Rebus kacang panjang dan nangka sampai empuk, tiriskan lalu cincang kasar", "Sangrai kelapa parut sebentar sampai harum", "Tumis bumbu halus bawang, cabai, dan kencur sampai matang", "Campur sayur, kelapa, bumbu, garam, dan sedikit perasan jeruk limau", "Cicipi dan sesuaikan rasa; sajikan segera sebagai lawar sayur tanpa daging" ]
+  },
+  {
+    id: 19, title: "Ayam Bakar Kecap", emoji: "🍗🍯", gradient: "linear-gradient(135deg,#b65b2b,#713b28)", time: "50 mnt", servings: "4 Porsi", calories: "340 kal", difficulty: "Mudah", tags: ["Favorit", "Bakar", "Lauk"],
+    ingredients: ["🍗 Paha ayam", "🫙 Kecap manis", "🧄 Bawang putih", "🧅 Bawang merah", "🫚 Jahe", "🍋 Jeruk nipis", "🧂 Garam dan merica"],
+    steps: ["Lumuri ayam dengan jeruk nipis, garam, dan merica selama 10 menit", "Tumis bawang dan jahe halus, tambahkan kecap dan sedikit air", "Ungkep ayam dalam bumbu sampai matang dan bumbu menyusut", "Bakar sambil dioles bumbu hingga harum dan sedikit karamel", "Pastikan bagian dalam ayam matang; sajikan dengan nasi dan lalapan" ]
+  },
+  {
+    id: 20, title: "Fried Chicken Rumahan", emoji: "🍗🍟", gradient: "linear-gradient(135deg,#e2a138,#bd622c)", time: "55 mnt", servings: "4 Porsi", calories: "420 kal", difficulty: "Sedang", tags: ["Favorit", "Goreng", "Ayam"],
+    ingredients: ["🍗 Potongan ayam", "🌾 Tepung terigu", "🌽 Tepung maizena", "🥚 Telur", "🥛 Susu cair", "🧄 Bawang putih", "🧂 Garam, lada, paprika"],
+    steps: ["Bumbui ayam dengan bawang putih, garam, dan lada; diamkan 30 menit di kulkas", "Campur terigu, maizena, lada, dan paprika", "Celup ayam ke telur yang dicampur susu, lalu balur tepung sambil diremas ringan", "Goreng dalam minyak cukup banyak dengan api sedang sampai keemasan dan matang sampai tulang", "Tiriskan di rak agar kulit tetap renyah; jangan menumpuk ayam panas" ]
+  },
+  {
+    id: 21, title: "Pizza Teflon Keju", emoji: "🍕🧀", gradient: "linear-gradient(135deg,#c64b37,#a52e37)", time: "40 mnt", servings: "2 Porsi", calories: "390 kal", difficulty: "Mudah", tags: ["Favorit", "Camilan"],
+    ingredients: ["🌾 Tepung terigu", "🧀 Keju mozzarella", "🍅 Saus tomat", "🫒 Minyak", "🧂 Garam", "🍄 Jamur atau topping sisa", "🥄 Ragi instan (opsional)"],
+    steps: ["Campur tepung, sedikit garam, minyak, dan air hangat; uleni sampai kalis", "Diamkan adonan 20 menit bila memakai ragi", "Pipihkan adonan di teflon yang dioles tipis minyak", "Oles saus, beri keju dan topping", "Tutup teflon; masak dengan api sangat kecil 15–20 menit sampai bagian bawah matang dan keju meleleh" ]
+  },
+  {
+    id: 22, title: "Burger Ayam Rumahan", emoji: "🍔🍗", gradient: "linear-gradient(135deg,#bd543a,#82442f)", time: "30 mnt", servings: "2 Porsi", calories: "430 kal", difficulty: "Mudah", tags: ["Favorit", "Cepat"],
+    ingredients: ["🍞 Roti burger", "🍗 Daging ayam cincang", "🥚 Telur", "🥬 Selada", "🍅 Tomat", "🧀 Keju", "🫙 Mayones atau saus"],
+    steps: ["Bumbui ayam cincang dengan garam dan lada, bentuk dua patty", "Masak patty di wajan dengan sedikit minyak sampai matang merata", "Belah roti lalu panggang sisi dalamnya sebentar", "Susun saus, selada, patty, tomat, dan keju", "Tutup burger dan sajikan selagi hangat" ]
+  },
+  {
+    id: 23, title: "Spaghetti Bolognese", emoji: "🍝🍅", gradient: "linear-gradient(135deg,#bd4938,#762f32)", time: "35 mnt", servings: "3 Porsi", calories: "410 kal", difficulty: "Mudah", tags: ["Favorit", "Pasta"],
+    ingredients: ["🍝 Spaghetti", "🥩 Daging sapi cincang", "🍅 Tomat atau saus tomat", "🧅 Bawang bombai", "🧄 Bawang putih", "🫒 Minyak", "🧀 Keju parut"],
+    steps: ["Rebus spaghetti dalam air bergaram sampai al dente, sisihkan sedikit air rebusannya", "Tumis bawang bombai dan bawang putih sampai harum", "Masukkan daging cincang, masak sampai berubah warna", "Tambahkan tomat atau saus tomat dan sedikit air pasta; didihkan 15 menit", "Aduk saus dengan spaghetti dan sajikan dengan keju parut" ]
+  },
+  {
+    id: 24, title: "Ramen Ayam Praktis", emoji: "🍜🥚", gradient: "linear-gradient(135deg,#d49a42,#9d5434)", time: "35 mnt", servings: "2 Porsi", calories: "430 kal", difficulty: "Mudah", tags: ["Favorit", "Mi", "Berkuah"],
+    ingredients: ["🍜 Mi ramen atau mi telur", "🍗 Ayam", "🥚 Telur", "🧄 Bawang putih", "🧅 Daun bawang", "🥬 Sawi", "🫙 Kecap asin", "🍲 Kaldu"],
+    steps: ["Rebus telur 7–8 menit, kupas, dan sisihkan", "Tumis bawang putih, masukkan ayam potong dan masak sampai matang", "Tuang kaldu, bumbui kecap asin dan lada, didihkan 10 menit", "Masak mi terpisah sesuai petunjuk kemasan", "Susun mi, kuah, ayam, telur, sawi, dan daun bawang dalam mangkuk" ]
+  },
+  {
+    id: 25, title: "Sushi Roll Isi Matang", emoji: "🍣🥑", gradient: "linear-gradient(135deg,#399b82,#236f70)", time: "45 mnt", servings: "2 Porsi", calories: "360 kal", difficulty: "Sedang", tags: ["Favorit", "Nasi"],
+    ingredients: ["🍚 Nasi pulen", "🌊 Nori", "🥒 Timun", "🥑 Alpukat", "🦀 Crab stick atau ayam matang", "🍶 Cuka beras atau air jeruk", "🫙 Kecap asin"],
+    steps: ["Bumbui nasi hangat dengan sedikit cuka beras dan garam, lalu dinginkan", "Letakkan nori di atas alas gulung dan ratakan nasi tipis", "Susun timun, alpukat, dan isian yang sudah matang di satu sisi", "Gulung rapat sambil menahan isi, lalu potong dengan pisau basah", "Sajikan dengan kecap asin; resep ini memakai isian matang, bukan ikan mentah" ]
+  },
+  {
+    id: 26, title: "Taco Daging Sapi", emoji: "🌮🥩", gradient: "linear-gradient(135deg,#d7833a,#a64d37)", time: "30 mnt", servings: "3 Porsi", calories: "390 kal", difficulty: "Mudah", tags: ["Favorit", "Cepat"],
+    ingredients: ["🌮 Tortilla", "🥩 Daging sapi cincang", "🧅 Bawang bombai", "🍅 Tomat", "🥬 Selada", "🧀 Keju", "🍋 Jeruk nipis", "🌶️ Paprika bubuk"],
+    steps: ["Tumis bawang bombai, masukkan daging dan paprika bubuk", "Masak sambil diaduk sampai daging matang merata; bumbui garam", "Hangatkan tortilla di wajan kering", "Isi tortilla dengan daging, selada, tomat, dan keju", "Tambahkan perasan jeruk nipis dan sajikan selagi hangat" ]
+  },
+  {
+    id: 27, title: "Pancake Lembut", emoji: "🥞🍯", gradient: "linear-gradient(135deg,#e4ad55,#b77939)", time: "20 mnt", servings: "2 Porsi", calories: "280 kal", difficulty: "Mudah", tags: ["Sarapan", "Camilan"],
+    ingredients: ["🌾 Tepung terigu", "🥚 Telur", "🥛 Susu", "🧈 Mentega", "🍬 Gula", "🥄 Baking powder", "🍯 Madu atau pisang (opsional)"],
+    steps: ["Campur tepung, gula, baking powder, telur, dan susu; aduk seperlunya", "Lelehkan sedikit mentega di wajan antilengket", "Tuang adonan satu sendok sayur; masak sampai muncul gelembung", "Balik dan masak sisi lainnya sampai keemasan", "Sajikan dengan madu atau potongan buah yang tersedia" ]
+  },
+  {
+    id: 28, title: "Ayam Teriyaki", emoji: "🍗🍱", gradient: "linear-gradient(135deg,#ad6235,#6b4430)", time: "30 mnt", servings: "3 Porsi", calories: "320 kal", difficulty: "Mudah", tags: ["Favorit", "Cepat"],
+    ingredients: ["🍗 Ayam tanpa tulang", "🫙 Kecap asin", "🍯 Madu atau gula", "🧄 Bawang putih", "🫚 Jahe", "🧅 Bawang bombai", "🌽 Maizena (opsional)"],
+    steps: ["Campur kecap asin, madu, bawang putih, dan jahe parut", "Potong ayam, lalu tumis sampai matang dan kecokelatan", "Masukkan bawang bombai dan saus, aduk sampai mendidih", "Tambahkan sedikit larutan maizena jika ingin saus kental", "Sajikan dengan nasi hangat dan sayuran" ]
+  },
+  {
+    id: 29, title: "Sate Lilit Bali", emoji: "🍢🥥", gradient: "linear-gradient(135deg,#c56d38,#7b4835)", time: "40 mnt", servings: "3 Porsi", calories: "300 kal", difficulty: "Sedang", tags: ["Bali", "Tradisional", "Bakar"],
+    ingredients: ["🐟 Ikan cincang atau ayam cincang", "🥥 Kelapa parut", "🧅 Bawang merah", "🧄 Bawang putih", "🌶️ Cabai", "🌿 Serai atau tusuk sate", "🫚 Kencur", "🧂 Garam"],
+    steps: ["Haluskan bawang, cabai, kencur, dan garam", "Campur bumbu dengan ikan atau ayam cincang dan kelapa parut", "Lilitkan adonan pada batang serai atau tusuk sate pipih", "Panggang sambil diputar sampai matang merata dan harum", "Sajikan dengan nasi, sambal matah, atau jeruk limau" ]
   }
 ];
 
@@ -186,6 +266,8 @@ let currentFilter = 'all';
 let cameraStream = null;
 let foodDetectionModel = null;
 let demoRunning = false;
+let currentChatRecipeIdx = null;
+let awaitingSubstitutionIngredient = false;
 
 // AI Response database
 const AI_RESPONSES = {
@@ -606,8 +688,9 @@ function renderRecipesGrid() {
 }
 
 function createRecipeCardHTML(r) {
+  const recipeIndex = RECIPES_DB.indexOf(r);
   return `
-    <div class="recipe-card" onclick="openRecipeModal('${r.title}','${r.time}','${r.servings}','${r.calories}',${JSON.stringify(r.ingredients)},${JSON.stringify(r.steps)})">
+    <div class="recipe-card" onclick="openRecipeByIndex(${recipeIndex})">
       <div class="recipe-img" style="background:${r.gradient}">
         <span class="recipe-img-emoji">${r.emoji}</span>
       </div>
@@ -698,6 +781,12 @@ function openRecipeModal(title, time, servings, calories, ingredients, steps) {
   document.body.style.overflow = 'hidden';
 }
 
+function openRecipeByIndex(index) {
+  const recipe = RECIPES_DB[index];
+  if (!recipe) return;
+  openRecipeModal(recipe.title, recipe.time, recipe.servings, recipe.calories, recipe.ingredients, recipe.steps);
+}
+
 function findAITip(ingredientName) {
   for (const [key, val] of Object.entries(AI_RESPONSES.keywords)) {
     if (ingredientName.includes(key)) return val.tip;
@@ -778,27 +867,62 @@ function generateAIResponse(message) {
     return { type: 'text', text: 'Aku Chef Resepin. Aku bisa bantu mencari ide resep dari bahan yang tersedia, memberi tips memasak, dan menyarankan pengganti bahan. Coba sebutkan bahan atau pertanyaanmu.' };
   }
 
-  if (/\bcoto\b/.test(normalized)) {
-    const coto = RECIPES_DB.find(recipe => recipe.title === 'Coto Makassar');
-    return {
-      type: 'recipe',
-      text: 'Wah, mantap! Kalau mau bikin **Coto Makassar**, ini versi rumahan: rebus daging sapi sampai empuk, haluskan kacang tanah sangrai dan bumbu rempah, lalu masak bersama kaldu sampai gurih. Waktu sekitar 90 menit, tingkat sedang. Air cucian beras boleh dipakai untuk kuah, tapi air biasa juga bisa. Sajikan dengan buras atau ketupat. Aku tampilkan resep lengkapnya di bawah ya.',
-      recipe: { title: coto.title, time: coto.time, idx: RECIPES_DB.indexOf(coto) }
-    };
-  }
-
   if (/\b(belum punya bahan|belum ada bahan|tidak punya bahan|tidak ada bahan|ga punya bahan|gak punya bahan|nggak punya bahan|gak ada bahan|nggak ada bahan|kehabisan bahan)\b/.test(normalized)) {
     return { type: 'text', text: 'Nggak apa-apa 😊 Kita mulai dari yang paling sederhana. Coba cek apakah ada nasi, telur, mi, atau roti? Sebutkan satu saja yang ada—aku carikan ide paling simpel. Kalau benar-benar belum ada bahan, aku bisa bantu susun daftar belanja minimal untuk masakan yang kamu inginkan.' };
   }
 
-  // Only offer a substitution for an ingredient actually mentioned.
-  const asksSubstitution = /\b(ganti|pengganti|substitusi|tidak ada|nggak ada|ga ada|habis|kehabisan)\b/.test(normalized);
+  const asksSubstitution = /\b(ganti|diganti|pengganti|alternatif|substitusi|tidak ada|tidak punya|nggak ada|ga ada|habis|kehabisan)\b/.test(normalized);
+  if (awaitingSubstitutionIngredient && !asksSubstitution) {
+    const suppliedIngredient = Object.keys(AI_RESPONSES.substitusi).find(item => normalized.includes(item));
+    awaitingSubstitutionIngredient = false;
+    if (suppliedIngredient) {
+      return { type: 'substitusi', text: `Untuk **${suppliedIngredient}**, ${AI_RESPONSES.substitusi[suppliedIngredient]}`, tip: 'Sesuaikan takaran pengganti sedikit demi sedikit sambil mencicipi.' };
+    }
+  }
   if (asksSubstitution) {
     const missingIngredient = Object.keys(AI_RESPONSES.substitusi).find(item => normalized.includes(item));
     if (missingIngredient) {
+      awaitingSubstitutionIngredient = false;
       return { type: 'substitusi', text: `Untuk **${missingIngredient}**, ${AI_RESPONSES.substitusi[missingIngredient]}`, tip: 'Sesuaikan takaran pengganti sedikit demi sedikit sambil mencicipi.' };
     }
-    return { type: 'text', text: 'Bahan apa yang ingin kamu ganti? Sebutkan namanya, nanti aku carikan alternatif yang cocok.' };
+    awaitingSubstitutionIngredient = true;
+    return { type: 'text', text: 'Bisa banget! Bahan apa yang lagi kosong? Sebutkan namanya, nanti aku kasih pengganti yang paling masuk akal.' };
+  }
+
+  const requestedRecipe = RECIPES_DB.find(recipe => normalized.includes(recipe.title.toLowerCase()) ||
+    (recipe.title === 'Coto Makassar' && /\bcoto\b/.test(normalized)) ||
+    (recipe.title === 'Ayam Sere Lemo (Ayam Sisit Bali)' && /\b(ayam\s+sere\s+lemo|ayam\s+sisit\s+sere\s+lemo|ayam\s+serli)\b/.test(normalized)) ||
+    (recipe.title === 'Ayam Bakar Bumbu Bali' && /\bayam\s+bakar\s+(?:khas\s+)?bali\b/.test(normalized)) ||
+    (recipe.title === 'Ayam Bakar Kecap' && /\bayam\s+bakar\b/.test(normalized)) ||
+    (recipe.title === 'Lawar Sayur Bali' && /\blawar\b/.test(normalized)) ||
+    (recipe.title === 'Babi Guling Bali (Versi Rumahan)' && /\bbabi\s+guling\b/.test(normalized)) ||
+    (recipe.title === 'Fried Chicken Rumahan' && /\b(fried\s+chicken|ayam\s+goreng\s+crispy|ayam\s+goreng\s+krispi)\b/.test(normalized)) ||
+    (recipe.title === 'Pizza Teflon Keju' && /\bpizza\b/.test(normalized)) ||
+    (recipe.title === 'Burger Ayam Rumahan' && /\b(burger|hamburger)\b/.test(normalized)) ||
+    (recipe.title === 'Spaghetti Bolognese' && /\b(spaghetti|bolognese)\b/.test(normalized)) ||
+    (recipe.title === 'Ramen Ayam Praktis' && /\bramen\b/.test(normalized)) ||
+    (recipe.title === 'Sushi Roll Isi Matang' && /\bsushi\b/.test(normalized)) ||
+    (recipe.title === 'Taco Daging Sapi' && /\b(taco|tacos)\b/.test(normalized)) ||
+    (recipe.title === 'Pancake Lembut' && /\bpancake\b/.test(normalized)) ||
+    (recipe.title === 'Ayam Teriyaki' && /\bteriyaki\b/.test(normalized)) ||
+    (recipe.title === 'Sate Lilit Bali' && /\bsate\s+lilit\b/.test(normalized))
+  );
+  if (requestedRecipe) {
+    const dietaryNote = ['Babi Guling Bali (Versi Rumahan)', 'Lawar Sayur Bali'].includes(requestedRecipe.title)
+      ? '\n\nCatatan: babi guling memakai daging babi. Lawar ini versi sayur tanpa daging dan tanpa darah.'
+      : '';
+    return { type: 'recipe', text: `Asik, kita bikin **${requestedRecipe.title}**! Aku tuliskan resep lengkapnya di bawah—kalau ada bahan yang nggak tersedia, bilang saja, nanti kita cari gantinya.${dietaryNote}`, recipe: { title: requestedRecipe.title, time: requestedRecipe.time, idx: RECIPES_DB.indexOf(requestedRecipe) } };
+  }
+
+  // Only offer a substitution for an ingredient actually mentioned.
+  if (currentChatRecipeIdx !== null && /\b(lebih pedas|tambah pedas|kurang pedas|tidak pedas|ga pedas|nggak pedas|lebih hemat|tips|trik)\b/.test(normalized)) {
+    const recipe = RECIPES_DB[currentChatRecipeIdx];
+    const advice = /\b(lebih pedas|tambah pedas)\b/.test(normalized)
+      ? 'Tambahkan cabai sedikit demi sedikit saat menumis bumbu, lalu cicipi sebelum menambah lagi.'
+      : /\b(kurang pedas|tidak pedas|ga pedas|nggak pedas)\b/.test(normalized)
+        ? 'Kurangi atau hilangkan cabai rawit. Rasa tetap gurih dengan bawang, garam, dan sedikit jeruk limau.'
+        : 'Pakai bahan pengganti yang sudah ada, siapkan semua bahan sebelum memasak, dan buat porsi sesuai kebutuhan agar tidak ada sisa.';
+    return { type: 'text', text: `Buat **${recipe.title}**, ${advice} Mau ubah bahan tertentu juga boleh—sebutkan bahan yang ingin diganti.` };
   }
 
   // Match recipes against ingredients from this message and the scan list.
@@ -878,12 +1002,22 @@ function appendAIResponse(response) {
   let recipeCardHTML = '';
   if (response.type === 'recipe' && response.recipe) {
     const r = RECIPES_DB[response.recipe.idx] || RECIPES_DB[0];
+    currentChatRecipeIdx = response.recipe.idx;
     recipeCardHTML = `
-      <div class="chat-recipe-card" onclick="openRecipeModal('${r.title}','${r.time}','${r.servings}','${r.calories}',${JSON.stringify(r.ingredients)},${JSON.stringify(r.steps)})">
-        <div class="crc-title">${r.emoji} ${r.title}</div>
-        <div class="crc-meta">⏱ ${r.time} • 👥 ${r.servings} • 🔥 ${r.calories}</div>
-        <span class="crc-link">Lihat Resep Lengkap →</span>
-      </div>
+      <section class="chat-recipe-card" aria-label="Resep ${escapeHtml(r.title)}">
+        <div class="crc-title">${r.emoji} ${escapeHtml(r.title)}</div>
+        <div class="crc-meta">⏱ ${escapeHtml(r.time)} &nbsp;•&nbsp; ${escapeHtml(r.difficulty)} &nbsp;•&nbsp; 👥 ${escapeHtml(r.servings)}</div>
+        <h4>Bahan-bahan</h4>
+        <ul class="chat-recipe-ingredients">${r.ingredients.map(ingredient => `<li>${escapeHtml(ingredient)}</li>`).join('')}</ul>
+        <h4>Langkah memasak</h4>
+        <ol class="chat-recipe-steps">${r.steps.map(step => `<li>${escapeHtml(step)}</li>`).join('')}</ol>
+        <button class="crc-link" type="button" onclick="openRecipeByIndex(${response.recipe.idx})">Buka tampilan resep ↗</button>
+        <div class="chat-recipe-actions">
+          <button type="button" onclick="sendQuickPrompt('Bikin versi lebih pedas')">🌶️ Bikin lebih pedas</button>
+          <button type="button" onclick="sendQuickPrompt('Bahan apa yang bisa diganti?')">🔄 Tanya substitusi</button>
+          <button type="button" onclick="sendQuickPrompt('Kasih tips biar lebih hemat')">💡 Tips hemat</button>
+        </div>
+      </section>
     `;
   }
 

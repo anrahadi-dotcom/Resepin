@@ -1322,13 +1322,18 @@ a { color: inherit; text-decoration: none; }
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 14px;
-  cursor: pointer;
   transition: var(--transition);
 }
 .chat-recipe-card:hover { border-color: var(--primary); }
 .crc-title { font-weight: 700; margin-bottom: 6px; }
 .crc-meta { font-size: 0.8rem; color: var(--text-muted); }
-.crc-link { color: var(--primary); font-size: 0.85rem; font-weight: 600; display: block; margin-top: 8px; }
+.chat-recipe-card h4 { margin: 16px 0 6px; font-size: 0.88rem; color: var(--text-primary); }
+.chat-recipe-ingredients, .chat-recipe-steps { margin: 0; padding-left: 22px; color: var(--text-secondary); font-size: 0.84rem; }
+.chat-recipe-ingredients li, .chat-recipe-steps li { padding: 3px 0; }
+.crc-link { color: var(--primary); font-size: 0.85rem; font-weight: 600; display: inline-flex; margin-top: 12px; padding: 8px 0; background: transparent; border: 0; cursor: pointer; }
+.chat-recipe-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+.chat-recipe-actions button { border: 1px solid var(--border); border-radius: 999px; padding: 7px 10px; background: var(--bg-card); color: var(--text-secondary); font: inherit; font-size: 0.76rem; cursor: pointer; transition: var(--transition); }
+.chat-recipe-actions button:hover { border-color: var(--primary); color: var(--primary); }
 
 .quick-prompts {
   padding: 12px 0;
