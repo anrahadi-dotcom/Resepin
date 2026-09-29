@@ -1,21 +1,749 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resepin</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Resepin — Ubah sisa bahan dapurmu menjadi masakan lezat dengan AI. Scan bahan, dapatkan resep, zero food waste!" />
+  <title>Resepin — Masak dari Sisa, Hemat & Lezat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    
 
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a class="nav-logo" href="#" onclick="showPage('home')">
+        <div class="logo-icon">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="15" fill="url(#logoGrad)" opacity="0.15"/>
+            <path d="M8 20 Q16 8 24 20" stroke="url(#logoGrad)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <path d="M10 22 Q16 12 22 22" stroke="url(#logoGrad2)" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.6"/>
+            <circle cx="16" cy="22" r="2.5" fill="#FF6B35"/>
+            <defs>
+              <linearGradient id="logoGrad" x1="0" y1="0" x2="32" y2="32">
+                <stop offset="0%" stop-color="#FF6B35"/>
+                <stop offset="100%" stop-color="#FFE135"/>
+              </linearGradient>
+              <linearGradient id="logoGrad2" x1="0" y1="0" x2="32" y2="32">
+                <stop offset="0%" stop-color="#2EC4B6"/>
+                <stop offset="100%" stop-color="#FF6B35"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span>Resepin</span>
+      </a>
 
+      <div class="nav-links" id="navLinks">
+        <a class="nav-link active" data-page="home" href="#" onclick="showPage('home'); return false;">🏠 Beranda</a>
+        <a class="nav-link" data-page="scan" href="#" onclick="showPage('scan'); return false;">📷 Scan Bahan</a>
+        <a class="nav-link" data-page="resep" href="#" onclick="showPage('resep'); return false;">🍜 Resep</a>
+        <a class="nav-link" data-page="chef" href="#" onclick="showPage('chef'); return false;">🤖 Chef AI</a>
+        <a class="nav-link" data-page="jelajahi" href="#" onclick="showPage('jelajahi'); return false;">📚 Jelajahi</a>
+      </div>
 
+      <div class="nav-actions">
+        <button class="btn-scan-nav" onclick="showPage('scan')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="7" height="7"/><rect x="15" y="2" width="7" height="7"/><rect x="2" y="15" width="7" height="7"/><path d="M15 15h2v2h-2zm2 2h2v2h-2zm2 2h2v2h-2z"/></svg>
+          Scan Bahan
+        </button>
+        <button class="btn-avatar" onclick="showPage('profil')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+        <button class="btn-hamburger" id="hamburgerBtn" onclick="toggleMenu()">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
 
+  <!-- ===== PAGE: HOME ===== -->
+  <div class="page active" id="page-home">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-bg-glow"></div>
+      <div class="hero-particles" id="heroParticles"></div>
+      <div class="hero-container">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="badge-dot"></span>
+            <span>🌱 Zero Food Waste Platform</span>
+          </div>
+          <h1 class="hero-title">
+            Sisa Bahan<br/>
+            di Dapur?<br/>
+            <span class="title-gradient">Jadikan Masakan</span><br/>
+            <span class="title-accent">Lezat!</span>
+          </h1>
+          <p class="hero-desc">
+            Foto bahan sisa dapurmu, AI kami mendeteksi otomatis & memberikan resep terbaik. Hemat, Lezat, Zero Waste!
+          </p>
+          <div class="hero-cta">
+            <button class="btn-primary" onclick="showPage('scan')">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              Scan Bahan Sekarang
+            </button>
+            <button class="btn-secondary" onclick="showPage('resep')">
+              Lihat Semua Resep
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-item">
+              <span class="stat-num">2.4K+</span>
+              <span class="stat-label">Resep Tersedia</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <span class="stat-num">98%</span>
+              <span class="stat-label">Akurasi Deteksi</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <span class="stat-num">12K+</span>
+              <span class="stat-label">Bahan Diselamatkan</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="phone-mockup">
+            <div class="phone-screen">
+              <div class="scan-demo">
+                <div class="scan-line"></div>
+                <div class="scan-corner tl"></div>
+                <div class="scan-corner tr"></div>
+                <div class="scan-corner bl"></div>
+                <div class="scan-corner br"></div>
+                <div class="detected-box" style="top:20%;left:10%;width:40%;height:35%;" data-label="🌽 Jagung 97%"></div>
+                <div class="detected-box" style="top:45%;left:30%;width:35%;height:30%;" data-label="🥕 Wortel 94%"></div>
+                <div class="detected-box" style="top:25%;left:55%;width:30%;height:28%;" data-label="🧅 Bawang 91%"></div>
+                <div class="veggie-bg">🥬🥕🌽🧅🍅🧄</div>
+              </div>
+            </div>
+            <div class="phone-chip">
+              <div class="chip-dot"></div>
+              <span>AI Mendeteksi...</span>
+            </div>
+          </div>
+          <div class="floating-card card-1">
+            <div class="fc-icon">🥕</div>
+            <div class="fc-info">
+              <span class="fc-name">Wortel</span>
+              <div class="fc-bar"><div class="fc-fill" style="width:94%"></div></div>
+            </div>
+            <span class="fc-pct">94%</span>
+          </div>
+          <div class="floating-card card-2">
+            <div class="fc-icon">🌽</div>
+            <div class="fc-info">
+              <span class="fc-name">Jagung</span>
+              <div class="fc-bar"><div class="fc-fill" style="width:97%"></div></div>
+            </div>
+            <span class="fc-pct">97%</span>
+          </div>
+          <div class="floating-card card-3">
+            <span class="fc-recipe-label">🍲 Sup Jagung Wortel</span>
+            <span class="fc-recipe-time">⏱ 20 menit</span>
+          </div>
+        </div>
+      </div>
+      <div class="hero-scroll-hint">
+        <div class="scroll-dot"></div>
+        <span>Scroll untuk Jelajahi</span>
+      </div>
+    </section>
 
+    <!-- How It Works -->
+    <section class="section how-it-works">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Cara Kerja</span>
+          <h2>3 Langkah Mudah Masak<br/><span class="gradient-text">dari Sisa Dapur</span></h2>
+        </div>
+        <div class="steps-grid">
+          <div class="step-card" data-step="1">
+            <div class="step-number">01</div>
+            <div class="step-icon-wrap">
+              <div class="step-icon">📷</div>
+              <div class="step-ring"></div>
+            </div>
+            <h3>Foto Bahan</h3>
+            <p>Arahkan kamera ke bahan makanan yang tersisa di dapurmu. Bisa jagung, wortel, ayam, atau apapun!</p>
+            <div class="step-tag">Kamera Real-time</div>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step-card" data-step="2">
+            <div class="step-number">02</div>
+            <div class="step-icon-wrap">
+              <div class="step-icon">🧠</div>
+              <div class="step-ring"></div>
+            </div>
+            <h3>AI Deteksi Otomatis</h3>
+            <p>Model Machine Learning YOLOv8 kami langsung mendeteksi nama bahan dan menginputnya ke daftar secara otomatis.</p>
+            <div class="step-tag">98% Akurasi</div>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step-card" data-step="3">
+            <div class="step-number">03</div>
+            <div class="step-icon-wrap">
+              <div class="step-icon">🍳</div>
+              <div class="step-ring"></div>
+            </div>
+            <h3>Dapat Resep & Masak!</h3>
+            <p>Dapatkan rekomendasi resep yang pas dengan bahan yang kamu punya. Tanya juga ke Chef AI untuk variasi dan saran!</p>
+            <div class="step-tag">AI Powered</div>
+          </div>
+        </div>
+      </div>
+    </section>
 
+    <!-- Featured Recipes -->
+    <section class="section featured-recipes">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Resep Unggulan</span>
+          <h2>Populer Hari Ini</h2>
+          <a class="see-all" href="#" onclick="showPage('resep'); return false;">Lihat Semua →</a>
+        </div>
+        <div class="recipes-scroll">
+          <div class="recipe-card" onclick="openRecipeModal('Sup Jagung Wortel', '20 mnt', '2 Porsi', '180 kal', ['🌽 Jagung', '🥕 Wortel', '🧅 Bawang', '🧄 Bawang Putih', '🧂 Garam'], ['Potong jagung dan wortel', 'Tumis bawang hingga harum', 'Masukkan air dan semua bahan', 'Rebus 15 menit, beri bumbu', 'Sajikan hangat'])">
+            <div class="recipe-img" style="background: linear-gradient(135deg,#e67e22,#f39c12)">
+              <span class="recipe-img-emoji">🌽🥕</span>
+            </div>
+            <div class="recipe-badge-diff easy">Mudah</div>
+            <div class="recipe-info">
+              <h3>Sup Jagung Wortel</h3>
+              <p class="recipe-meta">⏱ 20 mnt &nbsp;|&nbsp; 👥 2 Porsi &nbsp;|&nbsp; 🔥 180 kal</p>
+              <div class="recipe-tags"><span>Zero Waste</span><span>Sehat</span></div>
+              <div class="recipe-ingredients-preview">
+                <span>🌽</span><span>🥕</span><span>🧅</span><span>🧄</span>
+                <span class="more">+1</span>
+              </div>
+            </div>
+          </div>
 
+          <div class="recipe-card" onclick="openRecipeModal('Nasi Goreng Sederhana', '15 mnt', '1 Porsi', '320 kal', ['🍚 Nasi', '🥚 Telur', '🧅 Bawang', '🌶️ Cabai', '🫙 Kecap'], ['Siapkan nasi dingin', 'Goreng telur orak-arik', 'Masukkan nasi dan bumbu', 'Aduk rata dengan kecap', 'Sajikan dengan kerupuk'])">
+            <div class="recipe-img" style="background: linear-gradient(135deg,#8e44ad,#9b59b6)">
+              <span class="recipe-img-emoji">🍚🥚</span>
+            </div>
+            <div class="recipe-badge-diff easy">Mudah</div>
+            <div class="recipe-info">
+              <h3>Nasi Goreng Sederhana</h3>
+              <p class="recipe-meta">⏱ 15 mnt &nbsp;|&nbsp; 👥 1 Porsi &nbsp;|&nbsp; 🔥 320 kal</p>
+              <div class="recipe-tags"><span>Sarapan</span><span>Cepat</span></div>
+              <div class="recipe-ingredients-preview">
+                <span>🍚</span><span>🥚</span><span>🧅</span><span>🌶️</span>
+                <span class="more">+1</span>
+              </div>
+            </div>
+          </div>
 
-    <script src="main.js"></script>
+          <div class="recipe-card" onclick="openRecipeModal('Tumis Kangkung Terasi', '10 mnt', '2 Porsi', '95 kal', ['🥬 Kangkung', '🧄 Bawang Putih', '🌶️ Cabai', '🦐 Terasi', '🧂 Garam'], ['Cuci bersih kangkung', 'Tumis bawang dan cabai', 'Masukkan terasi, haluskan', 'Masukkan kangkung', 'Masak 2 menit, sajikan'])">
+            <div class="recipe-img" style="background: linear-gradient(135deg,#27ae60,#2ecc71)">
+              <span class="recipe-img-emoji">🥬🌶️</span>
+            </div>
+            <div class="recipe-badge-diff easy">Mudah</div>
+            <div class="recipe-info">
+              <h3>Tumis Kangkung Terasi</h3>
+              <p class="recipe-meta">⏱ 10 mnt &nbsp;|&nbsp; 👥 2 Porsi &nbsp;|&nbsp; 🔥 95 kal</p>
+              <div class="recipe-tags"><span>Sayur</span><span>Cepat</span></div>
+              <div class="recipe-ingredients-preview">
+                <span>🥬</span><span>🧄</span><span>🌶️</span><span>🦐</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="recipe-card" onclick="openRecipeModal('Tempe Orek Pedas', '25 mnt', '3 Porsi', '240 kal', ['🧱 Tempe', '🌶️ Cabai', '🧅 Bawang', '🫙 Kecap Manis', '🧂 Gula'], ['Goreng tempe hingga kering', 'Haluskan bumbu cabai bawang', 'Tumis bumbu halus', 'Masukkan kecap dan gula', 'Masukkan tempe, aduk rata'])">
+            <div class="recipe-img" style="background: linear-gradient(135deg,#e74c3c,#c0392b)">
+              <span class="recipe-img-emoji">🧱🌶️</span>
+            </div>
+            <div class="recipe-badge-diff medium">Sedang</div>
+            <div class="recipe-info">
+              <h3>Tempe Orek Pedas</h3>
+              <p class="recipe-meta">⏱ 25 mnt &nbsp;|&nbsp; 👥 3 Porsi &nbsp;|&nbsp; 🔥 240 kal</p>
+              <div class="recipe-tags"><span>Lauk</span><span>Pedas</span></div>
+              <div class="recipe-ingredients-preview">
+                <span>🧱</span><span>🌶️</span><span>🧅</span><span>🫙</span>
+                <span class="more">+1</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="recipe-card" onclick="openRecipeModal('Capcay Kuah Segar', '20 mnt', '4 Porsi', '150 kal', ['🥦 Brokoli', '🥕 Wortel', '🫑 Paprika', '🍄 Jamur', '🧄 Bawang'], ['Potong semua sayur', 'Tumis bawang', 'Masukkan sayur keras dahulu', 'Tuang kaldu, masak 10 mnt', 'Tambah tepung maizena'])">
+            <div class="recipe-img" style="background: linear-gradient(135deg,#1abc9c,#16a085)">
+              <span class="recipe-img-emoji">🥦🥕</span>
+            </div>
+            <div class="recipe-badge-diff easy">Mudah</div>
+            <div class="recipe-info">
+              <h3>Capcay Kuah Segar</h3>
+              <p class="recipe-meta">⏱ 20 mnt &nbsp;|&nbsp; 👥 4 Porsi &nbsp;|&nbsp; 🔥 150 kal</p>
+              <div class="recipe-tags"><span>Sehat</span><span>Sayur</span></div>
+              <div class="recipe-ingredients-preview">
+                <span>🥦</span><span>🥕</span><span>🫑</span><span>🍄</span>
+                <span class="more">+1</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="recipe-card" onclick="openRecipeModal('Soto Ayam Bening', '45 mnt', '4 Porsi', '280 kal', ['🍗 Ayam', '🥬 Sawi', '🥕 Wortel', '🧅 Bawang', '🌿 Daun Salam'], ['Rebus ayam hingga matang', 'Suwir ayam, sisihkan', 'Tumis bumbu halus', 'Masukkan ke kaldu ayam', 'Tambah sayur, masak 5 mnt'])">
+            <div class="recipe-img" style="background: linear-gradient(135deg,#f39c12,#d68910)">
+              <span class="recipe-img-emoji">🍗🌿</span>
+            </div>
+            <div class="recipe-badge-diff medium">Sedang</div>
+            <div class="recipe-info">
+              <h3>Soto Ayam Bening</h3>
+              <p class="recipe-meta">⏱ 45 mnt &nbsp;|&nbsp; 👥 4 Porsi &nbsp;|&nbsp; 🔥 280 kal</p>
+              <div class="recipe-tags"><span>Soto</span><span>Berkuah</span></div>
+              <div class="recipe-ingredients-preview">
+                <span>🍗</span><span>🥬</span><span>🥕</span><span>🧅</span>
+                <span class="more">+1</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Zero Waste Stats -->
+    <section class="section waste-stats">
+      <div class="container">
+        <div class="stats-banner">
+          <div class="stats-content">
+            <h2>🌱 Dampak Zero Waste Resepin</h2>
+            <p>Bersama-sama kita telah menyelamatkan ribuan bahan makanan dari pembuangan</p>
+          </div>
+          <div class="stats-numbers">
+            <div class="waste-stat"><span class="ws-num" data-target="12400">0</span><span class="ws-label">Bahan Diselamatkan</span></div>
+            <div class="waste-stat"><span class="ws-num" data-target="3200">0</span><span class="ws-label">Masakan Dimasak</span></div>
+            <div class="waste-stat"><span class="ws-num" data-target="8900">0</span><span class="ws-label">Pengguna Aktif</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Chef CTA -->
+    <section class="section ai-cta">
+      <div class="container">
+        <div class="ai-cta-card">
+          <div class="ai-cta-glow"></div>
+          <div class="ai-cta-content">
+            <div class="ai-avatar-big">🤖</div>
+            <div>
+              <h2>Tanya Chef AI Resepin!</h2>
+              <p>Bingung mau masak apa? Chat dengan Chef AI kami yang siap memberikan ide resep kreatif, saran substitusi bahan, dan tips memasak berdasarkan bahan yang kamu punya.</p>
+              <button class="btn-primary" onclick="showPage('chef')">
+                Mulai Chat Sekarang
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="ai-chat-preview">
+            <div class="acp-bubble bot">Halo! Aku Chef AI Resepin 👋 Punya bahan apa di dapur hari ini?</div>
+            <div class="acp-bubble user">Ada wortel, jagung, dan tahu nih...</div>
+            <div class="acp-bubble bot typing">
+              <span class="typing-dots"><span></span><span></span><span></span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-logo">
+              <div class="logo-icon">🍳</div>
+              <span>Resepin</span>
+            </div>
+            <p>Platform resep berbasis AI untuk mengurangi food waste dan memaksimalkan bahan sisa dapur.</p>
+            <div class="footer-social">
+              <a href="#" class="social-link">Instagram</a>
+              <a href="#" class="social-link">TikTok</a>
+              <a href="#" class="social-link">YouTube</a>
+            </div>
+          </div>
+          <div class="footer-links">
+            <h4>Fitur</h4>
+            <a href="#" onclick="showPage('scan')">Scan Bahan</a>
+            <a href="#" onclick="showPage('resep')">Cari Resep</a>
+            <a href="#" onclick="showPage('chef')">Chef AI</a>
+            <a href="#" onclick="showPage('jelajahi')">Jelajahi</a>
+          </div>
+          <div class="footer-links">
+            <h4>Kategori</h4>
+            <a href="#">Sarapan</a>
+            <a href="#">Makan Siang</a>
+            <a href="#">Camilan</a>
+            <a href="#">Minuman</a>
+          </div>
+          <div class="footer-links">
+            <h4>Tentang</h4>
+            <a href="#">Tentang Kami</a>
+            <a href="#">Blog</a>
+            <a href="#">Kebijakan Privasi</a>
+            <a href="#">Kontak</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>©️ 2026 Resepin. Dibuat dengan ❤️ untuk mengurangi food waste Indonesia.</p>
+          <p>🌱 <span id="footerWasteCount">12,450</span> bahan diselamatkan hari ini</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ===== PAGE: SCAN ===== -->
+  <div class="page" id="page-scan">
+    <div class="scan-page">
+      <div class="scan-header">
+        <button class="back-btn" onclick="showPage('home')">← Kembali</button>
+        <h1>📷 Scan Bahan Dapur</h1>
+        <p>Arahkan kamera ke bahan makananmu, AI akan mendeteksi secara otomatis</p>
+      </div>
+
+      <div class="scan-layout">
+        <!-- Camera Section -->
+        <div class="camera-section">
+          <div class="camera-viewport" id="cameraViewport">
+            <video id="cameraFeed" autoplay muted playsinline></video>
+            <canvas id="cameraCanvas"></canvas>
+            <!-- Scan overlay -->
+            <div class="scan-overlay" id="scanOverlay">
+              <div class="scan-corner-tl"></div>
+              <div class="scan-corner-tr"></div>
+              <div class="scan-corner-bl"></div>
+              <div class="scan-corner-br"></div>
+              <div class="scan-laser" id="scanLaser"></div>
+            </div>
+            <!-- Detection boxes (simulated) -->
+            <div class="detection-boxes" id="detectionBoxes"></div>
+            <!-- Camera placeholder -->
+            <div class="camera-placeholder" id="cameraPlaceholder">
+              <div class="cp-icon">📷</div>
+              <p>Klik "Aktifkan Kamera" untuk mulai scan</p>
+              <p class="cp-sub">atau gunakan mode Demo untuk melihat contoh</p>
+            </div>
+          </div>
+          <div class="camera-controls">
+            <button class="cam-btn primary" id="startCamBtn" onclick="startCamera()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+              Aktifkan Kamera
+            </button>
+            <button class="cam-btn demo" onclick="runDemo()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5,3 19,12 5,21"/></svg>
+              Mode Demo
+            </button>
+            <button class="cam-btn capture" id="captureBtn" onclick="captureAndDetect()" disabled>
+              📸 Ambil Foto
+            </button>
+          </div>
+          <p class="cp-sub">Deteksi berjalan di browser dengan TensorFlow.js. Model mengenali beberapa objek makanan umum; tambahkan bahan lain secara manual.</p>
+          <div class="detection-status" id="detectionStatus">
+            <div class="status-idle">
+              <div class="status-dot idle"></div>
+              <span>Menunggu kamera aktif...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ingredients Panel -->
+        <div class="ingredients-panel">
+          <div class="ip-header">
+            <h3>🧺 Bahan Terdeteksi</h3>
+            <span class="ip-count" id="ingredientCount">0 bahan</span>
+          </div>
+
+          <div class="ip-list" id="ingredientList">
+            <div class="ip-empty" id="ipEmpty">
+              <div class="ip-empty-icon">🔍</div>
+              <p>Belum ada bahan terdeteksi.<br/>Aktifkan kamera atau coba Mode Demo</p>
+            </div>
+          </div>
+
+          <div class="ip-manual">
+            <h4>+ Tambah Manual</h4>
+            <div class="ip-manual-input">
+              <input type="text" id="manualIngredientInput" placeholder="Cth: tomat, kentang..." onkeypress="if(event.key==='Enter') addManualIngredient()" />
+              <button onclick="addManualIngredient()">Tambah</button>
+            </div>
+            <div class="quick-add-chips">
+              <span class="chip" onclick="addIngredient('🥚 Telur')">🥚 Telur</span>
+              <span class="chip" onclick="addIngredient('🍚 Nasi')">🍚 Nasi</span>
+              <span class="chip" onclick="addIngredient('🍗 Ayam')">🍗 Ayam</span>
+              <span class="chip" onclick="addIngredient('🧱 Tempe')">🧱 Tempe</span>
+              <span class="chip" onclick="addIngredient('🥬 Kangkung')">🥬 Kangkung</span>
+              <span class="chip" onclick="addIngredient('🍜 Mie')">🍜 Mie</span>
+            </div>
+          </div>
+
+          <div class="ip-actions">
+            <button class="btn-primary full-width" id="findRecipesBtn" onclick="showPage('resep')" disabled>
+              🍳 Cari Resep (<span id="ingredientCountBtn">0</span> bahan)
+            </button>
+            <button class="btn-secondary full-width" onclick="showPage('chef')">
+              🤖 Tanya Chef AI
+            </button>
+          </div>
+
+          <div class="ip-confidence" id="confidenceBar" style="display:none">
+            <span>Kepercayaan Deteksi</span>
+            <div class="conf-bar-wrap">
+              <div class="conf-bar-fill" id="confFill" style="width:0%"></div>
+            </div>
+            <span id="confPct">0%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE: RESEP ===== -->
+  <div class="page" id="page-resep">
+    <div class="resep-page">
+      <div class="resep-header">
+        <button class="back-btn" onclick="showPage('home')">← Kembali</button>
+        <h1>🍜 Semua Resep</h1>
+        <p>Temukan resep terbaik dari bahan yang kamu punya</p>
+      </div>
+
+      <!-- Search & Filter -->
+      <div class="resep-filters">
+        <div class="search-box">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" id="recipeSearch" placeholder="Cari resep atau bahan..." oninput="filterRecipes()" />
+        </div>
+        <div class="filter-chips">
+          <span class="filter-chip active" onclick="setFilter('all', this)">Semua</span>
+          <span class="filter-chip" onclick="setFilter('mudah', this)">Mudah</span>
+          <span class="filter-chip" onclick="setFilter('cepat', this)">< 15 Menit</span>
+          <span class="filter-chip" onclick="setFilter('sehat', this)">Sehat</span>
+          <span class="filter-chip" onclick="setFilter('sayur', this)">Sayur</span>
+          <span class="filter-chip" onclick="setFilter('berkuah', this)">Berkuah</span>
+          <span class="filter-chip" onclick="setFilter('5bahan', this)">≤ 5 Bahan</span>
+        </div>
+      </div>
+
+      <!-- Recipes Grid -->
+      <div class="container">
+        <div class="recipes-grid" id="recipesGrid">
+          <!-- populated by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE: CHEF AI ===== -->
+  <div class="page" id="page-chef">
+    <div class="chef-page">
+      <div class="chef-header">
+        <button class="back-btn" onclick="showPage('home')">← Kembali</button>
+        <div class="chef-title-area">
+          <div class="chef-avatar">🤖</div>
+          <div>
+            <h1>Chef AI Resepin</h1>
+            <span class="chef-status"><span class="status-online"></span> Online & Siap Membantu</span>
+          </div>
+        </div>
+        <div class="chef-bahan-badge" id="chefBahanBadge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M7 12h10M10 18h4"/></svg>
+          <span id="chefBahanText">Belum ada bahan</span>
+        </div>
+      </div>
+
+      <div class="chat-container">
+        <div class="chat-messages" id="chatMessages">
+          <div class="chat-bubble bot-bubble">
+            <div class="bubble-avatar">🤖</div>
+            <div class="bubble-content">
+              <p>Halo! Aku <strong>Chef AI Resepin</strong> 👋</p>
+              <p>Aku bisa bantu kamu menemukan resep terbaik dari bahan yang ada di dapur. Mau mulai dari mana?</p>
+              <p>Coba tanya: <em>"Aku punya wortel, telur, dan bawang. Bisa masak apa?"</em></p>
+            </div>
+            <span class="bubble-time">Sekarang</span>
+          </div>
+        </div>
+
+        <div class="quick-prompts" id="quickPrompts">
+          <div class="qp-scroll">
+            <button class="qp-btn" onclick="sendQuickPrompt('Aku punya wortel, jagung, dan bawang. Bisa masak apa?')">🥕 Punya wortel & jagung</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Ada nasi sisa dan telur di kulkas. Ada resep simpel?')">🍚 Nasi sisa + telur</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Mau masak sesuatu yang kaya protein tapi cepat, ada ayam.')">🍗 Masak dari ayam</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Ada tempe dan tahu, mau bikin lauk yang enak.')">🧱 Tempe & tahu</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Bahan di kulkas tinggal sedikit, ada brokoli dan wortel saja.')">🥦 Sayuran sisa</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Apa pengganti santan kalau habis?')">💡 Substitusi bahan</button>
+          </div>
+        </div>
+
+        <div class="chat-input-area">
+          <div class="chat-input-box">
+            <textarea id="chatInput" placeholder="Ketik pesanmu... (cth: aku punya wortel dan telur)" rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}" oninput="autoResizeTextarea(this)"></textarea>
+            <button class="chat-send-btn" onclick="sendChat()" id="chatSendBtn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE: JELAJAHI ===== -->
+  <div class="page" id="page-jelajahi">
+    <div class="jelajahi-page">
+      <div class="jelajahi-header">
+        <button class="back-btn" onclick="showPage('home')">← Kembali</button>
+        <h1>📚 Jelajahi Resep</h1>
+        <p>Temukan inspirasi masakan dari berbagai kategori</p>
+      </div>
+
+      <div class="container">
+        <section class="jelajahi-section">
+          <h2>Kategori Masakan</h2>
+          <div class="category-grid">
+            <div class="cat-card" onclick="filterByCategory('Sarapan')" style="--cat-color:#FF6B35">
+              <div class="cat-emoji">🌅</div>
+              <span>Sarapan</span>
+              <div class="cat-count">42 resep</div>
+            </div>
+            <div class="cat-card" onclick="filterByCategory('Makan Siang')" style="--cat-color:#FFE135">
+              <div class="cat-emoji">☀️</div>
+              <span>Makan Siang</span>
+              <div class="cat-count">89 resep</div>
+            </div>
+            <div class="cat-card" onclick="filterByCategory('Makan Malam')" style="--cat-color:#2EC4B6">
+              <div class="cat-emoji">🌙</div>
+              <span>Makan Malam</span>
+              <div class="cat-count">76 resep</div>
+            </div>
+            <div class="cat-card" onclick="filterByCategory('Camilan')" style="--cat-color:#9B59B6">
+              <div class="cat-emoji">🍿</div>
+              <span>Camilan</span>
+              <div class="cat-count">54 resep</div>
+            </div>
+            <div class="cat-card" onclick="filterByCategory('Sup')" style="--cat-color:#E74C3C">
+              <div class="cat-emoji">🍲</div>
+              <span>Sup & Soto</span>
+              <div class="cat-count">38 resep</div>
+            </div>
+            <div class="cat-card" onclick="filterByCategory('Minuman')" style="--cat-color:#27AE60">
+              <div class="cat-emoji">🥤</div>
+              <span>Minuman</span>
+              <div class="cat-count">31 resep</div>
+            </div>
+            <div class="cat-card" onclick="filterByCategory('Dessert')" style="--cat-color:#F39C12">
+              <div class="cat-emoji">🍮</div>
+              <span>Dessert</span>
+              <div class="cat-count">29 resep</div>
+            </div>
+            <div class="cat-card" onclick="filterByCategory('Lauk')" style="--cat-color:#1ABC9C">
+              <div class="cat-emoji">🍳</div>
+              <span>Lauk Pauk</span>
+              <div class="cat-count">112 resep</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="jelajahi-section">
+          <h2>⚡ Masak Cepat &lt; 15 Menit</h2>
+          <div class="quick-recipes-list">
+            <div class="qr-item" onclick="openRecipeModal('Telur Dadar Crispy','5 mnt','1 Porsi','210 kal',['🥚 Telur','🧅 Bawang','🌶️ Cabai','🧂 Garam','🫙 Minyak'],['Kocok telur dengan bumbu','Panaskan minyak','Tuang telur ke wajan','Masak hingga pinggir crispy','Lipat dan sajikan'])">
+              <div class="qr-emoji">🥚</div>
+              <div class="qr-info">
+                <span class="qr-name">Telur Dadar Crispy</span>
+                <span class="qr-meta">⏱ 5 mnt • 2 bahan</span>
+              </div>
+              <div class="qr-time">5 mnt</div>
+            </div>
+            <div class="qr-item" onclick="openRecipeModal('Mie Goreng Kilat','8 mnt','1 Porsi','380 kal',['🍜 Mie Instan','🥚 Telur','🥬 Sawi','🧄 Bawang Putih','🌶️ Cabai'],['Rebus mie al dente','Goreng telur orak-arik','Tumis bumbu + bawang','Masukkan mie tiriskan','Aduk semua bersama sawi'])">
+              <div class="qr-emoji">🍜</div>
+              <div class="qr-info">
+                <span class="qr-name">Mie Goreng Kilat</span>
+                <span class="qr-meta">⏱ 8 mnt • 5 bahan</span>
+              </div>
+              <div class="qr-time">8 mnt</div>
+            </div>
+            <div class="qr-item" onclick="openRecipeModal('Tahu Goreng Tepung','10 mnt','2 Porsi','180 kal',['🥚 Tahu','🌾 Tepung','🧄 Bawang Putih','🧂 Garam','🫙 Minyak'],['Potong tahu dadu','Buat adonan tepung bumbu','Celupkan tahu ke adonan','Goreng hingga kuning keemasan','Tiriskan dan sajikan'])">
+              <div class="qr-emoji">🟨</div>
+              <div class="qr-info">
+                <span class="qr-name">Tahu Goreng Tepung</span>
+                <span class="qr-meta">⏱ 10 mnt • 5 bahan</span>
+              </div>
+              <div class="qr-time">10 mnt</div>
+            </div>
+            <div class="qr-item" onclick="openRecipeModal('Sandwich Ayam Sisa','12 mnt','1 Porsi','420 kal',['🍞 Roti','🍗 Ayam Sisa','🥬 Selada','🍅 Tomat','🫙 Mayo'],['Sobek/iris ayam sisa','Olesi roti dengan mayo','Susun selada dan tomat','Letakkan ayam di atasnya','Tutup roti dan sajikan'])">
+              <div class="qr-emoji">🥪</div>
+              <div class="qr-info">
+                <span class="qr-name">Sandwich Ayam Sisa</span>
+                <span class="qr-meta">⏱ 12 mnt • 5 bahan</span>
+              </div>
+              <div class="qr-time">12 mnt</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="jelajahi-section">
+          <h2>🥄 ≤ 5 Bahan Saja</h2>
+          <div class="recipes-grid mini" id="fiveBahanGrid">
+            <!-- populated by JS -->
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== RECIPE DETAIL MODAL ===== -->
+  <div class="modal-overlay" id="recipeModal" onclick="closeModal(event)">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeRecipeModal()">✕</button>
+      <div class="modal-hero" id="modalHero">
+        <div class="modal-hero-emoji" id="modalHeroEmoji">🍳</div>
+      </div>
+      <div class="modal-body">
+        <div class="modal-header-info">
+          <h2 id="modalTitle">Nama Resep</h2>
+          <div class="modal-meta" id="modalMeta">
+            <span>⏱ 20 mnt</span>
+            <span>👥 2 Porsi</span>
+            <span>🔥 180 kal</span>
+          </div>
+        </div>
+
+        <div class="modal-grid">
+          <div class="modal-ingredients">
+            <h3>🧺 Bahan-bahan</h3>
+            <ul id="modalIngredients"></ul>
+          </div>
+          <div class="modal-steps">
+            <h3>👨‍🍳 Langkah Memasak</h3>
+            <ol id="modalSteps"></ol>
+          </div>
+        </div>
+
+        <div class="modal-ai-tip">
+          <div class="tip-icon">🤖</div>
+          <div>
+            <strong>Tips Chef AI:</strong>
+            <p id="modalTip">Jika tidak punya salah satu bahan, tanyakan ke Chef AI untuk saran substitusi yang tepat!</p>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-primary" onclick="closeRecipeModal(); showPage('chef')">🤖 Tanya Chef AI</button>
+          <button class="btn-secondary" onclick="saveRecipe()">♥️ Simpan Resep</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TOAST ===== -->
+  <div class="toast" id="toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
