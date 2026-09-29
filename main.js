@@ -999,7 +999,11 @@ function generateAIResponse(message) {
   }
 
   const asksSubstitution = /\b(ganti|diganti|pengganti|alternatif|substitusi|tidak ada|tidak punya|nggak ada|ga ada|habis|kehabisan)\b/.test(normalized);
+  const isAcknowledgement = /^(oke|ok|iya|ya|boleh|siap|gas|lanjut|sip)(?:\s+(?:deh|dong|bro|kak|bang|sis|lanjut|ya|boleh|aja))*[!?.\s]*$/.test(normalized.trim());
   if (awaitingSubstitutionIngredient && !asksSubstitution && !explicitRecipeRequest) {
+    if (isAcknowledgement) {
+      return { type: 'text', text: 'Siap 😊 Sebutkan bahan yang mau diganti, nanti aku carikan pilihan yang paling cocok.' };
+    }
     const suppliedIngredient = Object.keys(substitutionAdvice).find(item => textHasPhrase(normalized, item)) || message.trim().replace(/[?.!,]+$/, '');
     awaitingSubstitutionIngredient = false;
     return { type: 'substitusi', text: `Untuk **${suppliedIngredient}**, ${substitutionFor(suppliedIngredient)}`, tip: 'Sesuaikan takaran sedikit demi sedikit dan cicipi sebelum menambah lagi.' };
@@ -1012,6 +1016,14 @@ function generateAIResponse(message) {
     }
     awaitingSubstitutionIngredient = true;
     return { type: 'text', text: 'Bisa banget! Bahan apa yang lagi kosong? Sebutkan namanya, nanti aku kasih pengganti yang paling masuk akal.' };
+  }
+
+  if (isAcknowledgement) {
+    if (currentChatRecipeIdx !== null && RECIPES_DB[currentChatRecipeIdx]) {
+      const recipe = RECIPES_DB[currentChatRecipeIdx];
+      return { type: 'text', text: `Siap 😊 Untuk **${recipe.title}**, sebutkan bahan yang tersedia atau yang mau diganti. Nanti aku sesuaikan resep dan langkahnya buat kamu.` };
+    }
+    return { type: 'text', text: 'Oke 😊 Mau cari resep, tanya pengganti bahan, atau ceritakan bahan yang ada di dapur?' };
   }
 
   const requestedRecipe = RECIPES_DB.find(recipe => normalized.includes(recipe.title.toLowerCase()) ||
