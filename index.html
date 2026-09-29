@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Resepin — Ubah sisa bahan dapurmu menjadi masakan lezat dengan AI. Scan bahan, dapatkan resep, zero food waste!" />
+  <meta name="description" content="Resepin — Temukan resep lezat dari bahan yang ada di dapur. Masak enak, hemat bahan, kurangi makanan terbuang." />
   <title>Resepin — Masak dari Sisa, Hemat & Lezat</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -18,18 +18,13 @@
       <a class="nav-logo" href="#" onclick="showPage('home')">
         <div class="logo-icon">
           <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="16" cy="16" r="15" fill="url(#logoGrad)" opacity="0.15"/>
-            <path d="M8 20 Q16 8 24 20" stroke="url(#logoGrad)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
-            <path d="M10 22 Q16 12 22 22" stroke="url(#logoGrad2)" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.6"/>
-            <circle cx="16" cy="22" r="2.5" fill="#FF6B35"/>
+            <circle cx="16" cy="16" r="15" fill="url(#logoGrad)" opacity="0.12"/>
+            <circle cx="16" cy="17" r="8" stroke="url(#logoGrad)" stroke-width="2.2" fill="none"/>
+            <path d="M8 7v8M6 7v4a2 2 0 0 0 4 0V7M8 15v10M24 7v18M24 7c-3 2-4 5-4 8h4" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
             <defs>
               <linearGradient id="logoGrad" x1="0" y1="0" x2="32" y2="32">
-                <stop offset="0%" stop-color="#FF6B35"/>
-                <stop offset="100%" stop-color="#FFE135"/>
-              </linearGradient>
-              <linearGradient id="logoGrad2" x1="0" y1="0" x2="32" y2="32">
-                <stop offset="0%" stop-color="#2EC4B6"/>
-                <stop offset="100%" stop-color="#FF6B35"/>
+                <stop offset="0%" stop-color="#B65C3A"/>
+                <stop offset="100%" stop-color="#788466"/>
               </linearGradient>
             </defs>
           </svg>
@@ -38,17 +33,21 @@
       </a>
 
       <div class="nav-links" id="navLinks">
-        <a class="nav-link active" data-page="home" href="#" onclick="showPage('home'); return false;">🏠 Beranda</a>
-        <a class="nav-link" data-page="scan" href="#" onclick="showPage('scan'); return false;">📷 Scan Bahan</a>
-        <a class="nav-link" data-page="resep" href="#" onclick="showPage('resep'); return false;">🍜 Resep</a>
-        <a class="nav-link" data-page="chef" href="#" onclick="showPage('chef'); return false;">🤖 Chef AI</a>
-        <a class="nav-link" data-page="jelajahi" href="#" onclick="showPage('jelajahi'); return false;">📚 Jelajahi</a>
+        <a class="nav-link active" data-page="home" href="#" onclick="showPage('home'); return false;">Beranda</a>
+        <a class="nav-link" data-page="scan" href="#" onclick="showPage('scan'); return false;">Pindai bahan</a>
+        <a class="nav-link" data-page="resep" href="#" onclick="showPage('resep'); return false;">Resep</a>
+        <a class="nav-link" data-page="chef" href="#" onclick="showPage('chef'); return false;">Chef Resepin</a>
+        <a class="nav-link" data-page="jelajahi" href="#" onclick="showPage('jelajahi'); return false;">Jelajahi</a>
       </div>
 
       <div class="nav-actions">
         <button class="btn-scan-nav" onclick="showPage('scan')">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="7" height="7"/><rect x="15" y="2" width="7" height="7"/><rect x="2" y="15" width="7" height="7"/><path d="M15 15h2v2h-2zm2 2h2v2h-2zm2 2h2v2h-2z"/></svg>
-          Scan Bahan
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><circle cx="12" cy="12" r="4"/></svg>
+          <span>Pindai bahan</span>
+        </button>
+        <button class="theme-toggle" id="themeToggle" type="button" onclick="toggleTheme()" aria-label="Aktifkan mode gelap" title="Ganti tema warna">
+          <svg id="themeIcon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
+          <span id="themeLabel">Terang</span>
         </button>
         <button class="btn-avatar" onclick="showPage('profil')">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -70,7 +69,7 @@
         <div class="hero-content">
           <div class="hero-badge">
             <span class="badge-dot"></span>
-            <span>🌱 Zero Food Waste Platform</span>
+            <span>Masak enak, sisa berkurang</span>
           </div>
           <h1 class="hero-title">
             Sisa Bahan<br/>
@@ -79,7 +78,7 @@
             <span class="title-accent">Lezat!</span>
           </h1>
           <p class="hero-desc">
-            Foto bahan sisa dapurmu, AI kami mendeteksi otomatis & memberikan resep terbaik. Hemat, Lezat, Zero Waste!
+            Foto bahan yang tersisa, lalu temukan ide masak yang pas. Lebih hemat, tetap lezat, dan tak banyak terbuang.
           </p>
           <div class="hero-cta">
             <button class="btn-primary" onclick="showPage('scan')">
@@ -125,7 +124,7 @@
             </div>
             <div class="phone-chip">
               <div class="chip-dot"></div>
-              <span>AI Mendeteksi...</span>
+              <span>Mengenali bahan...</span>
             </div>
           </div>
           <div class="floating-card card-1">
@@ -181,8 +180,8 @@
               <div class="step-icon">🧠</div>
               <div class="step-ring"></div>
             </div>
-            <h3>AI Deteksi Otomatis</h3>
-            <p>Model Machine Learning YOLOv8 kami langsung mendeteksi nama bahan dan menginputnya ke daftar secara otomatis.</p>
+            <h3>Pindai bahan dari kamera</h3>
+            <p>Kamera mengenali beberapa bahan umum. Hasil pindai bisa kamu cek, ubah, atau lengkapi secara manual.</p>
             <div class="step-tag">98% Akurasi</div>
           </div>
           <div class="step-connector"></div>
@@ -193,8 +192,8 @@
               <div class="step-ring"></div>
             </div>
             <h3>Dapat Resep & Masak!</h3>
-            <p>Dapatkan rekomendasi resep yang pas dengan bahan yang kamu punya. Tanya juga ke Chef AI untuk variasi dan saran!</p>
-            <div class="step-tag">AI Powered</div>
+            <p>Dapatkan rekomendasi resep dari bahan yang kamu punya. Tanya Chef Resepin untuk variasi, pengganti bahan, dan tips memasak.</p>
+            <div class="step-tag">Ide dari bahanmu</div>
           </div>
         </div>
       </div>
@@ -330,10 +329,10 @@
         <div class="ai-cta-card">
           <div class="ai-cta-glow"></div>
           <div class="ai-cta-content">
-            <div class="ai-avatar-big">🤖</div>
+            <div class="ai-avatar-big">👩‍🍳</div>
             <div>
-              <h2>Tanya Chef AI Resepin!</h2>
-              <p>Bingung mau masak apa? Chat dengan Chef AI kami yang siap memberikan ide resep kreatif, saran substitusi bahan, dan tips memasak berdasarkan bahan yang kamu punya.</p>
+              <h2>Ngobrol dengan Chef Resepin</h2>
+              <p>Bingung mau masak apa? Ceritakan bahan yang ada; Chef Resepin akan mencarikan ide, saran pengganti bahan, dan tips memasak.</p>
               <button class="btn-primary" onclick="showPage('chef')">
                 Mulai Chat Sekarang
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -341,7 +340,7 @@
             </div>
           </div>
           <div class="ai-chat-preview">
-            <div class="acp-bubble bot">Halo! Aku Chef AI Resepin 👋 Punya bahan apa di dapur hari ini?</div>
+            <div class="acp-bubble bot">Halo! Aku Chef Resepin 👋 Punya bahan apa di dapur hari ini?</div>
             <div class="acp-bubble user">Ada wortel, jagung, dan tahu nih...</div>
             <div class="acp-bubble bot typing">
               <span class="typing-dots"><span></span><span></span><span></span></span>
@@ -360,7 +359,7 @@
               <div class="logo-icon">🍳</div>
               <span>Resepin</span>
             </div>
-            <p>Platform resep berbasis AI untuk mengurangi food waste dan memaksimalkan bahan sisa dapur.</p>
+            <p>Resep praktis untuk memanfaatkan bahan dapur dan mengurangi makanan terbuang.</p>
             <div class="footer-social">
               <a href="#" class="social-link">Instagram</a>
               <a href="#" class="social-link">TikTok</a>
@@ -371,7 +370,7 @@
             <h4>Fitur</h4>
             <a href="#" onclick="showPage('scan')">Scan Bahan</a>
             <a href="#" onclick="showPage('resep')">Cari Resep</a>
-            <a href="#" onclick="showPage('chef')">Chef AI</a>
+            <a href="#" onclick="showPage('chef')">Chef Resepin</a>
             <a href="#" onclick="showPage('jelajahi')">Jelajahi</a>
           </div>
           <div class="footer-links">
@@ -403,7 +402,7 @@
       <div class="scan-header">
         <button class="back-btn" onclick="showPage('home')">← Kembali</button>
         <h1>📷 Scan Bahan Dapur</h1>
-        <p>Arahkan kamera ke bahan makananmu, AI akan mendeteksi secara otomatis</p>
+        <p>Arahkan kamera ke bahan makanan; hasil pindai bisa kamu periksa dan koreksi</p>
       </div>
 
       <div class="scan-layout">
@@ -486,7 +485,7 @@
               🍳 Cari Resep (<span id="ingredientCountBtn">0</span> bahan)
             </button>
             <button class="btn-secondary full-width" onclick="showPage('chef')">
-              🤖 Tanya Chef AI
+              Tanya Chef Resepin
             </button>
           </div>
 
@@ -537,16 +536,16 @@
     </div>
   </div>
 
-  <!-- ===== PAGE: CHEF AI ===== -->
+  <!-- ===== PAGE: CHEF RESEPIN ===== -->
   <div class="page" id="page-chef">
     <div class="chef-page">
       <div class="chef-header">
         <button class="back-btn" onclick="showPage('home')">← Kembali</button>
         <div class="chef-title-area">
-          <div class="chef-avatar">🤖</div>
+          <div class="chef-avatar">👩‍🍳</div>
           <div>
-            <h1>Chef AI Resepin</h1>
-            <span class="chef-status"><span class="status-online"></span> Online & Siap Membantu</span>
+            <h1>Chef Resepin</h1>
+            <span class="chef-status"><span class="status-online"></span> Siap membantu di dapur</span>
           </div>
         </div>
         <div class="chef-bahan-badge" id="chefBahanBadge">
@@ -558,9 +557,9 @@
       <div class="chat-container">
         <div class="chat-messages" id="chatMessages">
           <div class="chat-bubble bot-bubble">
-            <div class="bubble-avatar">🤖</div>
+            <div class="bubble-avatar">👩‍🍳</div>
             <div class="bubble-content">
-              <p>Halo! Aku <strong>Chef AI Resepin</strong> 👋</p>
+              <p>Halo! Aku <strong>Chef Resepin</strong> 👋</p>
               <p>Aku bisa bantu kamu menemukan resep terbaik dari bahan yang ada di dapur. Mau mulai dari mana?</p>
               <p>Coba tanya: <em>"Aku punya wortel, telur, dan bawang. Bisa masak apa?"</em></p>
             </div>
@@ -604,17 +603,17 @@
         <section class="jelajahi-section">
           <h2>Kategori Masakan</h2>
           <div class="category-grid">
-            <div class="cat-card" onclick="filterByCategory('Sarapan')" style="--cat-color:#FF6B35">
+            <div class="cat-card" onclick="filterByCategory('Sarapan')" style="--cat-color:#B65C3A">
               <div class="cat-emoji">🌅</div>
               <span>Sarapan</span>
               <div class="cat-count">42 resep</div>
             </div>
-            <div class="cat-card" onclick="filterByCategory('Makan Siang')" style="--cat-color:#FFE135">
+            <div class="cat-card" onclick="filterByCategory('Makan Siang')" style="--cat-color:#D3A64F">
               <div class="cat-emoji">☀️</div>
               <span>Makan Siang</span>
               <div class="cat-count">89 resep</div>
             </div>
-            <div class="cat-card" onclick="filterByCategory('Makan Malam')" style="--cat-color:#2EC4B6">
+            <div class="cat-card" onclick="filterByCategory('Makan Malam')" style="--cat-color:#788466">
               <div class="cat-emoji">🌙</div>
               <span>Makan Malam</span>
               <div class="cat-count">76 resep</div>
@@ -724,15 +723,15 @@
         </div>
 
         <div class="modal-ai-tip">
-          <div class="tip-icon">🤖</div>
+          <div class="tip-icon">👩‍🍳</div>
           <div>
-            <strong>Tips Chef AI:</strong>
-            <p id="modalTip">Jika tidak punya salah satu bahan, tanyakan ke Chef AI untuk saran substitusi yang tepat!</p>
+            <strong>Tips Chef Resepin:</strong>
+            <p id="modalTip">Jika tidak punya salah satu bahan, tanyakan ke Chef Resepin untuk saran penggantinya.</p>
           </div>
         </div>
 
         <div class="modal-actions">
-          <button class="btn-primary" onclick="closeRecipeModal(); showPage('chef')">🤖 Tanya Chef AI</button>
+          <button class="btn-primary" onclick="closeRecipeModal(); showPage('chef')">Tanya Chef Resepin</button>
           <button class="btn-secondary" onclick="saveRecipe()">♥️ Simpan Resep</button>
         </div>
       </div>

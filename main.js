@@ -218,8 +218,8 @@ const RECIPES_DB = [
   },
   {
     id: 22, title: "Burger Ayam Rumahan", emoji: "🍔🍗", gradient: "linear-gradient(135deg,#bd543a,#82442f)", time: "30 mnt", servings: "2 Porsi", calories: "430 kal", difficulty: "Mudah", tags: ["Favorit", "Cepat"],
-    ingredients: ["🍞 Roti burger", "🍗 Daging ayam cincang", "🥚 Telur", "🥬 Selada", "🍅 Tomat", "🧀 Keju", "🫙 Mayones atau saus"],
-    steps: ["Bumbui ayam cincang dengan garam dan lada, bentuk dua patty", "Masak patty di wajan dengan sedikit minyak sampai matang merata", "Belah roti lalu panggang sisi dalamnya sebentar", "Susun saus, selada, patty, tomat, dan keju", "Tutup burger dan sajikan selagi hangat" ]
+    ingredients: ["🍞 Bun atau roti burger", "🍗 Patty ayam atau sapi", "🥬 Selada (opsional)", "🍅 Tomat (opsional)", "🧀 Keju (opsional)", "🫙 Mayones atau saus (opsional)", "🧂 Garam dan lada"],
+    steps: ["Jika membuat patty sendiri, bumbui daging cincang dengan garam dan lada lalu bentuk pipih", "Masak patty di wajan dengan sedikit minyak sampai matang sepenuhnya", "Belah bun lalu panggang sisi dalamnya sebentar", "Oleskan saus bila ada, lalu tumpuk patty dan topping yang tersedia", "Tutup burger dan nikmati selagi hangat; bun dan patty saja juga cukup untuk versi simpel" ]
   },
   {
     id: 23, title: "Spaghetti Bolognese", emoji: "🍝🍅", gradient: "linear-gradient(135deg,#bd4938,#762f32)", time: "35 mnt", servings: "3 Porsi", calories: "410 kal", difficulty: "Mudah", tags: ["Favorit", "Pasta"],
@@ -321,6 +321,36 @@ function showPage(pageId) {
 
 function toggleMenu() {
   document.getElementById('navLinks').classList.toggle('open');
+}
+
+function applyTheme(theme) {
+  const selected = theme === 'dark' ? 'dark' : 'light';
+  document.body.dataset.theme = selected;
+  const button = document.getElementById('themeToggle');
+  const label = document.getElementById('themeLabel');
+  const icon = document.getElementById('themeIcon');
+  const nextTheme = selected === 'dark' ? 'light' : 'dark';
+  if (label) label.textContent = nextTheme === 'dark' ? 'Gelap' : 'Terang';
+  if (icon) {
+    icon.innerHTML = nextTheme === 'dark'
+      ? '<path d="M20.9 13A8.5 8.5 0 0 1 11 3.1 8.5 8.5 0 1 0 20.9 13Z"/>'
+      : '<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/>';
+  }
+  if (button) {
+    button.setAttribute('aria-label', `Aktifkan mode ${nextTheme === 'dark' ? 'gelap' : 'terang'}`);
+    button.setAttribute('aria-pressed', String(selected === 'dark'));
+  }
+  try { localStorage.setItem('resep-theme', selected); } catch (_) { /* Theme still works for this page view. */ }
+}
+
+function toggleTheme() {
+  applyTheme(document.body.dataset.theme === 'dark' ? 'light' : 'dark');
+}
+
+function initTheme() {
+  let savedTheme = 'light';
+  try { savedTheme = localStorage.getItem('resep-theme') || 'light'; } catch (_) { /* Use the warm light theme by default. */ }
+  applyTheme(savedTheme);
 }
 
 // ============================================================
@@ -475,7 +505,7 @@ function runDemo() {
       // Final state
       if (idx === demoItems.length - 1) {
         setTimeout(() => {
-          updateDetectionStatus('detected', `✅ ${demoItems.length} bahan terdeteksi! Cari resep atau tanya Chef AI.`);
+          updateDetectionStatus('detected', `✅ ${demoItems.length} bahan terdeteksi! Cari resep atau tanya Chef Resepin.`);
           showConfidenceBar(91);
           demoRunning = false;
           document.getElementById('captureBtn').disabled = false;
@@ -857,7 +887,7 @@ function generateAIResponse(message) {
 
   // Handle conversation before looking for ingredients, so a greeting never
   // falls through to an unrelated recipe or generic zero-waste tip.
-  if (/^(hai|halo|hello|hi|hei|pagi|siang|sore|malam)(\b|[!?. ,])/i.test(normalized.trim())) {
+  if (/^(hai|halo|hello|hi|hei|pagi|siang|sore|malam)(?:\s+(?:bro|kak|bang|sis|guys))?[!?.\s]*$/i.test(normalized.trim())) {
     return { type: 'text', text: 'Hai! 👋 Aku Chef Resepin. Kamu lagi punya bahan apa, atau mau tanya soal resep dan substitusi?' };
   }
   if (/\b(terima kasih|makasih|thanks|thank you)\b/.test(normalized)) {
@@ -928,6 +958,8 @@ function generateAIResponse(message) {
   // Match recipes against ingredients from this message and the scan list.
   const availableIngredients = [...new Set([
     ...detectedIngredients.map(item => item.name.toLowerCase()),
+    ...( /\b(bun|buns|burger\s+bun|roti\s+burger)\b/.test(normalized) ? ['roti burger'] : [] ),
+    ...( /\b(patty|patti|beef\s+patty|chicken\s+patty|patty\s+burger)\b/.test(normalized) ? ['patty'] : [] ),
     ...Object.keys(AI_RESPONSES.keywords).filter(item => item !== 'default' && normalized.includes(item)),
     ...RECIPES_DB.flatMap(recipe => recipe.ingredients.map(item => item.replace(/^\S+\s*/, '').toLowerCase()).filter(item => normalized.includes(item)))
   ])];
@@ -942,6 +974,13 @@ function generateAIResponse(message) {
     const best = rankedRecipes[0];
     if (best) {
       const names = availableIngredients.join(', ');
+      if (best.recipe.title === 'Burger Ayam Rumahan' && availableIngredients.includes('roti burger') && availableIngredients.includes('patty')) {
+        return {
+          type: 'recipe',
+          text: 'Nah, bun + patty sudah cukup buat burger simpel! 🔥 Masak patty sampai matang, panggang bun sebentar, lalu tumpuk. Keju, saus, atau sayur cuma tambahan kalau ada. Aku tulis langkah lengkapnya di bawah.',
+          recipe: { title: best.recipe.title, time: best.recipe.time, idx: RECIPES_DB.indexOf(best.recipe) }
+        };
+      }
       return {
         type: 'recipe',
         text: `Dari pesanmu, bahan yang cocok adalah **${names}**. Ide yang paling mendekati: **${best.recipe.title}** (${best.recipe.time}, ${best.recipe.difficulty.toLowerCase()}). Resep ini memakai ${best.matched.join(', ')}. Mau aku bantu sesuaikan langkahnya dengan bahan yang kamu punya?`,
@@ -982,7 +1021,7 @@ function appendChatMessage(text, role) {
     `;
   } else {
     div.innerHTML = `
-      <div class="bubble-avatar">🤖</div>
+      <div class="bubble-avatar">👩‍🍳</div>
       <div class="bubble-content"><p>${formatBotText(text)}</p></div>
       <span class="bubble-time">${time}</span>
     `;
@@ -1022,7 +1061,7 @@ function appendAIResponse(response) {
   }
 
   div.innerHTML = `
-    <div class="bubble-avatar">🤖</div>
+    <div class="bubble-avatar">👩‍🍳</div>
     <div class="bubble-content">
       <p>${formatBotText(response.text)}</p>
       ${recipeCardHTML}
@@ -1041,7 +1080,7 @@ function appendTypingIndicator(id) {
   div.id = id;
   div.className = 'chat-bubble bot-bubble';
   div.innerHTML = `
-    <div class="bubble-avatar">🤖</div>
+    <div class="bubble-avatar">👩‍🍳</div>
     <div class="bubble-content" style="padding:14px 18px">
       <div class="typing-dots">
         <span></span><span></span><span></span>
@@ -1108,6 +1147,7 @@ document.addEventListener('keydown', (e) => {
 // INIT
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
   initParticles();
   initScrollEffects();
   animateFooterCounter();
