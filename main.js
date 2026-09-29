@@ -162,6 +162,19 @@ const RECIPES_DB = [
     tags: ["Lauk", "Tradisional", "Pedas"],
     ingredients: ["🥩 Daging Sapi", "🌶️ Cabai Merah", "🥥 Santan", "🌿 Daun Jeruk", "🧄 Bawang Putih"],
     steps: ["Potong daging sapi kotak, lumuri garam dan merica", "Haluskan semua bumbu rendang (cabai, bawang, jahe)", "Masak santan bersama bumbu hingga mendidih", "Masukkan daging, masak dengan api sedang", "Aduk terus hingga santan menyusut dan daging kecoklatan"]
+  },
+  {
+    id: 13,
+    title: "Coto Makassar",
+    emoji: "🍲🥜",
+    gradient: "linear-gradient(135deg,#795548,#4e342e)",
+    time: "90 mnt",
+    servings: "4 Porsi",
+    calories: "350 kal",
+    difficulty: "Sedang",
+    tags: ["Tradisional", "Berkuah", "Sulawesi"],
+    ingredients: ["🥩 Daging sapi", "🥜 Kacang tanah sangrai", "🧅 Bawang merah", "🧄 Bawang putih", "🌿 Serai dan lengkuas", "🌾 Ketumbar, jintan, dan merica", "🧂 Garam", "🍚 Air cucian beras (opsional)"],
+    steps: ["Rebus daging sapi sampai empuk; sisihkan kaldunya dan potong daging", "Sangrai kacang tanah, lalu haluskan", "Haluskan bawang merah, bawang putih, ketumbar, jintan, merica, dan lengkuas", "Tumis bumbu bersama serai hingga harum, lalu masukkan ke dalam kaldu", "Masukkan kacang halus dan daging; masak perlahan sampai kuah menyatu, bumbui garam", "Sajikan hangat dengan buras atau ketupat, jeruk nipis, dan sambal"]
   }
 ];
 
@@ -763,6 +776,19 @@ function generateAIResponse(message) {
   }
   if (/\b(kamu siapa|siapa kamu|bisa apa|bant[u]? apa|help|tolong)\b/.test(normalized)) {
     return { type: 'text', text: 'Aku Chef Resepin. Aku bisa bantu mencari ide resep dari bahan yang tersedia, memberi tips memasak, dan menyarankan pengganti bahan. Coba sebutkan bahan atau pertanyaanmu.' };
+  }
+
+  if (/\bcoto\b/.test(normalized)) {
+    const coto = RECIPES_DB.find(recipe => recipe.title === 'Coto Makassar');
+    return {
+      type: 'recipe',
+      text: 'Wah, mantap! Kalau mau bikin **Coto Makassar**, ini versi rumahan: rebus daging sapi sampai empuk, haluskan kacang tanah sangrai dan bumbu rempah, lalu masak bersama kaldu sampai gurih. Waktu sekitar 90 menit, tingkat sedang. Air cucian beras boleh dipakai untuk kuah, tapi air biasa juga bisa. Sajikan dengan buras atau ketupat. Aku tampilkan resep lengkapnya di bawah ya.',
+      recipe: { title: coto.title, time: coto.time, idx: RECIPES_DB.indexOf(coto) }
+    };
+  }
+
+  if (/\b(belum punya bahan|belum ada bahan|tidak punya bahan|tidak ada bahan|ga punya bahan|gak punya bahan|nggak punya bahan|gak ada bahan|nggak ada bahan|kehabisan bahan)\b/.test(normalized)) {
+    return { type: 'text', text: 'Nggak apa-apa 😊 Kita mulai dari yang paling sederhana. Coba cek apakah ada nasi, telur, mi, atau roti? Sebutkan satu saja yang ada—aku carikan ide paling simpel. Kalau benar-benar belum ada bahan, aku bisa bantu susun daftar belanja minimal untuk masakan yang kamu inginkan.' };
   }
 
   // Only offer a substitution for an ingredient actually mentioned.
