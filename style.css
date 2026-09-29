@@ -239,12 +239,12 @@ a { color: inherit; text-decoration: none; }
    HOME — HERO
    ============================ */
 .hero {
-  min-height: 100vh;
+  min-height: 0;
   display: flex;
   align-items: center;
   position: relative;
   overflow: hidden;
-  padding: 120px 24px 80px;
+  padding: 112px 24px 72px;
 }
 .hero-bg-glow {
   position: absolute;
@@ -252,7 +252,7 @@ a { color: inherit; text-decoration: none; }
   width: 700px; height: 700px;
   background: radial-gradient(circle, rgba(182,92,58,0.12) 0%, transparent 70%);
   pointer-events: none;
-  opacity: 0.65;
+  opacity: 0.18;
 }
 .hero-bg-glow::after {
   content: '';
@@ -303,7 +303,7 @@ a { color: inherit; text-decoration: none; }
   padding: 6px 16px;
   background: rgba(120,132,102,0.1);
   border: 1px solid rgba(120,132,102,0.3);
-  border-radius: 999px;
+  border-radius: 8px;
   font-size: 0.85rem;
   font-weight: 500;
   color: var(--secondary);
@@ -399,8 +399,25 @@ a { color: inherit; text-decoration: none; }
 .stat-label { font-size: 0.75rem; color: var(--text-muted); }
 .stat-divider { width: 1px; height: 40px; background: var(--border); }
 
-/* Phone Mockup */
+/* Simple food feature in the home hero */
+.hero-note { color: var(--text-muted); font-size: .92rem; margin-top: -24px; }
 .hero-visual { position: relative; display: flex; justify-content: center; align-items: center; }
+.hero-food-card {
+  width: min(100%, 390px);
+  padding: 28px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: var(--shadow-card);
+}
+.hero-food-kicker { color: var(--primary); font-size: .82rem; font-weight: 700; margin: 0 0 16px; }
+.hero-food-bowl { display: grid; place-items: center; min-height: 210px; background: #efe2cf; border-radius: 14px; font-size: 6rem; }
+body[data-theme="dark"] .hero-food-bowl { background: #3a332b; }
+.hero-food-card h2 { margin: 18px 0 4px; font: 700 1.35rem var(--font-display); }
+.hero-food-card > p:last-of-type { color: var(--text-secondary); margin: 0; }
+.hero-food-ingredients { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+.hero-food-ingredients span { padding: 6px 10px; background: var(--bg-secondary); border-radius: 999px; color: var(--text-secondary); font-size: .8rem; }
+/* Legacy scan illustration styles, retained for the scan page. */
 .phone-mockup {
   width: 280px;
   height: 500px;
@@ -1687,7 +1704,7 @@ a { color: inherit; text-decoration: none; }
   .btn-hamburger { display: flex; }
   .btn-scan-nav span { display: none; }
   .hero-container { grid-template-columns: 1fr; gap: 40px; }
-  .hero-visual { order: -1; }
+  .hero-visual { order: 0; }
   .phone-mockup { width: 220px; height: 380px; }
   .floating-card { display: none; }
   .steps-grid { flex-direction: column; align-items: center; }

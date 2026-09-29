@@ -78,74 +78,26 @@
             <span class="title-accent">Lezat!</span>
           </h1>
           <p class="hero-desc">
-            Foto bahan yang tersisa, lalu temukan ide masak yang pas. Lebih hemat, tetap lezat, dan tak banyak terbuang.
+            Punya bahan tersisa? Temukan masakan rumahan yang enak, praktis, dan cocok dengan isi dapurmu.
           </p>
           <div class="hero-cta">
             <button class="btn-primary" onclick="showPage('scan')">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-              Scan Bahan Sekarang
+              Cari resep dari bahan
             </button>
             <button class="btn-secondary" onclick="showPage('resep')">
               Lihat Semua Resep
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </button>
           </div>
-          <div class="hero-stats">
-            <div class="stat-item">
-              <span class="stat-num">2.4K+</span>
-              <span class="stat-label">Resep Tersedia</span>
-            </div>
-            <div class="stat-divider"></div>
-            <div class="stat-item">
-              <span class="stat-num">98%</span>
-              <span class="stat-label">Akurasi Deteksi</span>
-            </div>
-            <div class="stat-divider"></div>
-            <div class="stat-item">
-              <span class="stat-num">12K+</span>
-              <span class="stat-label">Bahan Diselamatkan</span>
-            </div>
-          </div>
+          <p class="hero-note">Bisa ketik bahan sendiri atau pakai kamera.</p>
         </div>
         <div class="hero-visual">
-          <div class="phone-mockup">
-            <div class="phone-screen">
-              <div class="scan-demo">
-                <div class="scan-line"></div>
-                <div class="scan-corner tl"></div>
-                <div class="scan-corner tr"></div>
-                <div class="scan-corner bl"></div>
-                <div class="scan-corner br"></div>
-                <div class="detected-box" style="top:20%;left:10%;width:40%;height:35%;" data-label="🌽 Jagung 97%"></div>
-                <div class="detected-box" style="top:45%;left:30%;width:35%;height:30%;" data-label="🥕 Wortel 94%"></div>
-                <div class="detected-box" style="top:25%;left:55%;width:30%;height:28%;" data-label="🧅 Bawang 91%"></div>
-                <div class="veggie-bg">🥬🥕🌽🧅🍅🧄</div>
-              </div>
-            </div>
-            <div class="phone-chip">
-              <div class="chip-dot"></div>
-              <span>Mengenali bahan...</span>
-            </div>
-          </div>
-          <div class="floating-card card-1">
-            <div class="fc-icon">🥕</div>
-            <div class="fc-info">
-              <span class="fc-name">Wortel</span>
-              <div class="fc-bar"><div class="fc-fill" style="width:94%"></div></div>
-            </div>
-            <span class="fc-pct">94%</span>
-          </div>
-          <div class="floating-card card-2">
-            <div class="fc-icon">🌽</div>
-            <div class="fc-info">
-              <span class="fc-name">Jagung</span>
-              <div class="fc-bar"><div class="fc-fill" style="width:97%"></div></div>
-            </div>
-            <span class="fc-pct">97%</span>
-          </div>
-          <div class="floating-card card-3">
-            <span class="fc-recipe-label">🍲 Sup Jagung Wortel</span>
-            <span class="fc-recipe-time">⏱ 20 menit</span>
+          <div class="hero-food-card">
+            <p class="hero-food-kicker">Inspirasi dari dapur</p>
+            <div class="hero-food-bowl" aria-hidden="true">🍲</div>
+            <h2>Sup jagung &amp; wortel</h2>
+            <p>Hangat, sederhana, siap dalam 20 menit.</p>
+            <div class="hero-food-ingredients"><span>Jagung</span><span>Wortel</span><span>Bawang</span></div>
           </div>
         </div>
       </div>
@@ -182,7 +134,7 @@
             </div>
             <h3>Pindai bahan dari kamera</h3>
             <p>Kamera mengenali beberapa bahan umum. Hasil pindai bisa kamu cek, ubah, atau lengkapi secara manual.</p>
-            <div class="step-tag">98% Akurasi</div>
+            <div class="step-tag">Bisa dikoreksi</div>
           </div>
           <div class="step-connector"></div>
           <div class="step-card" data-step="3">

@@ -1030,11 +1030,23 @@ function generateAIResponse(message) {
   ])];
   const asksForRecipe = /\b(resep|masak|masakan|makanan|ide|buat apa|bikin apa|menu)\b/.test(normalized);
   if (availableIngredients.length && (asksForRecipe || availableIngredients.some(item => normalized.includes(item)))) {
+    const cleanIngredient = value => value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+    const mentionsIngredient = (ingredient, available) => {
+      const words = value => cleanIngredient(value).match(/\p{L}+/gu) || [];
+      const recipeWords = words(ingredient.replace(/^\S+\s*/, ''));
+      const wantedWords = words(available);
+      return wantedWords.length > 0 && recipeWords.some((_, index) =>
+        wantedWords.every((word, offset) => recipeWords[index + offset] === word));
+    };
     const rankedRecipes = RECIPES_DB.map(recipe => {
-      const recipeIngredients = recipe.ingredients.map(item => item.replace(/^\S+\s*/, '').toLowerCase());
-      const matched = availableIngredients.filter(available => recipeIngredients.some(ingredient => ingredient.includes(available) || available.includes(ingredient)));
-      return { recipe, matched, score: matched.length };
-    }).filter(item => item.score > 0).sort((a, b) => b.score - a.score || parseInt(a.recipe.time, 10) - parseInt(b.recipe.time, 10));
+      const matched = availableIngredients.filter(available => recipe.ingredients.some(ingredient => mentionsIngredient(ingredient, available)));
+      const asksProtein = /\b(protein|tinggi protein|banyak protein)\b/.test(normalized);
+      const asksQuick = /\b(cepat|kilat|sebentar|praktis|singkat)\b/.test(normalized);
+      const hasChicken = recipe.ingredients.some(ingredient => mentionsIngredient(ingredient, 'ayam'));
+      const meetsIntent = (!asksProtein || hasChicken || recipe.ingredients.some(ingredient => /telur|tempe|tahu|daging|ikan|kacang/i.test(ingredient))) &&
+        (!asksQuick || parseInt(recipe.time, 10) <= 30);
+      return { recipe, matched, score: matched.length, meetsIntent };
+    }).filter(item => item.score > 0 && item.meetsIntent).sort((a, b) => b.score - a.score || parseInt(a.recipe.time, 10) - parseInt(b.recipe.time, 10));
 
     const best = rankedRecipes[0];
     if (best) {
