@@ -595,100 +595,33 @@
     <div class="jelajahi-page">
       <div class="jelajahi-header">
         <button class="back-btn" onclick="showPage('home')">← Kembali</button>
-        <h1>📚 Jelajahi Resep</h1>
+        <h1>Jelajahi Resep</h1>
         <p>Temukan inspirasi masakan dari berbagai kategori</p>
       </div>
 
       <div class="container">
         <section class="jelajahi-section">
           <h2>Kategori Masakan</h2>
-          <div class="category-grid">
-            <div class="cat-card" onclick="filterByCategory('Sarapan')" style="--cat-color:#B65C3A">
-              <div class="cat-emoji">🌅</div>
-              <span>Sarapan</span>
-              <div class="cat-count">42 resep</div>
-            </div>
-            <div class="cat-card" onclick="filterByCategory('Makan Siang')" style="--cat-color:#D3A64F">
-              <div class="cat-emoji">☀️</div>
-              <span>Makan Siang</span>
-              <div class="cat-count">89 resep</div>
-            </div>
-            <div class="cat-card" onclick="filterByCategory('Makan Malam')" style="--cat-color:#788466">
-              <div class="cat-emoji">🌙</div>
-              <span>Makan Malam</span>
-              <div class="cat-count">76 resep</div>
-            </div>
-            <div class="cat-card" onclick="filterByCategory('Camilan')" style="--cat-color:#9B59B6">
-              <div class="cat-emoji">🍿</div>
-              <span>Camilan</span>
-              <div class="cat-count">54 resep</div>
-            </div>
-            <div class="cat-card" onclick="filterByCategory('Sup')" style="--cat-color:#E74C3C">
-              <div class="cat-emoji">🍲</div>
-              <span>Sup & Soto</span>
-              <div class="cat-count">38 resep</div>
-            </div>
-            <div class="cat-card" onclick="filterByCategory('Minuman')" style="--cat-color:#27AE60">
-              <div class="cat-emoji">🥤</div>
-              <span>Minuman</span>
-              <div class="cat-count">31 resep</div>
-            </div>
-            <div class="cat-card" onclick="filterByCategory('Dessert')" style="--cat-color:#F39C12">
-              <div class="cat-emoji">🍮</div>
-              <span>Dessert</span>
-              <div class="cat-count">29 resep</div>
-            </div>
-            <div class="cat-card" onclick="filterByCategory('Lauk')" style="--cat-color:#1ABC9C">
-              <div class="cat-emoji">🍳</div>
-              <span>Lauk Pauk</span>
-              <div class="cat-count">112 resep</div>
-            </div>
-          </div>
+          <div class="category-grid" id="exploreCategories"></div>
         </section>
 
         <section class="jelajahi-section">
-          <h2>⚡ Masak Cepat &lt; 15 Menit</h2>
-          <div class="quick-recipes-list">
-            <div class="qr-item" onclick="openRecipeModal('Telur Dadar Crispy','5 mnt','1 Porsi','210 kal',['🥚 Telur','🧅 Bawang','🌶️ Cabai','🧂 Garam','🫙 Minyak'],['Kocok telur dengan bumbu','Panaskan minyak','Tuang telur ke wajan','Masak hingga pinggir crispy','Lipat dan sajikan'])">
-              <div class="qr-emoji">🥚</div>
-              <div class="qr-info">
-                <span class="qr-name">Telur Dadar Crispy</span>
-                <span class="qr-meta">⏱ 5 mnt • 2 bahan</span>
-              </div>
-              <div class="qr-time">5 mnt</div>
-            </div>
-            <div class="qr-item" onclick="openRecipeModal('Mie Goreng Kilat','8 mnt','1 Porsi','380 kal',['🍜 Mie Instan','🥚 Telur','🥬 Sawi','🧄 Bawang Putih','🌶️ Cabai'],['Rebus mie al dente','Goreng telur orak-arik','Tumis bumbu + bawang','Masukkan mie tiriskan','Aduk semua bersama sawi'])">
-              <div class="qr-emoji">🍜</div>
-              <div class="qr-info">
-                <span class="qr-name">Mie Goreng Kilat</span>
-                <span class="qr-meta">⏱ 8 mnt • 5 bahan</span>
-              </div>
-              <div class="qr-time">8 mnt</div>
-            </div>
-            <div class="qr-item" onclick="openRecipeModal('Tahu Goreng Tepung','10 mnt','2 Porsi','180 kal',['🥚 Tahu','🌾 Tepung','🧄 Bawang Putih','🧂 Garam','🫙 Minyak'],['Potong tahu dadu','Buat adonan tepung bumbu','Celupkan tahu ke adonan','Goreng hingga kuning keemasan','Tiriskan dan sajikan'])">
-              <div class="qr-emoji">🟨</div>
-              <div class="qr-info">
-                <span class="qr-name">Tahu Goreng Tepung</span>
-                <span class="qr-meta">⏱ 10 mnt • 5 bahan</span>
-              </div>
-              <div class="qr-time">10 mnt</div>
-            </div>
-            <div class="qr-item" onclick="openRecipeModal('Sandwich Ayam Sisa','12 mnt','1 Porsi','420 kal',['🍞 Roti','🍗 Ayam Sisa','🥬 Selada','🍅 Tomat','🫙 Mayo'],['Sobek/iris ayam sisa','Olesi roti dengan mayo','Susun selada dan tomat','Letakkan ayam di atasnya','Tutup roti dan sajikan'])">
-              <div class="qr-emoji">🥪</div>
-              <div class="qr-info">
-                <span class="qr-name">Sandwich Ayam Sisa</span>
-                <span class="qr-meta">⏱ 12 mnt • 5 bahan</span>
-              </div>
-              <div class="qr-time">12 mnt</div>
-            </div>
-          </div>
+          <h2>Masak praktis, 30 menit atau kurang</h2>
+          <p class="explore-results-count" id="quickRecipesCount"></p>
+          <div class="quick-recipes-list" id="quickRecipesList"></div>
         </section>
 
         <section class="jelajahi-section">
-          <h2>🥄 ≤ 5 Bahan Saja</h2>
+          <h2>Resep dengan 5 bahan atau kurang</h2>
           <div class="recipes-grid mini" id="fiveBahanGrid">
             <!-- populated by JS -->
           </div>
+        </section>
+
+        <section class="jelajahi-section explore-results" id="exploreResults">
+          <h2 id="exploreResultsTitle">Semua resep</h2>
+          <p id="exploreResultsCount" class="explore-results-count"></p>
+          <div class="recipes-grid" id="exploreResultsGrid"></div>
         </section>
       </div>
     </div>

@@ -268,6 +268,19 @@ let foodDetectionModel = null;
 let demoRunning = false;
 let currentChatRecipeIdx = null;
 let awaitingSubstitutionIngredient = false;
+let selectedExploreCategory = 'all';
+
+const EXPLORE_CATEGORIES = [
+  { id: 'all', label: 'Semua resep', color: '#B65C3A', matches: () => true },
+  { id: 'bali', label: 'Masakan Bali', color: '#788466', matches: recipe => recipe.tags.includes('Bali') },
+  { id: 'quick', label: '30 menit atau kurang', color: '#D3A64F', matches: recipe => parseInt(recipe.time, 10) <= 30 },
+  { id: 'soups', label: 'Sup dan berkuah', color: '#A96F4C', matches: recipe => recipe.tags.includes('Berkuah') },
+  { id: 'chicken', label: 'Menu ayam', color: '#8B7653', matches: recipe => recipe.title.toLowerCase().includes('ayam') || recipe.ingredients.some(item => /\bayam\b/i.test(item)) },
+  { id: 'snacks', label: 'Camilan', color: '#B97859', matches: recipe => recipe.tags.includes('Camilan') },
+  { id: 'noodles', label: 'Mi dan pasta', color: '#6F8061', matches: recipe => recipe.tags.includes('Mi') || recipe.tags.includes('Pasta') || /\b(mie|mi|ramen|spaghetti|pasta)\b/i.test(recipe.title) },
+  { id: 'vegetarian', label: 'Tanpa daging', color: '#87906C', matches: recipe => recipe.tags.includes('Vegetarian') },
+  { id: 'favorites', label: 'Favorit', color: '#C28B45', matches: recipe => recipe.tags.includes('Favorit') }
+];
 
 // AI Response database
 const AI_RESPONSES = {
@@ -749,25 +762,77 @@ function setFilter(filter, el) {
   renderRecipesGrid();
 }
 
-function filterByCategory(cat) {
-  showPage('resep');
-  setTimeout(() => {
-    const searchEl = document.getElementById('recipeSearch');
-    if (searchEl) {
-      searchEl.value = cat;
-      filterRecipes();
-    }
-  }, 100);
+function getExploreRecipes(categoryId = selectedExploreCategory) {
+  const category = EXPLORE_CATEGORIES.find(item => item.id === categoryId) || EXPLORE_CATEGORIES[0];
+  return RECIPES_DB.filter(category.matches);
+}
+
+function filterByCategory(categoryId) {
+  selectedExploreCategory = categoryId;
+  renderExploreResults();
+  document.querySelectorAll('.cat-card').forEach(button => {
+    const active = button.dataset.category === categoryId;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+  document.getElementById('exploreResults')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // ============================================================
 // JELAJAHI GRID
 // ============================================================
 function renderJelajahiGrid() {
-  const grid = document.getElementById('fiveBahanGrid');
-  if (!grid) return;
-  const fiveBahan = RECIPES_DB.filter(r => r.ingredients.length <= 5);
-  grid.innerHTML = fiveBahan.map(r => createRecipeCardHTML(r)).join('');
+  const categoryGrid = document.getElementById('exploreCategories');
+  if (!categoryGrid) return;
+
+  categoryGrid.innerHTML = EXPLORE_CATEGORIES.map(category => {
+    const count = RECIPES_DB.filter(category.matches).length;
+    const active = category.id === selectedExploreCategory;
+    return `<button class="cat-card${active ? ' active' : ''}" type="button" data-category="${category.id}" aria-pressed="${active}" onclick="filterByCategory('${category.id}')" style="--cat-color:${category.color}">
+      <span class="cat-swatch" aria-hidden="true"></span>
+      <span class="cat-name">${category.label}</span>
+      <span class="cat-count">${count} resep</span>
+    </button>`;
+  }).join('');
+
+  const quickList = document.getElementById('quickRecipesList');
+  if (quickList) {
+    const quickRecipes = RECIPES_DB.filter(recipe => parseInt(recipe.time, 10) <= 30)
+      .sort((a, b) => parseInt(a.time, 10) - parseInt(b.time, 10));
+    const quickCount = document.getElementById('quickRecipesCount');
+    if (quickCount) quickCount.textContent = `Menampilkan ${Math.min(4, quickRecipes.length)} dari ${quickRecipes.length} resep`;
+    quickList.innerHTML = quickRecipes.length
+      ? quickRecipes.slice(0, 4).map(recipe => `<button class="qr-item" type="button" onclick="openRecipeByIndex(${RECIPES_DB.indexOf(recipe)})">
+          <span class="qr-emoji">${recipe.emoji}</span>
+          <span class="qr-info"><span class="qr-name">${recipe.title}</span><span class="qr-meta">${recipe.difficulty} · ${recipe.ingredients.length} bahan</span></span>
+          <span class="qr-time">${recipe.time}</span>
+        </button>`).join('')
+      : '<p class="explore-empty">Belum ada resep singkat di katalog.</p>';
+  }
+
+  const fiveBahanGrid = document.getElementById('fiveBahanGrid');
+  if (fiveBahanGrid) {
+    const fiveBahan = RECIPES_DB.filter(recipe => recipe.ingredients.length <= 5);
+    fiveBahanGrid.innerHTML = fiveBahan.length
+      ? fiveBahan.map(recipe => createRecipeCardHTML(recipe)).join('')
+      : '<p class="explore-empty">Belum ada resep dengan lima bahan atau kurang.</p>';
+  }
+  renderExploreResults();
+}
+
+function renderExploreResults() {
+  const title = document.getElementById('exploreResultsTitle');
+  const count = document.getElementById('exploreResultsCount');
+  const grid = document.getElementById('exploreResultsGrid');
+  const category = EXPLORE_CATEGORIES.find(item => item.id === selectedExploreCategory) || EXPLORE_CATEGORIES[0];
+  const recipes = getExploreRecipes(category.id);
+  if (title) title.textContent = category.label;
+  if (count) count.textContent = `${recipes.length} resep dari katalog`;
+  if (grid) {
+    grid.innerHTML = recipes.length
+      ? recipes.map(recipe => createRecipeCardHTML(recipe)).join('')
+      : '<p class="explore-empty">Belum ada resep dalam kategori ini.</p>';
+  }
 }
 
 // ============================================================
