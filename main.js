@@ -949,6 +949,38 @@ function sendChat() {
 function generateAIResponse(message) {
   const lowerMsg = message.toLowerCase();
   const normalized = lowerMsg.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const textHasPhrase = (text, phrase) => {
+    const textWords = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').match(/\p{L}+/gu) || [];
+    const phraseWords = phrase.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').match(/\p{L}+/gu) || [];
+    return phraseWords.length > 0 && textWords.some((_, index) =>
+      phraseWords.every((word, offset) => textWords[index + offset] === word));
+  };
+  const substitutionAdvice = {
+    santan: 'coba susu cair atau santan bubuk yang dilarutkan. Untuk masakan gurih, susu oat tanpa gula juga bisa dipakai.',
+    kecap: 'campurkan sedikit garam dengan gula merah dan air. Rasanya tidak persis sama, jadi tambahkan sedikit demi sedikit.',
+    terasi: 'lewati saja atau tambahkan sedikit ikan asin/udang kering yang dihaluskan jika tersedia.',
+    'daun salam': 'gunakan daun jeruk atau sedikit thyme untuk aroma; kalau tidak ada, bumbunya tetap bisa dimasak tanpa daun salam.',
+    kemiri: 'gunakan sedikit kacang tanah sangrai atau skip saja. Tekstur bumbu akan sedikit berbeda.',
+    selada: 'pakai kol iris tipis, timun, atau sawi muda. Untuk isian burger, keringkan sayuran dulu supaya rotinya tidak lembek.',
+    ayam: 'gunakan tempe, tahu, jamur tiram, atau ikan sesuai jenis masakannya. Atur kembali waktu masak sampai bahan pengganti matang.',
+    telur: 'untuk adonan, coba 1 sdm maizena + 2 sdm air per telur. Untuk lauk, tahu hancur bisa jadi pengganti yang lebih mengenyangkan.',
+    'roti burger': 'pakai roti tawar panggang, English muffin, atau nasi sebagai lauk patty.',
+    patty: 'gunakan ayam cincang, daging cincang, tempe, atau jamur yang dibentuk pipih.',
+    tomat: 'gunakan paprika panggang atau sedikit saus tomat. Jika hanya butuh kesegaran, tambahkan timun.',
+    keju: 'boleh dilewati, atau gunakan sedikit susu/saus putih untuk memberi rasa gurih.',
+    cabai: 'gunakan lada hitam atau paprika bubuk untuk rasa hangat tanpa pedas yang kuat.',
+    susu: 'gunakan susu kedelai tanpa gula atau air/kaldu, tergantung resepnya.',
+    bawang: 'gunakan bawang putih atau bawang merah yang tersedia; bila keduanya habis, bubuk bawang bisa dipakai sedikit saja.'
+  };
+  const substitutionFor = ingredient => {
+    const known = Object.keys(substitutionAdvice).find(name => textHasPhrase(ingredient, name));
+    if (known) return substitutionAdvice[known];
+    if (/sayur|bayam|kangkung|brokoli|sawi|kol|wortel|selada/.test(ingredient)) return 'ganti dengan sayuran lain yang tekstur dan waktu masaknya mirip, seperti kol, sawi, atau wortel. Masukkan sayuran keras lebih dulu.';
+    return 'sebutkan jenis masakannya supaya aku bisa pilih pengganti yang rasanya dan fungsinya paling mendekati. Kalau bahan ini hanya pelengkap, biasanya bisa dilewati.';
+  };
+  const explicitRecipeRequest = /\b(resep|masak|menu|mau|bikin|buat)\b/.test(normalized) ||
+    RECIPES_DB.some(recipe => textHasPhrase(normalized, recipe.title)) ||
+    /\b(ayam\s+betutu|ayam\s+sere\s+lemo|ayam\s+sisit\s+sere\s+lemo|ayam\s+bakar\s+(?:khas\s+)?bali|coto|babi\s+guling|lawar|fried\s+chicken|pizza|burger|spaghetti|ramen|sushi|taco|pancake|teriyaki|sate\s+lilit)\b/.test(normalized);
 
   // Handle conversation before looking for ingredients, so a greeting never
   // falls through to an unrelated recipe or generic zero-waste tip.
@@ -967,18 +999,16 @@ function generateAIResponse(message) {
   }
 
   const asksSubstitution = /\b(ganti|diganti|pengganti|alternatif|substitusi|tidak ada|tidak punya|nggak ada|ga ada|habis|kehabisan)\b/.test(normalized);
-  if (awaitingSubstitutionIngredient && !asksSubstitution) {
-    const suppliedIngredient = Object.keys(AI_RESPONSES.substitusi).find(item => normalized.includes(item));
+  if (awaitingSubstitutionIngredient && !asksSubstitution && !explicitRecipeRequest) {
+    const suppliedIngredient = Object.keys(substitutionAdvice).find(item => textHasPhrase(normalized, item)) || message.trim().replace(/[?.!,]+$/, '');
     awaitingSubstitutionIngredient = false;
-    if (suppliedIngredient) {
-      return { type: 'substitusi', text: `Untuk **${suppliedIngredient}**, ${AI_RESPONSES.substitusi[suppliedIngredient]}`, tip: 'Sesuaikan takaran pengganti sedikit demi sedikit sambil mencicipi.' };
-    }
+    return { type: 'substitusi', text: `Untuk **${suppliedIngredient}**, ${substitutionFor(suppliedIngredient)}`, tip: 'Sesuaikan takaran sedikit demi sedikit dan cicipi sebelum menambah lagi.' };
   }
   if (asksSubstitution) {
-    const missingIngredient = Object.keys(AI_RESPONSES.substitusi).find(item => normalized.includes(item));
+    const missingIngredient = Object.keys(substitutionAdvice).find(item => textHasPhrase(normalized, item));
     if (missingIngredient) {
       awaitingSubstitutionIngredient = false;
-      return { type: 'substitusi', text: `Untuk **${missingIngredient}**, ${AI_RESPONSES.substitusi[missingIngredient]}`, tip: 'Sesuaikan takaran pengganti sedikit demi sedikit sambil mencicipi.' };
+      return { type: 'substitusi', text: `Untuk **${missingIngredient}**, ${substitutionFor(missingIngredient)}`, tip: 'Sesuaikan takaran sedikit demi sedikit dan cicipi sebelum menambah lagi.' };
     }
     awaitingSubstitutionIngredient = true;
     return { type: 'text', text: 'Bisa banget! Bahan apa yang lagi kosong? Sebutkan namanya, nanti aku kasih pengganti yang paling masuk akal.' };
@@ -986,6 +1016,7 @@ function generateAIResponse(message) {
 
   const requestedRecipe = RECIPES_DB.find(recipe => normalized.includes(recipe.title.toLowerCase()) ||
     (recipe.title === 'Coto Makassar' && /\bcoto\b/.test(normalized)) ||
+    (recipe.title === 'Ayam Betutu Bali' && /\bayam\s+betutu\b/.test(normalized)) ||
     (recipe.title === 'Ayam Sere Lemo (Ayam Sisit Bali)' && /\b(ayam\s+sere\s+lemo|ayam\s+sisit\s+sere\s+lemo|ayam\s+serli)\b/.test(normalized)) ||
     (recipe.title === 'Ayam Bakar Bumbu Bali' && /\bayam\s+bakar\s+(?:khas\s+)?bali\b/.test(normalized)) ||
     (recipe.title === 'Ayam Bakar Kecap' && /\bayam\s+bakar\b/.test(normalized)) ||
@@ -1025,28 +1056,26 @@ function generateAIResponse(message) {
     ...detectedIngredients.map(item => item.name.toLowerCase()),
     ...( /\b(bun|buns|burger\s+bun|roti\s+burger)\b/.test(normalized) ? ['roti burger'] : [] ),
     ...( /\b(patty|patti|beef\s+patty|chicken\s+patty|patty\s+burger)\b/.test(normalized) ? ['patty'] : [] ),
-    ...Object.keys(AI_RESPONSES.keywords).filter(item => item !== 'default' && normalized.includes(item)),
-    ...RECIPES_DB.flatMap(recipe => recipe.ingredients.map(item => item.replace(/^\S+\s*/, '').toLowerCase()).filter(item => normalized.includes(item)))
+    ...Object.keys(AI_RESPONSES.keywords).filter(item => item !== 'default' && textHasPhrase(normalized, item)),
+    ...RECIPES_DB.flatMap(recipe => recipe.ingredients.map(item => item.replace(/^\S+\s*/, '').toLowerCase()).filter(item => textHasPhrase(normalized, item)))
   ])];
   const asksForRecipe = /\b(resep|masak|masakan|makanan|ide|buat apa|bikin apa|menu)\b/.test(normalized);
   if (availableIngredients.length && (asksForRecipe || availableIngredients.some(item => normalized.includes(item)))) {
-    const cleanIngredient = value => value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
-    const mentionsIngredient = (ingredient, available) => {
-      const words = value => cleanIngredient(value).match(/\p{L}+/gu) || [];
-      const recipeWords = words(ingredient.replace(/^\S+\s*/, ''));
-      const wantedWords = words(available);
-      return wantedWords.length > 0 && recipeWords.some((_, index) =>
-        wantedWords.every((word, offset) => recipeWords[index + offset] === word));
-    };
+    const mentionsIngredient = (ingredient, available) => textHasPhrase(ingredient.replace(/^\S+\s*/, ''), available);
     const rankedRecipes = RECIPES_DB.map(recipe => {
-      const matched = availableIngredients.filter(available => recipe.ingredients.some(ingredient => mentionsIngredient(ingredient, available)));
+      const matched = recipe.ingredients.filter(ingredient => availableIngredients.some(available => mentionsIngredient(ingredient, available)));
+      const hasMainIngredient = recipe.ingredients.slice(0, 2).some(ingredient => availableIngredients.some(available => mentionsIngredient(ingredient, available)));
       const asksProtein = /\b(protein|tinggi protein|banyak protein)\b/.test(normalized);
       const asksQuick = /\b(cepat|kilat|sebentar|praktis|singkat)\b/.test(normalized);
       const hasChicken = recipe.ingredients.some(ingredient => mentionsIngredient(ingredient, 'ayam'));
       const meetsIntent = (!asksProtein || hasChicken || recipe.ingredients.some(ingredient => /telur|tempe|tahu|daging|ikan|kacang/i.test(ingredient))) &&
         (!asksQuick || parseInt(recipe.time, 10) <= 30);
-      return { recipe, matched, score: matched.length, meetsIntent };
-    }).filter(item => item.score > 0 && item.meetsIntent).sort((a, b) => b.score - a.score || parseInt(a.recipe.time, 10) - parseInt(b.recipe.time, 10));
+      return { recipe, matched, score: matched.length, meetsIntent, hasMainIngredient };
+    }).filter(item => item.score > 0 && item.meetsIntent &&
+      (availableIngredients.length > 1 || item.hasMainIngredient) &&
+      (item.recipe.title !== 'Burger Ayam Rumahan' || /\b(burger|hamburger|bun|patty)\b/.test(normalized)) &&
+      (item.recipe.title !== 'Fried Chicken Rumahan' || /\b(fried chicken|crispy|krispi|goreng)\b/.test(normalized))
+    ).sort((a, b) => b.score - a.score || parseInt(a.recipe.time, 10) - parseInt(b.recipe.time, 10));
 
     const best = rankedRecipes[0];
     if (best) {
@@ -1063,6 +1092,10 @@ function generateAIResponse(message) {
         text: `Dari pesanmu, bahan yang cocok adalah **${names}**. Ide yang paling mendekati: **${best.recipe.title}** (${best.recipe.time}, ${best.recipe.difficulty.toLowerCase()}). Resep ini memakai ${best.matched.join(', ')}. Mau aku bantu sesuaikan langkahnya dengan bahan yang kamu punya?`,
         recipe: { title: best.recipe.title, time: best.recipe.time, idx: RECIPES_DB.indexOf(best.recipe) }
       };
+    }
+    if (availableIngredients.length) {
+      const names = availableIngredients.join(', ');
+      return { type: 'text', text: `Aku baru menangkap ${names}. Itu belum cukup untuk memilih resep utama dengan pas. Ada bahan lain yang bisa dipakai, atau kamu sedang mencari pengganti untuk bahan ini?` };
     }
   }
 
@@ -1178,6 +1211,50 @@ function hideQuickPrompts() {
   if (qp) qp.style.display = 'none';
 }
 
+function initQuickPromptDragging() {
+  const strip = document.querySelector('.qp-scroll');
+  if (!strip || strip.dataset.dragReady) return;
+  strip.dataset.dragReady = 'true';
+
+  let startX = 0;
+  let startScrollLeft = 0;
+  let isDragging = false;
+  let didMove = false;
+
+  strip.addEventListener('pointerdown', event => {
+    if (event.pointerType !== 'mouse' || event.button !== 0) return;
+    startX = event.clientX;
+    startScrollLeft = strip.scrollLeft;
+    isDragging = true;
+    didMove = false;
+  });
+
+  window.addEventListener('pointermove', event => {
+    if (!isDragging) return;
+    const distance = event.clientX - startX;
+    if (Math.abs(distance) > 5) {
+      didMove = true;
+      strip.classList.add('dragging');
+      strip.scrollLeft = startScrollLeft - distance;
+    }
+  });
+
+  const stopDragging = () => {
+    if (!isDragging) return;
+    isDragging = false;
+    strip.classList.remove('dragging');
+    if (didMove) strip.dataset.draggedAt = String(Date.now());
+  };
+  window.addEventListener('pointerup', stopDragging);
+  window.addEventListener('pointercancel', stopDragging);
+  strip.addEventListener('click', event => {
+    if (Date.now() - Number(strip.dataset.draggedAt || 0) < 250) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
+  }, true);
+}
+
 function formatBotText(text) {
   return text
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
@@ -1225,6 +1302,7 @@ document.addEventListener('keydown', (e) => {
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
+  initQuickPromptDragging();
   initParticles();
   initScrollEffects();
   animateFooterCounter();

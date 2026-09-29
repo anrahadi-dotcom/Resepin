@@ -1404,9 +1404,16 @@ body[data-theme="dark"] .hero-food-bowl { background: #3a332b; }
   gap: 8px;
   overflow-x: auto;
   padding-bottom: 4px;
-  scrollbar-width: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  cursor: grab;
+  user-select: none;
+  touch-action: pan-x;
 }
-.qp-scroll::-webkit-scrollbar { display: none; }
+.qp-scroll.dragging { cursor: grabbing; scroll-behavior: auto; }
+.qp-scroll::-webkit-scrollbar { height: 5px; }
+.qp-scroll::-webkit-scrollbar-track { background: transparent; }
+.qp-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 .qp-btn {
   flex-shrink: 0;
   padding: 8px 14px;
