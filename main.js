@@ -751,55 +751,71 @@ function sendChat() {
 
 function generateAIResponse(message) {
   const lowerMsg = message.toLowerCase();
+  const normalized = lowerMsg.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
-  // Check for substitusi
-  for (const [ingredient, substitusi] of Object.entries(AI_RESPONSES.substitusi)) {
-    if (lowerMsg.includes(ingredient) || lowerMsg.includes('ganti') || lowerMsg.includes('substitusi')) {
-      return {
-        type: 'substitusi',
-        text: `Tentu! Untuk **${ingredient}**, ${substitusi}`,
-        tip: `💡 Substitusi bahan adalah seni memasak yang kreatif!`
-      };
-    }
+  // Handle conversation before looking for ingredients, so a greeting never
+  // falls through to an unrelated recipe or generic zero-waste tip.
+  if (/^(hai|halo|hello|hi|hei|pagi|siang|sore|malam)(\b|[!?. ,])/i.test(normalized.trim())) {
+    return { type: 'text', text: 'Hai! 👋 Aku Chef Resepin. Kamu lagi punya bahan apa, atau mau tanya soal resep dan substitusi?' };
+  }
+  if (/\b(terima kasih|makasih|thanks|thank you)\b/.test(normalized)) {
+    return { type: 'text', text: 'Sama-sama! 😊 Kalau ada bahan lain atau ingin mengubah resepnya, bilang saja ya.' };
+  }
+  if (/\b(kamu siapa|siapa kamu|bisa apa|bant[u]? apa|help|tolong)\b/.test(normalized)) {
+    return { type: 'text', text: 'Aku Chef Resepin. Aku bisa bantu mencari ide resep dari bahan yang tersedia, memberi tips memasak, dan menyarankan pengganti bahan. Coba sebutkan bahan atau pertanyaanmu.' };
   }
 
-  // Check for ingredients mentioned
-  for (const [key, data] of Object.entries(AI_RESPONSES.keywords)) {
-    if (key !== 'default' && lowerMsg.includes(key)) {
+  // Only offer a substitution for an ingredient actually mentioned.
+  const asksSubstitution = /\b(ganti|pengganti|substitusi|tidak ada|nggak ada|ga ada|habis|kehabisan)\b/.test(normalized);
+  if (asksSubstitution) {
+    const missingIngredient = Object.keys(AI_RESPONSES.substitusi).find(item => normalized.includes(item));
+    if (missingIngredient) {
+      return { type: 'substitusi', text: `Untuk **${missingIngredient}**, ${AI_RESPONSES.substitusi[missingIngredient]}`, tip: 'Sesuaikan takaran pengganti sedikit demi sedikit sambil mencicipi.' };
+    }
+    return { type: 'text', text: 'Bahan apa yang ingin kamu ganti? Sebutkan namanya, nanti aku carikan alternatif yang cocok.' };
+  }
+
+  // Match recipes against ingredients from this message and the scan list.
+  const availableIngredients = [...new Set([
+    ...detectedIngredients.map(item => item.name.toLowerCase()),
+    ...Object.keys(AI_RESPONSES.keywords).filter(item => item !== 'default' && normalized.includes(item)),
+    ...RECIPES_DB.flatMap(recipe => recipe.ingredients.map(item => item.replace(/^\S+\s*/, '').toLowerCase()).filter(item => normalized.includes(item)))
+  ])];
+  const asksForRecipe = /\b(resep|masak|masakan|makanan|ide|buat apa|bikin apa|menu)\b/.test(normalized);
+  if (availableIngredients.length && (asksForRecipe || availableIngredients.some(item => normalized.includes(item)))) {
+    const rankedRecipes = RECIPES_DB.map(recipe => {
+      const recipeIngredients = recipe.ingredients.map(item => item.replace(/^\S+\s*/, '').toLowerCase());
+      const matched = availableIngredients.filter(available => recipeIngredients.some(ingredient => ingredient.includes(available) || available.includes(ingredient)));
+      return { recipe, matched, score: matched.length };
+    }).filter(item => item.score > 0).sort((a, b) => b.score - a.score || parseInt(a.recipe.time, 10) - parseInt(b.recipe.time, 10));
+
+    const best = rankedRecipes[0];
+    if (best) {
+      const names = availableIngredients.join(', ');
       return {
         type: 'recipe',
-        text: `Wah, kamu punya **${key}**! Aku rekomendasikan:\n\n**${data.recipe}** (⏱ ${data.time})\n\n${data.tip}`,
-        recipe: {
-          title: data.recipe,
-          time: data.time,
-          idx: Math.floor(Math.random() * RECIPES_DB.length)
-        }
+        text: `Dari pesanmu, bahan yang cocok adalah **${names}**. Ide yang paling mendekati: **${best.recipe.title}** (${best.recipe.time}, ${best.recipe.difficulty.toLowerCase()}). Resep ini memakai ${best.matched.join(', ')}. Mau aku bantu sesuaikan langkahnya dengan bahan yang kamu punya?`,
+        recipe: { title: best.recipe.title, time: best.recipe.time, idx: RECIPES_DB.indexOf(best.recipe) }
       };
     }
   }
 
-  // Check for bahan sisa context
-  if (detectedIngredients.length > 0) {
+  if (asksForRecipe && detectedIngredients.length) {
     const names = detectedIngredients.map(i => i.name).join(', ');
-    const randRecipe = RECIPES_DB[Math.floor(Math.random() * RECIPES_DB.length)];
-    return {
-      type: 'recipe',
-      text: `Dengan bahan yang kamu punya (${names}), aku sarankan membuat:\n\n**${randRecipe.title}** (⏱ ${randRecipe.time})\n\nResep ini cocok banget untuk bahan sisa dan tidak memerlukan banyak bahan tambahan!`,
-      recipe: {
-        title: randRecipe.title,
-        time: randRecipe.time,
-        idx: RECIPES_DB.indexOf(randRecipe)
-      }
-    };
+    const ranked = RECIPES_DB.map(recipe => ({ recipe, score: recipe.ingredients.filter(ingredient => detectedIngredients.some(item => ingredient.toLowerCase().includes(item.name.toLowerCase()))).length }))
+      .sort((a, b) => b.score - a.score || parseInt(a.recipe.time, 10) - parseInt(b.recipe.time, 10));
+    const best = ranked[0];
+    if (best && best.score) return { type: 'recipe', text: `Dari daftar bahanmu (${names}), coba **${best.recipe.title}** (${best.recipe.time}). Resep ini paling banyak memakai bahan yang sudah tersedia.`, recipe: { title: best.recipe.title, time: best.recipe.time, idx: RECIPES_DB.indexOf(best.recipe) } };
   }
 
-  // Default responses
-  const defaults = [
-    { text: "Coba ceritakan bahan apa yang kamu punya di dapur! Aku akan bantu carikan resep yang cocok 🍳", type: 'text' },
-    { text: "Untuk masakan sehat dan cepat, aku rekomendasikan tumis-tumisan dengan bahan segar. Bahan apa yang tersedia?", type: 'text' },
-    { text: "Prinsip zero waste cooking: gunakan semua bagian bahan! Misalnya batang brokoli bisa dijadikan sup.", type: 'text' },
-  ];
-  return defaults[Math.floor(Math.random() * defaults.length)];
+  if (/\b(tips|cara memasak|cara masak|supaya|agar)\b/.test(normalized)) {
+    return { type: 'text', text: 'Tentu, aku bantu. Bahan atau masakan apa yang sedang kamu siapkan? Dengan detail itu aku bisa memberi tips yang pas.' };
+  }
+
+  return {
+    type: 'text',
+    text: `Aku menangkap pesanmu: “${escapeHtml(message)}”. Aku khusus membantu soal resep dan memasak. Ceritakan bahan yang tersedia atau tanyakan resep, cara memasak, maupun pengganti bahan supaya aku bisa memberi saran yang tepat.`
+  };
 }
 
 function appendChatMessage(text, role) {
