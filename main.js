@@ -264,7 +264,6 @@ const RECIPES_DB = [
 let detectedIngredients = [];
 let currentFilter = 'all';
 let cameraStream = null;
-let foodDetectionModel = null;
 let demoRunning = false;
 let currentChatRecipeIdx = null;
 let awaitingSubstitutionIngredient = false;
@@ -539,40 +538,48 @@ async function captureAndDetect() {
 
   const button = document.getElementById('captureBtn');
   button.disabled = true;
-  updateDetectionStatus('active', 'AI sedang memeriksa foto…');
+  updateDetectionStatus('active', 'Memeriksa foto dengan model bahan...');
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
   canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
   boxes.innerHTML = '';
 
   try {
-    if (!foodDetectionModel) {
-      if (!window.cocoSsd) throw new Error('Model deteksi belum tersedia. Periksa koneksi internet.');
-      foodDetectionModel = await cocoSsd.load();
-    }
-    const predictions = await foodDetectionModel.detect(canvas);
-    const foodLabels = {
-      apple: ['🍎', 'Apel'], banana: ['🍌', 'Pisang'], orange: ['🍊', 'Jeruk'],
-      broccoli: ['🥦', 'Brokoli'], carrot: ['🥕', 'Wortel'],
-      'hot dog': ['🌭', 'Hot dog'], pizza: ['🍕', 'Pizza'],
-      sandwich: ['🥪', 'Sandwich'], cake: ['🍰', 'Kue'], donut: ['🍩', 'Donat']
+    const imageBlob = await new Promise((resolve, reject) => {
+      canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('Foto tidak bisa disiapkan.')), 'image/jpeg', 0.9);
+    });
+    const formData = new FormData();
+    formData.append('file', imageBlob, 'bahan.jpg');
+    const response = await fetch('/api/detect', { method: 'POST', body: formData });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result.detail || 'Deteksi gagal. Pastikan server Resepin sedang berjalan.');
+
+    const foodEmojis = {
+      'Ayam': '🍗', 'Bawang Bombai': '🧅', 'Bawang Merah': '🧅', 'Bawang Putih': '🧄',
+      'Bayam': '🥬', 'Biji Kemiri': '🌰', 'Cabai Hijau': '🫑', 'Cabai Merah': '🌶️',
+      'Daging Sapi': '🥩', 'Daun Bawang': '🌿', 'Ikan': '🐟', 'Jagung': '🌽', 'Jahe': '🫚',
+      'Kacang Panjang': '🫘', 'Kangkung': '🥬', 'Kencur': '🌿', 'Kentang': '🥔',
+      'Ketumbar': '🌿', 'Kol': '🥬', 'Kunyit': '🫚', 'Lada': '⚫', 'Lengkuas': '🌿',
+      'Selada': '🥬', 'Tahu': '🟨', 'Telur': '🥚', 'Tempe': '🧱', 'Terong': '🍆',
+      'Tomat': '🍅', 'Udang': '🦐', 'Wortel': '🥕'
     };
-    const matches = predictions.filter(item => foodLabels[item.class] && item.score >= 0.35);
-    matches.forEach(({ class: label, score, bbox }) => {
-      const [emoji, name] = foodLabels[label];
-      const [x, y, width, height] = bbox;
+    const matches = result.detections || [];
+    matches.forEach(({ label, confidence, bbox }) => {
+      const emoji = foodEmojis[label] || '🥗';
+      const name = label;
+      const [x1, y1, x2, y2] = bbox;
       const box = document.createElement('div');
       box.className = 'det-box';
-      box.style.cssText = `left:${x / canvas.width * 100}%;top:${y / canvas.height * 100}%;width:${width / canvas.width * 100}%;height:${height / canvas.height * 100}%`;
+      box.style.cssText = `left:${x1 / canvas.width * 100}%;top:${y1 / canvas.height * 100}%;width:${(x2 - x1) / canvas.width * 100}%;height:${(y2 - y1) / canvas.height * 100}%`;
       const caption = document.createElement('div');
       caption.className = 'det-box-label';
-      caption.textContent = `${emoji} ${name} ${Math.round(score * 100)}%`;
+      caption.textContent = `${emoji} ${name} ${Math.round(confidence * 100)}%`;
       box.appendChild(caption);
       boxes.appendChild(box);
-      addIngredientItem(emoji, name, Math.round(score * 100));
+      addIngredientItem(emoji, name, Math.round(confidence * 100));
     });
     if (matches.length) {
-      const confidence = Math.round(matches.reduce((sum, item) => sum + item.score, 0) / matches.length * 100);
+      const confidence = Math.round(matches.reduce((sum, item) => sum + item.confidence, 0) / matches.length * 100);
       updateDetectionStatus('detected', `${matches.length} bahan terdeteksi. Periksa hasilnya sebelum mencari resep.`);
       showConfidenceBar(confidence);
       showToast('Foto berhasil dipindai.', 'success');
@@ -580,8 +587,8 @@ async function captureAndDetect() {
       updateDetectionStatus('idle', 'Belum menemukan bahan yang didukung. Coba dekatkan objek atau tambah bahan secara manual.');
     }
   } catch (error) {
-    updateDetectionStatus('idle', error.message || 'Pemindaian gagal. Coba Mode Demo atau tambah bahan secara manual.');
-    showToast('Model deteksi tidak dapat dimuat.', 'error');
+    updateDetectionStatus('idle', error.message || 'Deteksi gagal. Pastikan server Resepin dan model PyTorch siap.');
+    showToast(error.message || 'Deteksi bahan gagal.', 'error');
   } finally {
     button.disabled = false;
   }

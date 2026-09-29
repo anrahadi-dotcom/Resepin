@@ -4,12 +4,19 @@ Website resep zero food waste: masukkan bahan sisa secara manual atau pindai obj
 
 ## Menjalankan
 
-Buka folder ini melalui server web lokal (contohnya Live Server di VS Code), lalu kunjungi alamat `localhost` yang diberikan. Kamera memerlukan izin pengguna dan secure context (`localhost` atau HTTPS). TensorFlow.js dan model COCO-SSD dimuat dari jsDelivr, jadi pemindaian ML memerlukan koneksi internet.
+Deteksi bahan memakai checkpoint PyTorch milik project, jadi jalankan backend lokal untuk membuka situs dan memproses foto:
+
+```powershell
+python -m pip install -r requirements.txt
+python -m uvicorn server:app --host 127.0.0.1 --port 8000
+```
+
+Buka `http://127.0.0.1:8000`. Kamera memerlukan izin pengguna dan secure context (`localhost` memenuhi syarat ini). Jangan membuka `index.html` langsung sebagai file atau memakai Live Server; frontend memanggil API lokal pada origin yang sama.
 
 ## Bagian aplikasi
 
 - Beranda: pengenalan produk dan resep unggulan.
-- Scan Bahan: kamera, deteksi foto di browser, Mode Demo, input manual, dan daftar bahan.
+- Scan Bahan: kamera, deteksi foto melalui model PyTorch lokal, Mode Demo, input manual, dan daftar bahan.
 - Resep/Jelajahi: katalog resep, filter dan pencarian berdasarkan bahan.
 - Chef Resepin: asisten resep berbasis aturan lokal untuk ide awal, variasi, dan substitusi. Balasan resep menampilkan bahan dan langkah langsung di chat dengan tombol tindak lanjut.
 - Modal resep: detail bahan, langkah, serta penyimpanan lokal di browser.
@@ -20,9 +27,9 @@ Beranda → Scan Bahan → izinkan kamera → arahkan ke bahan → Ambil Foto �
 
 ## Implementasi dan batasan
 
-Antarmuka menggunakan HTML, CSS responsif, dan JavaScript tanpa proses build. Deteksi memakai TensorFlow.js dengan model COCO-SSD di browser. Model ini hanya mengenali kelas objek COCO tertentu; hasil perlu dikonfirmasi pengguna dan bahan yang tidak didukung bisa dimasukkan manual. Mode Demo selalu menghasilkan bahan contoh dan bukan deteksi ML.
+Antarmuka menggunakan HTML, CSS responsif, dan JavaScript tanpa proses build. FastAPI memuat `models/best.pt` menggunakan Ultralytics/PyTorch saat server mulai; checkpoint ini berisi 30 kelas bahan berbahasa Indonesia, yang juga dicatat di `data_classes.yaml`. Foto kamera dikirim ke endpoint lokal `/api/detect`, diproses di komputer yang menjalankan server, lalu dibuang setelah inferensi. File gambar tidak disimpan. Model mendeteksi objek sesuai kelas yang dipelajari; periksa hasilnya dan tambahkan bahan lain secara manual bila perlu. Mode Demo selalu menghasilkan bahan contoh dan bukan deteksi model.
 
-Saat ini situs tidak memiliki backend, server API, panggilan API AI, ataupun kunci rahasia. Respons Chef berasal dari katalog dan aturan JavaScript lokal. Deteksi foto memakai TensorFlow.js/COCO-SSD yang diunduh dari CDN dan dijalankan di browser; kode situs tidak mengunggah gambar atau video kamera ke server. Font juga dimuat dari Google Fonts. Untuk produksi, bila API AI kelak ditambahkan, panggil dari backend (misalnya Node.js + Express) agar kunci API tidak ditanam di browser. Backend juga dapat menyimpan akun, resep favorit, dan histori. Pertimbangkan model klasifikasi bahan makanan yang dilatih khusus bila cakupan deteksi bahan Indonesia perlu lebih luas.
+Server deteksi hanya menerima koneksi loopback dari komputer lokal, memeriksa origin permintaan, membatasi foto ke JPG/PNG/WebP hingga 10 MB, dan hanya menyajikan file frontend yang diperlukan. Checkpoint tidak bisa diunduh melalui web. Tidak ada kunci API atau panggilan layanan AI eksternal; Chef tetap memakai katalog dan aturan JavaScript lokal. Font masih dimuat dari Google Fonts.
 
 Katalog awal mencakup masakan rumahan, beberapa menu Bali (babi guling versi rumahan, ayam betutu, ayam sere lemo, ayam bakar, lawar sayur, sate lilit), serta hidangan populer seperti fried chicken, pizza, burger, pasta, ramen, sushi roll isi matang, taco, pancake, dan teriyaki. Katalog ini bukan ensiklopedia semua masakan; resep baru dapat ditambahkan ke `RECIPES_DB`.
 
