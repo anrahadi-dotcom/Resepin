@@ -61,8 +61,12 @@ class ResepinHandler(BaseHTTPRequestHandler):
 
         pages = {
             "/": ROOT / "index.html",
-            "/main.js": ROOT / "main.js",
-            "/style.css": ROOT / "style.css",
+            "/js/main.js": ROOT / "js" / "main.js",
+            "/js/recipes.js": ROOT / "js" / "recipes.js",
+            "/js/chef-prompts.js": ROOT / "js" / "chef-prompts.js",
+            "/js/chatbot.js": ROOT / "js" / "chatbot.js",
+            "/css/style.css": ROOT / "css" / "style.css",
+            "/css/responsive.css": ROOT / "css" / "responsive.css",
         }
         file_path = pages.get(path)
         if path.startswith("/assets/"):

@@ -60,6 +60,16 @@ Teman yang sudah menerima akses repo privat cukup menjalankan `git -C models pul
 - Chef Resepin: asisten resep berbasis aturan lokal untuk ide awal, variasi, dan substitusi. Balasan resep menampilkan bahan dan langkah langsung di chat dengan tombol tindak lanjut.
 - Modal resep: detail bahan, langkah, serta penyimpanan lokal di browser.
 
+## Struktur frontend
+
+- `index.html`: kerangka halaman dan urutan pemuatan stylesheet/script.
+- `css/style.css`: komponen, warna, dan gaya dasar.
+- `css/responsive.css`: breakpoint layar dan preferensi aksesibilitas.
+- `js/main.js`: navigasi halaman, kamera, katalog UI, dan interaksi umum.
+- `js/recipes.js`: data resep dan mapping foto.
+- `js/chef-prompts.js`: teks jawaban standar Chef Resepin.
+- `js/chatbot.js`: alur chat, pencocokan maksud, dan tampilan jawaban/resep.
+
 ## Alur pengguna
 
 Beranda → Scan Bahan → izinkan kamera → arahkan ke bahan → Ambil Foto → periksa/ubah bahan terdeteksi → Cari Resep atau Tanya Chef Resepin.
