@@ -14,6 +14,7 @@ import numpy as np
 from fastapi import FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse
 from starlette.concurrency import run_in_threadpool
+from starlette.staticfiles import StaticFiles
 from ultralytics import YOLO
 
 
@@ -147,3 +148,7 @@ async def frontend_script() -> FileResponse:
 @app.get("/style.css", include_in_schema=False)
 async def frontend_styles() -> FileResponse:
     return FileResponse(PROJECT_DIR / "style.css", media_type="text/css")
+
+
+# Foto hidangan yang sudah matang untuk kartu resep
+app.mount("/assets", StaticFiles(directory=str(PROJECT_DIR / "assets")), name="assets")

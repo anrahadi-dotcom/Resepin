@@ -6,6 +6,17 @@
 // ============================================================
 // DATA: Recipe Database
 // ============================================================
+// Foto: hidangan sudah matang / hasil akhir (/assets/img/<slug>.jpg)
+const RECIPE_IMAGES = {
+  1: "sup-jagung", 2: "nasi-goreng", 3: "tumis-kangkung", 4: "tempe-orek",
+  5: "capcay", 6: "soto-ayam", 7: "tahu-bacem", 8: "mie-goreng",
+  9: "pecel", 10: "balado-telur", 11: "sayur-lodeh", 12: "rendang",
+  13: "coto-makassar", 14: "babi-guling", 15: "ayam-betutu", 16: "ayam-sere-lemo",
+  17: "ayam-bakar-bali", 18: "lawar", 19: "ayam-bakar-kecap", 20: "fried-chicken",
+  21: "pizza-teflon", 22: "burger", 23: "spaghetti", 24: "ramen",
+  25: "sushi", 26: "taco", 27: "pancake", 28: "teriyaki", 29: "sate-lilit"
+};
+
 const RECIPES_DB = [
   {
     id: 1,
@@ -735,6 +746,35 @@ function renderRecipesGrid() {
   grid.innerHTML = filtered.length === 0
     ? `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-muted)"><div style="font-size:3rem;margin-bottom:16px">🍳</div><p>Tidak ada resep yang cocok.<br/>Coba kata kunci lain!</p></div>`
     : filtered.map(r => createRecipeCardHTML(r)).join('');
+  bindRecipeImageFallbacks(grid);
+}
+
+// URL foto hidangan sudah matang untuk sebuah resep
+function getRecipeImage(recipe) {
+  if (!recipe) return '';
+  if (recipe.image) return recipe.image;
+  const slug = RECIPE_IMAGES[recipe.id];
+  return slug ? `assets/img/${slug}.jpg` : '';
+}
+
+// Elemen foto hidangan yang sudah matang, dengan fallback ke emoji bila foto gagal dimuat
+function recipeImageHTML(recipe, className, altText) {
+  const src = getRecipeImage(recipe);
+  const alt = altText || (recipe ? recipe.title : 'Halaman Resepin');
+  if (!src) return `<span class="${className}">${recipe ? recipe.emoji : '\uD83C\uDF7F'}</span>`;
+  return `<img class="${className}" src="${src}" alt="${alt}" loading="lazy" data-fallback="${(recipe ? recipe.emoji : '\uD83C\uDF7F').replace(/"/g, '&quot;')}" />`;
+}
+
+// Pasang fallback emoji untuk foto yang gagal dimuat (dipasang sekali per render)
+function bindRecipeImageFallbacks(root = document) {
+  root.querySelectorAll('img[data-fallback]').forEach(img => {
+    img.addEventListener('error', function handleError() {
+      const span = document.createElement('span');
+      span.className = img.className;
+      span.textContent = img.dataset.fallback || '\uD83C\uDF7F';
+      img.replaceWith(span);
+    }, { once: true });
+  });
 }
 
 function createRecipeCardHTML(r) {
@@ -742,7 +782,7 @@ function createRecipeCardHTML(r) {
   return `
     <div class="recipe-card" onclick="openRecipeByIndex(${recipeIndex})">
       <div class="recipe-img" style="background:${r.gradient}">
-        <span class="recipe-img-emoji">${r.emoji}</span>
+        ${recipeImageHTML(r, 'recipe-img-photo', r.title)}
       </div>
       <div class="recipe-badge-diff ${r.difficulty === 'Mudah' ? 'easy' : 'medium'}">${r.difficulty}</div>
       <div class="recipe-info">
@@ -810,11 +850,12 @@ function renderJelajahiGrid() {
     if (quickCount) quickCount.textContent = `Menampilkan ${Math.min(4, quickRecipes.length)} dari ${quickRecipes.length} resep`;
     quickList.innerHTML = quickRecipes.length
       ? quickRecipes.slice(0, 4).map(recipe => `<button class="qr-item" type="button" onclick="openRecipeByIndex(${RECIPES_DB.indexOf(recipe)})">
-          <span class="qr-emoji">${recipe.emoji}</span>
+          ${recipeImageHTML(recipe, 'qr-photo', recipe.title)}
           <span class="qr-info"><span class="qr-name">${recipe.title}</span><span class="qr-meta">${recipe.difficulty} · ${recipe.ingredients.length} bahan</span></span>
           <span class="qr-time">${recipe.time}</span>
         </button>`).join('')
       : '<p class="explore-empty">Belum ada resep singkat di katalog.</p>';
+    bindRecipeImageFallbacks(quickList);
   }
 
   const fiveBahanGrid = document.getElementById('fiveBahanGrid');
@@ -823,6 +864,7 @@ function renderJelajahiGrid() {
     fiveBahanGrid.innerHTML = fiveBahan.length
       ? fiveBahan.map(recipe => createRecipeCardHTML(recipe)).join('')
       : '<p class="explore-empty">Belum ada resep dengan lima bahan atau kurang.</p>';
+    bindRecipeImageFallbacks(fiveBahanGrid);
   }
   renderExploreResults();
 }
@@ -839,6 +881,7 @@ function renderExploreResults() {
     grid.innerHTML = recipes.length
       ? recipes.map(recipe => createRecipeCardHTML(recipe)).join('')
       : '<p class="explore-empty">Belum ada resep dalam kategori ini.</p>';
+    bindRecipeImageFallbacks(grid);
   }
 }
 
@@ -863,10 +906,23 @@ function openRecipeModal(title, time, servings, calories, ingredients, steps) {
     <span>🔥 ${calories}</span>
   `;
 
+  const recipe = RECIPES_DB.find(r => r.title === title);
+  const hero = document.getElementById('modalHero');
+  const heroMedia = document.getElementById('modalHeroMedia');
+  const photoSrc = getRecipeImage(recipe);
+  if (photoSrc) {
+    heroMedia.innerHTML = `<img class="modal-hero-photo" src="${photoSrc}" alt="${title}" onerror="this.style.display='none';document.getElementById('modalHeroEmoji').style.display='flex'" />`;
+    document.getElementById('modalHeroEmoji').style.display = 'none';
+  } else {
+    heroMedia.innerHTML = '';
+    const firstEmoji = ingredients[0]?.split(' ')[0] || '🍳';
+    const heroEmoji = document.getElementById('modalHeroEmoji');
+    heroEmoji.textContent = firstEmoji + (ingredients[1]?.split(' ')[0] || '');
+    heroEmoji.style.display = 'flex';
+  }
   const firstEmoji = ingredients[0]?.split(' ')[0] || '🍳';
-  document.getElementById('modalHeroEmoji').textContent = firstEmoji + (ingredients[1]?.split(' ')[0] || '');
   const gradient = EMOJI_GRADIENTS[firstEmoji] || 'linear-gradient(135deg,rgba(255,107,53,0.2),rgba(46,196,182,0.15))';
-  document.getElementById('modalHero').style.background = gradient;
+  hero.style.background = gradient;
 
   document.getElementById('modalIngredients').innerHTML = ingredients.map(ing => {
     const detected = detectedIngredients.some(d => ing.toLowerCase().includes(d.name.toLowerCase()));
@@ -1326,6 +1382,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollEffects();
   animateFooterCounter();
   showPage('home');
+  bindRecipeImageFallbacks();
 
   // Initial recipe grid render
   setTimeout(() => {

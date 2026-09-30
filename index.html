@@ -161,7 +161,7 @@
         <div class="recipes-scroll">
           <div class="recipe-card" onclick="openRecipeModal('Sup Jagung Wortel', '20 mnt', '2 Porsi', '180 kal', ['🌽 Jagung', '🥕 Wortel', '🧅 Bawang', '🧄 Bawang Putih', '🧂 Garam'], ['Potong jagung dan wortel', 'Tumis bawang hingga harum', 'Masukkan air dan semua bahan', 'Rebus 15 menit, beri bumbu', 'Sajikan hangat'])">
             <div class="recipe-img" style="background: linear-gradient(135deg,#e67e22,#f39c12)">
-              <span class="recipe-img-emoji">🌽🥕</span>
+              <img class="recipe-img-photo" src="assets/img/sup-jagung.jpg" alt="Sup Jagung Wortel" loading="lazy" data-fallback="&#127859;" />
             </div>
             <div class="recipe-badge-diff easy">Mudah</div>
             <div class="recipe-info">
@@ -177,7 +177,7 @@
 
           <div class="recipe-card" onclick="openRecipeModal('Nasi Goreng Sederhana', '15 mnt', '1 Porsi', '320 kal', ['🍚 Nasi', '🥚 Telur', '🧅 Bawang', '🌶️ Cabai', '🫙 Kecap'], ['Siapkan nasi dingin', 'Goreng telur orak-arik', 'Masukkan nasi dan bumbu', 'Aduk rata dengan kecap', 'Sajikan dengan kerupuk'])">
             <div class="recipe-img" style="background: linear-gradient(135deg,#8e44ad,#9b59b6)">
-              <span class="recipe-img-emoji">🍚🥚</span>
+              <img class="recipe-img-photo" src="assets/img/nasi-goreng.jpg" alt="Nasi Goreng Sederhana" loading="lazy" data-fallback="&#127831;" />
             </div>
             <div class="recipe-badge-diff easy">Mudah</div>
             <div class="recipe-info">
@@ -193,7 +193,7 @@
 
           <div class="recipe-card" onclick="openRecipeModal('Tumis Kangkung Terasi', '10 mnt', '2 Porsi', '95 kal', ['🥬 Kangkung', '🧄 Bawang Putih', '🌶️ Cabai', '🦐 Terasi', '🧂 Garam'], ['Cuci bersih kangkung', 'Tumis bawang dan cabai', 'Masukkan terasi, haluskan', 'Masukkan kangkung', 'Masak 2 menit, sajikan'])">
             <div class="recipe-img" style="background: linear-gradient(135deg,#27ae60,#2ecc71)">
-              <span class="recipe-img-emoji">🥬🌶️</span>
+              <img class="recipe-img-photo" src="assets/img/tumis-kangkung.jpg" alt="Tumis Kangkung Terasi" loading="lazy" data-fallback="&#129388;" />
             </div>
             <div class="recipe-badge-diff easy">Mudah</div>
             <div class="recipe-info">
@@ -208,7 +208,7 @@
 
           <div class="recipe-card" onclick="openRecipeModal('Tempe Orek Pedas', '25 mnt', '3 Porsi', '240 kal', ['🧱 Tempe', '🌶️ Cabai', '🧅 Bawang', '🫙 Kecap Manis', '🧂 Gula'], ['Goreng tempe hingga kering', 'Haluskan bumbu cabai bawang', 'Tumis bumbu halus', 'Masukkan kecap dan gula', 'Masukkan tempe, aduk rata'])">
             <div class="recipe-img" style="background: linear-gradient(135deg,#e74c3c,#c0392b)">
-              <span class="recipe-img-emoji">🧱🌶️</span>
+              <img class="recipe-img-photo" src="assets/img/tempe-orek.jpg" alt="Tempe Orek Pedas" loading="lazy" data-fallback="&#127859;" />
             </div>
             <div class="recipe-badge-diff medium">Sedang</div>
             <div class="recipe-info">
@@ -224,7 +224,7 @@
 
           <div class="recipe-card" onclick="openRecipeModal('Capcay Kuah Segar', '20 mnt', '4 Porsi', '150 kal', ['🥦 Brokoli', '🥕 Wortel', '🫑 Paprika', '🍄 Jamur', '🧄 Bawang'], ['Potong semua sayur', 'Tumis bawang', 'Masukkan sayur keras dahulu', 'Tuang kaldu, masak 10 mnt', 'Tambah tepung maizena'])">
             <div class="recipe-img" style="background: linear-gradient(135deg,#1abc9c,#16a085)">
-              <span class="recipe-img-emoji">🥦🥕</span>
+              <img class="recipe-img-photo" src="assets/img/capcay.jpg" alt="Capcay Kuah Segar" loading="lazy" data-fallback="&#129367;" />
             </div>
             <div class="recipe-badge-diff easy">Mudah</div>
             <div class="recipe-info">
@@ -240,7 +240,7 @@
 
           <div class="recipe-card" onclick="openRecipeModal('Soto Ayam Bening', '45 mnt', '4 Porsi', '280 kal', ['🍗 Ayam', '🥬 Sawi', '🥕 Wortel', '🧅 Bawang', '🌿 Daun Salam'], ['Rebus ayam hingga matang', 'Suwir ayam, sisihkan', 'Tumis bumbu halus', 'Masukkan ke kaldu ayam', 'Tambah sayur, masak 5 mnt'])">
             <div class="recipe-img" style="background: linear-gradient(135deg,#f39c12,#d68910)">
-              <span class="recipe-img-emoji">🍗🌿</span>
+              <img class="recipe-img-photo" src="assets/img/soto-ayam.jpg" alt="Soto Ayam Bening" loading="lazy" data-fallback="&#127836;" />
             </div>
             <div class="recipe-badge-diff medium">Sedang</div>
             <div class="recipe-info">
@@ -583,6 +583,7 @@
     <div class="modal-content">
       <button class="modal-close" onclick="closeRecipeModal()">✕</button>
       <div class="modal-hero" id="modalHero">
+        <div class="modal-hero-media" id="modalHeroMedia"></div>
         <div class="modal-hero-emoji" id="modalHeroEmoji">🍳</div>
       </div>
       <div class="modal-body">
