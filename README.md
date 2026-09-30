@@ -4,16 +4,53 @@ Website resep zero food waste: masukkan bahan sisa secara manual atau pindai obj
 
 ## Menjalankan
 
-Deteksi bahan memakai model PyTorch di repo privat terpisah. Pastikan akun GitHub-mu punya akses, lalu dari folder project jalankan:
+Backend scan memerlukan **CPython Windows 64-bit**. Python dari MSYS2/MinGW tidak cocok untuk memasang wheel PyTorch. Pasang Python 3.12 dari [python.org](https://www.python.org/downloads/windows/) dan pastikan perintah `py -3.12 --version` berhasil.
+
+### Setup baru di Windows
+
+Buka PowerShell, lalu jalankan perintah berikut. Akun GitHub harus sudah menerima akses ke repo model privat `resepin-models`.
 
 ```powershell
+git clone https://github.com/anrahadi-dotcom/Resepin.git
+cd Resepin
 git lfs install
 git clone https://github.com/anrahadi-dotcom/resepin-models.git models
-python -m pip install -r requirements.txt
-python server.py
+py -3.12 -m venv .venv-win
+.\.venv-win\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv-win\Scripts\python.exe server.py
 ```
 
-Buka `http://127.0.0.1:8000`. Kamera memerlukan izin pengguna dan secure context (`localhost` memenuhi syarat ini). Jangan membuka `index.html` langsung sebagai file atau memakai Live Server; frontend memanggil API lokal pada origin yang sama.
+Server menampilkan alamat `http://127.0.0.1:8000`. Buka alamat itu di browser. Kamera memerlukan izin pengguna dan secure context (`localhost` memenuhi syarat ini). Jangan membuka `index.html` langsung sebagai file atau memakai Live Server; frontend memanggil API lokal pada origin yang sama. Tekan `Ctrl+C` di terminal untuk menghentikan server.
+
+### Menjalankan dari VS Code
+
+1. Buka folder `Resepin` di VS Code.
+2. Pilih **Python: Select Interpreter** dari Command Palette (`Ctrl+Shift+P`), lalu pilih `.venv-win\Scripts\python.exe`.
+3. Buka terminal PowerShell di folder project dan jalankan:
+
+   ```powershell
+   .\.venv-win\Scripts\python.exe server.py
+   ```
+
+Jika model sudah pernah di-clone, jangan clone lagi. Ambil update model dengan:
+
+```powershell
+git -C models pull
+```
+
+Untuk mengambil update kode website, jalankan `git pull` dari folder `Resepin`.
+
+### Memperbarui model
+
+Setelah mengganti `models/best.pt`, pemilik model dapat mengirim versinya ke repo privat:
+
+```powershell
+git -C models add best.pt
+git -C models commit -m "Update ingredient model"
+git -C models push
+```
+
+Teman yang sudah menerima akses repo privat cukup menjalankan `git -C models pull`.
 
 ## Bagian aplikasi
 
