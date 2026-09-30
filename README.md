@@ -4,11 +4,13 @@ Website resep zero food waste: masukkan bahan sisa secara manual atau pindai obj
 
 ## Menjalankan
 
-Deteksi bahan memakai checkpoint PyTorch milik project, jadi jalankan backend lokal untuk membuka situs dan memproses foto:
+Deteksi bahan memakai model PyTorch di repo privat terpisah. Pastikan akun GitHub-mu punya akses, lalu dari folder project jalankan:
 
 ```powershell
+git lfs install
+git clone https://github.com/anrahadi-dotcom/resepin-models.git models
 python -m pip install -r requirements.txt
-python -m uvicorn server:app --host 127.0.0.1 --port 8000
+python server.py
 ```
 
 Buka `http://127.0.0.1:8000`. Kamera memerlukan izin pengguna dan secure context (`localhost` memenuhi syarat ini). Jangan membuka `index.html` langsung sebagai file atau memakai Live Server; frontend memanggil API lokal pada origin yang sama.
@@ -27,9 +29,9 @@ Beranda → Scan Bahan → izinkan kamera → arahkan ke bahan → Ambil Foto �
 
 ## Implementasi dan batasan
 
-Antarmuka menggunakan HTML, CSS responsif, dan JavaScript tanpa proses build. FastAPI memuat `models/best.pt` menggunakan Ultralytics/PyTorch saat server mulai; checkpoint ini berisi 30 kelas bahan berbahasa Indonesia, yang juga dicatat di `data_classes.yaml`. Foto kamera dikirim ke endpoint lokal `/api/detect`, diproses di komputer yang menjalankan server, lalu dibuang setelah inferensi. File gambar tidak disimpan. Model mendeteksi objek sesuai kelas yang dipelajari; periksa hasilnya dan tambahkan bahan lain secara manual bila perlu. Mode Demo selalu menghasilkan bahan contoh dan bukan deteksi model.
+Antarmuka menggunakan HTML, CSS responsif, dan JavaScript tanpa proses build. Server Python bawaan memuat `models/best.pt` menggunakan Ultralytics/PyTorch saat server mulai; checkpoint ini berisi 30 kelas bahan berbahasa Indonesia, yang juga dicatat di `data_classes.yaml`. Foto kamera dikirim ke endpoint lokal `/api/detect`, diproses di komputer yang menjalankan server, lalu dibuang setelah inferensi. File gambar tidak disimpan. Model mendeteksi objek sesuai kelas yang dipelajari; periksa hasilnya dan tambahkan bahan lain secara manual bila perlu. Mode Demo selalu menghasilkan bahan contoh dan bukan deteksi model.
 
-Server deteksi hanya menerima koneksi loopback dari komputer lokal, memeriksa origin permintaan, membatasi foto ke JPG/PNG/WebP hingga 10 MB, dan hanya menyajikan file frontend yang diperlukan. Checkpoint tidak bisa diunduh melalui web. Tidak ada kunci API atau panggilan layanan AI eksternal; Chef tetap memakai katalog dan aturan JavaScript lokal. Font masih dimuat dari Google Fonts.
+Server deteksi hanya bind ke `127.0.0.1`, memeriksa origin permintaan, membatasi foto ke JPG/PNG/WebP hingga 10 MB, dan hanya menyajikan file frontend yang diperlukan. Checkpoint tidak bisa diunduh melalui web. Tidak ada kunci API atau panggilan layanan AI eksternal; Chef tetap memakai katalog dan aturan JavaScript lokal. Font masih dimuat dari Google Fonts.
 
 Katalog awal mencakup masakan rumahan, beberapa menu Bali (babi guling versi rumahan, ayam betutu, ayam sere lemo, ayam bakar, lawar sayur, sate lilit), serta hidangan populer seperti fried chicken, pizza, burger, pasta, ramen, sushi roll isi matang, taco, pancake, dan teriyaki. Katalog ini bukan ensiklopedia semua masakan; resep baru dapat ditambahkan ke `RECIPES_DB`.
 

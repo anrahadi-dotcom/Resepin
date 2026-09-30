@@ -1,154 +1,173 @@
-"""Local-only FastAPI service for Resepin's PyTorch ingredient detector."""
+"""Small local web server and ingredient detector for Resepin."""
 
 from __future__ import annotations
 
-import ipaddress
-import logging
-from contextlib import asynccontextmanager
+import json
+import mimetypes
+from email.parser import BytesParser
+from email.policy import default
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from threading import Lock
-from typing import AsyncIterator
+from urllib.parse import unquote, urlsplit
 
 import cv2
 import numpy as np
-from fastapi import FastAPI, File, HTTPException, Request, UploadFile
-from fastapi.responses import FileResponse
-from starlette.concurrency import run_in_threadpool
-from starlette.staticfiles import StaticFiles
 from ultralytics import YOLO
 
 
-PROJECT_DIR = Path(__file__).resolve().parent
-MODEL_PATH = PROJECT_DIR / "models" / "best.pt"
-MAX_IMAGE_BYTES = 10 * 1024 * 1024
-MAX_IMAGE_DIMENSION = 6000
-ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/webp"}
-INFERENCE_LOCK = Lock()
-LOGGER = logging.getLogger("resepin.detector")
+ROOT = Path(__file__).resolve().parent
+MODEL = ROOT / "models" / "best.pt"
+MAX_UPLOAD = 10 * 1024 * 1024
+MAX_IMAGE_SIDE = 6000
+PREDICTION_LOCK = Lock()
+DETECTOR = None
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-    if not MODEL_PATH.is_file():
-        raise RuntimeError(f"Checkpoint PyTorch tidak ditemukan: {MODEL_PATH}")
-    try:
-        app.state.detector = await run_in_threadpool(YOLO, str(MODEL_PATH))
-    except Exception as error:
-        raise RuntimeError(
-            "Model gagal dimuat. Pasang dependensi dari requirements.txt "
-            "dan pastikan checkpoint Ultralytics kompatibel."
-        ) from error
-    LOGGER.info("Model bahan Resepin siap (%s).", MODEL_PATH.name)
-    yield
-    app.state.detector = None
-
-
-app = FastAPI(
-    title="Resepin local ingredient detector",
-    docs_url=None,
-    redoc_url=None,
-    openapi_url=None,
-    lifespan=lifespan,
-)
-
-
-def ensure_local_request(request: Request) -> None:
-    peer = request.client.host if request.client else ""
-    try:
-        if not ipaddress.ip_address(peer).is_loopback:
-            raise HTTPException(status_code=403, detail="Deteksi hanya tersedia dari komputer ini.")
-    except ValueError as error:
-        raise HTTPException(status_code=403, detail="Deteksi hanya tersedia dari komputer ini.") from error
-
-    origin = request.headers.get("origin")
-    local_origin = str(request.base_url).rstrip("/")
-    if origin and origin.rstrip("/") != local_origin:
-        raise HTTPException(status_code=403, detail="Permintaan lintas situs tidak diizinkan.")
-
-
-@app.get("/api/health")
-async def health(request: Request) -> dict[str, bool]:
-    ensure_local_request(request)
-    return {"ready": getattr(request.app.state, "detector", None) is not None}
-
-
-@app.post("/api/detect")
-async def detect_ingredients(
-    request: Request,
-    file: UploadFile = File(...),
-) -> dict[str, object]:
-    ensure_local_request(request)
-    if file.content_type not in ALLOWED_IMAGE_TYPES:
-        raise HTTPException(status_code=415, detail="Gunakan foto JPG, PNG, atau WebP.")
-
-    payload = await file.read(MAX_IMAGE_BYTES + 1)
-    await file.close()
-    if not payload:
-        raise HTTPException(status_code=400, detail="File foto kosong.")
-    if len(payload) > MAX_IMAGE_BYTES:
-        raise HTTPException(status_code=413, detail="Ukuran foto maksimal 10 MB.")
-
-    image = cv2.imdecode(np.frombuffer(payload, dtype=np.uint8), cv2.IMREAD_COLOR)
-    if image is None:
-        raise HTTPException(status_code=400, detail="File tidak dapat dibaca sebagai gambar.")
-
-    height, width = image.shape[:2]
-    if max(height, width) > MAX_IMAGE_DIMENSION or height * width > 24_000_000:
-        raise HTTPException(status_code=413, detail="Resolusi foto terlalu besar. Coba foto yang lebih kecil.")
-
-    detector = getattr(request.app.state, "detector", None)
-    if detector is None:
-        raise HTTPException(status_code=503, detail="Model PyTorch belum siap.")
-
-    try:
-        results = await run_in_threadpool(run_detection, detector, image)
-    except Exception:
-        LOGGER.exception("Inferensi model bahan gagal.")
-        raise HTTPException(status_code=503, detail="Model gagal memeriksa foto. Coba lagi.") from None
-
-    return {"image_width": width, "image_height": height, "detections": results}
-
-
-def run_detection(detector: YOLO, image: np.ndarray) -> list[dict[str, object]]:
-    with INFERENCE_LOCK:
-        result = detector.predict(image, conf=0.35, imgsz=640, max_det=30, verbose=False)[0]
+def detect(image: np.ndarray) -> list[dict[str, object]]:
+    with PREDICTION_LOCK:
+        result = DETECTOR.predict(image, conf=0.35, imgsz=640, max_det=30, verbose=False)[0]
 
     if result.boxes is None or len(result.boxes) == 0:
         return []
 
     names = result.names
-    boxes_xyxy = result.boxes.xyxy.cpu().tolist()
-    class_ids = result.boxes.cls.cpu().tolist()
-    confidences = result.boxes.conf.cpu().tolist()
-
-    detections: list[dict[str, object]] = []
-    for coordinates, class_id, confidence in zip(boxes_xyxy, class_ids, confidences):
-        index = int(class_id)
-        label = names.get(index, str(index)) if isinstance(names, dict) else names[index]
-        detections.append(
-            {
-                "label": str(label),
-                "confidence": float(confidence),
-                "bbox": [float(coordinate) for coordinate in coordinates],
-            }
-        )
+    detections = []
+    for box in result.boxes:
+        class_id = int(box.cls.item())
+        label = names.get(class_id, str(class_id)) if isinstance(names, dict) else names[class_id]
+        detections.append({
+            "label": str(label),
+            "confidence": float(box.conf.item()),
+            "bbox": [float(value) for value in box.xyxy[0].tolist()],
+        })
     return detections
 
 
-@app.get("/", include_in_schema=False)
-async def home() -> FileResponse:
-    return FileResponse(PROJECT_DIR / "index.html", media_type="text/html")
+class ResepinHandler(BaseHTTPRequestHandler):
+    def send_json(self, status: int, body: dict[str, object]) -> None:
+        payload = json.dumps(body).encode("utf-8")
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Content-Length", str(len(payload)))
+        self.end_headers()
+        self.wfile.write(payload)
+
+    def do_GET(self) -> None:
+        path = unquote(urlsplit(self.path).path)
+        if path == "/api/health":
+            self.send_json(200, {"ready": DETECTOR is not None})
+            return
+
+        pages = {
+            "/": ROOT / "index.html",
+            "/main.js": ROOT / "main.js",
+            "/style.css": ROOT / "style.css",
+        }
+        file_path = pages.get(path)
+        if path.startswith("/assets/"):
+            file_path = ROOT / path.lstrip("/")
+            try:
+                file_path.resolve().relative_to((ROOT / "assets").resolve())
+            except ValueError:
+                file_path = None
+
+        if file_path is None or not file_path.is_file():
+            self.send_error(404, "File not found")
+            return
+
+        content = file_path.read_bytes()
+        content_type = mimetypes.guess_type(file_path.name)[0] or "application/octet-stream"
+        self.send_response(200)
+        self.send_header("Content-Type", content_type)
+        self.send_header("Content-Length", str(len(content)))
+        self.end_headers()
+        self.wfile.write(content)
+
+    def do_POST(self) -> None:
+        if urlsplit(self.path).path != "/api/detect":
+            self.send_error(404, "Endpoint not found")
+            return
+
+        origin = self.headers.get("Origin")
+        if origin and origin.rstrip("/") != f"http://{self.headers.get('Host', '')}":
+            self.send_json(403, {"detail": "Permintaan harus berasal dari server Resepin lokal."})
+            return
+
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+        except ValueError:
+            length = 0
+        if length <= 0 or length > MAX_UPLOAD + 64_000:
+            self.send_json(413, {"detail": "Foto kosong atau terlalu besar (maksimal 10 MB)."})
+            return
+
+        content_type = self.headers.get("Content-Type", "")
+        if not content_type.lower().startswith("multipart/form-data"):
+            self.send_json(400, {"detail": "Kirim foto sebagai multipart/form-data."})
+            return
+
+        message = BytesParser(policy=default).parsebytes(
+            f"Content-Type: {content_type}\r\nMIME-Version: 1.0\r\n\r\n".encode("ascii")
+            + self.rfile.read(length)
+        )
+        part = next((
+            item for item in message.iter_parts()
+            if item.get_content_disposition() == "form-data"
+            and item.get_param("name", header="content-disposition") == "file"
+        ), None)
+        if part is None or part.get_content_type() not in {"image/jpeg", "image/png", "image/webp"}:
+            self.send_json(415, {"detail": "Kirim foto JPG, PNG, atau WebP."})
+            return
+
+        payload = part.get_payload(decode=True)
+        if not payload or len(payload) > MAX_UPLOAD:
+            self.send_json(413, {"detail": "Foto kosong atau terlalu besar (maksimal 10 MB)."})
+            return
+
+        image = cv2.imdecode(np.frombuffer(payload, dtype=np.uint8), cv2.IMREAD_COLOR)
+        if image is None:
+            self.send_json(400, {"detail": "File tidak terbaca sebagai gambar."})
+            return
+
+        height, width = image.shape[:2]
+        if max(height, width) > MAX_IMAGE_SIDE or height * width > 24_000_000:
+            self.send_json(413, {"detail": "Resolusi foto terlalu besar. Coba foto yang lebih kecil."})
+            return
+
+        try:
+            detections = detect(image)
+        except Exception:
+            self.log_error("Model gagal memeriksa foto")
+            self.send_json(500, {"detail": "Model gagal memeriksa foto. Coba lagi."})
+            return
+
+        self.send_json(200, {
+            "image_width": width,
+            "image_height": height,
+            "detections": detections,
+        })
+
+    def log_message(self, format: str, *args: object) -> None:
+        print(f"[{self.log_date_time_string()}] {format % args}")
 
 
-@app.get("/main.js", include_in_schema=False)
-async def frontend_script() -> FileResponse:
-    return FileResponse(PROJECT_DIR / "main.js", media_type="text/javascript")
+def main() -> None:
+    global DETECTOR
+    if not MODEL.is_file():
+        raise SystemExit(f"Model tidak ditemukan: {MODEL}\nClone repo privat resepin-models ke folder models terlebih dahulu.")
+
+    print("Memuat model bahan...")
+    DETECTOR = YOLO(str(MODEL))
+    server = ThreadingHTTPServer(("127.0.0.1", 8000), ResepinHandler)
+    print("Resepin aktif: http://127.0.0.1:8000 (Ctrl+C untuk berhenti)")
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        print("\nServer Resepin berhenti.")
+    finally:
+        server.server_close()
 
 
-@app.get("/style.css", include_in_schema=False)
-async def frontend_styles() -> FileResponse:
-    return FileResponse(PROJECT_DIR / "style.css", media_type="text/css")
-
-
-# Foto hidangan yang sudah matang untuk kartu resep
-app.mount("/assets", StaticFiles(directory=str(PROJECT_DIR / "assets")), name="assets")
+if __name__ == "__main__":
+    main()

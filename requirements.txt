@@ -1,9 +1,1 @@
-fastapi
-uvicorn
 ultralytics
-google-genai
-python-multipart
-python-dotenv
-opencv-python-headless
-numpy
-pydantic
