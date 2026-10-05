@@ -52,6 +52,15 @@ git -C models push
 
 Teman yang sudah menerima akses repo privat cukup menjalankan `git -C models pull`.
 
+### Deploy ke Vercel (frontend dan API scan)
+
+Repo ini dapat diimpor sebagai project Vercel dengan root directory default. Vercel menyajikan file frontend sebagai static site dan menjalankan `api/detect.py` sebagai Python Function. Setelah menghubungkan repo GitHub, tambahkan environment variables berikut di **Project Settings → Environment Variables**, lalu deploy ulang:
+
+- `RESEPIN_GITHUB_TOKEN`: fine-grained personal access token yang dibatasi ke repo privat `resepin-models` dengan izin **Contents: Read-only**. Function memakai token ini untuk mengambil pointer dan bobot Git LFS; token tidak dikirim ke browser atau disimpan di repo.
+- `VERCEL_SUPPORT_LARGE_FUNCTIONS`: isi `1` agar bundle Python yang memuat PyTorch dapat melewati batas ukuran function standar. Vercel mensyaratkan Fluid Compute dengan Active CPU untuk large functions.
+
+Atur kedua variable untuk Production dan Preview. Model diunduh dan diverifikasi saat function pertama kali menerima foto, lalu disimpan pada cache sementara instance tersebut. Endpoint menerima foto hingga 4 MB karena batas request Vercel Functions adalah 4,5 MB; browser mengecilkan foto kamera sebelum mengirimnya. Server `server.py` tetap dipakai saat development lokal.
+
 ## Bagian aplikasi
 
 - Beranda: pengenalan produk dan resep unggulan.
@@ -62,7 +71,8 @@ Teman yang sudah menerima akses repo privat cukup menjalankan `git -C models pul
 
 ## Struktur frontend
 
-- `index.html`: kerangka halaman dan urutan pemuatan stylesheet/script.
+- `index.html`: kerangka halaman dan urutan pemuatan stylesheet/script; hero memakai Vue 3 dan Tailwind CDN.
+- `api/detect.py`: endpoint scan untuk Vercel Functions; mengambil bobot model dari Git LFS privat.
 - `css/style.css`: komponen, warna, dan gaya dasar.
 - `css/responsive.css`: breakpoint layar dan preferensi aksesibilitas.
 - `js/main.js`: navigasi halaman, kamera, katalog UI, dan interaksi umum.

@@ -288,15 +288,17 @@ async function captureAndDetect() {
   const button = document.getElementById('captureBtn');
   button.disabled = true;
   updateDetectionStatus('active', 'Memeriksa foto dengan model bahan...');
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
+  const imageScale = Math.min(1, 1600 / Math.max(video.videoWidth, video.videoHeight));
+  canvas.width = Math.round(video.videoWidth * imageScale);
+  canvas.height = Math.round(video.videoHeight * imageScale);
   canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
   boxes.innerHTML = '';
 
   try {
     const imageBlob = await new Promise((resolve, reject) => {
-      canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('Foto tidak bisa disiapkan.')), 'image/jpeg', 0.9);
+      canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('Foto tidak bisa disiapkan.')), 'image/jpeg', 0.82);
     });
+    if (imageBlob.size > 3_900_000) throw new Error('Foto masih terlalu besar. Coba ambil foto dari jarak lebih dekat.');
     const formData = new FormData();
     formData.append('file', imageBlob, 'bahan.jpg');
     const response = await fetch('/api/detect', { method: 'POST', body: formData });
