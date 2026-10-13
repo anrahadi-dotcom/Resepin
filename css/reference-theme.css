@@ -354,7 +354,7 @@ body[data-theme="dark"] .recipe-tags span { background: #383047; color: #c7b8e7;
 .hero-content { width: min(800px, 62vw); }
 .hero-content h1 { font-size: clamp(3rem,4.35vw,5.1rem); line-height: 1.02; }
 .hero-content .hero-badge { margin-bottom: 14px; padding: 6px 12px; font-size: .78rem; letter-spacing: .01em; }
-#app:has(#page-home.active) .navbar { border-bottom-color: transparent; box-shadow: none; }
+#app:has(#page-home.active) .navbar { border: 0 !important; box-shadow: none; }
 .hero-photo-caption { right: clamp(24px,5vw,76px); }
 .hero-recipe-switcher { right: clamp(24px,5vw,76px); }
 
