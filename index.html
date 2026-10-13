@@ -47,7 +47,7 @@
       </div>
 
       <div class="nav-actions">
-        <button class="btn-scan-nav" @click="go('scan')">
+        <button class="btn-scan-nav" aria-label="Tambah bahan" @click="go('scan')">
           <span>Tambah bahan</span>
         </button>
         <button class="theme-toggle" id="themeToggle" type="button" @click="toggleTheme" aria-label="Aktifkan mode gelap" title="Ganti tema warna">
@@ -82,24 +82,11 @@
           <p class="hero-note">Pilih inspirasi, geser bahan di atas foto, lalu mulai masak.</p>
         </div>
         <div class="hero-visual">
-          <div class="hero-photo-stage">
-            <div class="hero-photo-caption">
-              <p>INSPIRASI DARI DAPUR</p>
-              <h2>{{ activeHeroRecipe.title }}</h2>
-              <span>{{ activeHeroRecipe.time }}</span>
-            </div>
-            <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-amber-100" @pointermove="moveIngredient" @pointerup="endDrag" @pointercancel="endDrag">
-              <img :key="activeHeroRecipe.image" class="hero-food-photo h-full w-full select-none object-cover" :src="activeHeroRecipe.image" :alt="activeHeroRecipe.title" draggable="false" />
+          <div class="hero-photo-stage" :class="{'is-dragging': photoDrag}" @pointerdown.prevent="startPhotoDrag" @pointermove="movePhoto" @pointerup="endPhotoDrag" @pointercancel="endPhotoDrag">
+            <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-amber-100">
+              <img class="hero-food-photo h-full w-full select-none object-cover" src="/assets/img/sup-jagung.jpg" alt="Sup jagung dan wortel" draggable="false" :style="{'--pan-x': photoOffset.x + 'px', '--pan-y': photoOffset.y + 'px'}" />
               <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent"></div>
-              <button v-for="item in ingredients" :key="item.name" type="button" class="absolute z-10 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 touch-none place-items-center rounded-2xl border border-white/70 bg-white/90 text-3xl shadow-lg transition-shadow hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-orange-500" :style="{left: item.x + '%', top: item.y + '%', cursor: dragging === item.name ? 'grabbing' : 'grab'}" :aria-label="'Seret bahan ' + item.name" @pointerdown.prevent="startDrag($event, item)">
-                {{ item.emoji }}
-              </button>
-              <div class="pointer-events-none absolute bottom-3 left-3 rounded-full bg-black/45 px-3 py-1.5 text-xs font-medium text-white">Seret bahan ke mana saja ✨</div>
             </div>
-            <div class="hero-recipe-switcher" aria-label="Pilih inspirasi resep">
-              <button v-for="(recipe, index) in heroRecipes" :key="recipe.title" type="button" :class="{active: heroRecipeIndex === index}" :aria-pressed="heroRecipeIndex === index" @click="setHeroRecipe(index)">{{ recipe.label }}</button>
-            </div>
-            <div class="hero-ingredient-tags"><span v-for="item in ingredients" :key="item.name">{{ item.name }}</span></div>
           </div>
         </div>
       </div>

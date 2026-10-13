@@ -142,8 +142,14 @@ body[data-theme="dark"] .recipe-tags span { background: #383047; color: #c7b8e7;
   height: 100%;
   object-fit: cover;
   object-position: center 54%;
+  transform: translate3d(var(--pan-x,0),var(--pan-y,0),0) scale(1.12);
+  transform-origin: center;
+  will-change: transform;
   animation: hero-photo-arrive .8s ease both, hero-photo-drift 24s ease-in-out infinite alternate;
 }
+.hero-photo-stage { cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
+.hero-photo-stage.is-dragging { cursor: grabbing; }
+.hero-photo-stage.is-dragging .hero-food-photo { transition: none; }
 @keyframes hero-photo-arrive {
   from { opacity: .35; transform: scale(1.035); }
   to { opacity: 1; transform: scale(1); }
@@ -349,4 +355,44 @@ body[data-theme="dark"] .recipe-tags span { background: #383047; color: #c7b8e7;
   .qr-item { gap: 10px; padding: 12px; }
   .qr-photo { width: 44px; height: 44px; flex-basis: 44px; }
   .qr-time { padding: 4px 7px; font-size: .72rem; }
+}
+
+@media (max-width: 1100px) {
+  .navbar { padding-inline: clamp(12px,3vw,24px); }
+  .nav-container { min-width: 0; gap: 12px; }
+  .nav-links { display: none; }
+  .nav-links.open {
+    display: flex;
+    position: fixed;
+    top: 68px;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    max-height: calc(100svh - 68px);
+    overflow-y: auto;
+    padding: 16px;
+    gap: 4px;
+    background: var(--navbar-bg);
+    border-bottom: 1px solid var(--border);
+    z-index: 999;
+  }
+  .nav-links.open .nav-link,
+  #app:has(#page-home.active) .navbar:not(.scrolled) .nav-links.open .nav-link { color: var(--text-primary); }
+  .nav-links.open .nav-link.active { color: var(--primary); background: var(--bg-surface); }
+  .nav-actions { flex: 0 0 auto; gap: 8px; }
+  .btn-hamburger { display: flex; color: currentColor; }
+  .btn-hamburger span { background: currentColor; }
+  .btn-scan-nav { width: 40px; height: 40px; flex: 0 0 40px; justify-content: center; padding: 0; font-size: 0; }
+  .btn-scan-nav span { display: none !important; }
+  .btn-scan-nav::before { content: "+"; font-size: 1.35rem; line-height: 1; }
+}
+
+@media (max-width: 480px) {
+  .nav-logo { gap: 7px; font-size: 1.18rem; }
+  .logo-icon { width: 32px; height: 32px; }
+  .nav-actions { gap: 6px; }
+  .theme-toggle { width: 38px; min-height: 38px; padding: 0; }
+  .theme-toggle span { display: none; }
+  .btn-avatar, .btn-hamburger { width: 36px; height: 38px; justify-content: center; align-items: center; }
+  .btn-hamburger { padding: 7px; }
 }
