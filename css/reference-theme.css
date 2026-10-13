@@ -286,3 +286,67 @@ body[data-theme="dark"] .recipe-tags span { background: #383047; color: #c7b8e7;
   .hero-content .btn-primary, .hero-content .btn-secondary { width: auto; padding: 12px 14px; font-size: .78rem; }
   .hero-recipe-switcher { left: 18px; right: auto; bottom: 22px; }
 }
+
+/* Keep the hero copy and floating controls in separate, predictable zones. */
+.hero-content .hero-note,
+.hero-ingredient-tags,
+.hero-photo-stage > .relative > .pointer-events-none.absolute.bottom-3.left-3 {
+  display: none;
+}
+.hero-content { width: min(570px, 50vw); }
+.hero-content h1 { font-size: clamp(2.8rem,5.2vw,5rem); line-height: 1.02; }
+.hero-photo-caption { right: clamp(24px,5vw,76px); }
+.hero-recipe-switcher { right: clamp(24px,5vw,76px); }
+
+@media (max-width: 900px) {
+  .hero { min-height: max(820px,100svh); height: max(820px,100svh); }
+  .hero-content {
+    top: 104px;
+    bottom: 104px;
+    left: 24px;
+    width: min(620px,calc(100% - 48px));
+    transform: none;
+  }
+  .hero-content h1 { font-size: clamp(2.7rem,7.2vw,4.4rem); line-height: 1.02; }
+  .hero-content .hero-desc { max-width: 500px; margin: 18px 0 22px; }
+  .hero-content .hero-cta { flex-wrap: wrap; gap: 10px; }
+  .hero-content .btn-primary, .hero-content .btn-secondary { min-height: 48px; }
+  .hero-photo-caption { top: 88px; right: 18px; }
+  .hero-recipe-switcher { left: 18px; right: 18px; bottom: 20px; justify-content: center; }
+  .hero-photo-stage .relative > button { display: none; }
+}
+
+@media (max-width: 600px) {
+  .hero { min-height: max(880px,100svh); height: max(880px,100svh); }
+  .hero-content { top: 102px; bottom: 110px; left: 18px; width: calc(100% - 36px); }
+  .hero-content h1 { font-size: clamp(2.45rem,10.5vw,3.5rem); }
+  .hero-content .hero-desc { max-width: 100%; font-size: .94rem; }
+  .hero-content .hero-cta { display: grid; grid-template-columns: 1fr; }
+  .hero-content .btn-primary, .hero-content .btn-secondary { width: 100%; justify-content: center; }
+  .hero-photo-caption { top: 18px; right: 16px; padding: 8px 11px; }
+  .hero-photo-caption p { display: none; }
+  .hero-photo-caption h2 { font-size: .78rem; }
+  .hero-photo-caption span { font-size: .68rem; }
+  .hero-recipe-switcher { left: 12px; right: 12px; bottom: 14px; gap: 2px; padding: 5px; }
+  .hero-recipe-switcher button { flex: 1; padding: 10px 6px; font-size: .7rem; white-space: nowrap; }
+}
+
+/* The five-ingredient cards keep their full image and readable text on desktop. */
+@media (min-width: 980px) {
+  .recipes-grid.mini { grid-template-columns: repeat(auto-fill,minmax(220px,1fr)); }
+  .recipes-grid.mini .recipe-card { display: block; min-height: 0; }
+  .recipes-grid.mini .recipe-img { height: 178px; min-height: 0; }
+  .recipes-grid.mini .recipe-info { padding: 18px; }
+}
+
+/* Prevent the quick-recipe time badge from squeezing or clipping its title. */
+.qr-item { min-height: 82px; overflow: visible; }
+.qr-photo { flex: 0 0 52px; }
+.qr-info { min-width: 0; }
+.qr-name { overflow-wrap: anywhere; }
+.qr-time { flex: 0 0 auto; white-space: nowrap; }
+@media (max-width: 480px) {
+  .qr-item { gap: 10px; padding: 12px; }
+  .qr-photo { width: 44px; height: 44px; flex-basis: 44px; }
+  .qr-time { padding: 4px 7px; font-size: .72rem; }
+}
