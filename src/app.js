@@ -8,10 +8,13 @@ createApp({
       photoOffsetX: 0,
       photoIndex: 0,
       slideDirection: '',
+      heroPlaying: !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+      heroHovered: false,
+      heroMotionTimer: null,
       heroPhotos: [
-        { image: '/assets/img/sup-jagung.jpg', alt: 'Sup jagung dan wortel', title: 'Sup Jagung Wortel', time: '20 menit', difficulty: 'Mudah' },
-        { image: '/assets/img/nasi-goreng.jpg', alt: 'Nasi goreng sederhana', title: 'Nasi Goreng Sederhana', time: '15 menit', difficulty: 'Mudah' },
-        { image: '/assets/img/ayam-betutu.jpg', alt: 'Ayam betutu', title: 'Ayam Betutu Bali', time: '120 menit', difficulty: 'Sedang' }
+        { image: '/assets/img/teriyaki.jpg', alt: 'Hidangan ayam teriyaki dengan wijen dan nasi', title: 'Ayam Teriyaki', time: '30 menit', difficulty: 'Mudah' },
+        { image: '/assets/img/pecel.jpg', alt: 'Pecel sayur dengan sambal kacang', title: 'Pecel Sayur Komplit', time: '30 menit', difficulty: 'Sedang' },
+        { image: '/assets/img/ayam-bakar-bali.jpg', alt: 'Ayam bakar Bali berbumbu rempah', title: 'Ayam Bakar Bumbu Bali', time: '55 menit', difficulty: 'Sedang' }
       ],
       activePage: 'home',
       menuOpen: false
@@ -55,9 +58,7 @@ createApp({
       const deltaX = event.clientX - startX;
       const threshold = Math.max(55, Math.min(110, width * 0.1));
       if (Math.abs(deltaX) >= threshold) {
-        this.slideDirection = deltaX < 0 ? 'slide-next' : 'slide-previous';
-        const direction = deltaX < 0 ? 1 : -1;
-        this.photoIndex = (this.photoIndex + direction + this.heroPhotos.length) % this.heroPhotos.length;
+        this.advancePhoto(deltaX < 0 ? 1 : -1);
       }
       this.photoDrag = null;
       this.photoOffsetX = 0;
@@ -65,6 +66,24 @@ createApp({
     cancelPhotoDrag() {
       this.photoDrag = null;
       this.photoOffsetX = 0;
+    },
+    advancePhoto(direction = 1) {
+      this.slideDirection = direction < 0 ? 'slide-previous' : 'slide-next';
+      this.photoIndex = (this.photoIndex + direction + this.heroPhotos.length) % this.heroPhotos.length;
+    },
+    toggleHeroMotion() {
+      this.heroPlaying = !this.heroPlaying;
+    },
+    onHeroMotionTick() {
+      if (this.heroPlaying && !this.heroHovered && !this.photoDrag && this.activePage === 'home' && document.visibilityState === 'visible') {
+        this.advancePhoto(1);
+      }
     }
+  },
+  mounted() {
+    this.heroMotionTimer = window.setInterval(() => this.onHeroMotionTick(), 8000);
+  },
+  beforeUnmount() {
+    window.clearInterval(this.heroMotionTimer);
   }
 }).mount('#app');

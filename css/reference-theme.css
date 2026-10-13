@@ -142,27 +142,29 @@ body[data-theme="dark"] .recipe-tags span { background: #383047; color: #c7b8e7;
   height: 100%;
   object-fit: cover;
   object-position: center 54%;
-  transform: translate3d(var(--drag-x,0),0,0) scale(1.25);
+  transform: translate3d(var(--drag-x,0),0,0) scale(1.07);
   transform-origin: center;
   will-change: transform;
-  animation: hero-photo-arrive .8s ease both, hero-photo-drift 24s ease-in-out infinite alternate;
+  animation: hero-photo-arrive .8s ease both, hero-photo-drift 20s ease-in-out infinite alternate;
 }
 .hero-photo-stage { cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
 .hero-photo-stage.is-dragging { cursor: grabbing; }
 .hero-photo-stage.is-dragging .hero-food-photo { transition: none; }
+.hero-photo-stage.is-paused .hero-food-photo { animation-play-state: paused; }
+.hero-photo-stage:focus-visible { outline: 2px solid #c6b4f1; outline-offset: -5px; }
 .hero-food-photo.slide-next {
-  animation: hero-photo-arrive .8s ease both, hero-photo-drift 24s ease-in-out infinite alternate, hero-slide-in-from-right .42s cubic-bezier(.2,.7,.2,1);
+  animation: hero-photo-arrive .8s ease both, hero-photo-drift 20s ease-in-out infinite alternate, hero-slide-in-from-right .42s cubic-bezier(.2,.7,.2,1);
 }
 .hero-food-photo.slide-previous {
-  animation: hero-photo-arrive .8s ease both, hero-photo-drift 24s ease-in-out infinite alternate, hero-slide-in-from-left .42s cubic-bezier(.2,.7,.2,1);
+  animation: hero-photo-arrive .8s ease both, hero-photo-drift 20s ease-in-out infinite alternate, hero-slide-in-from-left .42s cubic-bezier(.2,.7,.2,1);
 }
 @keyframes hero-slide-in-from-right {
-  from { transform: translate3d(6vw,0,0) scale(1.25); }
-  to { transform: translate3d(0,0,0) scale(1.25); }
+  from { transform: translate3d(calc(var(--drag-x,0px) + 3vw),0,0) scale(1.07); }
+  to { transform: translate3d(var(--drag-x,0px),0,0) scale(1.07); }
 }
 @keyframes hero-slide-in-from-left {
-  from { transform: translate3d(-6vw,0,0) scale(1.25); }
-  to { transform: translate3d(0,0,0) scale(1.25); }
+  from { transform: translate3d(calc(var(--drag-x,0px) - 3vw),0,0) scale(1.07); }
+  to { transform: translate3d(var(--drag-x,0px),0,0) scale(1.07); }
 }
 .hero-slide-indicator {
   position: absolute;
@@ -202,13 +204,33 @@ body[data-theme="dark"] .recipe-tags span { background: #383047; color: #c7b8e7;
 .hero-recipe-meta-details { display: flex; gap: 8px; flex-wrap: wrap; }
 .hero-recipe-meta-details span { display: inline-flex; align-items: center; gap: 6px; padding: 6px 9px; color: rgba(255,255,255,.9); background: rgba(255,255,255,.1); border-radius: 999px; font-size: .76rem; }
 .hero-recipe-meta-details i { color: #d6c5f7; font-style: normal; }
+.hero-motion-toggle {
+  position: absolute;
+  z-index: 5;
+  top: clamp(88px,12vh,124px);
+  right: max(32px,calc((100vw - 1200px)/2));
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  color: rgba(255,255,255,.92);
+  background: rgba(31,25,41,.48);
+  border: 1px solid rgba(255,255,255,.25);
+  border-radius: 50%;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: background .2s ease, transform .2s ease;
+}
+.hero-motion-toggle:hover { background: rgba(31,25,41,.72); transform: scale(1.05); }
+.hero-motion-toggle:focus-visible { outline: 2px solid #d6c5f7; outline-offset: 3px; }
+.hero-motion-toggle svg { width: 15px; height: 15px; }
 @keyframes hero-photo-arrive {
   from { opacity: .35; }
   to { opacity: 1; }
 }
 @keyframes hero-photo-drift {
-  from { object-position: center 48%; }
-  to { object-position: center 58%; }
+  from { transform: translate3d(var(--drag-x,0),0,0) scale(1.07); object-position: center 48%; }
+  to { transform: translate3d(var(--drag-x,0),0,0) scale(1.13); object-position: center 54%; }
 }
 .hero-photo-caption {
   position: absolute;
@@ -453,4 +475,8 @@ body[data-theme="dark"] .recipe-tags span { background: #383047; color: #c7b8e7;
   .theme-toggle span { display: none; }
   .btn-avatar, .btn-hamburger { width: 36px; height: 38px; justify-content: center; align-items: center; }
   .btn-hamburger { padding: 7px; }
+}
+
+@media (max-width: 600px) {
+  .hero-motion-toggle { top: 84px; right: 16px; width: 36px; height: 36px; }
 }
