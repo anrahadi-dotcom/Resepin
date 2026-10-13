@@ -9,9 +9,9 @@ createApp({
       photoIndex: 0,
       slideDirection: '',
       heroPhotos: [
-        { image: '/assets/img/sup-jagung.jpg', alt: 'Sup jagung dan wortel' },
-        { image: '/assets/img/nasi-goreng.jpg', alt: 'Nasi goreng sederhana' },
-        { image: '/assets/img/ayam-betutu.jpg', alt: 'Ayam betutu' }
+        { image: '/assets/img/sup-jagung.jpg', alt: 'Sup jagung dan wortel', title: 'Sup Jagung Wortel', time: '20 menit', difficulty: 'Mudah' },
+        { image: '/assets/img/nasi-goreng.jpg', alt: 'Nasi goreng sederhana', title: 'Nasi Goreng Sederhana', time: '15 menit', difficulty: 'Mudah' },
+        { image: '/assets/img/ayam-betutu.jpg', alt: 'Ayam betutu', title: 'Ayam Betutu Bali', time: '120 menit', difficulty: 'Sedang' }
       ],
       activePage: 'home',
       menuOpen: false

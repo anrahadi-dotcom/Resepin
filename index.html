@@ -87,6 +87,14 @@
               <img :key="photoIndex" class="hero-food-photo h-full w-full select-none object-cover" :class="slideDirection" :src="heroPhotos[photoIndex].image" :alt="heroPhotos[photoIndex].alt" draggable="false" :style="{'--drag-x': photoOffsetX + 'px'}" />
               <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent"></div>
             </div>
+            <aside class="hero-recipe-meta" aria-live="polite" aria-atomic="true">
+              <span class="hero-recipe-meta-label">DI FOTO</span>
+              <h2>{{ heroPhotos[photoIndex].title }}</h2>
+              <div class="hero-recipe-meta-details">
+                <span><i aria-hidden="true">◷</i>{{ heroPhotos[photoIndex].time }}</span>
+                <span><i aria-hidden="true">✦</i>{{ heroPhotos[photoIndex].difficulty }}</span>
+              </div>
+            </aside>
             <div class="hero-slide-indicator" aria-hidden="true">
               <span v-for="(photo, index) in heroPhotos" :key="photo.image" :class="{active: photoIndex === index}"></span>
             </div>
