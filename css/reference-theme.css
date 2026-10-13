@@ -142,14 +142,47 @@ body[data-theme="dark"] .recipe-tags span { background: #383047; color: #c7b8e7;
   height: 100%;
   object-fit: cover;
   object-position: center 54%;
-  transform: translate3d(var(--pan-x,0),var(--pan-y,0),0) scale(1.12);
+  transform: translate3d(var(--drag-x,0),0,0) scale(1.25);
   transform-origin: center;
   will-change: transform;
   animation: hero-photo-arrive .8s ease both, hero-photo-drift 24s ease-in-out infinite alternate;
 }
-.hero-photo-stage { cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
+.hero-photo-stage { cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
 .hero-photo-stage.is-dragging { cursor: grabbing; }
 .hero-photo-stage.is-dragging .hero-food-photo { transition: none; }
+.hero-food-photo.slide-next {
+  animation: hero-photo-arrive .8s ease both, hero-photo-drift 24s ease-in-out infinite alternate, hero-slide-in-from-right .42s cubic-bezier(.2,.7,.2,1);
+}
+.hero-food-photo.slide-previous {
+  animation: hero-photo-arrive .8s ease both, hero-photo-drift 24s ease-in-out infinite alternate, hero-slide-in-from-left .42s cubic-bezier(.2,.7,.2,1);
+}
+@keyframes hero-slide-in-from-right {
+  from { transform: translate3d(6vw,0,0) scale(1.25); }
+  to { transform: translate3d(0,0,0) scale(1.25); }
+}
+@keyframes hero-slide-in-from-left {
+  from { transform: translate3d(-6vw,0,0) scale(1.25); }
+  to { transform: translate3d(0,0,0) scale(1.25); }
+}
+.hero-slide-indicator {
+  position: absolute;
+  z-index: 3;
+  bottom: 30px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.hero-slide-indicator span {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.55);
+  transition: width .22s ease, background .22s ease;
+}
+.hero-slide-indicator span.active { width: 20px; background: #c6b4f1; }
 @keyframes hero-photo-arrive {
   from { opacity: .35; }
   to { opacity: 1; }

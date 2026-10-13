@@ -5,7 +5,14 @@ createApp({
   data() {
     return {
       photoDrag: null,
-      photoOffset: { x: 0, y: 0 },
+      photoOffsetX: 0,
+      photoIndex: 0,
+      slideDirection: '',
+      heroPhotos: [
+        { image: '/assets/img/sup-jagung.jpg', alt: 'Sup jagung dan wortel' },
+        { image: '/assets/img/nasi-goreng.jpg', alt: 'Nasi goreng sederhana' },
+        { image: '/assets/img/ayam-betutu.jpg', alt: 'Ayam betutu' }
+      ],
       activePage: 'home',
       menuOpen: false
     };
@@ -31,23 +38,33 @@ createApp({
       if (event.button !== undefined && event.button !== 0) return;
       const bounds = event.currentTarget.getBoundingClientRect();
       this.photoDrag = {
-        pointerX: event.clientX,
-        pointerY: event.clientY,
-        startX: this.photoOffset.x,
-        startY: this.photoOffset.y,
-        maxX: bounds.width * 0.055,
-        maxY: bounds.height * 0.055
+        startX: event.clientX,
+        width: bounds.width
       };
       event.currentTarget.setPointerCapture(event.pointerId);
     },
     movePhoto(event) {
       if (!this.photoDrag) return;
-      const { pointerX, pointerY, startX, startY, maxX, maxY } = this.photoDrag;
-      this.photoOffset.x = Math.max(-maxX, Math.min(maxX, startX + event.clientX - pointerX));
-      this.photoOffset.y = Math.max(-maxY, Math.min(maxY, startY + event.clientY - pointerY));
+      const deltaX = event.clientX - this.photoDrag.startX;
+      const maxOffset = this.photoDrag.width * 0.12;
+      this.photoOffsetX = Math.max(-maxOffset, Math.min(maxOffset, deltaX));
     },
-    endPhotoDrag() {
+    endPhotoDrag(event) {
+      if (!this.photoDrag) return;
+      const { startX, width } = this.photoDrag;
+      const deltaX = event.clientX - startX;
+      const threshold = Math.max(55, Math.min(110, width * 0.1));
+      if (Math.abs(deltaX) >= threshold) {
+        this.slideDirection = deltaX < 0 ? 'slide-next' : 'slide-previous';
+        const direction = deltaX < 0 ? 1 : -1;
+        this.photoIndex = (this.photoIndex + direction + this.heroPhotos.length) % this.heroPhotos.length;
+      }
       this.photoDrag = null;
+      this.photoOffsetX = 0;
+    },
+    cancelPhotoDrag() {
+      this.photoDrag = null;
+      this.photoOffsetX = 0;
     }
   }
 }).mount('#app');

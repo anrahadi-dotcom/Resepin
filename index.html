@@ -82,10 +82,13 @@
           <p class="hero-note">Pilih inspirasi, geser bahan di atas foto, lalu mulai masak.</p>
         </div>
         <div class="hero-visual">
-          <div class="hero-photo-stage" :class="{'is-dragging': photoDrag}" @pointerdown.prevent="startPhotoDrag" @pointermove="movePhoto" @pointerup="endPhotoDrag" @pointercancel="endPhotoDrag">
+          <div class="hero-photo-stage" :class="{'is-dragging': photoDrag}" role="group" aria-label="Foto resep. Geser kiri atau kanan untuk mengganti foto." @pointerdown.prevent="startPhotoDrag" @pointermove="movePhoto" @pointerup="endPhotoDrag" @pointercancel="cancelPhotoDrag">
             <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-amber-100">
-              <img class="hero-food-photo h-full w-full select-none object-cover" src="/assets/img/sup-jagung.jpg" alt="Sup jagung dan wortel" draggable="false" :style="{'--pan-x': photoOffset.x + 'px', '--pan-y': photoOffset.y + 'px'}" />
+              <img :key="photoIndex" class="hero-food-photo h-full w-full select-none object-cover" :class="slideDirection" :src="heroPhotos[photoIndex].image" :alt="heroPhotos[photoIndex].alt" draggable="false" :style="{'--drag-x': photoOffsetX + 'px'}" />
               <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent"></div>
+            </div>
+            <div class="hero-slide-indicator" aria-hidden="true">
+              <span v-for="(photo, index) in heroPhotos" :key="photo.image" :class="{active: photoIndex === index}"></span>
             </div>
           </div>
         </div>
