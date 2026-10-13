@@ -60,6 +60,10 @@ Repo ini dapat diimpor sebagai project Vercel dengan root directory default. Ver
 
 Atur variable tersebut untuk Production dan Preview. Project Vercel baru memenuhi syarat large functions secara default. Model diunduh dan diverifikasi saat function pertama kali menerima foto, lalu disimpan pada cache sementara instance tersebut. Endpoint menerima foto hingga 4 MB karena batas request Vercel Functions adalah 4,5 MB; browser mengecilkan foto kamera sebelum mengirimnya. Server `server.py` tetap dipakai saat development lokal.
 
+### Deploy frontend ke Cloudflare Pages
+
+Frontend statis dibangun ke `dist/` dengan `npm run build` dan diunggah menggunakan Wrangler. Jalankan `npx wrangler pages deploy dist --project-name=resepin` setelah menghubungkan Wrangler ke akun Cloudflare. Endpoint Pages memberi respons yang jelas bahwa scan kamera belum tersedia di Cloudflare; fitur ini tetap tersedia lewat server lokal atau deployment Vercel.
+
 ## Bagian aplikasi
 
 - Beranda: pengenalan produk dan resep unggulan.

@@ -11,3 +11,6 @@ venv/
 .env
 .env.*
 !.env.example
+
+# Generated static output for Cloudflare Pages
+/dist/
