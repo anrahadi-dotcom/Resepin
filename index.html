@@ -73,29 +73,33 @@
       <div id="heroApp" class="hero-container" v-cloak>
         <div class="hero-content">
           <div class="hero-badge"><span class="badge-dot"></span><span>Masak enak, sisa berkurang</span></div>
-          <h1 class="text-5xl md:text-6xl font-bold leading-tight mb-5">Sisa Bahan<br/>di Dapur?<br/><span class="title-gradient">Jadikan Masakan</span><br/><span class="title-accent">Lezat!</span></h1>
+          <h1 class="text-5xl md:text-6xl font-bold leading-tight mb-5">Apa yang ada<br/>di dapurmu?<br/><span class="title-gradient">Jadikan hidangan</span><br/><span class="title-accent">istimewa.</span></h1>
           <p class="hero-desc">Punya bahan tersisa? Temukan masakan rumahan yang enak, praktis, dan cocok dengan isi dapurmu.</p>
           <div class="hero-cta">
             <button class="btn-primary" @click="go('scan')">Cari resep dari bahan</button>
             <button class="btn-secondary" @click="go('resep')">Lihat Semua Resep <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
           </div>
-          <p class="hero-note">Geser bahan pada foto untuk bermain. Bisa ketik bahan sendiri atau pakai kamera.</p>
+          <p class="hero-note">Pilih inspirasi, geser bahan di atas foto, lalu mulai masak.</p>
         </div>
         <div class="hero-visual">
-          <div class="w-full max-w-lg rounded-3xl border border-white/60 bg-white/70 p-4 shadow-2xl backdrop-blur dark:bg-stone-900/70">
-            <div class="flex items-center justify-between px-2 pb-3">
-              <div><p class="text-xs font-bold uppercase tracking-[.18em] text-orange-800">Inspirasi dari dapur</p><h2 class="mt-1 text-xl font-bold text-stone-900 dark:text-white">Sup jagung &amp; wortel</h2></div>
-              <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-800">20 menit</span>
+          <div class="hero-photo-stage">
+            <div class="hero-photo-caption">
+              <p>INSPIRASI DARI DAPUR</p>
+              <h2>{{ activeHeroRecipe.title }}</h2>
+              <span>{{ activeHeroRecipe.time }}</span>
             </div>
             <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-amber-100" @pointermove="moveIngredient" @pointerup="endDrag" @pointercancel="endDrag">
-              <img class="h-full w-full select-none object-cover" src="/assets/img/sup-jagung.jpg" alt="Semangkuk sup jagung dan wortel" draggable="false" />
+              <img :key="activeHeroRecipe.image" class="hero-food-photo h-full w-full select-none object-cover" :src="activeHeroRecipe.image" :alt="activeHeroRecipe.title" draggable="false" />
               <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent"></div>
               <button v-for="item in ingredients" :key="item.name" type="button" class="absolute z-10 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 touch-none place-items-center rounded-2xl border border-white/70 bg-white/90 text-3xl shadow-lg transition-shadow hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-orange-500" :style="{left: item.x + '%', top: item.y + '%', cursor: dragging === item.name ? 'grabbing' : 'grab'}" :aria-label="'Seret bahan ' + item.name" @pointerdown.prevent="startDrag($event, item)">
                 {{ item.emoji }}
               </button>
               <div class="pointer-events-none absolute bottom-3 left-3 rounded-full bg-black/45 px-3 py-1.5 text-xs font-medium text-white">Seret bahan ke mana saja ✨</div>
             </div>
-            <div class="flex flex-wrap gap-2 px-2 pt-3"><span v-for="item in ingredients" :key="item.name" class="rounded-full bg-orange-50 px-3 py-1 text-xs font-semibold text-orange-900">{{ item.name }}</span></div>
+            <div class="hero-recipe-switcher" aria-label="Pilih inspirasi resep">
+              <button v-for="(recipe, index) in heroRecipes" :key="recipe.title" type="button" :class="{active: heroRecipeIndex === index}" :aria-pressed="heroRecipeIndex === index" @click="setHeroRecipe(index)">{{ recipe.label }}</button>
+            </div>
+            <div class="hero-ingredient-tags"><span v-for="item in ingredients" :key="item.name">{{ item.name }}</span></div>
           </div>
         </div>
       </div>
