@@ -14,3 +14,4 @@ venv/
 
 # Generated static output for Cloudflare Pages
 /dist/
+/.wrangler/
