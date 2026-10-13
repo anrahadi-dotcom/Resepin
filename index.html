@@ -10,16 +10,18 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/css/style.css" />
   <link rel="stylesheet" href="/css/responsive.css" />
+  <link rel="stylesheet" href="/css/reference-theme.css" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <style>[v-cloak] { display: none; }</style>
 </head>
 <body>
+  <div id="app">
 
   <!-- ===== NAVBAR ===== -->
   <nav class="navbar" id="navbar">
     <div class="nav-container">
-      <a class="nav-logo" href="#" onclick="showPage('home')">
+      <a class="nav-logo" href="#" @click="go('home')">
         <div class="logo-icon">
           <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="16" cy="16" r="15" fill="url(#logoGrad)" opacity="0.12"/>
@@ -37,25 +39,25 @@
       </a>
 
       <div class="nav-links" id="navLinks">
-        <a class="nav-link active" data-page="home" href="#" onclick="showPage('home'); return false;">Beranda</a>
-        <a class="nav-link" data-page="scan" href="#" onclick="showPage('scan'); return false;">Bahan</a>
-        <a class="nav-link" data-page="resep" href="#" onclick="showPage('resep'); return false;">Resep</a>
-        <a class="nav-link" data-page="chef" href="#" onclick="showPage('chef'); return false;">Chef Resepin</a>
-        <a class="nav-link" data-page="jelajahi" href="#" onclick="showPage('jelajahi'); return false;">Jelajahi</a>
+        <a class="nav-link active" data-page="home" href="#" @click.prevent="go('home')">Beranda</a>
+        <a class="nav-link" data-page="scan" href="#" @click.prevent="go('scan')">Bahan</a>
+        <a class="nav-link" data-page="resep" href="#" @click.prevent="go('resep')">Resep</a>
+        <a class="nav-link" data-page="chef" href="#" @click.prevent="go('chef')">Chef Resepin</a>
+        <a class="nav-link" data-page="jelajahi" href="#" @click.prevent="go('jelajahi')">Jelajahi</a>
       </div>
 
       <div class="nav-actions">
-        <button class="btn-scan-nav" onclick="showPage('scan')">
+        <button class="btn-scan-nav" @click="go('scan')">
           <span>Tambah bahan</span>
         </button>
-        <button class="theme-toggle" id="themeToggle" type="button" onclick="toggleTheme()" aria-label="Aktifkan mode gelap" title="Ganti tema warna">
+        <button class="theme-toggle" id="themeToggle" type="button" @click="toggleTheme" aria-label="Aktifkan mode gelap" title="Ganti tema warna">
           <svg id="themeIcon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
           <span id="themeLabel">Terang</span>
         </button>
-        <button class="btn-avatar" onclick="showPage('profil')">
+        <button class="btn-avatar" @click="go('profil')">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         </button>
-        <button class="btn-hamburger" id="hamburgerBtn" onclick="toggleMenu()">
+        <button class="btn-hamburger" id="hamburgerBtn" @click="toggleMenu">
           <span></span><span></span><span></span>
         </button>
       </div>
@@ -74,8 +76,8 @@
           <h1 class="text-5xl md:text-6xl font-bold leading-tight mb-5">Sisa Bahan<br/>di Dapur?<br/><span class="title-gradient">Jadikan Masakan</span><br/><span class="title-accent">Lezat!</span></h1>
           <p class="hero-desc">Punya bahan tersisa? Temukan masakan rumahan yang enak, praktis, dan cocok dengan isi dapurmu.</p>
           <div class="hero-cta">
-            <button class="btn-primary" onclick="showPage('scan')">Cari resep dari bahan</button>
-            <button class="btn-secondary" onclick="showPage('resep')">Lihat Semua Resep <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+            <button class="btn-primary" @click="go('scan')">Cari resep dari bahan</button>
+            <button class="btn-secondary" @click="go('resep')">Lihat Semua Resep <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
           </div>
           <p class="hero-note">Geser bahan pada foto untuk bermain. Bisa ketik bahan sendiri atau pakai kamera.</p>
         </div>
@@ -153,7 +155,7 @@
         <div class="section-header">
           <span class="section-tag">Resep Unggulan</span>
           <h2>Populer Hari Ini</h2>
-          <a class="see-all" href="#" onclick="showPage('resep'); return false;">Lihat Semua →</a>
+          <a class="see-all" href="#" @click.prevent="go('resep')">Lihat Semua →</a>
         </div>
         <div class="recipes-scroll">
           <div class="recipe-card" onclick="openRecipeModal('Sup Jagung Wortel', '20 mnt', '2 Porsi', '180 kal', ['🌽 Jagung', '🥕 Wortel', '🧅 Bawang', '🧄 Bawang Putih', '🧂 Garam'], ['Potong jagung dan wortel', 'Tumis bawang hingga harum', 'Masukkan air dan semua bahan', 'Rebus 15 menit, beri bumbu', 'Sajikan hangat'])">
@@ -281,7 +283,7 @@
             <div>
               <h2>Ngobrol dengan Chef Resepin</h2>
               <p>Bingung mau masak apa? Ceritakan bahan yang ada; Chef Resepin akan mencarikan ide, saran pengganti bahan, dan tips memasak.</p>
-              <button class="btn-primary" onclick="showPage('chef')">
+              <button class="btn-primary" @click="go('chef')">
                 Mulai Chat Sekarang
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </button>
@@ -316,10 +318,10 @@
           </div>
           <div class="footer-links">
             <h4>Fitur</h4>
-            <a href="#" onclick="showPage('scan')">Scan Bahan</a>
-            <a href="#" onclick="showPage('resep')">Cari Resep</a>
-            <a href="#" onclick="showPage('chef')">Chef Resepin</a>
-            <a href="#" onclick="showPage('jelajahi')">Jelajahi</a>
+            <a href="#" @click="go('scan')">Scan Bahan</a>
+            <a href="#" @click="go('resep')">Cari Resep</a>
+            <a href="#" @click="go('chef')">Chef Resepin</a>
+            <a href="#" @click="go('jelajahi')">Jelajahi</a>
           </div>
           <div class="footer-links">
             <h4>Kategori</h4>
@@ -348,7 +350,7 @@
   <div class="page" id="page-scan">
     <div class="scan-page">
       <div class="scan-header">
-        <button class="back-btn" onclick="showPage('home')">← Kembali</button>
+        <button class="back-btn" @click="go('home')">← Kembali</button>
         <h1>Tambah bahan dapur</h1>
         <p>Arahkan kamera ke bahan makanan; hasil pindai bisa kamu periksa dan koreksi</p>
       </div>
@@ -429,10 +431,10 @@
           </div>
 
           <div class="ip-actions">
-            <button class="btn-primary full-width" id="findRecipesBtn" onclick="showPage('resep')" disabled>
+            <button class="btn-primary full-width" id="findRecipesBtn" @click="go('resep')" disabled>
               🍳 Cari Resep (<span id="ingredientCountBtn">0</span> bahan)
             </button>
-            <button class="btn-secondary full-width" onclick="showPage('chef')">
+            <button class="btn-secondary full-width" @click="go('chef')">
               Tanya Chef Resepin
             </button>
           </div>
@@ -453,7 +455,7 @@
   <div class="page" id="page-resep">
     <div class="resep-page">
       <div class="resep-header">
-        <button class="back-btn" onclick="showPage('home')">← Kembali</button>
+        <button class="back-btn" @click="go('home')">← Kembali</button>
         <h1>🍜 Semua Resep</h1>
         <p>Temukan resep terbaik dari bahan yang kamu punya</p>
       </div>
@@ -488,7 +490,7 @@
   <div class="page" id="page-chef">
     <div class="chef-page">
       <div class="chef-header">
-        <button class="back-btn" onclick="showPage('home')">← Kembali</button>
+        <button class="back-btn" @click="go('home')">← Kembali</button>
         <div class="chef-title-area">
           <div class="chef-avatar">👩‍🍳</div>
           <div>
@@ -542,7 +544,7 @@
   <div class="page" id="page-jelajahi">
     <div class="jelajahi-page">
       <div class="jelajahi-header">
-        <button class="back-btn" onclick="showPage('home')">← Kembali</button>
+        <button class="back-btn" @click="go('home')">← Kembali</button>
         <h1>Jelajahi Resep</h1>
         <p>Temukan inspirasi masakan dari berbagai kategori</p>
       </div>
@@ -613,7 +615,7 @@
         </div>
 
         <div class="modal-actions">
-          <button class="btn-primary" onclick="closeRecipeModal(); showPage('chef')">Tanya Chef Resepin</button>
+          <button class="btn-primary" @click="closeModalAndGo('chef')">Tanya Chef Resepin</button>
           <button class="btn-secondary" onclick="saveRecipe()">♥️ Simpan Resep</button>
         </div>
       </div>
@@ -623,29 +625,11 @@
   <!-- ===== TOAST ===== -->
   <div class="toast" id="toast"></div>
 
-  <script src="/js/recipes.js"></script>
-  <script src="/js/chef-prompts.js"></script>
-  <script src="/js/main.js"></script>
-  <script src="/js/chatbot.js"></script>
-  <script>
-    Vue.createApp({
-      data() { return { dragging: null, ingredients: [
-        { name: 'Jagung', emoji: '🌽', x: 24, y: 28 },
-        { name: 'Wortel', emoji: '🥕', x: 75, y: 34 },
-        { name: 'Bawang', emoji: '🧅', x: 56, y: 70 }
-      ] }; },
-      methods: {
-        startDrag(event, item) { this.dragging = item.name; event.currentTarget.setPointerCapture(event.pointerId); this.moveIngredient(event); },
-        moveIngredient(event) {
-          if (!this.dragging) return;
-          const bounds = event.currentTarget.getBoundingClientRect();
-          const item = this.ingredients.find(entry => entry.name === this.dragging);
-          item.x = Math.max(8, Math.min(92, ((event.clientX - bounds.left) / bounds.width) * 100));
-          item.y = Math.max(12, Math.min(88, ((event.clientY - bounds.top) / bounds.height) * 100));
-        },
-        endDrag() { this.dragging = null; }
-      }
-    }).mount('#heroApp');
-  </script>
+  </div>
+  <script src="/src/legacy/recipes.js"></script>
+  <script src="/src/legacy/chef-prompts.js"></script>
+  <script src="/src/legacy/main.js"></script>
+  <script src="/src/legacy/chatbot.js"></script>
+  <script src="/src/app.js"></script>
 </body>
 </html>

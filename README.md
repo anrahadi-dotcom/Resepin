@@ -70,14 +70,13 @@ Atur variable tersebut untuk Production dan Preview. Project Vercel baru memenuh
 
 ## Struktur frontend
 
-- `index.html`: kerangka halaman dan urutan pemuatan stylesheet/script; hero memakai Vue 3 dan Tailwind CDN.
+- `index.html`: kerangka seluruh halaman aplikasi.
+- `src/app.js`: entry point Vue 3 untuk shell aplikasi dan interaksi hero.
+- `src/legacy/`: modul JavaScript lama yang masih menangani perilaku katalog, kamera, dan chat sambil dipindahkan ke komponen Vue.
 - `api/detect.py`: endpoint scan untuk Vercel Functions; mengambil bobot model dari Git LFS privat.
+- `css/reference-theme.css`: tema lavender dan aturan layout yang mengikuti referensi visual.
 - `css/style.css`: komponen, warna, dan gaya dasar.
 - `css/responsive.css`: breakpoint layar dan preferensi aksesibilitas.
-- `js/main.js`: navigasi halaman, kamera, katalog UI, dan interaksi umum.
-- `js/recipes.js`: data resep dan mapping foto.
-- `js/chef-prompts.js`: teks jawaban standar Chef Resepin.
-- `js/chatbot.js`: alur chat, pencocokan maksud, dan tampilan jawaban/resep.
 
 ## Alur pengguna
 
@@ -85,7 +84,7 @@ Beranda → Scan Bahan → izinkan kamera → arahkan ke bahan → Ambil Foto �
 
 ## Implementasi dan batasan
 
-Antarmuka menggunakan HTML, CSS responsif, dan JavaScript tanpa proses build. Server Python bawaan memuat `models/best.pt` menggunakan Ultralytics/PyTorch saat server mulai; checkpoint ini berisi 30 kelas bahan berbahasa Indonesia, yang juga dicatat di `data_classes.yaml`. Foto kamera dikirim ke endpoint lokal `/api/detect`, diproses di komputer yang menjalankan server, lalu dibuang setelah inferensi. File gambar tidak disimpan. Model mendeteksi objek sesuai kelas yang dipelajari; periksa hasilnya dan tambahkan bahan lain secara manual bila perlu. Mode Demo selalu menghasilkan bahan contoh dan bukan deteksi model.
+Antarmuka menggunakan Vue 3 dari CDN, HTML, dan CSS responsif tanpa proses build. Server Python bawaan memuat `models/best.pt` menggunakan Ultralytics/PyTorch saat server mulai; checkpoint ini berisi 30 kelas bahan berbahasa Indonesia, yang juga dicatat di `data_classes.yaml`. Foto kamera dikirim ke endpoint lokal `/api/detect`, diproses di komputer yang menjalankan server, lalu dibuang setelah inferensi. File gambar tidak disimpan. Model mendeteksi objek sesuai kelas yang dipelajari; periksa hasilnya dan tambahkan bahan lain secara manual bila perlu. Mode Demo selalu menghasilkan bahan contoh dan bukan deteksi model.
 
 Server deteksi hanya bind ke `127.0.0.1`, memeriksa origin permintaan, membatasi foto ke JPG/PNG/WebP hingga 10 MB, dan hanya menyajikan file frontend yang diperlukan. Checkpoint tidak bisa diunduh melalui web. Tidak ada kunci API atau panggilan layanan AI eksternal; Chef tetap memakai katalog dan aturan JavaScript lokal. Font masih dimuat dari Google Fonts.
 

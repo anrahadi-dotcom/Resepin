@@ -3,7 +3,7 @@
   "functions": {
     "api/detect.py": {
       "maxDuration": 60,
-      "excludeFiles": "{.git/**,.venv/**,models/**,assets/**,css/**,js/**,__pycache__/**}"
+      "excludeFiles": "{.git/**,.venv/**,models/**,assets/**,css/**,src/**,__pycache__/**}"
     }
   }
 }

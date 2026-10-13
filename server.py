@@ -61,10 +61,11 @@ class ResepinHandler(BaseHTTPRequestHandler):
 
         pages = {
             "/": ROOT / "index.html",
-            "/js/main.js": ROOT / "js" / "main.js",
-            "/js/recipes.js": ROOT / "js" / "recipes.js",
-            "/js/chef-prompts.js": ROOT / "js" / "chef-prompts.js",
-            "/js/chatbot.js": ROOT / "js" / "chatbot.js",
+            "/src/app.js": ROOT / "src" / "app.js",
+            "/src/legacy/main.js": ROOT / "src" / "legacy" / "main.js",
+            "/src/legacy/recipes.js": ROOT / "src" / "legacy" / "recipes.js",
+            "/src/legacy/chef-prompts.js": ROOT / "src" / "legacy" / "chef-prompts.js",
+            "/src/legacy/chatbot.js": ROOT / "src" / "legacy" / "chatbot.js",
             "/css/style.css": ROOT / "css" / "style.css",
             "/css/responsive.css": ROOT / "css" / "responsive.css",
         }
