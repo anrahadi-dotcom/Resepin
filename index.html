@@ -79,28 +79,31 @@
             <button class="btn-primary" @click="go('scan')">Cari resep dari bahan</button>
             <button class="btn-secondary" @click="go('resep')">Lihat Semua Resep <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
           </div>
-          <p class="hero-note">Geser foto untuk melihat inspirasi, lalu mulai masak.</p>
+          <p class="hero-note">Seret video untuk menjelajahi proses memasak, lalu mulai masak.</p>
         </div>
         <div class="hero-visual">
-          <div class="hero-photo-stage" :class="{'is-dragging': photoDrag, 'is-paused': !heroPlaying}" role="region" aria-roledescription="carousel" aria-label="Inspirasi resep" tabindex="0" @pointerenter="heroHovered = true" @pointerleave="heroHovered = false" @keydown.left.prevent="advancePhoto(-1)" @keydown.right.prevent="advancePhoto(1)" @pointerdown.prevent="startPhotoDrag" @pointermove="movePhoto" @pointerup="endPhotoDrag" @pointercancel="cancelPhotoDrag">
+          <div class="hero-photo-stage" :class="{'is-dragging': videoDrag, 'is-paused': !heroPlaying}" role="region" aria-label="Video tumis sayur. Geser kiri atau kanan untuk menjelajahi video." tabindex="0" @keydown.left.prevent="seekHeroVideo(-5)" @keydown.right.prevent="seekHeroVideo(5)" @pointerdown.prevent="startVideoScrub" @pointermove="moveVideoScrub" @pointerup="endVideoScrub" @pointercancel="cancelVideoScrub" @lostpointercapture="endVideoScrub">
             <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-amber-100">
-              <img :key="photoIndex" class="hero-food-photo h-full w-full select-none object-cover" :class="slideDirection" :src="heroPhotos[photoIndex].image" :alt="heroPhotos[photoIndex].alt" :fetchpriority="photoIndex === 0 ? 'high' : 'auto'" decoding="async" draggable="false" :style="{'--drag-x': photoOffsetX + 'px'}" />
+              <video ref="heroVideo" class="hero-food-video h-full w-full select-none object-cover" :autoplay="heroPlaying" muted loop playsinline preload="metadata" poster="/assets/img/pecel.jpg" aria-label="Sayuran berwarna-warni ditumis di wajan" @loadedmetadata="onHeroVideoLoaded" @timeupdate="onHeroVideoTimeUpdate">
+                <source src="https://videos.pexels.com/video-files/38878017/16528392_3840_2160_25fps.mp4" type="video/mp4" />
+                <source src="/assets/video/hero-tumis-tahu.mp4" type="video/mp4" />
+              </video>
               <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent"></div>
             </div>
-            <button class="hero-motion-toggle" type="button" :aria-label="heroPlaying ? 'Jeda gerak hero' : 'Putar gerak hero'" :title="heroPlaying ? 'Jeda gerak' : 'Putar gerak'" @pointerdown.stop @click.stop="toggleHeroMotion">
+            <button class="hero-motion-toggle" type="button" :aria-label="heroPlaying ? 'Jeda video hero' : 'Putar video hero'" :title="heroPlaying ? 'Jeda video' : 'Putar video'" @pointerdown.stop @click.stop="toggleHeroMotion">
               <svg v-if="heroPlaying" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5h3v14H8zM15 5h3v14h-3z" fill="currentColor"/></svg>
               <svg v-else viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 12 7-12 7z" fill="currentColor"/></svg>
             </button>
             <aside class="hero-recipe-meta" :aria-live="heroPlaying ? 'off' : 'polite'" aria-atomic="true">
-              <span class="hero-recipe-meta-label">DI FOTO</span>
-              <h2>{{ heroPhotos[photoIndex].title }}</h2>
+              <span class="hero-recipe-meta-label">VIDEO RESEP</span>
+              <h2>{{ heroRecipe.title }}</h2>
               <div class="hero-recipe-meta-details">
-                <span><i aria-hidden="true">◷</i>{{ heroPhotos[photoIndex].time }}</span>
-                <span><i aria-hidden="true">✦</i>{{ heroPhotos[photoIndex].difficulty }}</span>
+                <span><i aria-hidden="true">◷</i>{{ heroRecipe.time }}</span>
+                <span><i aria-hidden="true">✦</i>{{ heroRecipe.difficulty }}</span>
               </div>
             </aside>
-            <div class="hero-slide-indicator" aria-hidden="true">
-              <span v-for="(photo, index) in heroPhotos" :key="photo.image" :class="{active: photoIndex === index}"></span>
+            <div class="hero-video-progress" role="slider" aria-label="Posisi video resep" aria-valuemin="0" aria-valuemax="100" :aria-valuenow="Math.round(videoProgress * 100)" tabindex="0" @pointerdown.stop.prevent="startVideoScrub" @pointermove="moveVideoScrub" @pointerup="endVideoScrub" @pointercancel="cancelVideoScrub" @lostpointercapture="endVideoScrub">
+              <span :style="{width: (videoProgress * 100) + '%'}"></span>
             </div>
           </div>
         </div>

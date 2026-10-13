@@ -4,18 +4,11 @@ const { createApp } = Vue;
 createApp({
   data() {
     return {
-      photoDrag: null,
-      photoOffsetX: 0,
-      photoIndex: 0,
-      slideDirection: '',
+      videoDrag: null,
+      videoProgress: 0,
+      videoDuration: 0,
       heroPlaying: !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-      heroHovered: false,
-      heroMotionTimer: null,
-      heroPhotos: [
-        { image: '/assets/img/teriyaki.jpg', alt: 'Hidangan ayam teriyaki dengan wijen dan nasi', title: 'Ayam Teriyaki', time: '30 menit', difficulty: 'Mudah' },
-        { image: '/assets/img/pecel.jpg', alt: 'Pecel sayur dengan sambal kacang', title: 'Pecel Sayur Komplit', time: '30 menit', difficulty: 'Sedang' },
-        { image: '/assets/img/ayam-bakar-bali.jpg', alt: 'Ayam bakar Bali berbumbu rempah', title: 'Ayam Bakar Bumbu Bali', time: '55 menit', difficulty: 'Sedang' }
-      ],
+      heroRecipe: { title: 'Tumis Sayur', time: '15 menit', difficulty: 'Mudah' },
       activePage: 'home',
       menuOpen: false
     };
@@ -25,6 +18,7 @@ createApp({
       this.activePage = page;
       this.menuOpen = false;
       window.showPage(page);
+      this.$nextTick(this.syncHeroVideo);
     },
     toggleMenu() {
       this.menuOpen = !this.menuOpen;
@@ -37,53 +31,65 @@ createApp({
       window.closeRecipeModal();
       this.go(page);
     },
-    startPhotoDrag(event) {
+    startVideoScrub(event) {
       if (event.button !== undefined && event.button !== 0) return;
+      const video = this.$refs.heroVideo;
+      if (!video || !Number.isFinite(video.duration) || video.duration <= 0) return;
       const bounds = event.currentTarget.getBoundingClientRect();
-      this.photoDrag = {
+      this.videoDrag = {
         startX: event.clientX,
-        width: bounds.width
+        width: bounds.width,
+        startTime: video.currentTime,
+        wasPlaying: !video.paused
       };
+      video.pause();
       event.currentTarget.setPointerCapture(event.pointerId);
     },
-    movePhoto(event) {
-      if (!this.photoDrag) return;
-      const deltaX = event.clientX - this.photoDrag.startX;
-      const maxOffset = this.photoDrag.width * 0.12;
-      this.photoOffsetX = Math.max(-maxOffset, Math.min(maxOffset, deltaX));
+    moveVideoScrub(event) {
+      if (!this.videoDrag) return;
+      const video = this.$refs.heroVideo;
+      const deltaX = event.clientX - this.videoDrag.startX;
+      const seekOffset = deltaX / this.videoDrag.width * video.duration;
+      video.currentTime = (this.videoDrag.startTime + seekOffset + video.duration) % video.duration;
     },
-    endPhotoDrag(event) {
-      if (!this.photoDrag) return;
-      const { startX, width } = this.photoDrag;
-      const deltaX = event.clientX - startX;
-      const threshold = Math.max(55, Math.min(110, width * 0.1));
-      if (Math.abs(deltaX) >= threshold) {
-        this.advancePhoto(deltaX < 0 ? 1 : -1);
-      }
-      this.photoDrag = null;
-      this.photoOffsetX = 0;
+    endVideoScrub() {
+      if (!this.videoDrag) return;
+      const { wasPlaying } = this.videoDrag;
+      this.videoDrag = null;
+      if (wasPlaying && this.heroPlaying && this.activePage === 'home') this.$refs.heroVideo.play().catch(() => {});
     },
-    cancelPhotoDrag() {
-      this.photoDrag = null;
-      this.photoOffsetX = 0;
+    cancelVideoScrub() {
+      this.endVideoScrub();
     },
-    advancePhoto(direction = 1) {
-      this.slideDirection = direction < 0 ? 'slide-previous' : 'slide-next';
-      this.photoIndex = (this.photoIndex + direction + this.heroPhotos.length) % this.heroPhotos.length;
+    seekHeroVideo(seconds) {
+      const video = this.$refs.heroVideo;
+      if (!video || !Number.isFinite(video.duration)) return;
+      video.currentTime = (video.currentTime + seconds + video.duration) % video.duration;
     },
     toggleHeroMotion() {
       this.heroPlaying = !this.heroPlaying;
+      this.syncHeroVideo();
     },
-    onHeroMotionTick() {
-      if (this.heroPlaying && !this.heroHovered && !this.photoDrag && this.activePage === 'home' && document.visibilityState === 'visible') {
-        this.advancePhoto(1);
+    syncHeroVideo() {
+      const video = this.$refs.heroVideo;
+      if (!video) return;
+      if (this.heroPlaying && this.activePage === 'home' && document.visibilityState === 'visible') {
+        video.play().catch(() => { this.heroPlaying = false; });
+      } else {
+        video.pause();
       }
+    },
+    onHeroVideoLoaded() {
+      this.videoDuration = this.$refs.heroVideo?.duration || 0;
+      this.syncHeroVideo();
+    },
+    onHeroVideoTimeUpdate() {
+      const video = this.$refs.heroVideo;
+      if (video && video.duration) this.videoProgress = video.currentTime / video.duration;
     }
   },
   mounted() {
-    this.heroMotionTimer = window.setInterval(() => this.onHeroMotionTick(), 8000);
+    this.syncHeroVideo();
   },
-  beforeUnmount() {
-    window.clearInterval(this.heroMotionTimer);
-  }
+  beforeUnmount() { this.$refs.heroVideo?.pause(); }
 }).mount('#app');
