@@ -82,7 +82,7 @@ Frontend statis dibangun ke `dist/` dengan `npm run build` dan diunggah mengguna
 - `css/style.css`: komponen, warna, dan gaya dasar.
 - `css/responsive.css`: breakpoint layar dan preferensi aksesibilitas.
 
-Video hero memakai klip tumis sayur 4K (3840×2160, 25 fps) dari [Pexels](https://www.pexels.com/video/stirring-colorful-vegetables-in-frying-pan-38878017/), tersedia dengan lisensi gratis Pexels. File lokal di `assets/video/hero-tumis-tahu.mp4` menjadi sumber cadangan.
+Video hero memakai klip tumis tahu sayur lokal 1080p (1920×1080) dari `assets/video/hero-tumis-tahu.mp4`.
 
 ## Alur pengguna
 

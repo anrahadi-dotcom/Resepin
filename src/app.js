@@ -8,7 +8,7 @@ createApp({
       videoProgress: 0,
       videoDuration: 0,
       heroPlaying: !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-      heroRecipe: { title: 'Tumis Sayur', time: '15 menit', difficulty: 'Mudah' },
+      heroRecipe: { title: 'Tumis Tahu Sayur', time: '15 menit', difficulty: 'Mudah' },
       activePage: 'home',
       menuOpen: false
     };

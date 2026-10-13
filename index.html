@@ -82,10 +82,9 @@
           <p class="hero-note">Seret video untuk menjelajahi proses memasak, lalu mulai masak.</p>
         </div>
         <div class="hero-visual">
-          <div class="hero-photo-stage" :class="{'is-dragging': videoDrag, 'is-paused': !heroPlaying}" role="region" aria-label="Video tumis sayur. Geser kiri atau kanan untuk menjelajahi video." tabindex="0" @keydown.left.prevent="seekHeroVideo(-5)" @keydown.right.prevent="seekHeroVideo(5)" @pointerdown.prevent="startVideoScrub" @pointermove="moveVideoScrub" @pointerup="endVideoScrub" @pointercancel="cancelVideoScrub" @lostpointercapture="endVideoScrub">
+          <div class="hero-photo-stage" :class="{'is-dragging': videoDrag, 'is-paused': !heroPlaying}" role="region" aria-label="Video tumis tahu sayur. Geser kiri atau kanan untuk menjelajahi video." tabindex="0" @keydown.left.prevent="seekHeroVideo(-5)" @keydown.right.prevent="seekHeroVideo(5)" @pointerdown.prevent="startVideoScrub" @pointermove="moveVideoScrub" @pointerup="endVideoScrub" @pointercancel="cancelVideoScrub" @lostpointercapture="endVideoScrub">
             <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-amber-100">
-              <video ref="heroVideo" class="hero-food-video h-full w-full select-none object-cover" :autoplay="heroPlaying" muted loop playsinline preload="metadata" poster="/assets/img/pecel.jpg" aria-label="Sayuran berwarna-warni ditumis di wajan" @loadedmetadata="onHeroVideoLoaded" @timeupdate="onHeroVideoTimeUpdate">
-                <source src="https://videos.pexels.com/video-files/38878017/16528392_3840_2160_25fps.mp4" type="video/mp4" />
+              <video ref="heroVideo" class="hero-food-video h-full w-full select-none object-cover" :autoplay="heroPlaying" muted loop playsinline preload="metadata" poster="/assets/img/pecel.jpg" aria-label="Tahu dan sayuran ditumis di wajan" @loadedmetadata="onHeroVideoLoaded" @timeupdate="onHeroVideoTimeUpdate">
                 <source src="/assets/video/hero-tumis-tahu.mp4" type="video/mp4" />
               </video>
               <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent"></div>
