@@ -51,7 +51,15 @@ body[data-theme="dark"] .hero {
   background: linear-gradient(112deg,#292238 0%,#211d2c 54%,#30263f 100%);
 }
 .hero-bg-glow { background: radial-gradient(ellipse at 78% 34%,rgba(160,132,220,.18),transparent 54%); }
-.title-gradient, .gradient-text { background-image: linear-gradient(115deg,#7654b8,#a58ae0); }
+.title-gradient, .gradient-text {
+  background: linear-gradient(115deg,#7654b8,#a58ae0);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.hero-visual > div { background: rgba(255,255,255,.88) !important; border-color: rgba(117,84,184,.15) !important; }
+.hero-visual h2 { color: var(--text-primary) !important; }
 .recipe-card, .step-card, .ingredients-panel, .camera-section, .chat-container {
   box-shadow: var(--shadow-card);
 }
