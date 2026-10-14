@@ -1810,7 +1810,12 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
 }
 .nav-link:hover::after,
 .nav-link.active::after { transform: scaleX(1); }
+#app:has(#page-home.active) .navbar:not(.scrolled) .nav-links .nav-link.active {
+  color: #e1dcc9 !important;
+  background: transparent !important;
+}
 .nav-actions { flex: 0 0 auto; gap: 9px; }
+.btn-scan-nav span { display: inline !important; }
 .btn-scan-nav {
   display: inline-flex;
   flex: 0 0 auto;
