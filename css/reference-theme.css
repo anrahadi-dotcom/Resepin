@@ -1598,25 +1598,6 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
   transform: translateY(5px);
   box-shadow: 0 16px 38px rgba(0,0,0,.26), inset 0 1px 0 rgba(255,255,255,.2), inset 0 -1px 0 rgba(255,255,255,.05);
 }
-.nav-search-trigger {
-  display: grid;
-  flex: 0 0 40px;
-  width: 40px;
-  height: 40px;
-  place-items: center;
-  color: #e1dcc9;
-  border: 1px solid rgba(225,220,201,.16);
-  border-radius: 50%;
-  background: rgba(225,220,201,.055);
-  cursor: pointer;
-  transition: color .2s ease, background .2s ease, transform .25s ease;
-}
-.nav-search-trigger:hover,
-.nav-search-trigger:focus-visible {
-  color: #1f150c;
-  background: #e1dcc9;
-  transform: scale(1.04);
-}
 .nav-ingredient-search {
   position: absolute;
   z-index: 12;
@@ -1718,7 +1699,6 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
 }
 @media (prefers-reduced-motion: reduce) {
   .nav-container,
-  .nav-search-trigger,
   .nav-ingredient-search { transition: none !important; }
 }
 
@@ -1744,20 +1724,29 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
   .nav-links { order: 1; flex: 0 0 auto; margin: 0; gap: 2px; }
   .nav-link { padding: 8px 12px; font-size: .82rem; }
   .nav-actions { order: 2; flex: 0 0 auto; margin: 0; gap: 5px; }
-  .btn-scan-nav, .btn-avatar, .nav-search-trigger { width: 34px; height: 34px; }
-  .btn-scan-nav, .btn-avatar, .nav-search-trigger { flex-basis: 34px; }
+  .btn-scan-nav, .btn-avatar { width: 34px; height: 34px; flex-basis: 34px; }
+  .nav-container > .nav-links { position: static; }
 }
-.nav-ingredient-search { top: calc(100% + 10px); }
+.nav-ingredient-search { top: calc(100% + 2px); }
 .nav-ingredient-search::before {
   content: "";
   position: absolute;
-  top: -14px;
+  top: -5px;
   left: 0;
   right: 0;
-  height: 14px;
+  height: 5px;
   background: transparent;
 }
 @media (max-width: 900px) {
-  .nav-ingredient-search { top: calc(100% + 8px); }
-  .nav-ingredient-search::before { top: -12px; height: 12px; }
+  .nav-links.open .nav-ingredient-search {
+    position: static;
+    width: 100%;
+    max-width: none;
+    margin-top: 8px;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
+    transition: none;
+  }
 }
