@@ -796,20 +796,12 @@ document.addEventListener('keydown', (e) => {
 document.addEventListener('DOMContentLoaded', () => {
   const nav = document.getElementById('navbar');
   const navHint = document.getElementById('navHint');
-  const hintStorageKey = 'resep-nav-hover-hint-seen';
   const desktopHover = window.matchMedia('(min-width: 901px) and (hover: hover) and (pointer: fine)');
   if (nav && navHint && desktopHover.matches) {
-    let hasSeenHint = false;
-    try { hasSeenHint = localStorage.getItem(hintStorageKey) === 'true'; } catch (_) { /* Show the hint for this visit if storage is unavailable. */ }
-    if (!hasSeenHint) {
-      nav.classList.add('nav-hint-visible');
-      const dismissHint = () => {
-        nav.classList.remove('nav-hint-visible');
-        try { localStorage.setItem(hintStorageKey, 'true'); } catch (_) { /* The hint still dismisses for this visit. */ }
-      };
-      nav.addEventListener('pointerenter', dismissHint, { once: true });
-      nav.addEventListener('focusin', dismissHint, { once: true });
-    }
+    nav.classList.add('nav-hint-visible');
+    const dismissHint = () => nav.classList.remove('nav-hint-visible');
+    nav.addEventListener('pointerenter', dismissHint, { once: true });
+    nav.addEventListener('focusin', dismissHint, { once: true });
   }
 
   initTheme();

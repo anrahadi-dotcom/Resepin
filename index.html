@@ -72,9 +72,14 @@
         <a class="nav-link" data-page="jelajahi" href="#" @click.prevent="go('jelajahi')">Jelajahi</a>
         <form class="nav-ingredient-search" id="navIngredientSearch" @submit.prevent="submitHeroSearch">
           <label class="visually-hidden" for="heroIngredientSearch">Cari resep dari bahan</label>
-          <input id="heroIngredientSearch" v-model="heroIngredientText" type="search" aria-label="Ketik bahan untuk mencari resep" placeholder="Cari bahan..." autocomplete="off" />
+          <div class="nav-search-heading">
+            <strong>Masak dari bahan yang ada</strong>
+            <span>Pisahkan nama bahan dengan koma</span>
+          </div>
+          <input id="heroIngredientSearch" v-model="heroIngredientText" type="search" aria-label="Ketik bahan untuk mencari resep" placeholder="Contoh: telur, tomat, bawang..." autocomplete="off" />
           <button class="nav-search-submit" type="submit" aria-label="Cari resep" title="Cari resep" :disabled="heroSearchIngredients.length === 0">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m5 12 14 0m-6-6 6 6-6 6"/></svg>
+            <span>Cari resep</span>
           </button>
           <div class="hero-popular-ingredients nav-ingredient-popular" role="group" aria-label="Bahan populer">
             <span class="hero-popular-label">Populer:</span>
