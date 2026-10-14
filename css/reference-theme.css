@@ -1090,16 +1090,6 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
   opacity: .3;
   animation: kitchen-light-switch 3s cubic-bezier(.2,.7,.2,1) both;
 }
-.hero-light-beam {
-  position: absolute;
-  inset: 0;
-  opacity: .3;
-  clip-path: polygon(57.8% 7%,61.8% 7%,94% 100%,20% 100%);
-  background: linear-gradient(180deg,rgba(255,228,164,.48),rgba(225,220,201,.16) 40%,transparent 88%);
-  filter: blur(18px);
-  transform-origin: 60% 7%;
-  animation: lamp-beam-switch 3s ease-out both;
-}
 .hero-light-glow {
   position: absolute;
   top: 2%;
@@ -1124,12 +1114,6 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
   44% { opacity: .88; }
   51%,100% { opacity: .3; }
 }
-@keyframes lamp-beam-switch {
-  0%,33% { opacity: 0; transform: scaleY(.82); }
-  42% { opacity: .38; }
-  46% { opacity: .12; }
-  54%,100% { opacity: .3; transform: scaleY(1); }
-}
 @keyframes lamp-glow-switch {
   0%,34% { opacity: 0; }
   43% { opacity: .62; }
@@ -1141,12 +1125,6 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
   40% { opacity: .82; }
   44% { opacity: .96; }
   51%,100% { opacity: .65; }
-}
-@keyframes lamp-beam-switch-mobile {
-  0%,33% { opacity: 0; transform: scaleY(.82); }
-  42% { opacity: .22; }
-  46% { opacity: .08; }
-  54%,100% { opacity: .18; transform: scaleY(1); }
 }
 @keyframes lamp-glow-breathe { from { filter: blur(8px); scale: .98; } to { filter: blur(13px); scale: 1.06; } }
 @keyframes chef-photo-reveal { from { filter: brightness(.16); } to { filter: brightness(.88); } }
@@ -1170,8 +1148,6 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
     background: linear-gradient(180deg,rgba(0,0,0,.04) 0%,rgba(0,0,0,.1) 23%,rgba(0,0,0,.82) 53%,rgba(0,0,0,.96) 88%),linear-gradient(90deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.58) 50%,rgba(0,0,0,.12) 100%);
     animation-name: kitchen-light-switch-mobile;
   }
-  .hero-light-beam { filter: blur(48px); animation-name: lamp-beam-switch-mobile; }
-  .hero-light-beam { clip-path: polygon(54% 4%,63% 4%,100% 63%,0 63%); }
   .hero-light-glow { top: 2%; left: 59%; width: clamp(100px,30vw,220px); }
 }
 @media (max-width: 600px) {
@@ -1185,7 +1161,6 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
 @media (prefers-reduced-motion: reduce) {
   .hero-scene-photo { animation: none; filter: brightness(.88); transform: none; }
   .hero-light-veil { animation: none; opacity: .3; }
-  .hero-light-beam { animation: none; opacity: .18; transform: none; }
   .hero-light-glow { animation: none; opacity: .5; }
 }
 @media (max-width: 900px) and (prefers-reduced-motion: reduce) {
