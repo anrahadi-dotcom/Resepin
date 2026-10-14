@@ -237,6 +237,23 @@ function generateAIResponse(message) {
     const missingIngredient = Object.keys(substitutionAdvice).find(item => textHasPhrase(normalized, item));
     if (missingIngredient) {
       awaitingSubstitutionIngredient = false;
+      const swapMarker = normalized.search(/\b(?:ganti|diganti|gantikan)\b/);
+      if (swapMarker >= 0) {
+        const beforeSwap = normalized.slice(0, swapMarker);
+        const afterSwap = normalized.slice(swapMarker + normalized.slice(swapMarker).match(/^\b(?:ganti|diganti|gantikan)\b/)[0].length);
+        const sourceIngredient = Object.keys(substitutionAdvice).find(item => textHasPhrase(beforeSwap, item));
+        const targetText = afterSwap.replace(/^\s*(?:pakai|pake|dengan|jadi|oleh)\s+/, '');
+        const targetIngredient = Object.keys(substitutionAdvice).find(item => textHasPhrase(targetText, item)) ||
+          (/\b(daging|sapi|ayam|ikan|udang)\b/.test(targetText) ? 'daging' : null);
+        const activeRecipe = currentChatRecipeIdx !== null ? RECIPES_DB[currentChatRecipeIdx] : null;
+        const mentionsFriedRice = /\bnasi\s+goreng\b/.test(normalized) || /nasi\s+goreng/i.test(activeRecipe?.title || '');
+        if (sourceIngredient && targetIngredient && mentionsFriedRice && sourceIngredient === 'telur' && targetIngredient === 'daging') {
+          return { type: 'substitusi', text: 'Bisa. Untuk nasi goreng, daging bisa jadi topping/protein pengganti telur, meski teksturnya berbeda. Iris tipis atau cincang, tumis sampai matang sepenuhnya, lalu masukkan nasi dan bumbu. Kalau dagingnya alot, masak terpisah dulu sampai empuk. Tidak perlu menambahkan maizena—itu pengganti telur untuk fungsi mengikat adonan, bukan untuk nasi goreng.' };
+        }
+        if (sourceIngredient && targetIngredient) {
+          return { type: 'substitusi', text: `Bisa dicoba mengganti **${sourceIngredient}** dengan **${targetIngredient}**, tetapi kecocokannya bergantung pada hidangan dan fungsi bahannya. Sebutkan nama masakannya supaya aku bisa menyesuaikan saran dan cara memasaknya.` };
+        }
+      }
       if (missingIngredient === 'telur' && /\b(kue|bolu|cake|adonan)\b/.test(normalized)) {
         return { type: 'text', text: 'Untuk kue, pengganti telur tergantung fungsinya: pisang lumat atau saus apel membantu kelembapan (rasanya ikut berubah); flaxseed giling + air membantu mengikat. Tidak selalu bisa ditukar 1:1 di semua resep. Kirim jenis kue dan jumlah telurnya, nanti aku bantu pilih yang paling cocok.' };
       }
