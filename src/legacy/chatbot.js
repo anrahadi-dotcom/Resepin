@@ -24,6 +24,10 @@ function sendChat() {
   const input = document.getElementById('chatInput');
   const message = input.value.trim();
   if (!message) return;
+  if (message.length > 1000) {
+    appendChatMessage('Pesan maksimal 1.000 karakter. Ringkas pertanyaanmu lalu coba lagi.', 'assistant');
+    return;
+  }
 
   const history = [...document.querySelectorAll('#chatMessages .chat-bubble')].slice(-6).map(bubble => ({
     role: bubble.classList.contains('user-bubble') ? 'user' : 'assistant',
@@ -106,10 +110,13 @@ function generateAIResponse(message) {
     'baking soda': 'kalau resep memang memakai baking soda, biasanya perlu bahan asam seperti yogurt atau air lemon untuk mengaktifkannya. Baking powder tidak selalu bisa ditukar 1:1; kirim resep dan takarannya dulu.',
     'ragi': 'untuk roti mengembang, ragi tidak punya pengganti langsung yang setara. Baking powder cocok untuk adonan cepat, tapi hasilnya berbeda—sebutkan resepnya supaya aku bisa sarankan pilihan.',
     'kecap manis': 'campurkan kecap asin dengan gula merah atau gula pasir secukupnya; rasanya tidak persis sama, jadi tambahkan sedikit demi sedikit.',
+    'gula merah': 'gunakan gula pasir dengan jumlah sedikit lebih sedikit, lalu koreksi rasa; aroma karamelnya akan berkurang.',
+    'bawang putih': 'gunakan bawang merah sebagai pengganti aroma, atau lewati dan tambah sedikit bawang bombai bila ada. Rasanya akan lebih ringan.',
+    'bawang merah': 'gunakan bawang bombai atau sedikit bawang putih untuk aroma; rasanya berbeda, jadi sesuaikan jumlahnya.',
     'minyak goreng': 'untuk menumis bisa memakai margarin atau sedikit mentega. Untuk menggoreng rendam, pengganti bergantung pada titik asap dan jumlah minyak yang diperlukan.'
   };
   const substitutionFor = ingredient => {
-    const known = Object.keys(substitutionAdvice).find(name => textHasPhrase(ingredient, name));
+    const known = Object.keys(substitutionAdvice).sort((a, b) => b.length - a.length).find(name => textHasPhrase(ingredient, name));
     if (known) return substitutionAdvice[known];
     if (/sayur|bayam|kangkung|brokoli|sawi|kol|wortel|selada/.test(ingredient)) return 'ganti dengan sayuran lain yang tekstur dan waktu masaknya mirip, seperti kol, sawi, atau wortel. Masukkan sayuran keras lebih dulu.';
     return 'sebutkan jenis masakannya supaya aku bisa pilih pengganti yang rasanya dan fungsinya paling mendekati. Kalau bahan ini hanya pelengkap, biasanya bisa dilewati.';
@@ -135,13 +142,27 @@ function generateAIResponse(message) {
     return { type: 'text', text: CHEF_PROMPTS.noIngredients };
   }
 
-  const asksStorage = /\b(simpan|menyimpan|disimpan|penyimpanan|tahan lama|awet|basi|panaskan ulang|dipanasin|dipanaskan|panasin|hangatkan|dihangatkan|kedaluwarsa|kadaluwarsa|aman dimakan|masih aman|aman dikonsumsi|layak dimakan|berapa lama|masih bagus|dicairkan|thawing|defrost|semalaman|semalam|suhu ruang|di meja|dibiarkan|tertinggal)\b/.test(normalized) ||
+  const asksStorage = /\b(simpan|menyimpan|disimpan|penyimpanan|tahan lama|awet|basi|panaskan ulang|dipanasin|dipanaskan|panasin|hangatkan|dihangatkan|kedaluwarsa|kadaluwarsa|aman dimakan|masih aman|aman dikonsumsi|layak dimakan|masih bagus|dicairkan|thawing|defrost|semalaman|semalam|suhu ruang|di meja|dibiarkan|tertinggal)\b/.test(normalized) ||
+    (/\bberapa lama\b/.test(normalized) && /\b(tahan|simpan|kulkas|lemari es|freezer|suhu ruang|awet|basi)\b/.test(normalized)) ||
     (/\b(kulkas|lemari es|freezer|beku)\b/.test(normalized) && /\b(gimana|bagaimana|aman|simpan|tahan|berapa lama|berapa hari|cara)\b/.test(normalized));
   if (asksStorage) {
-    if (/\b(semalaman|semalam|di meja|suhu ruang|dibiarkan|tertinggal)\b/.test(normalized) &&
+    const roomTemperatureHours = Number(normalized.match(/\b(\d+)\s+jam\b/)?.[1] || 0);
+    const outsideFridgeDays = Number(normalized.match(/\b(\d+)\s+hari\b/)?.[1] || 0);
+    if (outsideFridgeDays > 0 && /\b(di luar kulkas|di luar lemari es|tanpa kulkas|suhu ruang|di meja)\b/.test(normalized) &&
+      /\b(ayam|unggas|daging|ikan|udang|nasi|makanan|masakan|sisa)\b/.test(normalized)) {
+      return { type: 'text', text: `${outsideFridgeDays} hari di luar kulkas terlalu lama untuk ayam atau makanan mudah rusak. Buang saja meskipun akan dimasak; panas tidak selalu menghilangkan risiko dari penanganan yang tidak aman. Jangan dicicipi untuk mengetes. Panduan umum USDA FSIS: makanan mudah rusak yang lebih dari 2 jam di suhu ruang sebaiknya dibuang.` };
+    }
+    if (/\b(sayur|sayuran|sayur daun|bayam|kangkung|selada)\b/.test(normalized) && /\bseminggu|7 hari|awet\b/.test(normalized)) {
+      return { type: 'text', text: 'Agar sayur lebih awet, pilah dan buang daun rusak, jangan dicuci sebelum disimpan kecuali dikeringkan sempurna, bungkus longgar dengan tisu/kain bersih, lalu simpan di laci sayur kulkas. Sayur daun tidak selalu tahan seminggu; cek kondisinya tiap hari dan buang jika berlendir atau berbau menyimpang.' };
+    }
+    if (/\b(bumbu halus)\b/.test(normalized)) {
+      return { type: 'text', text: 'Simpan bumbu halus dalam wadah bersih tertutup di kulkas dan ambil dengan sendok bersih; buat porsi kecil untuk beberapa hari. Untuk simpan lebih lama, bekukan per porsi. Lama aman bergantung bahan, kadar air, kebersihan, dan suhu, jadi jangan gunakan jika berubah bau/tekstur atau penanganannya meragukan.' };
+    }
+    if ((/\b(semalaman|semalam|di meja|suhu ruang|dibiarkan|tertinggal)\b/.test(normalized) || roomTemperatureHours > 2) &&
       !/\b(cairkan|mencairkan|dicairkan|thawing|defrost)\b/.test(normalized) &&
       /\b(ayam|daging|ikan|udang|nasi|tahu|makanan|masakan|sisa)\b/.test(normalized)) {
-      return { type: 'text', text: 'Makanan matang atau bahan mudah rusak yang dibiarkan di suhu ruang semalaman sebaiknya dibuang. Batas umum makanan mudah rusak adalah 2 jam di suhu ruang (1 jam jika suhu di atas 32°C); memanaskan ulang tidak selalu menghilangkan risiko. Jangan dicicipi untuk mengetes.' };
+      const leftOutDuration = roomTemperatureHours > 2 ? `${roomTemperatureHours} jam` : 'semalaman';
+      return { type: 'text', text: `Makanan matang atau bahan mudah rusak yang sudah berada di suhu ruang ${leftOutDuration} sebaiknya dibuang. Batas umum makanan mudah rusak adalah 2 jam di suhu ruang (1 jam jika suhu di atas 32°C); memanaskan ulang tidak selalu menghilangkan risiko. Jangan dicicipi untuk mengetes.` };
     }
     if (/\b(cairkan|mencairkan|dicairkan|thawing|defrost)\b/.test(normalized)) {
       return { type: 'text', text: 'Jangan cairkan bahan mudah rusak di meja dapur. Pilihan yang lebih aman: cairkan di kulkas; atau dalam kantong tertutup di air dingin (ganti air berkala) dan langsung masak; microwave juga boleh kalau langsung dimasak setelahnya. Kalau sudah berada di suhu ruang lebih dari 2 jam, lebih aman dibuang. Panduan umum: USDA FSIS.' };
@@ -179,6 +200,40 @@ function generateAIResponse(message) {
     };
   }
 
+  if (/\b(diabetes|diabetik|gula darah)\b/.test(normalized)) {
+    return { type: 'text', text: 'Gula merah tetap mengandung karbohidrat dan dapat menaikkan gula darah. Aku tidak bisa menentukan takaran yang aman untuk kondisi pribadimu; ikuti rencana makan dari dokter atau ahli gizi. Kalau tetap dipakai, ukur sedikit dan perhitungkan sebagai gula tambahan—jangan menganggap gula merah bebas risiko.' };
+  }
+
+  if (/\b(anak umur|anak usia|balita|umur 2 tahun|usia 2 tahun)\b/.test(normalized)) {
+    return { type: 'text', text: 'Untuk anak usia 2 tahun, pilih makanan yang lunak dan mudah dikunyah, potong kecil, batasi garam/gula tambahan, dan dampingi saat makan dalam posisi duduk. Hindari potongan keras atau bulat seperti wortel mentah, sosis berbentuk koin, kacang utuh, dan tulang. Bahan sisa hanya dipakai jika disimpan dengan aman; bila anak punya alergi atau kondisi medis, ikuti saran dokter anak.' };
+  }
+
+  if (/\b(tempe.*bintik hitam|bintik hitam.*tempe)\b/.test(normalized)) {
+    return { type: 'text', text: 'Bintik abu-abu/kehitaman kecil bisa muncul sebagai spora pada tempe yang fermentasinya lanjut, tetapi dari teks saja aku tidak bisa memastikan kondisinya. Kalau tempe berlendir, berubah warna mencolok, berbau menyengat/amonia, atau penyimpanannya meragukan, buang. Ikuti petunjuk kemasan dan masak sampai matang.' };
+  }
+
+  if (/\b(kulit wortel|batang kangkung|kulit sayur|batang sayur|tulang ayam|sisa nasi kering)\b/.test(normalized)) {
+    if (/\btulang ayam\b/.test(normalized)) {
+      return { type: 'text', text: 'Tulang ayam bisa direbus perlahan dengan air dan bumbu aromatik untuk membuat kaldu. Gunakan hanya tulang dari ayam yang ditangani dan disimpan dengan aman, saring kaldu, lalu buang tulangnya; jangan gunakan sisa yang lama berada di suhu ruang.' };
+    }
+    if (/\bsisa nasi kering\b/.test(normalized)) {
+      return { type: 'text', text: 'Kalau nasinya masih tersimpan aman dan belum basi, keringkan lalu buat kerupuk nasi atau rengginang rumahan. Pastikan nasi sisa segera didinginkan dan disimpan di kulkas; nasi yang dibiarkan di suhu ruang semalaman sebaiknya dibuang.' };
+    }
+    return { type: 'text', text: 'Bisa, selama masih segar, dicuci bersih, dan tidak berlendir atau berbau menyimpang. Kulit wortel dapat ikut dimasukkan ke sup/kaldu, sedangkan batang kangkung bisa diiris tipis dan ditumis lebih dulu karena lebih keras daripada daunnya.' };
+  }
+
+  if (/\b(ayam utuh|satu ayam utuh)\b/.test(normalized) && /\b(menu|3 hari|tiga hari)\b/.test(normalized)) {
+    return { type: 'text', text: 'Bagi ayam setelah dimasak matang: Hari 1, ayam panggang/bakar; Hari 2, suwir ayam untuk sup atau soto; Hari 3, tumis nasi atau mi dengan sisa daging. Rebus tulang menjadi kaldu jika penanganannya aman. Dinginkan sisa dalam wadah dangkal dan simpan di kulkas segera; jangan biarkan di suhu ruang lebih dari 2 jam.' };
+  }
+
+  if (/\b(rendah kalori|lebih ringan|makan malam rendah kalori)\b/.test(normalized)) {
+    return { type: 'text', text: 'Aku belum punya data kalori resep yang terverifikasi, jadi tidak bisa menjamin angka rendah kalori. Untuk makan malam yang lebih ringan, pilih sup sayur atau tumis sayur dengan sedikit minyak, lalu tambah protein seperti tahu, tempe, atau telur. Porsi dan kebutuhan tiap orang berbeda.' };
+  }
+
+  if (/\bbudget\b/.test(normalized) && /\b(ribu|rupiah|rp|hemat|dua orang|2 orang)\b/.test(normalized)) {
+    return { type: 'text', text: 'Aku belum punya harga pasar lokal terkini, jadi tidak mau menjanjikan cukup dalam Rp20.000. Untuk dua orang, menu sederhana bisa berupa tumis sayur dengan tahu/tempe dan nasi; pilih sayur musiman dan sesuaikan dengan harga di warung sekitar. Sebutkan kota dan bahan yang sudah ada kalau mau kubantu susun opsi tanpa mengarang harga.' };
+  }
+
   if (/\b(menu mingguan|rencana menu|meal prep|meal plan|daftar belanja|belanja mingguan|menu\s+(?:untuk\s+)?\d+\s+hari|menu\s+\d+\s+hari)\b/.test(normalized)) {
     const requestedDays = Number(normalized.match(/\b(\d+)\s+hari\b/)?.[1] || 3);
     const days = Math.max(1, Math.min(requestedDays, 7));
@@ -190,6 +245,11 @@ function generateAIResponse(message) {
       (!excludeDairy || !recipe.ingredients.some(ingredient => /susu|keju|mentega|krim|telur/i.test(ingredient))) &&
       (!excludeCoconut || !recipe.ingredients.some(ingredient => /santan|kelapa/i.test(ingredient))) &&
       !recipe.tags.includes('Pedas'));
+    if (/\b(daftar belanja|belanja mingguan)\b/.test(normalized)) {
+      const shoppingRecipes = quickMeals.slice(0, days);
+      const items = [...new Set(shoppingRecipes.flatMap(recipe => recipe.ingredients.map(item => item.replace(/^[^A-Za-zÀ-ÿ]+/, '').trim())))];
+      return { type: 'text', text: `Daftar bahan dari contoh menu ${shoppingRecipes.length} hari (belum termasuk takaran dan harga):\n${items.map(item => `• ${item}`).join('\n')}\n\nIni daftar umum dari resep katalog; sebutkan jumlah orang, bahan yang sudah ada, dan budget kalau mau aku rapikan supaya tidak berlebih.` };
+    }
     const plan = Array.from({ length: days }, (_, index) => {
       const recipe = quickMeals[index % Math.max(1, quickMeals.length)];
       return `Hari ${index + 1}: ${recipe?.title || 'pilih resep cepat dari katalog'}`;
@@ -200,16 +260,22 @@ function generateAIResponse(message) {
   if (/\b(alergi|alergik|intoleransi|tidak cocok|reaksi makanan)\b/.test(normalized)) {
     const allergen = Object.keys(AI_RESPONSES.keywords).find(item => item !== 'default' && textHasPhrase(normalized, item)) ||
       normalized.match(/(?:alergi|alergik|intoleransi)\s+(?:terhadap\s+)?([\p{L}-]+)/u)?.[1];
+    if (/\btelur\b/.test(normalized) && /\b(ganti|pengganti|diganti)\b/.test(normalized)) {
+      return { type: 'text', text: 'Kalau alergi telur, jangan gunakan telur atau produk yang mencantumkannya; periksa label dan risiko kontaminasi silang. Penggantinya tergantung resep: untuk lauk gurih bisa pakai tahu/tempe, sedangkan untuk adonan perlu pengikat khusus seperti flaxseed + air atau resep tanpa telur. Sebutkan masakannya supaya aku pilihkan dengan aman.' };
+    }
     return {
       type: 'text',
       text: `Aku bisa bantu menandai resep katalog yang mencantumkan ${allergen || 'bahan pemicu'}, tetapi aku tidak bisa menjamin makanan bebas alergennya karena label produk dan kontaminasi silang perlu dicek langsung. Untuk reaksi berat, jangan coba-coba bahan yang meragukan dan ikuti arahan tenaga kesehatan.`
     };
   }
 
-  if (/\b(vegetarian|vegan|tanpa daging|plant based|nabati|tanpa santan|bebas susu|tanpa susu|gluten free|bebas gluten|halal|tanpa babi)\b/.test(normalized)) {
+  if (/\b(vegetarian|vegan|tanpa daging|plant based|nabati|tanpa santan|bebas susu|tanpa susu|gluten free|bebas gluten|tanpa gluten|halal|tanpa babi)\b/.test(normalized)) {
+    if (/\b(vegetarian|vegan|tanpa daging|plant based|nabati)\b/.test(normalized) && /\btahu\b/.test(normalized) && /\bsayur|sayuran\b/.test(normalized)) {
+      return { type: 'text', text: 'Dari tahu dan sayur, kamu bisa bikin tumis tahu sayur: tiriskan dan potong tahu, tumis bawang bila ada, masukkan sayur yang keras lebih dulu lalu sayur daun, tambahkan tahu dan sedikit kecap asin/garam. Masak sampai panas merata; cabai bisa ditambahkan kalau suka.' };
+    }
     const avoid = /\b(tanpa santan)\b/.test(normalized) ? /santan|kelapa/i
       : /\b(bebas susu|tanpa susu)\b/.test(normalized) ? /susu|keju|mentega|krim/i
-        : /\b(gluten free|bebas gluten)\b/.test(normalized) ? /terigu|roti|mie|mi|kecap/i
+        : /\b(gluten free|bebas gluten|tanpa gluten)\b/.test(normalized) ? /terigu|roti|mie|mi|kecap/i
           : /\b(vegan|nabati|plant based)\b/.test(normalized) ? /ayam|daging|ikan|udang|telur|susu|keju|mentega|madu/i
       : /\b(vegetarian|tanpa daging)\b/.test(normalized) ? /ayam|daging|ikan|udang|terasi|ebi|belacan|teri|kaldu ayam/i
               : /\b(tanpa babi|halal)\b/.test(normalized) ? /babi/i : null;
@@ -217,13 +283,13 @@ function generateAIResponse(message) {
       ? RECIPES_DB.filter(recipe => !recipe.ingredients.some(ingredient => avoid.test(ingredient)))
       : RECIPES_DB.filter(recipe => recipe.tags.includes('Vegetarian'));
     const titles = candidates.slice(0, 4).map(recipe => recipe.title);
-    const condition = normalized.match(/vegetarian|vegan|tanpa daging|plant based|nabati|tanpa santan|bebas susu|tanpa susu|gluten free|bebas gluten|halal|tanpa babi/)?.[0] || 'preferensi itu';
+    const condition = normalized.match(/vegetarian|vegan|tanpa daging|plant based|nabati|tanpa santan|bebas susu|tanpa susu|gluten free|bebas gluten|tanpa gluten|halal|tanpa babi/)?.[0] || 'preferensi itu';
     return { type: 'text', text: titles.length
       ? `Untuk pilihan ${condition}, ini kandidat dari katalog: ${titles.join(', ')}. Ini penyaringan awal dari daftar bahan yang tercatat—cek lagi bumbu, kaldu, merek produk, dan labelnya. Mau rekomendasi dari bahan yang kamu punya?`
       : `Aku belum menemukan resep katalog yang cocok untuk ${condition}. Sebutkan bahan yang tersedia dan aku bantu cari opsi; tetap periksa label dan bahan tersembunyi seperti kaldu atau saus.` };
   }
 
-  const asksSubstitution = /\b(ganti|diganti|pengganti|alternatif|substitusi|tidak ada|tidak punya|nggak ada|ga ada|gak ada|habis|kehabisan)\b/.test(normalized);
+  const asksSubstitution = /\b(ganti|diganti|pengganti|alternatif|substitusi|tidak ada|tidak punya|nggak ada|nggak punya|gak ada|gak punya|ga ada|ga punya|enggak ada|enggak punya|habis|kehabisan)\b/.test(normalized);
   const isAcknowledgement = /^(oke|ok|iya|ya|boleh|siap|gas|lanjut|sip)(?:\s+(?:deh|dong|bro|kak|bang|sis|lanjut|ya|boleh|aja))*[!?.\s]*$/.test(normalized.trim());
   if (awaitingSubstitutionIngredient && !asksSubstitution && !explicitRecipeRequest) {
     if (isAcknowledgement) {
@@ -235,25 +301,46 @@ function generateAIResponse(message) {
   }
   if (asksSubstitution) {
     const recipeIngredientNames = RECIPES_DB.flatMap(recipe => recipe.ingredients.map(item => item.replace(/^[^A-Za-zÀ-ÿ]+/, '').trim().toLowerCase()));
-    const knownIngredientNames = [...new Set([...Object.keys(substitutionAdvice), ...recipeIngredientNames])].sort((a, b) => b.length - a.length);
-    const missingIngredient = knownIngredientNames.find(item => textHasPhrase(normalized, item));
+    const knownIngredientNames = [...new Set([...Object.keys(substitutionAdvice), ...recipeIngredientNames, 'ikan', 'sosis', 'kentang', 'babi', 'garam', 'gula', 'lada', 'merica', 'tapioka'])].sort((a, b) => b.length - a.length);
+    const activeRecipe = (currentChatRecipeIdx !== null ? RECIPES_DB[currentChatRecipeIdx] : null) ||
+      RECIPES_DB.find(recipe => textHasPhrase(normalized, recipe.title));
+    const questionWithoutRecipeTitle = activeRecipe ? normalized.split(activeRecipe.title.toLowerCase()).join(' ') : normalized;
+    const explicitlyAbsent = knownIngredientNames.find(item => {
+      const index = normalized.lastIndexOf(item);
+      if (index < 0) return false;
+      const before = normalized.slice(Math.max(0, index - 40), index);
+      const after = normalized.slice(index + item.length);
+      return /(?:nggak|gak|ga|enggak|tidak)\s+(?:ada|punya)\s*$/.test(before) || /^\s*(?:(?:nggak|gak|ga|enggak|tidak)\s+ada|(?:sudah\s+)?(?:habis|kosong))\b/.test(after);
+    });
+    const missingIngredient = explicitlyAbsent || knownIngredientNames.find(item => textHasPhrase(questionWithoutRecipeTitle, item));
     if (missingIngredient) {
       awaitingSubstitutionIngredient = false;
-      const swapMarker = normalized.search(/\b(?:ganti|diganti|gantikan)\b/);
+      if (/minyak/.test(missingIngredient) && /\b(tanpa minyak|masak tanpa minyak)\b/.test(normalized)) {
+        return { type: 'text', text: 'Bisa untuk tumis ringan: pakai wajan antilengket, kecilkan api, lalu tambahkan sedikit air atau kaldu saat bahan mulai menempel. Aduk sering dan tambahkan cairan sedikit demi sedikit. Cara ini tidak cocok untuk menggoreng rendam.' };
+      }
+      if (/daun salam/.test(normalized) && /\bserai\b/.test(normalized)) {
+        return { type: 'substitusi', text: 'Daun salam bisa dilewati atau diganti sedikit daun jeruk; aromanya berbeda. Serai bisa diganti kulit jeruk purut/daun jeruk sedikit, atau dilewati. Masukkan pengganti sedikit dulu agar aromanya tidak mendominasi.' };
+      }
+      const swapSearchText = questionWithoutRecipeTitle;
+      const swapMarker = swapSearchText.search(/\b(?:ganti|diganti|gantikan)\b/);
       if (swapMarker >= 0) {
-        const beforeSwap = normalized.slice(0, swapMarker);
-        const afterSwap = normalized.slice(swapMarker + normalized.slice(swapMarker).match(/^\b(?:ganti|diganti|gantikan)\b/)[0].length);
+        const beforeSwap = swapSearchText.slice(0, swapMarker);
+        const afterSwap = swapSearchText.slice(swapMarker + swapSearchText.slice(swapMarker).match(/^\b(?:ganti|diganti|gantikan)\b/)[0].length);
+        const findLastMention = (names, text) => names.map(name => ({ name, index: text.lastIndexOf(name) }))
+          .filter(item => item.index >= 0 && textHasPhrase(text, item.name))
+          .sort((a, b) => b.index - a.index || b.name.length - a.name.length)[0]?.name;
         const connector = afterSwap.match(/^\s*(?:pakai|pake|dengan|jadi|oleh)\s+/);
         const afterConnector = connector ? afterSwap.slice(connector[0].length) : afterSwap;
-        const sourceInBefore = knownIngredientNames.find(item => textHasPhrase(beforeSwap, item));
-        const sourceInAfter = knownIngredientNames.find(item => textHasPhrase(afterConnector.split(/\b(?:pakai|pake|dengan|jadi|oleh)\b/)[0], item));
+        const sourceInBefore = findLastMention(knownIngredientNames, beforeSwap);
+        const textBeforeTargetConnector = afterConnector.split(/\b(?:pakai|pake|dengan|jadi|oleh)\b/)[0].split(/\b(?:untuk|di|dalam|pada|buat|resep)\b/)[0];
+        const sourceInAfter = findLastMention(knownIngredientNames, textBeforeTargetConnector);
         const sourceIngredient = sourceInBefore || sourceInAfter;
-        const targetText = sourceInBefore ? afterConnector :
-          (afterSwap.match(/\b(?:pakai|pake|dengan|jadi|oleh)\s+(.+)/)?.[1] || '');
-        const targetAliases = [...new Set(['daging sapi', 'daging', 'ayam', 'ikan', 'udang', 'tempe', 'tahu', 'jamur', 'telur', 'sayur', 'santan', 'susu', 'keju', 'mentega', ...knownIngredientNames])].sort((a, b) => b.length - a.length);
-        const targetIngredient = targetAliases.find(item => textHasPhrase(targetText, item));
-        const activeRecipe = (currentChatRecipeIdx !== null ? RECIPES_DB[currentChatRecipeIdx] : null) ||
-          RECIPES_DB.find(recipe => textHasPhrase(normalized, recipe.title));
+        const targetText = (sourceInBefore ? afterConnector : (afterSwap.match(/\b(?:pakai|pake|dengan|jadi|oleh)\s+(.+)/)?.[1] || ''))
+          .replace(/\b(?:untuk|di|dalam|pada|buat|resep)\b.*$/,'').trim();
+        const targetAliases = [...new Set(['daging sapi', 'daging', 'ayam', 'ikan', 'udang', 'tempe', 'tahu', 'jamur', 'telur', 'sayur', 'santan', 'susu', 'susu oat', 'keju', 'mentega', 'margarin', 'minyak goreng', 'tapioka', 'tepung beras', 'garam', 'kaldu', 'air', 'yogurt', 'pisang', 'saus apel', 'flaxseed', 'baking soda', 'cream of tartar', 'kacang tanah', ...knownIngredientNames])].sort((a, b) => b.length - a.length);
+        const targetIngredient = targetAliases.map(name => ({ name, index: targetText.indexOf(name) }))
+          .filter(item => item.index >= 0 && textHasPhrase(targetText, item.name))
+          .sort((a, b) => a.index - b.index || b.name.length - a.name.length)[0]?.name;
         if (sourceIngredient && targetIngredient && activeRecipe) {
           const recipeIngredients = activeRecipe.ingredients.map(item => item.replace(/^[^A-Za-zÀ-ÿ]+/, '').trim().toLowerCase());
           const sourceIsInRecipe = recipeIngredients.some(item => textHasPhrase(item, sourceIngredient));
@@ -272,10 +359,58 @@ function generateAIResponse(message) {
           if (isProtein(sourceIngredient) && isProtein(targetIngredient)) {
             return { type: 'substitusi', text: `Untuk **${activeRecipe.title}**, **${targetIngredient}** bisa dipakai sebagai sumber protein pengganti **${sourceIngredient}**. Potong dengan ukuran serupa, masak sampai matang sesuai jenis bahannya, dan sesuaikan waktunya—ikan/tahu biasanya lebih cepat daripada daging. Rasa serta teksturnya akan berubah.` };
           }
+          if (sourceIngredient === 'santan' && /susu/.test(targetIngredient)) {
+            return { type: 'substitusi', text: `Untuk **${activeRecipe.title}**, susu bisa menggantikan santan, tetapi kuah akan lebih ringan dan rasanya berbeda. Tuang bertahap dengan api kecil, jangan sampai mendidih bergolak, lalu koreksi rasa. Untuk pilihan bebas susu, gunakan santan encer atau susu nabati tanpa gula.` };
+          }
+          if (/kecap manis/.test(sourceIngredient) && /kecap asin/.test(targetIngredient)) {
+            return { type: 'substitusi', text: `Untuk **${activeRecipe.title}**, kecap asin bisa menggantikan kecap manis untuk rasa gurih, tetapi tidak memberi rasa manis atau warna yang sama. Tambahkan sedikit gula, masukkan kecap asin bertahap, lalu cicipi agar tidak terlalu asin.` };
+          }
+          if (/terasi/.test(sourceIngredient) && /kecap/.test(targetIngredient)) {
+            return { type: 'substitusi', text: `Untuk **${activeRecipe.title}**, kecap bisa memberi rasa gurih tetapi tidak meniru aroma terasi. Tambahkan sedikit demi sedikit dan cicipi; jika menghindari seafood atau alergi udang, pastikan bumbu lain juga aman.` };
+          }
+          if (/tepung terigu/.test(sourceIngredient) && /maizena/.test(targetIngredient)) {
+            return { type: 'text', text: `Untuk **${activeRecipe.title}**, maizena bukan pengganti 1:1 tepung terigu karena tidak membentuk struktur seperti terigu. Sedikit maizena dapat dicampur untuk tekstur lebih ringan, tetapi jangan mengganti seluruh tepung pada adonan pancake.` };
+          }
+          if (/ragi/.test(sourceIngredient) && /baking powder/.test(targetIngredient)) {
+            return { type: 'text', text: `Untuk **${activeRecipe.title}**, baking powder tidak menggantikan ragi secara langsung. Adonan tidak mendapat waktu fermentasi atau tekstur roti yang sama; lebih baik gunakan resep roti cepat yang memang memakai baking powder.` };
+          }
+          if (/maizena/.test(sourceIngredient) && /tapioka/.test(targetIngredient)) {
+            return { type: 'substitusi', text: `Untuk **${activeRecipe.title}**, tapioka bisa menggantikan maizena untuk mengentalkan saus, tetapi hasilnya lebih kenyal dan bisa lebih bening. Larutkan dalam air dingin, tuang sedikit demi sedikit, lalu hentikan saat kekentalannya pas.` };
+          }
           return { type: 'text', text: `Untuk **${activeRecipe.title}**, kecocokan **${targetIngredient}** sebagai pengganti **${sourceIngredient}** bergantung pada fungsi bahan itu di resep (misalnya pengikat, pengental, atau penambah rasa). Aku belum bisa memastikan pertukaran ini setara; sebutkan bagian atau hasil yang ingin dipertahankan, nanti aku pilihkan opsi yang tepat.` };
         }
-        if (sourceIngredient && targetIngredient && (sourceIngredient === 'telur' && /daging|sapi|ayam|ikan|udang|tempe|tahu|jamur/.test(targetIngredient))) {
-          return { type: 'substitusi', text: `Bisa untuk masakan gurih jika telur berfungsi sebagai lauk atau topping: **${targetIngredient}** memberi protein tetapi tekstur dan rasanya berbeda. Masak terpisah sampai matang, lalu campurkan. Kalau telur dipakai untuk mengikat adonan atau melapisi, penggantian ini tidak cocok. Sebutkan nama masakannya supaya aku bisa sesuaikan langkahnya.` };
+        if (sourceIngredient && targetIngredient) {
+          if (sourceIngredient === 'telur' && /daging|sapi|ayam|ikan|udang|tempe|tahu|jamur/.test(targetIngredient)) {
+            return { type: 'substitusi', text: `Bisa untuk masakan gurih jika telur berfungsi sebagai lauk atau topping: **${targetIngredient}** memberi protein tetapi tekstur dan rasanya berbeda. Masak terpisah sampai matang, lalu campurkan. Kalau telur dipakai untuk mengikat adonan atau melapisi, penggantian ini tidak cocok. Sebutkan nama masakannya supaya aku bisa sesuaikan langkahnya.` };
+          }
+          if (sourceIngredient === 'santan' && /susu/.test(targetIngredient)) {
+            return { type: 'substitusi', text: 'Susu bisa menggantikan santan untuk kuah gurih, tetapi hasilnya lebih ringan dan rasanya berbeda. Tuang sedikit demi sedikit dengan api kecil supaya tidak pecah; untuk bebas susu, gunakan santan encer atau susu nabati tanpa gula.' };
+          }
+          if (/kecap manis/.test(sourceIngredient) && /kecap asin/.test(targetIngredient)) {
+            return { type: 'substitusi', text: 'Kecap asin bisa dipakai sebagai pengganti kecap manis untuk rasa gurih, tetapi tambahkan sedikit gula untuk menyeimbangkan rasa. Tuang bertahap dan cicipi agar tidak terlalu asin.' };
+          }
+          if (/tepung terigu/.test(sourceIngredient) && /maizena/.test(targetIngredient)) {
+            return { type: 'text', text: 'Maizena tidak menggantikan terigu 1:1 pada adonan roti atau pancake karena tidak membentuk struktur. Maizena lebih cocok untuk mengentalkan saus; untuk kue, gunakan resep bebas gluten yang memang dirancang untuk campuran tepung lain.' };
+          }
+          if (/ragi/.test(sourceIngredient) && /baking powder/.test(targetIngredient)) {
+            return { type: 'text', text: 'Baking powder tidak menggantikan ragi secara langsung untuk roti. Hasilnya tidak punya fermentasi dan tekstur yang sama; lebih baik pilih resep roti cepat yang memang memakai baking powder.' };
+          }
+          if (/maizena/.test(sourceIngredient) && /tapioka/.test(targetIngredient)) {
+            return { type: 'substitusi', text: 'Tapioka bisa menggantikan maizena untuk mengentalkan saus, tetapi hasilnya lebih kenyal dan bening. Larutkan dalam air dingin, tuang sedikit demi sedikit, lalu hentikan saat kekentalannya pas.' };
+          }
+          if (/sayur|selada|kol|wortel|kangkung|brokoli|sawi|timun/.test(sourceIngredient) && /sayur|selada|kol|wortel|kangkung|brokoli|sawi|timun/.test(targetIngredient)) {
+            return { type: 'substitusi', text: `**${targetIngredient}** bisa menggantikan **${sourceIngredient}** di banyak masakan. Iris dengan ukuran serupa; sayuran yang lebih keras perlu dimasukkan lebih awal, sedangkan daun cukup dimasukkan menjelang matang.` };
+          }
+          if (/bawang|jahe|serai|daun jeruk|daun salam/.test(sourceIngredient) && /bawang|jahe|serai|daun jeruk|daun salam/.test(targetIngredient)) {
+            return { type: 'substitusi', text: `**${targetIngredient}** bisa memberi aroma sebagai pengganti **${sourceIngredient}**, tetapi profil rasanya berbeda. Mulai dengan jumlah lebih sedikit, tumis sampai harum, lalu cicipi dan sesuaikan.` };
+          }
+          if (/kecap asin/.test(sourceIngredient) && /garam/.test(targetIngredient)) {
+            return { type: 'substitusi', text: 'Garam bisa menggantikan rasa asin dari kecap asin, tetapi tidak memberi warna atau rasa umami yang sama. Tambahkan sejumput demi sejumput; sedikit kaldu atau bawang bisa membantu rasa gurih.' };
+          }
+          if (/daging|sapi|ayam|ikan|udang|tempe|tahu|jamur/.test(sourceIngredient) && /daging|sapi|ayam|ikan|udang|tempe|tahu|jamur/.test(targetIngredient)) {
+            return { type: 'substitusi', text: `**${targetIngredient}** dapat menggantikan **${sourceIngredient}** sebagai protein di banyak masakan gurih. Sesuaikan potongan dan waktu masak, lalu pastikan matang sesuai jenis bahannya; rasa dan teksturnya akan berbeda. Sebutkan nama resepnya jika ingin langkah yang lebih pas.` };
+          }
+          return { type: 'text', text: `**${targetIngredient}** belum tentu bisa menggantikan **${sourceIngredient}** secara langsung karena fungsinya di resep bisa berbeda. Sebutkan nama masakan atau fungsi bahan itu (misalnya pengikat, pengental, atau bumbu), nanti aku sesuaikan takaran dan caranya.` };
         }
       }
       if (missingIngredient === 'telur' && /\b(kue|bolu|cake|adonan)\b/.test(normalized)) {
@@ -333,10 +468,34 @@ function generateAIResponse(message) {
   }
 
   const asksTechnique = /\b(cara|gimana|gmn|bagaimana|kenapa|mengapa|supaya|biar|tips|trik|kok)\b/.test(normalized);
+  if (asksTechnique && /\b(wortel)\b/.test(normalized) && /\b(rebus|merebus|ngerebus)\b/.test(normalized)) {
+    return { type: 'text', text: 'Untuk wortel iris, mulai cek setelah direbus sekitar 5 menit; potongan besar perlu lebih lama. Tusuk dengan garpu dan angkat saat empuk tetapi masih sedikit kokoh. Masukkan ke air yang sudah mendidih agar waktu masaknya lebih mudah dikontrol.' };
+  }
+  if (asksTechnique && /\b(telur dadar|omelet|omelette)\b/.test(normalized) && /\b(tebal|bantat|mengembang)\b/.test(normalized)) {
+    return { type: 'text', text: 'Untuk telur dadar lebih tebal, kocok telur secukupnya, campur sedikit bahan cincang yang sudah ditiriskan, lalu masak dengan api kecil di wajan kecil dan tutup wajan. Jangan terlalu sering dibalik; angkat ketika bagian tengah sudah matang agar tidak kering.' };
+  }
+  if (asksTechnique && /\b(terlalu asin|kebanyakan asin|keasinan|masakan asin)\b/.test(normalized)) {
+    return { type: 'text', text: 'Encerkan kuah dengan sedikit air atau kaldu tanpa garam. Untuk masakan kering, tambah bahan utama tawar seperti sayur, kentang, atau nasi; sedikit asam/gula hanya menyeimbangkan rasa dan tidak menghilangkan garam. Tambahkan bertahap sambil dicicipi.' };
+  }
+  if (asksTechnique && /\b(amis|bau amis)\b/.test(normalized) && /\b(ayam|daging|ikan)\b/.test(normalized)) {
+    return { type: 'text', text: 'Jangan cuci ayam mentah karena percikannya bisa menyebarkan kuman. Keringkan dengan tisu, buang cairan kemasan, lalu bumbui dengan bawang putih, jahe, lada, atau sedikit jeruk nipis untuk rasa/aroma. Masak sampai matang; jika baunya menyengat atau kamu ragu cara simpannya, buang—bau saja tidak cukup untuk memastikan aman.' };
+  }
+  if (asksTechnique && /\b(kuah soto|soto)\b/.test(normalized) && /\b(bening|jernih)\b/.test(normalized)) {
+    return { type: 'text', text: 'Untuk kuah soto bening, rebus ayam sebentar lalu buang air rebusan pertama bila banyak buih. Pakai api kecil setelah mendidih, buang buih di permukaan, dan jangan mengaduk terlalu kuat. Tumis bumbu sampai matang sebelum dimasukkan agar kuah tidak keruh.' };
+  }
+  if (asksTechnique && /\btumis kangkung\b/.test(normalized) && /\b(layu|pahit)\b/.test(normalized)) {
+    return { type: 'text', text: 'Tumis kangkung dengan api besar dalam wajan panas, masukkan batang lebih dulu lalu daun, dan masak singkat sampai layu saja. Jangan menutup wajan lama-lama atau memenuhi wajan karena sayur akan berair. Cuci bersih dan gunakan kangkung yang masih segar untuk mengurangi rasa pahit.' };
+  }
+  if (asksTechnique && /\btempe orek\b/.test(normalized) && /\b(renyah|garing)\b/.test(normalized)) {
+    return { type: 'text', text: 'Iris tempe tipis dan seragam, keringkan permukaannya, lalu goreng bertahap sampai kering sebelum dicampur bumbu. Masak bumbu sampai cukup kental dan tidak berair; campurkan tempe saat bumbu mulai dingin agar tetap renyah.' };
+  }
+  if (asksTechnique && /\b(ikan|fillet)\b/.test(normalized) && /\b(goreng|menggoreng|matang)\b/.test(normalized)) {
+    return { type: 'text', text: 'Waktu menggoreng ikan bergantung pada ketebalan potongan dan panas minyak. Masak sampai bagian tengahnya buram dan daging mudah terurai dengan garpu; balik sekali agar tidak hancur. Potongan tebal perlu api sedang supaya bagian dalam matang sebelum luarnya terlalu cokelat.' };
+  }
   if (asksTechnique && /\b(nasi goreng|nasi lembek|nasi pera)\b/.test(normalized)) {
     return { type: 'text', text: 'Biar nasi goreng tidak lembek, pakai nasi yang sudah dingin dan agak kering (nasi semalam bisa membantu), uraikan gumpalan, lalu goreng per porsi dengan wajan panas. Masukkan saus sedikit-sedikit supaya nasi tidak basah. Kalau nasinya baru matang, ratakan dulu agar uapnya keluar atau dinginkan sebentar.' };
   }
-  if (asksTechnique && /\b(telur|setengah matang|matang sempurna)\b/.test(normalized) && /\b(rebus|merebus|telur)\b/.test(normalized)) {
+  if (asksTechnique && /\b(telur|setengah matang|matang sempurna)\b/.test(normalized) && /\b(rebus|merebus|ngerebus)\b/.test(normalized)) {
     return { type: 'text', text: 'Untuk telur setengah matang, masukkan telur ke air yang sudah mendidih perlahan selama kira-kira 6–7 menit, lalu pindahkan ke air dingin agar proses masaknya berhenti. Waktu bisa berubah menurut ukuran telur dan kondisi awalnya; tambah waktu jika ingin kuning lebih padat.' };
   }
   if (asksTechnique && /\b(bawang|mata pedih|mata perih)\b/.test(normalized) && /\b(potong|iris|cincang|pedih|perih)\b/.test(normalized)) {
@@ -351,7 +510,7 @@ function generateAIResponse(message) {
   if (asksTechnique && /\b(wajan|panci|gosong|kerak)\b/.test(normalized) && /\b(bersihkan|membersihkan|cuci|menghilangkan|gosong|kerak)\b/.test(normalized)) {
     return { type: 'text', text: 'Rendam wajan dengan air hangat dan sabun dulu. Untuk kerak yang masih menempel, rebus air dengan sedikit baking soda beberapa menit, dinginkan, lalu gosok dengan spons yang sesuai bahan wajannya. Hindari wol baja pada lapisan antilengket dan jangan campur bahan pembersih.' };
   }
-  if (asksTechnique && /\b(tumis|menumis|rebus|merebus|goreng|menggoreng|panggang|bakar|kukus|potong|iris|cincang|empuk|renyah|crispy|tidak amis|nggak amis|ga amis|bumbu|api kecil|api besar)\b/.test(normalized)) {
+  if (asksTechnique && /\b(tumis|menumis|rebus|merebus|ngerebus|goreng|menggoreng|panggang|bakar|kukus|potong|iris|cincang|empuk|renyah|crispy|tidak amis|nggak amis|ga amis|bumbu|api kecil|api besar)\b/.test(normalized)) {
     const techniqueTip = /\b(tumis|menumis)\b/.test(normalized)
       ? 'Panaskan wajan lebih dulu, masukkan bahan yang keras lebih awal, lalu tumis dalam porsi kecil supaya bahan tidak menumpuk dan cepat berair.'
       : /\b(renyah|crispy)\b/.test(normalized) && /\b(tempe|tahu|ayam|goreng|menggoreng)\b/.test(normalized)
