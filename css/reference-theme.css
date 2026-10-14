@@ -678,14 +678,20 @@ body[data-theme="dark"] .recipe-tags span { color: #e1dcc9; background: rgba(225
   .nav-container { width: 100%; max-width: none; margin: 0; gap: clamp(16px, 2vw, 32px); }
 }
 .navbar {
-  background: rgba(12, 10, 8, .34);
-  border-bottom-color: rgba(225,220,201,.1);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  transition: background .3s ease, border-color .3s ease, backdrop-filter .3s ease;
+  background: transparent;
+  border-bottom-color: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transition: none;
 }
-.navbar.scrolled { background: rgba(12,10,8,.66); border-bottom-color: rgba(225,220,201,.16); }
-.nav-links { background: rgba(0,0,0,.68); border-color: rgba(225,220,201,.14); }
+.navbar.scrolled { background: transparent; border-bottom-color: transparent; }
+.nav-links {
+  background: rgba(0,0,0,.48);
+  border-color: rgba(225,220,201,.2);
+  box-shadow: 0 8px 28px rgba(0,0,0,.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
 .nav-actions { flex: 0 0 auto; }
 .btn-scan-nav, .theme-toggle, .btn-avatar {
   display: grid;
@@ -707,8 +713,8 @@ body[data-theme="dark"] .recipe-tags span { color: #e1dcc9; background: rgba(225
 .btn-scan-nav::before { content: none !important; }
 .btn-scan-nav:hover, .theme-toggle:hover, .btn-avatar:hover { transform: translateY(-2px); color: #1f150c; background: #e1dcc9; border-color: #e1dcc9; }
 .btn-hamburger { border-radius: 50%; }
-body[data-theme="dark"] .navbar { background: rgba(12,10,8,.74); }
-body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.82); }
+body[data-theme="dark"] .navbar { background: transparent; }
+body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
 
 /* Subtle photo movement keeps the hero lively without competing with its copy. */
 .hero-food-photo { animation: hero-photo-fade .65s ease both, hero-photo-drift 18s ease-in-out .65s infinite alternate; transform-origin: center; }
