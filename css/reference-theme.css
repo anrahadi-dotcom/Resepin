@@ -2115,3 +2115,110 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
   .nav-container::before,
   .nav-ingredient-search { transition: none !important; }
 }
+
+/* Start as a compact Dynamic-Island-like mark; reveal the full navigation on hover or keyboard focus. */
+@media (min-width: 901px) {
+  .nav-container,
+  .nav-container:hover,
+  .nav-container:focus-within {
+    width: 86px;
+    min-height: 54px;
+    height: 54px;
+    margin-top: 12px;
+    padding: 0;
+    gap: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    transition: width .62s cubic-bezier(.2,1.24,.28,1), height .58s cubic-bezier(.2,1.24,.28,1), padding .42s ease, border-radius .42s ease, background .3s ease, box-shadow .35s ease;
+  }
+  .nav-container::after {
+    content: "";
+    position: absolute;
+    z-index: 3;
+    bottom: 8px;
+    left: 50%;
+    width: 13px;
+    height: 2px;
+    border-radius: 99px;
+    background: rgba(225,220,201,.55);
+    opacity: .8;
+    transform: translateX(-50%);
+    transition: opacity .18s ease, transform .3s ease;
+    pointer-events: none;
+  }
+  .nav-container:hover,
+  .nav-container:focus-within {
+    width: min(680px, calc(100vw - 40px));
+    height: 202px;
+    padding: 0 18px;
+    gap: 18px;
+    align-items: flex-start;
+    justify-content: space-between;
+    border-radius: 30px;
+  }
+  .nav-container:hover::after,
+  .nav-container:focus-within::after { opacity: 0; transform: translate(-50%,5px); }
+  .nav-logo,
+  .nav-container:hover .nav-logo,
+  .nav-container:focus-within .nav-logo {
+    flex: 0 0 34px;
+    width: 34px;
+    height: 54px;
+  }
+  .nav-links,
+  .nav-links.open {
+    flex: 0 0 0;
+    width: 0;
+    height: 54px;
+    gap: 0;
+    overflow: hidden;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: flex-basis .48s cubic-bezier(.2,1.1,.3,1), width .48s ease, gap .38s ease, opacity .18s ease, transform .38s ease, visibility 0s linear .22s;
+  }
+  .nav-container:hover .nav-links,
+  .nav-container:focus-within .nav-links {
+    flex: 1 1 auto;
+    width: auto;
+    height: 54px;
+    gap: clamp(12px,1.8vw,24px);
+    overflow: visible;
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: .12s,0s,0s,.12s,.12s,0s;
+  }
+  .nav-actions,
+  .nav-container:hover .nav-actions,
+  .nav-container:focus-within .nav-actions {
+    flex: 0 0 0;
+    width: 0;
+    height: 54px;
+    gap: 0;
+    overflow: hidden;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: flex-basis .42s ease, width .42s ease, gap .3s ease, opacity .16s ease, transform .35s ease, visibility 0s linear .2s;
+  }
+  .nav-container:hover .nav-actions,
+  .nav-container:focus-within .nav-actions {
+    flex: 0 0 88px;
+    width: 88px;
+    gap: 8px;
+    overflow: visible;
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: .1s,0s,0s,.14s,.1s,0s;
+  }
+  .nav-container:hover .nav-ingredient-search,
+  .nav-container:focus-within .nav-ingredient-search { top: 76px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-container::after,
+  .nav-links,
+  .nav-actions { transition: none !important; }
+}
