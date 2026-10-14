@@ -95,6 +95,12 @@
   <div class="page active" id="page-home">
     <!-- Hero Section -->
     <section class="hero">
+      <div class="hero-scene" aria-hidden="true">
+        <img class="hero-scene-photo" src="/assets/img/chef-hero.jpg" alt="" fetchpriority="high" />
+        <span class="hero-light-veil"></span>
+        <span class="hero-light-beam"></span>
+        <span class="hero-light-glow"></span>
+      </div>
       <div class="hero-bg-glow"></div>
       <div class="hero-particles" id="heroParticles"></div>
       <div id="heroApp" class="hero-container" v-cloak>
@@ -117,28 +123,6 @@
           </form>
           <div class="hero-cta hero-cta-link hero-enter hero-enter-8">
             <a href="#resep" @click.prevent="go('resep')">Lihat semua resep <span aria-hidden="true">→</span></a>
-          </div>
-          <p class="hero-note">Geser foto untuk cari inspirasi masakan berikutnya.</p>
-        </div>
-        <div class="hero-visual">
-          <div class="hero-photo-stage" :class="{'is-dragging': photoDrag}" role="region" aria-roledescription="carousel" :aria-label="'Foto resep: ' + heroRecipe.title + '. Geser ke kiri atau kanan untuk melihat foto lain.'" tabindex="0" @mouseenter="pauseHeroRotation('hover')" @mouseleave="resumeHeroRotation('hover')" @focusin="pauseHeroRotation('focus')" @focusout="handleHeroFocusOut" @keydown.left.prevent="changeHeroPhoto(-1)" @keydown.right.prevent="changeHeroPhoto(1)" @pointerdown="startPhotoDrag" @pointermove="movePhotoDrag" @pointerup="endPhotoDrag" @pointercancel="cancelPhotoDrag" @lostpointercapture="endPhotoDrag">
-            <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-amber-100">
-              <picture class="hero-photo-picture"><source v-if="heroRecipe.webpImage" :srcset="heroRecipe.webpImage" type="image/webp" /><img class="hero-food-photo h-full w-full select-none object-cover" :src="heroRecipe.image" :alt="heroRecipe.alt" draggable="false" fetchpriority="high" /></picture>
-              <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent"></div>
-            </div>
-            <button class="hero-recipe-meta" type="button" :aria-label="'Lihat resep ' + heroRecipe.title" @pointerdown.stop @click.stop="openHeroRecipe">
-              <span class="hero-recipe-meta-label">FOTO RESEP {{ String(photoIndex + 1).padStart(2, '0') }} / {{ String(heroPhotos.length).padStart(2, '0') }}</span>
-              <h2>{{ heroRecipe.title }}</h2>
-              <div class="hero-recipe-meta-details">
-                <span><i aria-hidden="true">◷</i>{{ heroRecipe.time }}</span>
-                <span><i aria-hidden="true">✦</i>{{ heroRecipe.difficulty }}</span>
-                <span v-if="heroIngredientCount !== null"><i aria-hidden="true">◉</i>{{ heroIngredientCount }} bahan</span>
-              </div>
-              <span class="hero-recipe-link">Lihat resep <span aria-hidden="true">→</span></span>
-            </button>
-            <div class="hero-photo-dots" role="group" aria-label="Pilih foto resep">
-              <button v-for="(photo, index) in heroPhotos" :key="photo.title" type="button" :class="{active: index === photoIndex}" :style="index === photoIndex ? {'--hero-progress': heroProgress} : null" :aria-label="'Slide ' + (index + 1) + ' dari ' + heroPhotos.length" :aria-current="index === photoIndex ? 'true' : null" @pointerdown.stop @click.stop="setHeroPhoto(index)"></button>
-            </div>
           </div>
         </div>
       </div>

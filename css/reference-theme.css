@@ -1061,3 +1061,112 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
 @media (prefers-reduced-motion: reduce) {
   .stats-personal .waste-stat { transition: none; }
 }
+
+/* One cinematic chef hero: the kitchen starts dark, then the overhead lamp comes on. */
+.hero { background: #050403; }
+.hero-scene {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  background: #050403;
+  pointer-events: none;
+}
+.hero-scene-photo {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 48%;
+  transform: scale(1.015);
+  animation: chef-photo-reveal 2.8s cubic-bezier(.2,.7,.2,1) both, chef-photo-breathe 24s ease-in-out 2.8s infinite alternate;
+}
+.hero-light-veil {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,rgba(0,0,0,.98) 0%,rgba(0,0,0,.94) 34%,rgba(0,0,0,.72) 55%,rgba(0,0,0,.18) 88%),linear-gradient(0deg,rgba(0,0,0,.36),transparent 50%);
+  opacity: .3;
+  animation: kitchen-light-switch 3s cubic-bezier(.2,.7,.2,1) both;
+}
+.hero-light-beam {
+  position: absolute;
+  inset: 0;
+  opacity: .3;
+  clip-path: polygon(57.8% 7%,61.8% 7%,94% 100%,20% 100%);
+  background: linear-gradient(180deg,rgba(255,228,164,.48),rgba(225,220,201,.16) 40%,transparent 88%);
+  filter: blur(18px);
+  transform-origin: 60% 7%;
+  animation: lamp-beam-switch 3s ease-out both;
+}
+.hero-light-glow {
+  position: absolute;
+  top: 2%;
+  left: 59.8%;
+  width: clamp(80px,15vw,230px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle,rgba(255,241,196,.5) 0%,rgba(255,220,150,.2) 22%,rgba(255,218,160,.06) 48%,transparent 72%);
+  filter: blur(8px);
+  opacity: .5;
+  transform: translate(-50%,-4%);
+  animation: lamp-glow-switch 3s ease-out both, lamp-glow-breathe 4s ease-in-out 3s infinite alternate;
+}
+.hero-container { z-index: 2; }
+.hero-content { text-shadow: 0 2px 22px rgba(0,0,0,.32); }
+.hero-content .hero-search-field,
+.hero-content .hero-ingredient-chip,
+.hero-content .hero-cta-link a { text-shadow: none; }
+@keyframes kitchen-light-switch {
+  0%,34% { opacity: 1; }
+  40% { opacity: .68; }
+  44% { opacity: .88; }
+  51%,100% { opacity: .3; }
+}
+@keyframes lamp-beam-switch {
+  0%,33% { opacity: 0; transform: scaleY(.82); }
+  42% { opacity: .38; }
+  46% { opacity: .12; }
+  54%,100% { opacity: .3; transform: scaleY(1); }
+}
+@keyframes lamp-glow-switch {
+  0%,34% { opacity: 0; }
+  43% { opacity: .62; }
+  48% { opacity: .24; }
+  55%,100% { opacity: .5; }
+}
+@keyframes lamp-glow-breathe { from { filter: blur(8px); scale: .98; } to { filter: blur(13px); scale: 1.06; } }
+@keyframes chef-photo-reveal { from { filter: brightness(.16); } to { filter: brightness(.88); } }
+@keyframes chef-photo-breathe { from { transform: scale(1.015); } to { transform: scale(1.07); } }
+@media (max-width: 900px) {
+  .hero { height: auto; min-height: 100svh; }
+  .hero-container { height: auto; min-height: 100svh; }
+  .hero-content {
+    top: auto;
+    bottom: auto;
+    left: 24px;
+    width: min(620px,calc(100% - 48px));
+    padding-top: clamp(290px,40svh,390px);
+    padding-bottom: 72px;
+    transform: none;
+  }
+  .hero-scene-photo { object-position: 68% 32%; }
+  .hero-light-veil { background: linear-gradient(180deg,rgba(0,0,0,.03) 0%,rgba(0,0,0,.05) 29%,rgba(0,0,0,.72) 51%,rgba(0,0,0,.96) 76%),linear-gradient(90deg,rgba(0,0,0,.15),transparent 75%); }
+  .hero-light-beam { clip-path: polygon(54% 4%,63% 4%,100% 63%,0 63%); }
+  .hero-light-glow { top: 2%; left: 59%; width: clamp(100px,30vw,220px); }
+}
+@media (max-width: 600px) {
+  .hero-content { left: 18px; width: calc(100% - 36px); padding-top: clamp(300px,39svh,370px); padding-bottom: 46px; }
+  .hero-content .hero-desc { max-width: 100%; }
+  .hero-content .hero-cta { display: block; }
+  .hero-content .hero-cta-link a { min-height: 44px; }
+  .hero-scroll-hint { display: none; }
+  .hero-scene-photo { object-position: 68% 30%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-scene-photo { animation: none; filter: brightness(.88); transform: none; }
+  .hero-light-veil { animation: none; opacity: .3; }
+  .hero-light-beam { animation: none; opacity: .3; transform: none; }
+  .hero-light-glow { animation: none; opacity: .5; }
+}
