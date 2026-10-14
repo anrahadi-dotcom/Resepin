@@ -24,9 +24,9 @@ createApp({
       heroSearchMessage: '',
       popularIngredients: ['Telur', 'Ayam', 'Tahu', 'Nasi', 'Tempe'],
       heroPhotos: [
-        { title: 'Teriyaki Ayam', time: '25 menit', difficulty: 'Mudah', recipeId: 28, image: '/assets/img/teriyaki.jpg', alt: 'Ayam teriyaki dengan taburan biji wijen' },
-        { title: 'Pecel Sayur', time: '20 menit', difficulty: 'Mudah', recipeId: 9, image: '/assets/img/pecel.jpg', alt: 'Pecel sayur dengan saus kacang' },
-        { title: 'Ayam Bakar Bali', time: '45 menit', difficulty: 'Sedang', recipeId: 17, image: '/assets/img/ayam-bakar-bali.jpg', alt: 'Ayam bakar berbumbu khas Bali' },
+        { title: 'Teriyaki Ayam', time: '25 menit', difficulty: 'Mudah', recipeId: 28, image: '/assets/img/teriyaki.jpg', webpImage: '/assets/img/teriyaki.webp', alt: 'Ayam teriyaki dengan taburan biji wijen' },
+        { title: 'Pecel Sayur', time: '20 menit', difficulty: 'Mudah', recipeId: 9, image: '/assets/img/pecel.jpg', webpImage: '/assets/img/pecel.webp', alt: 'Pecel sayur dengan saus kacang' },
+        { title: 'Ayam Bakar Bali', time: '45 menit', difficulty: 'Sedang', recipeId: 17, image: '/assets/img/ayam-bakar-bali.jpg', webpImage: '/assets/img/ayam-bakar-bali.webp', alt: 'Ayam bakar berbumbu khas Bali' },
         { title: 'Rendang', time: '2 jam', difficulty: 'Sedang', recipeId: 12, image: '/assets/img/rendang.jpg', alt: 'Rendang sapi berbumbu rempah' }
       ],
       activePage: 'home',
@@ -180,6 +180,10 @@ createApp({
       window.history.replaceState(window.history.state, '', url);
       const recipeSearch = document.getElementById('recipeSearch');
       if (recipeSearch) recipeSearch.value = ingredients.join(', ');
+      this.go('resep');
+    },
+    findRecipesFromScan() {
+      window.recordScanIngredientUsage?.();
       this.go('resep');
     },
     openHeroRecipe() {

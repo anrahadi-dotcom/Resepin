@@ -17,6 +17,43 @@ let demoRunning = false;
 let currentChatRecipeIdx = null;
 let awaitingSubstitutionIngredient = false;
 let selectedExploreCategory = 'all';
+const PERSONAL_STATS_KEY = 'resepin-personal-stats-v1';
+let personalStatsMemory = { ingredientsUsed: 0, recipesOpened: 0 };
+
+function readPersonalStats() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(PERSONAL_STATS_KEY) || '{}');
+    personalStatsMemory = {
+      ingredientsUsed: Number.isFinite(stored.ingredientsUsed) && stored.ingredientsUsed > 0 ? Math.floor(stored.ingredientsUsed) : 0,
+      recipesOpened: Number.isFinite(stored.recipesOpened) && stored.recipesOpened > 0 ? Math.floor(stored.recipesOpened) : 0
+    };
+  } catch (_) { /* Keep session-only values if browser storage is unavailable. */ }
+  return { ...personalStatsMemory };
+}
+
+function renderPersonalStats(stats = readPersonalStats()) {
+  const ingredients = document.getElementById('personalIngredientsUsed');
+  const recipes = document.getElementById('personalRecipesOpened');
+  const empty = document.getElementById('personalStatsEmpty');
+  if (ingredients) ingredients.textContent = stats.ingredientsUsed.toLocaleString('id-ID');
+  if (recipes) recipes.textContent = stats.recipesOpened.toLocaleString('id-ID');
+  if (empty) empty.hidden = stats.ingredientsUsed > 0 || stats.recipesOpened > 0;
+}
+
+function updatePersonalStats(delta) {
+  const current = readPersonalStats();
+  personalStatsMemory = {
+    ingredientsUsed: current.ingredientsUsed + (delta.ingredientsUsed || 0),
+    recipesOpened: current.recipesOpened + (delta.recipesOpened || 0)
+  };
+  try { localStorage.setItem(PERSONAL_STATS_KEY, JSON.stringify(personalStatsMemory)); } catch (_) { /* Counters still work for this page session. */ }
+  renderPersonalStats(personalStatsMemory);
+}
+
+window.recordScanIngredientUsage = function recordScanIngredientUsage() {
+  const count = detectedIngredients.length;
+  if (count > 0) updatePersonalStats({ ingredientsUsed: count });
+};
 
 const EXPLORE_CATEGORIES = [
   { id: 'all', label: 'Semua resep', color: '#B65C3A', matches: () => true },
@@ -167,45 +204,6 @@ function initScrollEffects() {
     navbar.classList.toggle('scrolled', window.scrollY > 50);
   });
 
-  // Counter animation for waste stats
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const nums = entry.target.querySelectorAll('.ws-num');
-        nums.forEach(num => {
-          const target = parseInt(num.dataset.target);
-          animateCounter(num, 0, target, 2000);
-        });
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.3 });
-
-  const statsSection = document.querySelector('.waste-stats');
-  if (statsSection) observer.observe(statsSection);
-}
-
-function animateCounter(el, start, end, duration) {
-  const startTime = performance.now();
-  const update = (currentTime) => {
-    const elapsed = currentTime - startTime;
-    const progress = Math.min(elapsed / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3);
-    const value = Math.floor(start + (end - start) * eased);
-    el.textContent = value.toLocaleString('id-ID');
-    if (progress < 1) requestAnimationFrame(update);
-  };
-  requestAnimationFrame(update);
-}
-
-// Footer live counter
-function animateFooterCounter() {
-  let count = 12450;
-  setInterval(() => {
-    count += Math.floor(Math.random() * 3);
-    const el = document.getElementById('footerWasteCount');
-    if (el) el.textContent = count.toLocaleString('id-ID');
-  }, 3000);
 }
 
 // ============================================================
@@ -216,6 +214,13 @@ async function startCamera() {
   const placeholder = document.getElementById('cameraPlaceholder');
   const feed = document.getElementById('cameraFeed');
   const overlay = document.getElementById('scanOverlay');
+
+  if (!navigator.mediaDevices?.getUserMedia) {
+    const message = 'Kamera tidak tersedia di browser ini. Kamu tetap bisa mencoba contoh atau menambahkan bahan secara manual.';
+    updateDetectionStatus('idle', message);
+    showToast('Kamera tidak tersedia. Coba contoh atau input manual.', 'error');
+    return;
+  }
 
   try {
     btn.textContent = 'Meminta izin...';
@@ -245,8 +250,11 @@ async function startCamera() {
   } catch (err) {
     btn.textContent = 'Buka kamera';
     btn.disabled = false;
-    updateDetectionStatus('idle', 'Kamera tidak tersedia. Kamu bisa menambahkan bahan sendiri.');
-    showToast('Kamera tidak tersedia di perangkat ini.', 'error');
+    const message = ['NotAllowedError', 'PermissionDeniedError'].includes(err?.name)
+      ? 'Izin kamera belum diberikan. Kamu tetap bisa mencoba contoh atau menambahkan bahan secara manual.'
+      : 'Kamera tidak dapat digunakan saat ini. Kamu tetap bisa mencoba contoh atau menambahkan bahan secara manual.';
+    updateDetectionStatus('idle', message);
+    showToast('Kamera tidak aktif. Coba contoh atau input manual.', 'error');
   }
 }
 
@@ -289,7 +297,7 @@ function runDemo() {
       // Final state
       if (idx === demoItems.length - 1) {
         setTimeout(() => {
-          updateDetectionStatus('detected', `✅ ${demoItems.length} bahan terdeteksi! Cari resep atau tanya Chef Resepin.`);
+          updateDetectionStatus('detected', `${demoItems.length} bahan terdeteksi! Cari resep atau tanya Chef Resepin.`);
           showConfidenceBar(91);
           demoRunning = false;
           document.getElementById('captureBtn').disabled = false;
@@ -455,8 +463,10 @@ function createEmptyEl() {
   div.id = 'ipEmpty';
   div.className = 'ip-empty';
   div.innerHTML = `
-    <div class="ip-empty-icon">🔍</div>
-    <p>Belum ada bahan terdeteksi.<br/>Aktifkan kamera atau coba Mode Demo</p>
+    <div class="ip-empty-icon"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-search"/></svg></div>
+    <h4>Belum ada bahan</h4>
+    <p>Coba contoh bahan tanpa membuka kamera, atau tambahkan bahan secara manual.</p>
+    <button class="btn-primary ip-empty-example" type="button" onclick="runDemo()">Coba contoh</button>
   `;
   return div;
 }
@@ -469,7 +479,7 @@ function updateIngredientCount() {
   const findBtn = document.getElementById('findRecipesBtn');
   findBtn.disabled = count === 0;
   if (count > 0) {
-    findBtn.innerHTML = `🍳 Cari Resep (<span id="ingredientCountBtn">${count}</span> bahan)`;
+    findBtn.innerHTML = `<svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-pot"/></svg> Cari Resep (<span id="ingredientCountBtn">${count}</span> bahan)`;
   }
 }
 
@@ -519,7 +529,7 @@ function renderRecipesGrid() {
   }
 
   grid.innerHTML = filtered.length === 0
-    ? `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-muted)"><div style="font-size:3rem;margin-bottom:16px">🍳</div><p>Tidak ada resep yang cocok.<br/>Coba kata kunci lain!</p></div>`
+    ? `<div class="recipe-empty-state"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-book"/></svg><p>Tidak ada resep yang cocok.<br/>Coba kata kunci lain!</p></div>`
     : filtered.map(r => createRecipeCardHTML(r)).join('');
   bindRecipeImageFallbacks(grid);
 }
@@ -535,9 +545,15 @@ function getRecipeImage(recipe) {
 // Elemen foto hidangan yang sudah matang, dengan fallback ke emoji bila foto gagal dimuat
 function recipeImageHTML(recipe, className, altText) {
   const src = getRecipeImage(recipe);
-  const alt = altText || (recipe ? recipe.title : 'Halaman Resepin');
+  const alt = altText || (recipe ? `Foto hidangan ${recipe.title}` : 'Foto hidangan');
   if (!src) return `<span class="${className}">${recipe ? recipe.emoji : '\uD83C\uDF7F'}</span>`;
-  return `<img class="${className}" src="${src}" alt="${alt}" loading="lazy" data-fallback="${(recipe ? recipe.emoji : '\uD83C\uDF7F').replace(/"/g, '&quot;')}" />`;
+  const fallback = (recipe ? recipe.emoji : '\uD83C\uDF7F').replace(/"/g, '&quot;');
+  const objectPosition = recipe?.imagePosition || 'center';
+  const image = `<img class="${className}" src="${src}" alt="${escapeHtml(alt)}" style="object-position:${objectPosition}" loading="lazy" decoding="async" data-fallback="${fallback}" />`;
+  if (recipe && RECIPE_WEBP_IDS.has(recipe.id)) {
+    return `<picture class="recipe-picture ${className}-picture"><source srcset="${src.replace(/\.jpe?g$/i, '.webp')}" type="image/webp" />${image}</picture>`;
+  }
+  return image;
 }
 
 // Pasang fallback emoji untuk foto yang gagal dimuat (dipasang sekali per render)
@@ -554,23 +570,26 @@ function bindRecipeImageFallbacks(root = document) {
 
 function createRecipeCardHTML(r) {
   const recipeIndex = RECIPES_DB.indexOf(r);
+  const ingredientCount = Array.isArray(r.ingredients) ? r.ingredients.length : null;
   return `
-    <div class="recipe-card" onclick="openRecipeByIndex(${recipeIndex})">
+    <button class="recipe-card" type="button" aria-label="Lihat resep ${escapeHtml(r.title)}" onclick="openRecipeByIndex(${recipeIndex})">
       <div class="recipe-img" style="background:${r.gradient}">
-        ${recipeImageHTML(r, 'recipe-img-photo', r.title)}
+        ${recipeImageHTML(r, 'recipe-img-photo')}
       </div>
       <div class="recipe-badge-diff ${r.difficulty === 'Mudah' ? 'easy' : 'medium'}">${r.difficulty}</div>
       <div class="recipe-info">
-        <h3>${r.title}</h3>
-        <p class="recipe-meta">⏱ ${r.time} &nbsp;|&nbsp; 👥 ${r.servings} &nbsp;|&nbsp; 🔥 ${r.calories}</p>
-        <div class="recipe-tags">${r.tags.map(t => `<span>${t}</span>`).join('')}</div>
-        <div class="recipe-ingredients-preview">
-          ${r.ingredients.slice(0, 4).map(i => `<span>${i.split(' ')[0]}</span>`).join('')}
-          ${r.ingredients.length > 4 ? `<span class="more">+${r.ingredients.length - 4}</span>` : ''}
-        </div>
+        <h3>${escapeHtml(r.title)}</h3>
+        <p class="recipe-meta"><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>${escapeHtml(r.time)}</span>${ingredientCount === null ? '' : `<span class="recipe-ingredient-count">${ingredientCount} bahan</span>`}</p>
       </div>
-    </div>
+    </button>
   `;
+}
+
+function renderFeaturedRecipes() {
+  const list = document.querySelector('.featured-recipes .recipes-scroll');
+  if (!list) return;
+  list.innerHTML = RECIPES_DB.slice(0, 6).map(recipe => createRecipeCardHTML(recipe)).join('');
+  bindRecipeImageFallbacks(list);
 }
 
 function filterRecipes() {
@@ -630,7 +649,7 @@ function renderJelajahiGrid() {
     if (quickCount) quickCount.textContent = `Menampilkan ${Math.min(4, quickRecipes.length)} dari ${quickRecipes.length} resep`;
     quickList.innerHTML = quickRecipes.length
       ? quickRecipes.slice(0, 4).map(recipe => `<button class="qr-item" type="button" onclick="openRecipeByIndex(${RECIPES_DB.indexOf(recipe)})">
-          ${recipeImageHTML(recipe, 'qr-photo', recipe.title)}
+          ${recipeImageHTML(recipe, 'qr-photo')}
           <span class="qr-info"><span class="qr-name">${recipe.title}</span><span class="qr-meta">${recipe.difficulty} · ${recipe.ingredients.length} bahan</span></span>
           <span class="qr-time">${recipe.time}</span>
         </button>`).join('')
@@ -681,12 +700,13 @@ function openRecipeModal(title, time, servings, calories, ingredients, steps) {
   const modal = document.getElementById('recipeModal');
   document.getElementById('modalTitle').textContent = title;
   document.getElementById('modalMeta').innerHTML = `
-    <span>⏱ ${time}</span>
-    <span>👥 ${servings}</span>
-    <span>🔥 ${calories}</span>
+    <span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>${time}</span>
+    <span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-users"/></svg>${servings}</span>
+    <span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-flame"/></svg>${calories}</span>
   `;
 
   const recipe = RECIPES_DB.find(r => r.title === title);
+  if (recipe) updatePersonalStats({ recipesOpened: 1 });
   const hero = document.getElementById('modalHero');
   const heroMedia = document.getElementById('modalHeroMedia');
   const photoSrc = getRecipeImage(recipe);
@@ -706,7 +726,7 @@ function openRecipeModal(title, time, servings, calories, ingredients, steps) {
 
   document.getElementById('modalIngredients').innerHTML = ingredients.map(ing => {
     const detected = detectedIngredients.some(d => ing.toLowerCase().includes(d.name.toLowerCase()));
-    return `<li style="${detected ? 'border-color:rgba(46,196,182,0.5);background:rgba(46,196,182,0.08)' : ''}">${ing}${detected ? ' ✅' : ''}</li>`;
+    return `<li style="${detected ? 'border-color:rgba(46,196,182,0.5);background:rgba(46,196,182,0.08)' : ''}">${ing}${detected ? ' (tersedia)' : ''}</li>`;
   }).join('');
 
   document.getElementById('modalSteps').innerHTML = steps.map(s => `<li>${s}</li>`).join('');
@@ -742,7 +762,7 @@ function closeModal(event) {
 }
 
 function saveRecipe() {
-  showToast('❤️ Resep disimpan ke Favorit!', 'success');
+  showToast('Resep disimpan ke Favorit!', 'success');
   closeRecipeModal();
 }
 
@@ -778,7 +798,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initQuickPromptDragging();
   initParticles();
   initScrollEffects();
-  animateFooterCounter();
+  renderPersonalStats();
   const requestedIngredients = new URLSearchParams(window.location.search).getAll('bahan').map(value => value.trim()).filter(Boolean);
   if (requestedIngredients.length) {
     const search = document.getElementById('recipeSearch');
@@ -789,6 +809,7 @@ document.addEventListener('DOMContentLoaded', () => {
   bindRecipeImageFallbacks();
 
   // Initial recipe grid render
+  renderFeaturedRecipes();
   setTimeout(() => {
     renderJelajahiGrid();
   }, 100);

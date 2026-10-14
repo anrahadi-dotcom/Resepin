@@ -4,6 +4,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Resepin — Temukan resep lezat dari bahan yang ada di dapur. Masak enak, hemat bahan, kurangi makanan terbuang." />
+  <meta property="og:title" content="Resepin — Masak dari Sisa, Hemat & Lezat" />
+  <meta property="og:description" content="Temukan ide masak dari bahan yang tersedia di dapurmu." />
+  <meta property="og:image" content="https://resepin-3k1.pages.dev/assets/img/og-resepin.jpg" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://resepin-3k1.pages.dev/" />
+  <meta property="og:locale" content="id_ID" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Resepin — Masak dari Sisa, Hemat & Lezat" />
+  <meta name="twitter:description" content="Temukan ide masak dari bahan yang tersedia di dapurmu." />
+  <meta name="twitter:image" content="https://resepin-3k1.pages.dev/assets/img/og-resepin.jpg" />
+  <meta name="theme-color" content="#1f150c" />
   <title>Resepin — Masak dari Sisa, Hemat & Lezat</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,7 +27,24 @@
   <style>[v-cloak] { display: none; }</style>
 </head>
 <body>
-  <div id="app">
+  <div id="app" v-cloak>
+
+  <svg class="ui-icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+    <symbol id="ui-icon-carrot" viewBox="0 0 24 24"><path d="M12 8 5 15a3.5 3.5 0 0 0 5 5l7-7M12 8c1-3 3-4 6-5 0 3-1 5-4 6M12 8c-2-2-4-2-7-2 0 3 2 5 5 5M8 17l2 2m1-5 2 2"/></symbol>
+    <symbol id="ui-icon-basket" viewBox="0 0 24 24"><path d="m3 10 2 10h14l2-10H3Zm3 0 5-7m7 7-5-7M8 13v4m4-4v4m4-4v4"/></symbol>
+    <symbol id="ui-icon-pot" viewBox="0 0 24 24"><path d="M4 10h16l-1 10H5L4 10Zm-2 0h20M8 7h8M12 4v3M2 13H1m22 0h-1"/></symbol>
+    <symbol id="ui-icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="ui-icon-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2m16 0v-2a4 4 0 0 0-3-3.87M9.5 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7-7.87a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="ui-icon-flame" viewBox="0 0 24 24"><path d="M12 22a7 7 0 0 0 7-7c0-4-3-6-4-10-2 2-2 4-2 5-2-2-3-4-3-7-4 3-6 7-6 12a8 8 0 0 0 8 7Z"/><path d="M12 22a4 4 0 0 0 4-4c0-2-1-3-2-4-1 2-2 2-2 2s-1-2-2-3a6 6 0 0 0-2 5 4 4 0 0 0 4 4Z"/></symbol>
+    <symbol id="ui-icon-sprout" viewBox="0 0 24 24"><path d="M12 21v-9m0 4c0-5-3-8-8-8 0 5 3 8 8 8Zm0-4c0-5 3-8 8-8 0 5-3 8-8 8Z"/></symbol>
+    <symbol id="ui-icon-camera" viewBox="0 0 24 24"><path d="M4 7h3l2-3h6l2 3h3a2 2 0 0 1 2 2v10H2V9a2 2 0 0 1 2-2Z"/><circle cx="12" cy="13" r="4"/></symbol>
+    <symbol id="ui-icon-chef" viewBox="0 0 24 24"><path d="M6 11a4 4 0 1 1 2-7 5 5 0 0 1 8 0 4 4 0 1 1 2 7v9H6v-9Zm0 4h12m-8-4v3m4-3v3m-8 6h12"/></symbol>
+    <symbol id="ui-icon-book" viewBox="0 0 24 24"><path d="M12 7v14m0-14C9 4 5 4 2 5v14c3-1 7-1 10 2m0-14c3-3 7-3 10-2v14c-3-1-7-1-10 2"/></symbol>
+    <symbol id="ui-icon-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="ui-icon-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4M3 11V9a3 3 0 0 1 3-3h15m-14 16-4-4 4-4m14 1v2a3 3 0 0 1-3 3H3"/></symbol>
+    <symbol id="ui-icon-bulb" viewBox="0 0 24 24"><path d="M9 18h6m-5 4h4m-6.5-7.5A7 7 0 1 1 16.5 15c-.8.7-1.2 1.6-1.4 3H8.9c-.2-1.4-.6-2.3-1.4-3Z"/></symbol>
+    <symbol id="ui-icon-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1H4Z"/></symbol>
+  </svg>
 
   <!-- ===== NAVBAR ===== -->
   <nav class="navbar" id="navbar">
@@ -95,7 +123,7 @@
         <div class="hero-visual">
           <div class="hero-photo-stage" :class="{'is-dragging': photoDrag}" role="region" aria-roledescription="carousel" :aria-label="'Foto resep: ' + heroRecipe.title + '. Geser ke kiri atau kanan untuk melihat foto lain.'" tabindex="0" @mouseenter="pauseHeroRotation('hover')" @mouseleave="resumeHeroRotation('hover')" @focusin="pauseHeroRotation('focus')" @focusout="handleHeroFocusOut" @keydown.left.prevent="changeHeroPhoto(-1)" @keydown.right.prevent="changeHeroPhoto(1)" @pointerdown="startPhotoDrag" @pointermove="movePhotoDrag" @pointerup="endPhotoDrag" @pointercancel="cancelPhotoDrag" @lostpointercapture="endPhotoDrag">
             <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-amber-100">
-              <img class="hero-food-photo h-full w-full select-none object-cover" :src="heroRecipe.image" :alt="heroRecipe.alt" draggable="false" fetchpriority="high" />
+              <picture class="hero-photo-picture"><source v-if="heroRecipe.webpImage" :srcset="heroRecipe.webpImage" type="image/webp" /><img class="hero-food-photo h-full w-full select-none object-cover" :src="heroRecipe.image" :alt="heroRecipe.alt" draggable="false" fetchpriority="high" /></picture>
               <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent"></div>
             </div>
             <button class="hero-recipe-meta" type="button" :aria-label="'Lihat resep ' + heroRecipe.title" @pointerdown.stop @click.stop="openHeroRecipe">
@@ -131,7 +159,7 @@
           <div class="step-card" data-step="1">
             <div class="step-number">01</div>
             <div class="step-icon-wrap">
-              <div class="step-icon">🥕</div>
+              <div class="step-icon"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-carrot"/></svg></div>
               <div class="step-ring"></div>
             </div>
             <h3>Pilih bahanmu</h3>
@@ -142,7 +170,7 @@
           <div class="step-card" data-step="2">
             <div class="step-number">02</div>
             <div class="step-icon-wrap">
-              <div class="step-icon">🧺</div>
+              <div class="step-icon"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-basket"/></svg></div>
               <div class="step-ring"></div>
             </div>
             <h3>Masukkan bahan yang ada</h3>
@@ -153,7 +181,7 @@
           <div class="step-card" data-step="3">
             <div class="step-number">03</div>
             <div class="step-icon-wrap">
-              <div class="step-icon">🍳</div>
+              <div class="step-icon"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-pot"/></svg></div>
               <div class="step-ring"></div>
             </div>
             <h3>Dapat Resep & Masak!</h3>
@@ -175,12 +203,12 @@
         <div class="recipes-scroll">
           <div class="recipe-card" onclick="openRecipeModal('Sup Jagung Wortel', '20 mnt', '2 Porsi', '180 kal', ['🌽 Jagung', '🥕 Wortel', '🧅 Bawang', '🧄 Bawang Putih', '🧂 Garam'], ['Potong jagung dan wortel', 'Tumis bawang hingga harum', 'Masukkan air dan semua bahan', 'Rebus 15 menit, beri bumbu', 'Sajikan hangat'])">
             <div class="recipe-img" style="background: linear-gradient(135deg,#e67e22,#f39c12)">
-              <img class="recipe-img-photo" src="assets/img/sup-jagung.jpg" alt="Sup Jagung Wortel" loading="lazy" data-fallback="&#127859;" />
+              <img class="recipe-img-photo" src="assets/img/sup-jagung.jpg" alt="Foto hidangan Sup Jagung Wortel" loading="lazy" decoding="async" data-fallback="&#127859;" />
             </div>
             <div class="recipe-badge-diff easy">Mudah</div>
             <div class="recipe-info">
               <h3>Sup Jagung Wortel</h3>
-              <p class="recipe-meta">⏱ 20 mnt &nbsp;|&nbsp; 👥 2 Porsi &nbsp;|&nbsp; 🔥 180 kal</p>
+              <p class="recipe-meta"><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>20 mnt</span><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-users"/></svg>2 Porsi</span><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-flame"/></svg>180 kal</span></p>
               <div class="recipe-tags"><span>Zero Waste</span><span>Sehat</span></div>
               <div class="recipe-ingredients-preview">
                 <span>🌽</span><span>🥕</span><span>🧅</span><span>🧄</span>
@@ -191,12 +219,12 @@
 
           <div class="recipe-card" onclick="openRecipeModal('Nasi Goreng Sederhana', '15 mnt', '1 Porsi', '320 kal', ['🍚 Nasi', '🥚 Telur', '🧅 Bawang', '🌶️ Cabai', '🫙 Kecap'], ['Siapkan nasi dingin', 'Goreng telur orak-arik', 'Masukkan nasi dan bumbu', 'Aduk rata dengan kecap', 'Sajikan dengan kerupuk'])">
             <div class="recipe-img" style="background: linear-gradient(135deg,#8e44ad,#9b59b6)">
-              <img class="recipe-img-photo" src="assets/img/nasi-goreng.jpg" alt="Nasi Goreng Sederhana" loading="lazy" data-fallback="&#127831;" />
+              <img class="recipe-img-photo" src="assets/img/nasi-goreng.jpg" alt="Foto hidangan Nasi Goreng Sederhana" loading="lazy" decoding="async" data-fallback="&#127831;" />
             </div>
             <div class="recipe-badge-diff easy">Mudah</div>
             <div class="recipe-info">
               <h3>Nasi Goreng Sederhana</h3>
-              <p class="recipe-meta">⏱ 15 mnt &nbsp;|&nbsp; 👥 1 Porsi &nbsp;|&nbsp; 🔥 320 kal</p>
+              <p class="recipe-meta"><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>15 mnt</span><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-users"/></svg>1 Porsi</span><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-flame"/></svg>320 kal</span></p>
               <div class="recipe-tags"><span>Sarapan</span><span>Cepat</span></div>
               <div class="recipe-ingredients-preview">
                 <span>🍚</span><span>🥚</span><span>🧅</span><span>🌶️</span>
@@ -207,12 +235,12 @@
 
           <div class="recipe-card" onclick="openRecipeModal('Tumis Kangkung Terasi', '10 mnt', '2 Porsi', '95 kal', ['🥬 Kangkung', '🧄 Bawang Putih', '🌶️ Cabai', '🦐 Terasi', '🧂 Garam'], ['Cuci bersih kangkung', 'Tumis bawang dan cabai', 'Masukkan terasi, haluskan', 'Masukkan kangkung', 'Masak 2 menit, sajikan'])">
             <div class="recipe-img" style="background: linear-gradient(135deg,#27ae60,#2ecc71)">
-              <img class="recipe-img-photo" src="assets/img/tumis-kangkung.jpg" alt="Tumis Kangkung Terasi" loading="lazy" data-fallback="&#129388;" />
+              <img class="recipe-img-photo" src="assets/img/tumis-kangkung.jpg" alt="Foto hidangan Tumis Kangkung Terasi" loading="lazy" decoding="async" data-fallback="&#129388;" />
             </div>
             <div class="recipe-badge-diff easy">Mudah</div>
             <div class="recipe-info">
               <h3>Tumis Kangkung Terasi</h3>
-              <p class="recipe-meta">⏱ 10 mnt &nbsp;|&nbsp; 👥 2 Porsi &nbsp;|&nbsp; 🔥 95 kal</p>
+              <p class="recipe-meta"><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>10 mnt</span><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-users"/></svg>2 Porsi</span><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-flame"/></svg>95 kal</span></p>
               <div class="recipe-tags"><span>Sayur</span><span>Cepat</span></div>
               <div class="recipe-ingredients-preview">
                 <span>🥬</span><span>🧄</span><span>🌶️</span><span>🦐</span>
@@ -222,12 +250,12 @@
 
           <div class="recipe-card" onclick="openRecipeModal('Tempe Orek Pedas', '25 mnt', '3 Porsi', '240 kal', ['🧱 Tempe', '🌶️ Cabai', '🧅 Bawang', '🫙 Kecap Manis', '🧂 Gula'], ['Goreng tempe hingga kering', 'Haluskan bumbu cabai bawang', 'Tumis bumbu halus', 'Masukkan kecap dan gula', 'Masukkan tempe, aduk rata'])">
             <div class="recipe-img" style="background: linear-gradient(135deg,#e74c3c,#c0392b)">
-              <img class="recipe-img-photo" src="assets/img/tempe-orek.jpg" alt="Tempe Orek Pedas" loading="lazy" data-fallback="&#127859;" />
+              <img class="recipe-img-photo" src="assets/img/tempe-orek.jpg" alt="Foto hidangan Tempe Orek Pedas" loading="lazy" decoding="async" data-fallback="&#127859;" />
             </div>
             <div class="recipe-badge-diff medium">Sedang</div>
             <div class="recipe-info">
               <h3>Tempe Orek Pedas</h3>
-              <p class="recipe-meta">⏱ 25 mnt &nbsp;|&nbsp; 👥 3 Porsi &nbsp;|&nbsp; 🔥 240 kal</p>
+              <p class="recipe-meta"><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>25 mnt</span><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-users"/></svg>3 Porsi</span><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-flame"/></svg>240 kal</span></p>
               <div class="recipe-tags"><span>Lauk</span><span>Pedas</span></div>
               <div class="recipe-ingredients-preview">
                 <span>🧱</span><span>🌶️</span><span>🧅</span><span>🫙</span>
@@ -238,12 +266,12 @@
 
           <div class="recipe-card" onclick="openRecipeModal('Capcay Kuah Segar', '20 mnt', '4 Porsi', '150 kal', ['🥦 Brokoli', '🥕 Wortel', '🫑 Paprika', '🍄 Jamur', '🧄 Bawang'], ['Potong semua sayur', 'Tumis bawang', 'Masukkan sayur keras dahulu', 'Tuang kaldu, masak 10 mnt', 'Tambah tepung maizena'])">
             <div class="recipe-img" style="background: linear-gradient(135deg,#1abc9c,#16a085)">
-              <img class="recipe-img-photo" src="assets/img/capcay.jpg" alt="Capcay Kuah Segar" loading="lazy" data-fallback="&#129367;" />
+              <img class="recipe-img-photo" src="assets/img/capcay.jpg" alt="Foto hidangan Capcay Kuah Segar" loading="lazy" decoding="async" data-fallback="&#129367;" />
             </div>
             <div class="recipe-badge-diff easy">Mudah</div>
             <div class="recipe-info">
               <h3>Capcay Kuah Segar</h3>
-              <p class="recipe-meta">⏱ 20 mnt &nbsp;|&nbsp; 👥 4 Porsi &nbsp;|&nbsp; 🔥 150 kal</p>
+              <p class="recipe-meta"><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>20 mnt</span><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-users"/></svg>4 Porsi</span><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-flame"/></svg>150 kal</span></p>
               <div class="recipe-tags"><span>Sehat</span><span>Sayur</span></div>
               <div class="recipe-ingredients-preview">
                 <span>🥦</span><span>🥕</span><span>🫑</span><span>🍄</span>
@@ -254,12 +282,12 @@
 
           <div class="recipe-card" onclick="openRecipeModal('Soto Ayam Bening', '45 mnt', '4 Porsi', '280 kal', ['🍗 Ayam', '🥬 Sawi', '🥕 Wortel', '🧅 Bawang', '🌿 Daun Salam'], ['Rebus ayam hingga matang', 'Suwir ayam, sisihkan', 'Tumis bumbu halus', 'Masukkan ke kaldu ayam', 'Tambah sayur, masak 5 mnt'])">
             <div class="recipe-img" style="background: linear-gradient(135deg,#f39c12,#d68910)">
-              <img class="recipe-img-photo" src="assets/img/soto-ayam.jpg" alt="Soto Ayam Bening" loading="lazy" data-fallback="&#127836;" />
+              <img class="recipe-img-photo" src="assets/img/soto-ayam.jpg" alt="Foto hidangan Soto Ayam Bening" loading="lazy" decoding="async" data-fallback="&#127836;" />
             </div>
             <div class="recipe-badge-diff medium">Sedang</div>
             <div class="recipe-info">
               <h3>Soto Ayam Bening</h3>
-              <p class="recipe-meta">⏱ 45 mnt &nbsp;|&nbsp; 👥 4 Porsi &nbsp;|&nbsp; 🔥 280 kal</p>
+              <p class="recipe-meta"><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>45 mnt</span><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-users"/></svg>4 Porsi</span><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-flame"/></svg>280 kal</span></p>
               <div class="recipe-tags"><span>Soto</span><span>Berkuah</span></div>
               <div class="recipe-ingredients-preview">
                 <span>🍗</span><span>🥬</span><span>🥕</span><span>🧅</span>
@@ -276,13 +304,16 @@
       <div class="container">
         <div class="stats-banner">
           <div class="stats-content">
-            <h2>🌱 Dampak Zero Waste Resepin</h2>
-            <p>Bersama-sama kita telah menyelamatkan ribuan bahan makanan dari pembuangan</p>
+            <h2><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-sprout"/></svg> Dampak Zero Waste Resepin</h2>
+            <p class="stats-fact">Kajian Bappenas memperkirakan food loss dan food waste di Indonesia pada 2000–2019 mencapai 23–48 juta ton per tahun.</p>
+            <a class="stats-source" href="https://sdgs.bappenas.go.id/website/wp-content/uploads/2023/11/Lampiran-I-RAN-SDGs-2021-2024.pdf" target="_blank" rel="noopener noreferrer">Sumber: Bappenas, RAN SDGs 2021–2024</a>
           </div>
-          <div class="stats-numbers">
-            <div class="waste-stat"><span class="ws-num" data-target="12400">0</span><span class="ws-label">Bahan Diselamatkan</span></div>
-            <div class="waste-stat"><span class="ws-num" data-target="3200">0</span><span class="ws-label">Masakan Dimasak</span></div>
-            <div class="waste-stat"><span class="ws-num" data-target="8900">0</span><span class="ws-label">Pengguna Aktif</span></div>
+          <div class="stats-personal">
+            <div class="stats-numbers">
+              <div class="waste-stat"><span class="ws-num" id="personalIngredientsUsed">0</span><span class="ws-label">Bahan sisa yang kamu pakai</span></div>
+              <div class="waste-stat"><span class="ws-num" id="personalRecipesOpened">0</span><span class="ws-label">Resep yang kamu buka</span></div>
+            </div>
+            <p class="personal-stats-empty" id="personalStatsEmpty">Belum ada aktivitas tercatat. Coba contoh bahan atau buka resep untuk mulai.</p>
           </div>
         </div>
       </div>
@@ -291,44 +322,23 @@
     <!-- Footer -->
     <footer class="footer">
       <div class="container">
-        <div class="footer-grid">
+        <div class="footer-grid footer-grid-simple">
           <div class="footer-brand">
             <div class="footer-logo">
-              <div class="logo-icon">🍳</div>
+              <div class="logo-icon"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-pot"/></svg></div>
               <span>Resepin</span>
             </div>
-            <p>Resep praktis untuk memanfaatkan bahan dapur dan mengurangi makanan terbuang.</p>
+            <p>Temukan ide masak dari bahan yang tersedia di dapurmu.</p>
+            <!-- TODO: replace these homepage URLs with your GitHub and LinkedIn profile URLs. -->
             <div class="footer-social">
-              <a href="#" class="social-link">Instagram</a>
-              <a href="#" class="social-link">TikTok</a>
-              <a href="#" class="social-link">YouTube</a>
+              <a href="https://github.com/" class="social-link" data-url-placeholder="TODO: ganti dengan URL profil GitHub">GitHub</a>
+              <a href="https://www.linkedin.com/" class="social-link" data-url-placeholder="TODO: ganti dengan URL profil LinkedIn">LinkedIn</a>
             </div>
-          </div>
-          <div class="footer-links">
-            <h4>Fitur</h4>
-            <a href="#" @click="go('scan')">Scan Bahan</a>
-            <a href="#" @click="go('resep')">Cari Resep</a>
-            <a href="#" @click="go('chef')">Chef Resepin</a>
-            <a href="#" @click="go('jelajahi')">Jelajahi</a>
-          </div>
-          <div class="footer-links">
-            <h4>Kategori</h4>
-            <a href="#">Sarapan</a>
-            <a href="#">Makan Siang</a>
-            <a href="#">Camilan</a>
-            <a href="#">Minuman</a>
-          </div>
-          <div class="footer-links">
-            <h4>Tentang</h4>
-            <a href="#">Tentang Kami</a>
-            <a href="#">Blog</a>
-            <a href="#">Kebijakan Privasi</a>
-            <a href="#">Kontak</a>
+            <p class="portfolio-note">Project portofolio. Data resep bersifat contoh.</p>
           </div>
         </div>
         <div class="footer-bottom">
-          <p>©️ 2026 Resepin. Dibuat dengan ❤️ untuk mengurangi food waste Indonesia.</p>
-          <p>🌱 <span id="footerWasteCount">12,450</span> bahan diselamatkan hari ini</p>
+          <p>© 2026 Resepin</p>
         </div>
       </div>
     </footer>
@@ -361,7 +371,7 @@
             <div class="detection-boxes" id="detectionBoxes"></div>
             <!-- Camera placeholder -->
             <div class="camera-placeholder" id="cameraPlaceholder">
-              <div class="cp-icon">📷</div>
+              <div class="cp-icon"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-camera"/></svg></div>
               <p>Gunakan kamera untuk mengenali bahan</p>
               <p class="cp-sub">atau pilih bahan secara manual</p>
             </div>
@@ -376,7 +386,7 @@
               Coba contoh
             </button>
             <button class="cam-btn capture" id="captureBtn" onclick="captureAndDetect()" disabled>
-              📸 Ambil Foto
+              <svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-camera"/></svg> Ambil Foto
             </button>
           </div>
           <p class="cp-sub">Kamera mengenali beberapa bahan umum. Kamu bisa melengkapi daftar secara manual.</p>
@@ -397,8 +407,10 @@
 
           <div class="ip-list" id="ingredientList">
             <div class="ip-empty" id="ipEmpty">
-              <div class="ip-empty-icon">🔍</div>
-              <p>Belum ada bahan.<br/>Gunakan kamera atau tambahkan sendiri.</p>
+              <div class="ip-empty-icon"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-search"/></svg></div>
+              <h4>Belum ada bahan</h4>
+              <p>Coba contoh bahan tanpa membuka kamera, atau tambahkan bahan secara manual.</p>
+              <button class="btn-primary ip-empty-example" type="button" onclick="runDemo()">Coba contoh</button>
             </div>
           </div>
 
@@ -419,8 +431,8 @@
           </div>
 
           <div class="ip-actions">
-            <button class="btn-primary full-width" id="findRecipesBtn" @click="go('resep')" disabled>
-              🍳 Cari Resep (<span id="ingredientCountBtn">0</span> bahan)
+            <button class="btn-primary full-width" id="findRecipesBtn" @click="findRecipesFromScan" disabled>
+              <svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-pot"/></svg> Cari Resep (<span id="ingredientCountBtn">0</span> bahan)
             </button>
             <button class="btn-secondary full-width" @click="go('chef')">
               Tanya Chef Resepin
@@ -444,7 +456,7 @@
     <div class="resep-page">
       <div class="resep-header">
         <button class="back-btn" @click="go('home')">← Kembali</button>
-        <h1>🍜 Semua Resep</h1>
+        <h1><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-book"/></svg> Semua Resep</h1>
         <p>Temukan resep terbaik dari bahan yang kamu punya</p>
       </div>
 
@@ -480,7 +492,7 @@
       <div class="chef-header">
         <button class="back-btn" @click="go('home')">← Kembali</button>
         <div class="chef-title-area">
-          <div class="chef-avatar">👩‍🍳</div>
+          <div class="chef-avatar"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
           <div>
             <h1>Chef Resepin</h1>
             <span class="chef-status"><span class="status-online"></span> Siap membantu di dapur</span>
@@ -495,11 +507,10 @@
       <div class="chat-container">
         <div class="chat-messages" id="chatMessages">
           <div class="chat-bubble bot-bubble">
-            <div class="bubble-avatar">👩‍🍳</div>
+            <div class="bubble-avatar"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
             <div class="bubble-content">
-              <p>Halo! Aku <strong>Chef Resepin</strong> 👋</p>
-              <p>Aku bisa bantu kamu menemukan resep terbaik dari bahan yang ada di dapur. Mau mulai dari mana?</p>
-              <p>Coba tanya: <em>"Aku punya wortel, telur, dan bawang. Bisa masak apa?"</em></p>
+              <p>Hai, aku <strong>Chef Resepin</strong>.</p>
+              <p>Mau cari ide masak? Pilih salah satu topik di bawah, atau ceritakan bahan yang kamu punya.</p>
             </div>
             <span class="bubble-time">Sekarang</span>
           </div>
@@ -512,7 +523,7 @@
             <button class="qp-btn" onclick="sendQuickPrompt('Mau masak sesuatu yang kaya protein tapi cepat, ada ayam.')">🍗 Masak dari ayam</button>
             <button class="qp-btn" onclick="sendQuickPrompt('Ada tempe dan tahu, mau bikin lauk yang enak.')">🧱 Tempe & tahu</button>
             <button class="qp-btn" onclick="sendQuickPrompt('Bahan di kulkas tinggal sedikit, ada brokoli dan wortel saja.')">🥦 Sayuran sisa</button>
-            <button class="qp-btn" onclick="sendQuickPrompt('Apa pengganti santan kalau habis?')">💡 Substitusi bahan</button>
+          <button class="qp-btn" onclick="sendQuickPrompt('Apa pengganti santan kalau habis?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-bulb"/></svg> Substitusi bahan</button>
           </div>
         </div>
 
@@ -577,9 +588,9 @@
         <div class="modal-header-info">
           <h2 id="modalTitle">Nama Resep</h2>
           <div class="modal-meta" id="modalMeta">
-            <span>⏱ 20 mnt</span>
-            <span>👥 2 Porsi</span>
-            <span>🔥 180 kal</span>
+            <span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>20 mnt</span>
+            <span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-users"/></svg>2 Porsi</span>
+            <span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-flame"/></svg>180 kal</span>
           </div>
         </div>
 
@@ -589,13 +600,13 @@
             <ul id="modalIngredients"></ul>
           </div>
           <div class="modal-steps">
-            <h3>👨‍🍳 Langkah Memasak</h3>
+            <h3><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chef"/></svg> Langkah Memasak</h3>
             <ol id="modalSteps"></ol>
           </div>
         </div>
 
         <div class="modal-ai-tip">
-          <div class="tip-icon">👩‍🍳</div>
+          <div class="tip-icon"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
           <div>
             <strong>Tips Chef Resepin:</strong>
             <p id="modalTip">Jika tidak punya salah satu bahan, tanyakan ke Chef Resepin untuk saran penggantinya.</p>
@@ -604,7 +615,7 @@
 
         <div class="modal-actions">
           <button class="btn-primary" @click="closeModalAndGo('chef')">Tanya Chef Resepin</button>
-          <button class="btn-secondary" onclick="saveRecipe()">♥️ Simpan Resep</button>
+          <button class="btn-secondary" onclick="saveRecipe()">Simpan Resep</button>
         </div>
       </div>
     </div>

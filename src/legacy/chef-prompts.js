@@ -1,6 +1,6 @@
 /* Chef Resepin's reusable Indonesian response copy. */
 const CHEF_PROMPTS = {
-  greeting: 'Hai! 👋 Aku Chef Resepin. Kamu lagi punya bahan apa, atau mau tanya soal resep dan substitusi?',
+  greeting: 'Hai, aku Chef Resepin. Kamu lagi punya bahan apa, atau mau tanya soal resep dan substitusi?',
   thanks: 'Sama-sama! 😊 Kalau ada bahan lain atau ingin mengubah resepnya, bilang saja ya.',
   help: 'Aku Chef Resepin. Aku bisa bantu mencari ide resep dari bahan yang tersedia, memberi tips memasak, dan menyarankan pengganti bahan. Coba sebutkan bahan atau pertanyaanmu.',
   noIngredients: 'Nggak apa-apa 😊 Kita mulai dari yang paling sederhana. Coba cek apakah ada nasi, telur, mi, atau roti? Sebutkan satu saja yang ada—aku carikan ide paling simpel. Kalau benar-benar belum ada bahan, aku bisa bantu susun daftar belanja minimal untuk masakan yang kamu inginkan.',

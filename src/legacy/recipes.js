@@ -14,6 +14,9 @@ const RECIPE_IMAGES = {
   25: "sushi", 26: "taco", 27: "pancake", 28: "teriyaki", 29: "sate-lilit"
 };
 
+// WebP companions are generated for the largest recipe photos; JPG remains the fallback.
+const RECIPE_WEBP_IDS = new Set([2, 3, 9, 16, 17, 28]);
+
 const RECIPES_DB = [
   {
     id: 1,

@@ -6,6 +6,7 @@
 function updateChefBahanBadge() {
   const badge = document.getElementById('chefBahanText');
   if (!badge) return;
+  document.querySelector('#page-chef .chat-container')?.classList.toggle('chef-no-ingredients', detectedIngredients.length === 0);
   if (detectedIngredients.length === 0) {
     badge.textContent = 'Belum ada bahan';
   } else {
@@ -192,7 +193,7 @@ function generateAIResponse(message) {
       if (best.recipe.title === 'Burger Ayam Rumahan' && availableIngredients.includes('roti burger') && availableIngredients.includes('patty')) {
         return {
           type: 'recipe',
-          text: 'Nah, bun + patty sudah cukup buat burger simpel! 🔥 Masak patty sampai matang, panggang bun sebentar, lalu tumpuk. Keju, saus, atau sayur cuma tambahan kalau ada. Aku tulis langkah lengkapnya di bawah.',
+          text: 'Nah, bun + patty sudah cukup buat burger simpel! Masak patty sampai matang, panggang bun sebentar, lalu tumpuk. Keju, saus, atau sayur cuma tambahan kalau ada. Aku tulis langkah lengkapnya di bawah.',
           recipe: { title: best.recipe.title, time: best.recipe.time, idx: RECIPES_DB.indexOf(best.recipe) }
         };
       }
@@ -235,12 +236,12 @@ function appendChatMessage(text, role) {
   if (role === 'user') {
     div.innerHTML = `
       <div class="bubble-content"><p>${escapeHtml(text)}</p></div>
-      <div class="bubble-avatar">👤</div>
+      <div class="bubble-avatar"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-user"/></svg></div>
       <span class="bubble-time">${time}</span>
     `;
   } else {
     div.innerHTML = `
-      <div class="bubble-avatar">👩‍🍳</div>
+      <div class="bubble-avatar"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
       <div class="bubble-content"><p>${formatBotText(text)}</p></div>
       <span class="bubble-time">${time}</span>
     `;
@@ -264,7 +265,7 @@ function appendAIResponse(response) {
     recipeCardHTML = `
       <section class="chat-recipe-card" aria-label="Resep ${escapeHtml(r.title)}">
         <div class="crc-title">${r.emoji} ${escapeHtml(r.title)}</div>
-        <div class="crc-meta">⏱ ${escapeHtml(r.time)} &nbsp;•&nbsp; ${escapeHtml(r.difficulty)} &nbsp;•&nbsp; 👥 ${escapeHtml(r.servings)}</div>
+        <div class="crc-meta"><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>${escapeHtml(r.time)}</span><span>${escapeHtml(r.difficulty)}</span><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-users"/></svg>${escapeHtml(r.servings)}</span></div>
         <h4>Bahan-bahan</h4>
         <ul class="chat-recipe-ingredients">${r.ingredients.map(ingredient => `<li>${escapeHtml(ingredient)}</li>`).join('')}</ul>
         <h4>Langkah memasak</h4>
@@ -272,15 +273,15 @@ function appendAIResponse(response) {
         <button class="crc-link" type="button" onclick="openRecipeByIndex(${response.recipe.idx})">Buka tampilan resep ↗</button>
         <div class="chat-recipe-actions">
           <button type="button" onclick="sendQuickPrompt('Bikin versi lebih pedas')">🌶️ Bikin lebih pedas</button>
-          <button type="button" onclick="sendQuickPrompt('Bahan apa yang bisa diganti?')">🔄 Tanya substitusi</button>
-          <button type="button" onclick="sendQuickPrompt('Kasih tips biar lebih hemat')">💡 Tips hemat</button>
+          <button type="button" onclick="sendQuickPrompt('Bahan apa yang bisa diganti?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-repeat"/></svg> Tanya substitusi</button>
+          <button type="button" onclick="sendQuickPrompt('Kasih tips biar lebih hemat')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-bulb"/></svg> Tips hemat</button>
         </div>
       </section>
     `;
   }
 
   div.innerHTML = `
-    <div class="bubble-avatar">👩‍🍳</div>
+    <div class="bubble-avatar"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
     <div class="bubble-content">
       <p>${formatBotText(response.text)}</p>
       ${recipeCardHTML}
@@ -299,7 +300,7 @@ function appendTypingIndicator(id) {
   div.id = id;
   div.className = 'chat-bubble bot-bubble';
   div.innerHTML = `
-    <div class="bubble-avatar">👩‍🍳</div>
+    <div class="bubble-avatar"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
     <div class="bubble-content" style="padding:14px 18px">
       <div class="typing-dots">
         <span></span><span></span><span></span>
