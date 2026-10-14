@@ -2588,3 +2588,106 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
   .nav-links.open .nav-link.active,
   .nav-links.open .nav-link:hover { color: #f5efdf; background: rgba(225,220,201,.14); }
 }
+
+/* Give the floating navbar a more dimensional, layered glass surface. */
+.nav-container,
+.nav-container:hover,
+.nav-container:focus-within {
+  border-color: rgba(225,220,201,.38);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.13), transparent 48%),
+    linear-gradient(145deg, rgba(74,55,34,.72), rgba(20,15,10,.82) 58%, rgba(49,36,23,.78));
+  box-shadow:
+    0 2px 3px rgba(0,0,0,.22),
+    0 10px 22px rgba(0,0,0,.24),
+    0 24px 46px rgba(0,0,0,.16),
+    inset 0 1px 0 rgba(255,255,255,.38),
+    inset 0 2px 8px rgba(255,255,255,.08),
+    inset 0 -2px 0 rgba(0,0,0,.28);
+  transform: perspective(900px) rotateX(3deg);
+  transform-style: preserve-3d;
+  transition: width .38s cubic-bezier(.2,.8,.2,1), height .38s cubic-bezier(.2,.8,.2,1), background .3s ease, box-shadow .3s ease, transform .3s ease;
+}
+.nav-container:hover,
+.nav-container:focus-within {
+  transform: perspective(900px) rotateX(0) translateY(1px);
+  box-shadow:
+    0 3px 5px rgba(0,0,0,.2),
+    0 14px 28px rgba(0,0,0,.3),
+    0 30px 54px rgba(0,0,0,.18),
+    inset 0 1px 0 rgba(255,255,255,.42),
+    inset 0 2px 10px rgba(255,255,255,.09),
+    inset 0 -2px 0 rgba(0,0,0,.26);
+}
+.nav-container::before {
+  background:
+    linear-gradient(112deg, rgba(255,255,255,.24), transparent 25% 68%, rgba(225,220,201,.07)),
+    linear-gradient(180deg, rgba(255,255,255,.1), transparent 38%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.28), inset 0 -1px 0 rgba(0,0,0,.18);
+}
+.nav-link.active,
+#app:has(#page-home.active) .navbar:not(.scrolled) .nav-link.active {
+  background: linear-gradient(180deg, rgba(225,220,201,.24), rgba(225,220,201,.11)) !important;
+  border-color: rgba(225,220,201,.2);
+  box-shadow: 0 3px 8px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.22), inset 0 -1px 0 rgba(0,0,0,.14);
+  transform: translateY(-1px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-container,
+  .nav-container:hover,
+  .nav-container:focus-within,
+  .nav-link.active { transform: none; transition: none; }
+}
+
+/* First-visit cue that teaches desktop users to hover the compact island. */
+.nav-hint {
+  position: absolute;
+  top: calc(100% + 11px);
+  left: 50%;
+  z-index: 1001;
+  padding: 8px 13px;
+  color: #e1dcc9;
+  border: 1px solid rgba(225,220,201,.24);
+  border-radius: 999px;
+  background: rgba(31,21,12,.82);
+  box-shadow: 0 8px 22px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.16);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  font-size: .78rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate(-50%,-5px);
+  transition: opacity .22s ease, transform .22s ease, visibility .22s;
+}
+.nav-hint::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  border-top: 1px solid rgba(225,220,201,.24);
+  border-left: 1px solid rgba(225,220,201,.24);
+  background: #332719;
+  transform: translateX(-50%) rotate(45deg);
+}
+.navbar.nav-hint-visible .nav-hint {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%,0);
+  animation: nav-hint-float 1.7s ease-in-out infinite;
+}
+@keyframes nav-hint-float {
+  0%,100% { margin-top: 0; }
+  50% { margin-top: 4px; }
+}
+@media (max-width: 900px) {
+  .nav-hint { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .navbar.nav-hint-visible .nav-hint { animation: none; }
+}
