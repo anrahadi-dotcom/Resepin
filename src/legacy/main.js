@@ -476,14 +476,26 @@ function updateIngredientCount() {
 // ============================================================
 // RECIPES GRID
 // ============================================================
+function recipeIngredientMatches(ingredient, term) {
+  const words = value => value.toLocaleLowerCase('id').match(/[\p{L}\p{N}]+/gu) || [];
+  const ingredientWords = words(ingredient);
+  const termWords = words(term);
+  if (!termWords.length) return false;
+  return ingredientWords.some((_, start) => termWords.every((word, offset) => ingredientWords[start + offset] === word));
+}
+
 function renderRecipesGrid() {
   const grid = document.getElementById('recipesGrid');
   if (!grid) return;
   const query = document.getElementById('recipeSearch')?.value?.toLowerCase() || '';
+  const ingredientQuery = new URLSearchParams(window.location.search).getAll('bahan').map(value => value.trim().toLocaleLowerCase('id')).filter(Boolean);
   let filtered = RECIPES_DB;
 
-  // Apply text search
-  if (query) {
+  // Query parameters from the hero match any selected ingredient in the recipe data.
+  if (ingredientQuery.length) {
+    filtered = filtered.filter(recipe => ingredientQuery.some(term => recipe.ingredients.some(ingredient => recipeIngredientMatches(ingredient, term))));
+  } else if (query) {
+    // Apply existing free-text search.
     filtered = filtered.filter(r =>
       r.title.toLowerCase().includes(query) ||
       r.tags.some(t => t.toLowerCase().includes(query)) ||
@@ -562,6 +574,11 @@ function createRecipeCardHTML(r) {
 }
 
 function filterRecipes() {
+  const url = new URL(window.location.href);
+  if (url.searchParams.has('bahan')) {
+    url.searchParams.delete('bahan');
+    window.history.replaceState(window.history.state, '', url);
+  }
   renderRecipesGrid();
 }
 
@@ -762,7 +779,12 @@ document.addEventListener('DOMContentLoaded', () => {
   initParticles();
   initScrollEffects();
   animateFooterCounter();
-  showPage('home');
+  const requestedIngredients = new URLSearchParams(window.location.search).getAll('bahan').map(value => value.trim()).filter(Boolean);
+  if (requestedIngredients.length) {
+    const search = document.getElementById('recipeSearch');
+    if (search) search.value = requestedIngredients.join(', ');
+    showPage('resep');
+  } else showPage('home');
   window.refreshMotionReveals?.();
   bindRecipeImageFallbacks();
 

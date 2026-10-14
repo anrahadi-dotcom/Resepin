@@ -74,34 +74,42 @@
           <div class="hero-badge"><span class="badge-dot"></span><span>Masak enak, sisa berkurang</span></div>
           <h1 class="text-5xl md:text-6xl font-bold leading-tight mb-5">Apa yang ada<br/>di dapurmu?<br/><span class="title-gradient">Jadikan hidangan</span><br/><span class="title-accent">istimewa.</span></h1>
           <p class="hero-desc">Punya bahan tersisa? Temukan masakan rumahan yang enak, praktis, dan cocok dengan isi dapurmu.</p>
-          <div class="hero-cta">
-            <button class="btn-primary" @click="go('scan')">Cari resep dari bahan</button>
-            <button class="btn-secondary" @click="go('resep')">Lihat Semua Resep <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+          <form class="hero-search" @submit.prevent="submitHeroSearch">
+            <label class="visually-hidden" for="heroIngredientSearch">Cari resep dari bahan</label>
+            <div class="hero-search-field">
+              <svg class="hero-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+              <input id="heroIngredientSearch" v-model="heroIngredientText" type="search" aria-label="Ketik bahan untuk mencari resep" placeholder="Ketik bahan: telur, tomat, bawang..." autocomplete="off" />
+              <button class="btn-primary hero-search-submit" type="submit" :disabled="heroSearchIngredients.length === 0">Cari resep</button>
+            </div>
+            <div class="hero-popular-ingredients" role="group" aria-label="Bahan populer">
+              <span class="hero-popular-label">Populer:</span>
+              <button v-for="ingredient in popularIngredients" :key="ingredient" class="hero-ingredient-chip" :class="{active: heroSelectedIngredients.includes(ingredient)}" type="button" :aria-pressed="heroSelectedIngredients.includes(ingredient)" @click="toggleHeroIngredient(ingredient)">{{ ingredient }}</button>
+            </div>
+            <p v-if="heroSearchMessage" class="hero-search-message" role="status">{{ heroSearchMessage }}</p>
+          </form>
+          <div class="hero-cta hero-cta-link">
+            <a href="#resep" @click.prevent="go('resep')">Lihat semua resep <span aria-hidden="true">→</span></a>
           </div>
           <p class="hero-note">Geser foto untuk cari inspirasi masakan berikutnya.</p>
         </div>
         <div class="hero-visual">
-          <div class="hero-photo-stage" :class="{'is-dragging': photoDrag}" role="region" aria-roledescription="carousel" :aria-label="'Foto resep: ' + heroRecipe.title + '. Geser ke kiri atau kanan untuk melihat foto lain.'" tabindex="0" @mouseenter="heroPaused = true" @mouseleave="heroPaused = false" @focusin="heroPaused = true" @focusout="heroPaused = $event.currentTarget.contains($event.relatedTarget)" @keydown.left.prevent="changeHeroPhoto(-1)" @keydown.right.prevent="changeHeroPhoto(1)" @pointerdown="startPhotoDrag" @pointermove="movePhotoDrag" @pointerup="endPhotoDrag" @pointercancel="cancelPhotoDrag" @lostpointercapture="endPhotoDrag">
+          <div class="hero-photo-stage" :class="{'is-dragging': photoDrag}" role="region" aria-roledescription="carousel" :aria-label="'Foto resep: ' + heroRecipe.title + '. Geser ke kiri atau kanan untuk melihat foto lain.'" tabindex="0" @mouseenter="pauseHeroRotation('hover')" @mouseleave="resumeHeroRotation('hover')" @focusin="pauseHeroRotation('focus')" @focusout="handleHeroFocusOut" @keydown.left.prevent="changeHeroPhoto(-1)" @keydown.right.prevent="changeHeroPhoto(1)" @pointerdown="startPhotoDrag" @pointermove="movePhotoDrag" @pointerup="endPhotoDrag" @pointercancel="cancelPhotoDrag" @lostpointercapture="endPhotoDrag">
             <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-amber-100">
               <img class="hero-food-photo h-full w-full select-none object-cover" :src="heroRecipe.image" :alt="heroRecipe.alt" draggable="false" fetchpriority="high" />
               <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent"></div>
             </div>
-            <button class="hero-photo-arrow previous" type="button" aria-label="Foto resep sebelumnya" @pointerdown.stop @click.stop="changeHeroPhoto(-1)">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
-            </button>
-            <button class="hero-photo-arrow next" type="button" aria-label="Foto resep berikutnya" @pointerdown.stop @click.stop="changeHeroPhoto(1)">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-            </button>
-            <aside class="hero-recipe-meta" aria-live="polite" aria-atomic="true">
+            <button class="hero-recipe-meta" type="button" :aria-label="'Lihat resep ' + heroRecipe.title" @pointerdown.stop @click.stop="openHeroRecipe">
               <span class="hero-recipe-meta-label">FOTO RESEP {{ String(photoIndex + 1).padStart(2, '0') }} / {{ String(heroPhotos.length).padStart(2, '0') }}</span>
               <h2>{{ heroRecipe.title }}</h2>
               <div class="hero-recipe-meta-details">
                 <span><i aria-hidden="true">◷</i>{{ heroRecipe.time }}</span>
                 <span><i aria-hidden="true">✦</i>{{ heroRecipe.difficulty }}</span>
+                <span v-if="heroIngredientCount !== null"><i aria-hidden="true">◉</i>{{ heroIngredientCount }} bahan</span>
               </div>
-            </aside>
+              <span class="hero-recipe-link">Lihat resep <span aria-hidden="true">→</span></span>
+            </button>
             <div class="hero-photo-dots" role="group" aria-label="Pilih foto resep">
-              <button v-for="(photo, index) in heroPhotos" :key="photo.title" type="button" :class="{active: index === photoIndex}" :aria-label="'Tampilkan foto ' + photo.title" :aria-current="index === photoIndex ? 'true' : null" @pointerdown.stop @click.stop="setHeroPhoto(index)"></button>
+              <button v-for="(photo, index) in heroPhotos" :key="photo.title" type="button" :class="{active: index === photoIndex}" :style="index === photoIndex ? {'--hero-progress': heroProgress} : null" :aria-label="'Slide ' + (index + 1) + ' dari ' + heroPhotos.length" :aria-current="index === photoIndex ? 'true' : null" @pointerdown.stop @click.stop="setHeroPhoto(index)"></button>
             </div>
           </div>
         </div>
