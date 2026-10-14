@@ -6,6 +6,8 @@ createApp({
     return {
       photoIndex: 0,
       photoDrag: null,
+      heroPaused: false,
+      heroRotationTimer: null,
       heroPhotos: [
         { title: 'Teriyaki Ayam', time: '25 menit', difficulty: 'Mudah', image: '/assets/img/teriyaki.jpg', alt: 'Ayam teriyaki dengan taburan biji wijen' },
         { title: 'Pecel Sayur', time: '20 menit', difficulty: 'Mudah', image: '/assets/img/pecel.jpg', alt: 'Pecel sayur dengan saus kacang' },
@@ -19,11 +21,23 @@ createApp({
   computed: {
     heroRecipe() { return this.heroPhotos[this.photoIndex]; }
   },
+  mounted() {
+    this.heroRotationTimer = window.setInterval(() => {
+      if (!this.heroPaused && this.activePage === 'home' && !document.hidden && !this.photoDrag) {
+        this.changeHeroPhoto(1);
+      }
+    }, 6500);
+    this.$nextTick(() => window.refreshMotionReveals?.());
+  },
+  beforeUnmount() {
+    window.clearInterval(this.heroRotationTimer);
+  },
   methods: {
     go(page) {
       this.activePage = page;
       this.menuOpen = false;
       window.showPage(page);
+      this.$nextTick(() => window.refreshMotionReveals?.());
     },
     toggleMenu() {
       this.menuOpen = !this.menuOpen;

@@ -671,3 +671,78 @@ body[data-theme="dark"] .recipe-tags span { color: #e1dcc9; background: rgba(225
   color: transparent;
   -webkit-text-fill-color: transparent;
 }
+
+/* Edge-to-edge glass navigation, quiet motion, and icon-only round controls. */
+@media (min-width: 1101px) {
+  .navbar { padding-inline: clamp(24px, 3.2vw, 64px); }
+  .nav-container { width: 100%; max-width: none; margin: 0; gap: clamp(16px, 2vw, 32px); }
+}
+.navbar {
+  background: rgba(12, 10, 8, .34);
+  border-bottom-color: rgba(225,220,201,.1);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  transition: background .3s ease, border-color .3s ease, backdrop-filter .3s ease;
+}
+.navbar.scrolled { background: rgba(12,10,8,.66); border-bottom-color: rgba(225,220,201,.16); }
+.nav-links { background: rgba(0,0,0,.68); border-color: rgba(225,220,201,.14); }
+.nav-actions { flex: 0 0 auto; }
+.btn-scan-nav, .theme-toggle, .btn-avatar {
+  display: grid;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid rgba(225,220,201,.25);
+  border-radius: 50%;
+  color: #e1dcc9;
+  background: rgba(31,21,12,.72);
+  box-shadow: 0 3px 14px rgba(0,0,0,.12);
+  transition: transform .22s ease, background .22s ease, border-color .22s ease, color .22s ease;
+}
+.btn-scan-nav svg, .theme-toggle svg, .btn-avatar svg { width: 19px; height: 19px; }
+.btn-scan-nav span, #themeLabel { display: none !important; }
+.btn-scan-nav::before { content: none !important; }
+.btn-scan-nav:hover, .theme-toggle:hover, .btn-avatar:hover { transform: translateY(-2px); color: #1f150c; background: #e1dcc9; border-color: #e1dcc9; }
+.btn-hamburger { border-radius: 50%; }
+body[data-theme="dark"] .navbar { background: rgba(12,10,8,.74); }
+body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.82); }
+
+/* Subtle photo movement keeps the hero lively without competing with its copy. */
+.hero-food-photo { animation: hero-photo-fade .65s ease both, hero-photo-drift 18s ease-in-out .65s infinite alternate; transform-origin: center; }
+@keyframes hero-photo-fade { from { opacity: .35; } to { opacity: 1; } }
+@keyframes hero-photo-drift { from { transform: scale(1.015) translate3d(0,0,0); } to { transform: scale(1.075) translate3d(-.7%,.35%,0); } }
+.hero-photo-stage { --hero-float: 1; }
+.hero-photo-arrow { transition: background .22s ease, transform .22s ease, border-color .22s ease; }
+.hero-photo-arrow:hover { transform: translateY(-50%) scale(1.06); }
+
+/* Scroll reveals apply to meaningful content cards and headings site-wide. */
+.motion-ready { opacity: 0; transform: translateY(22px); transition: opacity .72s cubic-bezier(.2,.7,.2,1) var(--motion-delay,0ms), transform .72s cubic-bezier(.2,.7,.2,1) var(--motion-delay,0ms); }
+.motion-ready.motion-visible { opacity: 1; transform: translateY(0); }
+.step-card, .recipe-card, .cat-card, .btn-primary, .btn-secondary, .nav-link { transition-duration: .28s; }
+.step-card:hover, .recipe-card:hover, .cat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(31,21,12,.12); }
+
+/* Floating Chef icon is a small animated robot badge. */
+.floating-chef-button { position: fixed; z-index: 1100; isolation: isolate; animation: robot-hover 4s ease-in-out infinite; }
+.floating-chef-button::before { content: ""; position: absolute; z-index: -1; inset: -6px; border: 1px solid rgba(225,220,201,.4); border-radius: inherit; animation: robot-halo 2.8s ease-out infinite; }
+.floating-chef-button .robot-icon { overflow: visible; }
+.robot-icon rect, .robot-icon path, .robot-icon circle { stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.robot-icon .robot-antenna { transform-origin: 16px 5px; animation: robot-antenna 2.4s ease-in-out infinite; }
+.robot-icon .robot-eye { fill: currentColor; animation: robot-blink 4.8s ease-in-out infinite; }
+@keyframes robot-hover { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes robot-halo { 0% { opacity: .55; transform: scale(.92); } 85%,100% { opacity: 0; transform: scale(1.2); } }
+@keyframes robot-antenna { 0%,80%,100% { transform: rotate(0); } 86% { transform: rotate(-13deg); } 92% { transform: rotate(12deg); } }
+@keyframes robot-blink { 0%,46%,50%,100% { transform: scaleY(1); } 48% { transform: scaleY(.15); } }
+
+@media (max-width: 1100px) {
+  .btn-scan-nav, .theme-toggle, .btn-avatar { width: 42px; min-width: 42px; height: 42px; min-height: 42px; }
+}
+@media (max-width: 480px) {
+  .btn-scan-nav, .theme-toggle, .btn-avatar, .btn-hamburger { width: 38px; min-width: 38px; height: 38px; min-height: 38px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  .motion-ready { opacity: 1; transform: none; }
+}

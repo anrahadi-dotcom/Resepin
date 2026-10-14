@@ -78,7 +78,30 @@ function showPage(pageId) {
   if (pageId === 'resep') renderRecipesGrid();
   if (pageId === 'jelajahi') renderJelajahiGrid();
   if (pageId === 'chef') updateChefBahanBadge();
+  requestAnimationFrame(() => window.refreshMotionReveals?.());
 }
+
+// Reveal content gently as it enters the viewport, while keeping all text visible without JS.
+let motionRevealObserver;
+window.refreshMotionReveals = function refreshMotionReveals() {
+  const targets = document.querySelectorAll('.section-header, .step-card, .recipe-card, .cat-card, .scan-layout, .ingredients-panel, .camera-viewport, .ai-cta-card, .chat-container, .profile-card');
+  if (!motionRevealObserver) {
+    motionRevealObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('motion-visible');
+          motionRevealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -24px 0px' });
+  }
+  targets.forEach((element, index) => {
+    if (element.classList.contains('motion-ready')) return;
+    element.classList.add('motion-ready');
+    element.style.setProperty('--motion-delay', `${(index % 4) * 75}ms`);
+    motionRevealObserver.observe(element);
+  });
+};
 
 function toggleMenu() {
   document.getElementById('navLinks').classList.toggle('open');
@@ -740,6 +763,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollEffects();
   animateFooterCounter();
   showPage('home');
+  window.refreshMotionReveals?.();
   bindRecipeImageFallbacks();
 
   // Initial recipe grid render
