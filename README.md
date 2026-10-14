@@ -69,7 +69,7 @@ Frontend statis dibangun ke `dist/` dengan `npm run build` dan diunggah mengguna
 - Beranda: pengenalan produk dan resep unggulan.
 - Scan Bahan: kamera, deteksi foto melalui model PyTorch lokal, Mode Demo, input manual, dan daftar bahan.
 - Resep/Jelajahi: katalog resep, filter dan pencarian berdasarkan bahan.
-- Chef Resepin: asisten resep berbasis aturan lokal untuk ide awal, variasi, dan substitusi. Balasan resep menampilkan bahan dan langkah langsung di chat dengan tombol tindak lanjut.
+- Chef Resepin: asisten dapur dengan aturan lokal untuk resep katalog, substitusi umum, teknik, dan keamanan pangan. Pertanyaan yang belum cocok memakai Cloudflare Workers AI melalui Pages Function; balasan resep katalog menampilkan bahan dan langkah langsung di chat.
 - Modal resep: detail bahan, langkah, serta penyimpanan lokal di browser.
 
 ## Struktur frontend
@@ -92,7 +92,7 @@ Beranda → Scan Bahan → izinkan kamera → arahkan ke bahan → Ambil Foto �
 
 Antarmuka menggunakan Vue 3 dari CDN, HTML, dan CSS responsif tanpa proses build. Server Python bawaan memuat `models/best.pt` menggunakan Ultralytics/PyTorch saat server mulai; checkpoint ini berisi 30 kelas bahan berbahasa Indonesia, yang juga dicatat di `data_classes.yaml`. Foto kamera dikirim ke endpoint lokal `/api/detect`, diproses di komputer yang menjalankan server, lalu dibuang setelah inferensi. File gambar tidak disimpan. Model mendeteksi objek sesuai kelas yang dipelajari; periksa hasilnya dan tambahkan bahan lain secara manual bila perlu. Mode Demo selalu menghasilkan bahan contoh dan bukan deteksi model.
 
-Server deteksi hanya bind ke `127.0.0.1`, memeriksa origin permintaan, membatasi foto ke JPG/PNG/WebP hingga 10 MB, dan hanya menyajikan file frontend yang diperlukan. Checkpoint tidak bisa diunduh melalui web. Tidak ada kunci API atau panggilan layanan AI eksternal; Chef tetap memakai katalog dan aturan JavaScript lokal. Font masih dimuat dari Google Fonts.
+Server deteksi hanya bind ke `127.0.0.1`, memeriksa origin permintaan, membatasi foto ke JPG/PNG/WebP hingga 10 MB, dan hanya menyajikan file frontend yang diperlukan. Checkpoint tidak bisa diunduh melalui web. Chef memakai aturan JavaScript lokal terlebih dulu dan meneruskan pertanyaan yang belum dikenali ke Cloudflare Workers AI. Binding `AI` dikonfigurasi di `wrangler.jsonc`; tidak ada kunci API di browser. Workers AI memiliki alokasi gratis harian yang terbatas, sehingga jawaban AI bisa tidak tersedia saat kuota habis. Saat lokal, jalankan `npm run build` lalu `npx wrangler pages dev dist --ai=AI`; penggunaan binding AI lokal tetap memanggil layanan Cloudflare. Jika layanan gagal, Chef menampilkan jawaban fallback lokal. Maksimal enam pesan percakapan terakhir dikirim untuk konteks; jangan masukkan data pribadi/sensitif. Font masih dimuat dari Google Fonts.
 
 Katalog awal mencakup masakan rumahan, beberapa menu Bali (babi guling versi rumahan, ayam betutu, ayam sere lemo, ayam bakar, lawar sayur, sate lilit), serta hidangan populer seperti fried chicken, pizza, burger, pasta, ramen, sushi roll isi matang, taco, pancake, dan teriyaki. Katalog ini bukan ensiklopedia semua masakan; resep baru dapat ditambahkan ke `RECIPES_DB`.
 
