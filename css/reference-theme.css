@@ -1,42 +1,42 @@
-/* Warm kitchen palette from the supplied color reference. */
+/* Coffee and cream palette from the supplied color reference. */
 :root {
-  --primary: #946d6d;
-  --primary-light: #a290b7;
-  --primary-dark: #775454;
-  --secondary: #a290b7;
-  --accent: #b0cde6;
-  --bg: #fdf4d2;
-  --bg-card: #fff;
-  --bg-surface: #fff9e7;
-  --bg-glass: rgba(148,109,109,.055);
-  --border: rgba(107,78,78,.16);
-  --border-hover: rgba(148,109,109,.4);
-  --text-primary: #382d2d;
-  --text-secondary: #6e6060;
-  --text-muted: #8b7d7d;
-  --navbar-bg: rgba(253,244,210,.92);
-  --hero-art-bg: linear-gradient(120deg,#b0cde6 0%,#a290b7 55%,#946d6d 100%);
-  --shadow-glow: 0 12px 34px rgba(148,109,109,.13);
-  --shadow-card: 0 8px 28px rgba(56,45,45,.09);
+  --primary: #412d15;
+  --primary-light: #e1dcc9;
+  --primary-dark: #1f150c;
+  --secondary: #412d15;
+  --accent: #1f150c;
+  --bg: #e1dcc9;
+  --bg-card: #e1dcc9;
+  --bg-surface: rgba(65,45,21,.08);
+  --bg-glass: rgba(31,21,12,.055);
+  --border: rgba(31,21,12,.14);
+  --border-hover: rgba(65,45,21,.4);
+  --text-primary: #1f150c;
+  --text-secondary: #412d15;
+  --text-muted: rgba(31,21,12,.62);
+  --navbar-bg: rgba(225,220,201,.94);
+  --hero-art-bg: linear-gradient(120deg,#412d15 0%,#1f150c 100%);
+  --shadow-glow: 0 12px 34px rgba(31,21,12,.13);
+  --shadow-card: 0 8px 28px rgba(31,21,12,.1);
 }
 
 [data-theme="dark"] {
-  --primary: #c39a9a;
-  --primary-light: #c5b5d5;
-  --primary-dark: #946d6d;
-  --secondary: #c5b5d5;
-  --accent: #b0cde6;
-  --bg: #1f1b29;
-  --bg-card: #292435;
-  --bg-surface: #342e42;
-  --bg-glass: rgba(255,255,255,.055);
-  --border: rgba(232,222,255,.12);
-  --border-hover: rgba(180,155,233,.4);
-  --text-primary: #f3effa;
-  --text-secondary: #c4bdd1;
-  --text-muted: #a49bb2;
-  --navbar-bg: rgba(43,37,39,.95);
-  --hero-art-bg: linear-gradient(120deg,#40586c 0%,#554a60 55%,#503a3a 100%);
+  --primary: #e1dcc9;
+  --primary-light: #e1dcc9;
+  --primary-dark: #412d15;
+  --secondary: #e1dcc9;
+  --accent: #e1dcc9;
+  --bg: #000;
+  --bg-card: #1f150c;
+  --bg-surface: #412d15;
+  --bg-glass: rgba(225,220,201,.055);
+  --border: rgba(225,220,201,.14);
+  --border-hover: rgba(225,220,201,.4);
+  --text-primary: #e1dcc9;
+  --text-secondary: rgba(225,220,201,.78);
+  --text-muted: rgba(225,220,201,.56);
+  --navbar-bg: rgba(0,0,0,.95);
+  --hero-art-bg: linear-gradient(120deg,#412d15 0%,#1f150c 55%,#000 100%);
   --shadow-glow: 0 12px 34px rgba(0,0,0,.25);
   --shadow-card: 0 8px 28px rgba(0,0,0,.22);
 }
@@ -560,4 +560,97 @@ body[data-theme="dark"] .recipe-tags span { background: #383047; color: #c7b8e7;
   .hero-photo-dots { bottom: 24px; }
   .hero-recipe-meta { bottom: 62px; }
   .floating-chef-button { right: 16px; bottom: max(16px,env(safe-area-inset-bottom)); width: 54px; height: 54px; }
+}
+
+/* Rounded dark navigation and the updated coffee palette. */
+.navbar { box-shadow: none; }
+.nav-links {
+  flex: 0 0 auto;
+  justify-content: flex-end;
+  gap: 3px;
+  margin-left: auto;
+  padding: 5px;
+  background: rgba(0,0,0,.88);
+  border: 1px solid rgba(225,220,201,.08);
+  border-radius: 999px;
+  backdrop-filter: blur(14px);
+}
+.nav-link {
+  padding: 10px 17px;
+  color: rgba(225,220,201,.72);
+  border-radius: 999px;
+  transition: color .2s ease, background .2s ease, box-shadow .2s ease;
+}
+.nav-link:hover { color: #e1dcc9; background: rgba(225,220,201,.1); }
+.nav-link.active {
+  color: #1f150c;
+  background: #e1dcc9;
+  box-shadow: inset 0 0 0 1px rgba(225,220,201,.7), 0 0 0 1px rgba(225,220,201,.18);
+}
+.nav-actions { gap: 8px; }
+.btn-scan-nav { background: #412d15; color: #e1dcc9; border-radius: 999px; }
+.btn-scan-nav:hover { background: #1f150c; box-shadow: 0 5px 18px rgba(31,21,12,.2); }
+.theme-toggle, .btn-avatar { color: #412d15; border-color: rgba(31,21,12,.16); background: rgba(225,220,201,.82); }
+.hero, body[data-theme="dark"] .hero { background: #000; }
+.hero-bg-glow { background: radial-gradient(ellipse at 78% 34%,rgba(225,220,201,.12),transparent 54%); }
+.title-gradient, .gradient-text { background: linear-gradient(115deg,#412d15,#1f150c); }
+.hero-content .title-gradient { background: linear-gradient(110deg,#e1dcc9,rgba(225,220,201,.75)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.hero-content .title-accent { color: #e1dcc9; }
+.hero-recipe-meta-label, .hero-recipe-meta-details i { color: #e1dcc9; }
+.hero-photo-arrow:hover { background: rgba(65,45,21,.9); }
+.hero-photo-dots button.active { background: #e1dcc9; }
+.hero-badge { color: #1f150c; background: #e1dcc9; border-color: rgba(31,21,12,.16); }
+.hero-badge .badge-dot { background: #412d15; }
+.section-tag, .step-number { color: #412d15; }
+.btn-primary, .btn-scan-nav { background: linear-gradient(130deg,#412d15,#1f150c); }
+.btn-primary:hover, .btn-scan-nav:hover { box-shadow: 0 8px 22px rgba(31,21,12,.24); }
+.recipe-tags span { color: #1f150c; background: rgba(65,45,21,.1); }
+.filter-chip:hover, .filter-chip.active { color: #1f150c; background: rgba(65,45,21,.1); border-color: rgba(65,45,21,.38); }
+.floating-chef-button { color: #1f150c; background: #e1dcc9; border-color: #412d15; box-shadow: 0 8px 28px rgba(0,0,0,.32); }
+.floating-chef-button:hover { background: #fff; }
+.floating-chef-button:focus-visible { outline-color: #e1dcc9; }
+
+body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.9); }
+body[data-theme="dark"] .nav-link { color: rgba(225,220,201,.72); }
+body[data-theme="dark"] .nav-link.active { color: #1f150c; background: #e1dcc9; }
+body[data-theme="dark"] .theme-toggle, body[data-theme="dark"] .btn-avatar { color: #e1dcc9; border-color: rgba(225,220,201,.2); background: rgba(65,45,21,.72); }
+body[data-theme="dark"] .recipe-tags span { color: #e1dcc9; background: rgba(225,220,201,.12); }
+
+/* Keep carousel controls clear of the hero copy and grouped as one control. */
+.hero-photo-arrow {
+  top: 96px;
+  width: 42px;
+  height: 42px;
+  background: rgba(31,21,12,.72);
+  border-color: rgba(225,220,201,.42);
+}
+.hero-photo-arrow.previous { left: auto; right: max(84px,calc((100vw - 1200px)/2 + 84px)); }
+.hero-photo-arrow.next { right: max(32px,calc((100vw - 1200px)/2)); }
+.hero-photo-arrow:hover { background: #412d15; }
+
+/* The home-page transparent header has a stronger active-link rule. */
+#app:has(#page-home.active) .navbar:not(.scrolled) .nav-links .nav-link.active {
+  color: #1f150c;
+  background: #e1dcc9;
+  box-shadow: inset 0 0 0 1px rgba(225,220,201,.7), 0 0 0 1px rgba(225,220,201,.18);
+}
+
+.cat-card.active, .cat-card:hover { border-color: #412d15; box-shadow: 0 8px 24px rgba(31,21,12,.12); }
+.hero-photo-stage::before {
+  background: linear-gradient(90deg,rgba(31,21,12,.82) 0%,rgba(31,21,12,.62) 38%,rgba(31,21,12,.1) 78%),linear-gradient(0deg,rgba(31,21,12,.48),transparent 38%);
+}
+@media (max-width: 900px) {
+  .hero-photo-arrow { display: none; }
+}
+
+@media (max-width: 1100px) {
+  .nav-links { margin-left: 0; }
+  .nav-links.open {
+    background: #1f150c;
+    border: 1px solid rgba(225,220,201,.14);
+    border-radius: 18px;
+  }
+  .nav-links.open .nav-link,
+  #app:has(#page-home.active) .navbar:not(.scrolled) .nav-links.open .nav-link { color: rgba(225,220,201,.82); }
+  .nav-links.open .nav-link.active { color: #1f150c; background: #e1dcc9; }
 }
