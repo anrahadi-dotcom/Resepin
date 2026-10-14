@@ -2222,3 +2222,53 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
   .nav-links,
   .nav-actions { transition: none !important; }
 }
+
+/* Keep the island bar compact when opened; let search fall into its own tidy glass card. */
+@media (min-width: 901px) {
+  .nav-container,
+  .nav-container:hover,
+  .nav-container:focus-within {
+    height: 54px;
+    min-height: 54px;
+    align-items: center;
+    border-radius: 999px;
+    transition: width .62s cubic-bezier(.2,1.24,.28,1), border-radius .42s ease, background .3s ease, box-shadow .35s ease;
+  }
+  .nav-container:hover,
+  .nav-container:focus-within {
+    width: min(680px, calc(100vw - 40px));
+    height: 54px;
+    padding: 0 18px;
+    gap: 18px;
+  }
+  .nav-container::before { border-radius: inherit; }
+  .nav-logo,
+  .nav-container:hover .nav-logo,
+  .nav-container:focus-within .nav-logo { height: 52px; }
+  .nav-links,
+  .nav-links.open,
+  .nav-container:hover .nav-links,
+  .nav-container:focus-within .nav-links { height: 52px; }
+  .nav-actions,
+  .nav-container:hover .nav-actions,
+  .nav-container:focus-within .nav-actions { height: 52px; }
+  .nav-ingredient-search {
+    top: 68px;
+    width: min(480px, calc(100vw - 40px));
+    padding: 12px;
+    border: 1px solid rgba(225,220,201,.2);
+    border-radius: 22px;
+    background: rgba(31,21,12,.88);
+    box-shadow: 0 20px 46px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.14);
+    backdrop-filter: blur(24px) saturate(145%);
+    -webkit-backdrop-filter: blur(24px) saturate(145%);
+    transform: translate(-50%,-18px) scale(.98);
+    transform-origin: top center;
+    transition: opacity .2s ease, transform .52s cubic-bezier(.16,1.25,.3,1), visibility 0s linear .2s;
+  }
+  .nav-container:hover .nav-ingredient-search,
+  .nav-container:focus-within .nav-ingredient-search {
+    top: 68px;
+    transform: translate(-50%,0) scale(1);
+  }
+}
