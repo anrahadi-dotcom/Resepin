@@ -464,6 +464,8 @@ body[data-theme="dark"] .recipe-tags span { background: #383047; color: #c7b8e7;
 .hero-photo-stage::before {
   background: linear-gradient(90deg,rgba(48,37,37,.78) 0%,rgba(48,37,37,.56) 38%,rgba(48,37,37,.1) 78%),linear-gradient(0deg,rgba(48,37,37,.45),transparent 38%);
 }
+.hero-container, .hero-visual, .hero-photo-stage { height: 100%; min-height: 100%; }
+.hero-visual, .hero-photo-stage { width: 100%; }
 .hero-food-photo {
   display: block;
   width: 100%;
