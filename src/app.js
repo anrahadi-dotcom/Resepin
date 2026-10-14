@@ -1,24 +1,29 @@
-/* Vue 3 owns the application shell and interactive hero. */
+/* Vue 3 owns the application shell and interactive photo hero. */
 const { createApp } = Vue;
 
 createApp({
   data() {
     return {
-      videoDrag: null,
-      videoProgress: 0,
-      videoDuration: 0,
-      heroPlaying: !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-      heroRecipe: { title: 'Tumis Tahu Sayur', time: '15 menit', difficulty: 'Mudah' },
+      photoIndex: 0,
+      photoDrag: null,
+      heroPhotos: [
+        { title: 'Teriyaki Ayam', time: '25 menit', difficulty: 'Mudah', image: '/assets/img/teriyaki.jpg', alt: 'Ayam teriyaki dengan taburan biji wijen' },
+        { title: 'Pecel Sayur', time: '20 menit', difficulty: 'Mudah', image: '/assets/img/pecel.jpg', alt: 'Pecel sayur dengan saus kacang' },
+        { title: 'Ayam Bakar Bali', time: '45 menit', difficulty: 'Sedang', image: '/assets/img/ayam-bakar-bali.jpg', alt: 'Ayam bakar berbumbu khas Bali' },
+        { title: 'Rendang', time: '2 jam', difficulty: 'Sedang', image: '/assets/img/rendang.jpg', alt: 'Rendang sapi berbumbu rempah' }
+      ],
       activePage: 'home',
       menuOpen: false
     };
+  },
+  computed: {
+    heroRecipe() { return this.heroPhotos[this.photoIndex]; }
   },
   methods: {
     go(page) {
       this.activePage = page;
       this.menuOpen = false;
       window.showPage(page);
-      this.$nextTick(this.syncHeroVideo);
     },
     toggleMenu() {
       this.menuOpen = !this.menuOpen;
@@ -31,65 +36,30 @@ createApp({
       window.closeRecipeModal();
       this.go(page);
     },
-    startVideoScrub(event) {
+    setHeroPhoto(index) {
+      this.photoIndex = (index + this.heroPhotos.length) % this.heroPhotos.length;
+    },
+    changeHeroPhoto(direction) {
+      this.setHeroPhoto(this.photoIndex + direction);
+    },
+    startPhotoDrag(event) {
       if (event.button !== undefined && event.button !== 0) return;
-      const video = this.$refs.heroVideo;
-      if (!video || !Number.isFinite(video.duration) || video.duration <= 0) return;
-      const bounds = event.currentTarget.getBoundingClientRect();
-      this.videoDrag = {
-        startX: event.clientX,
-        width: bounds.width,
-        startTime: video.currentTime,
-        wasPlaying: !video.paused
-      };
-      video.pause();
+      this.photoDrag = { startX: event.clientX, moved: false };
       event.currentTarget.setPointerCapture(event.pointerId);
     },
-    moveVideoScrub(event) {
-      if (!this.videoDrag) return;
-      const video = this.$refs.heroVideo;
-      const deltaX = event.clientX - this.videoDrag.startX;
-      const seekOffset = deltaX / this.videoDrag.width * video.duration;
-      video.currentTime = (this.videoDrag.startTime + seekOffset + video.duration) % video.duration;
+    movePhotoDrag(event) {
+      if (!this.photoDrag) return;
+      if (Math.abs(event.clientX - this.photoDrag.startX) > 12) this.photoDrag.moved = true;
     },
-    endVideoScrub() {
-      if (!this.videoDrag) return;
-      const { wasPlaying } = this.videoDrag;
-      this.videoDrag = null;
-      if (wasPlaying && this.heroPlaying && this.activePage === 'home') this.$refs.heroVideo.play().catch(() => {});
+    endPhotoDrag(event) {
+      if (!this.photoDrag) return;
+      const delta = event.clientX - this.photoDrag.startX;
+      const moved = this.photoDrag.moved;
+      this.photoDrag = null;
+      if (moved && Math.abs(delta) > 48) this.changeHeroPhoto(delta < 0 ? 1 : -1);
     },
-    cancelVideoScrub() {
-      this.endVideoScrub();
-    },
-    seekHeroVideo(seconds) {
-      const video = this.$refs.heroVideo;
-      if (!video || !Number.isFinite(video.duration)) return;
-      video.currentTime = (video.currentTime + seconds + video.duration) % video.duration;
-    },
-    toggleHeroMotion() {
-      this.heroPlaying = !this.heroPlaying;
-      this.syncHeroVideo();
-    },
-    syncHeroVideo() {
-      const video = this.$refs.heroVideo;
-      if (!video) return;
-      if (this.heroPlaying && this.activePage === 'home' && document.visibilityState === 'visible') {
-        video.play().catch(() => { this.heroPlaying = false; });
-      } else {
-        video.pause();
-      }
-    },
-    onHeroVideoLoaded() {
-      this.videoDuration = this.$refs.heroVideo?.duration || 0;
-      this.syncHeroVideo();
-    },
-    onHeroVideoTimeUpdate() {
-      const video = this.$refs.heroVideo;
-      if (video && video.duration) this.videoProgress = video.currentTime / video.duration;
+    cancelPhotoDrag() {
+      this.photoDrag = null;
     }
-  },
-  mounted() {
-    this.syncHeroVideo();
-  },
-  beforeUnmount() { this.$refs.heroVideo?.pause(); }
+  }
 }).mount('#app');
