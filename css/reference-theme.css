@@ -874,3 +874,53 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
 @media (prefers-reduced-motion: reduce) {
   .hero-photo-dots button.active::before { transition: none; }
 }
+
+/* Stagger the hero copy on entry while keeping its layout fixed. */
+.hero-title-line { display: block; }
+.hero-enter, .hero-title-line {
+  animation: hero-text-rise .72s cubic-bezier(.2,.7,.2,1) both;
+}
+.hero-enter-1 { animation-delay: .04s; }
+.hero-enter-2 { animation-delay: .1s; }
+.hero-enter-3 { animation-delay: .18s; }
+.hero-enter-4 { animation-delay: .26s; }
+.hero-enter-5 { animation-delay: .34s; }
+.hero-enter-6 { animation-delay: .46s; }
+.hero-enter-7 { animation-delay: .56s; }
+.hero-enter-8 { animation-delay: .66s; }
+@keyframes hero-text-rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* The floating Chef button reveals a short prompt on pointer or keyboard focus. */
+.floating-chef-button { overflow: visible; }
+.floating-chef-tooltip {
+  position: absolute;
+  right: calc(100% + 14px);
+  top: 50%;
+  padding: 10px 14px;
+  color: var(--primary-dark);
+  background: var(--primary-light);
+  border: 1px solid rgba(225,220,201,.7);
+  border-radius: 999px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.22);
+  font: 600 .86rem var(--font-body);
+  line-height: 1.2;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate(8px,-50%);
+  transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
+}
+.floating-chef-button:hover .floating-chef-tooltip,
+.floating-chef-button:focus-visible .floating-chef-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(0,-50%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-enter, .hero-title-line { animation: none; opacity: 1; transform: none; }
+  .floating-chef-tooltip { transition: none; }
+}
