@@ -1583,3 +1583,26 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
 @media (prefers-reduced-motion: reduce) {
   .floating-chef-button, .chef-character, .chef-arm-wave, .chef-hat, .chef-mascot .chef-character > circle { animation: none !important; }
 }
+.floating-chef-button,
+.floating-chef-button:hover,
+.floating-chef-button:active,
+.floating-chef-button:focus-visible {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+.floating-chef-button:hover { transform: translateY(-4px) scale(1.02); }
+.floating-chef-button:focus-visible { outline-offset: 4px; }
+.floating-chef-button .chef-mascot { filter: drop-shadow(0 5px 5px rgba(0,0,0,.14)); }
+.chef-head { transform-box: fill-box; transform-origin: center bottom; transform: scale(.91); }
+.chef-arm-wave { animation-duration: 1.6s; }
+.floating-chef-button .floating-chef-tooltip {
+  padding: 9px 13px;
+  color: #e1dcc9;
+  background: rgba(31,21,12,.88);
+  border-color: rgba(225,220,201,.22);
+  box-shadow: 0 6px 18px rgba(0,0,0,.16);
+}
+@media (prefers-reduced-motion: reduce) {
+  .chef-head { transform: none; }
+}
