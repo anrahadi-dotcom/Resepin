@@ -1136,28 +1136,46 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
   48% { opacity: .24; }
   55%,100% { opacity: .5; }
 }
+@keyframes kitchen-light-switch-mobile {
+  0%,34% { opacity: 1; }
+  40% { opacity: .82; }
+  44% { opacity: .96; }
+  51%,100% { opacity: .65; }
+}
+@keyframes lamp-beam-switch-mobile {
+  0%,33% { opacity: 0; transform: scaleY(.82); }
+  42% { opacity: .22; }
+  46% { opacity: .08; }
+  54%,100% { opacity: .18; transform: scaleY(1); }
+}
 @keyframes lamp-glow-breathe { from { filter: blur(8px); scale: .98; } to { filter: blur(13px); scale: 1.06; } }
 @keyframes chef-photo-reveal { from { filter: brightness(.16); } to { filter: brightness(.88); } }
 @keyframes chef-photo-breathe { from { transform: scale(1.015); } to { transform: scale(1.07); } }
 @media (max-width: 900px) {
   .hero { height: auto; min-height: 100svh; }
-  .hero-container { height: auto; min-height: 100svh; }
+  .hero-container { height: auto; min-height: 0; }
   .hero-content {
+    position: relative;
     top: auto;
     bottom: auto;
-    left: 24px;
+    left: auto;
     width: min(620px,calc(100% - 48px));
-    padding-top: clamp(290px,40svh,390px);
+    margin: 0 auto;
+    padding-top: clamp(280px,38svh,360px);
     padding-bottom: 72px;
     transform: none;
   }
   .hero-scene-photo { object-position: 68% 32%; }
-  .hero-light-veil { background: linear-gradient(180deg,rgba(0,0,0,.03) 0%,rgba(0,0,0,.05) 29%,rgba(0,0,0,.72) 51%,rgba(0,0,0,.96) 76%),linear-gradient(90deg,rgba(0,0,0,.15),transparent 75%); }
+  .hero-light-veil {
+    background: linear-gradient(180deg,rgba(0,0,0,.04) 0%,rgba(0,0,0,.1) 23%,rgba(0,0,0,.82) 53%,rgba(0,0,0,.96) 88%),linear-gradient(90deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.58) 50%,rgba(0,0,0,.12) 100%);
+    animation-name: kitchen-light-switch-mobile;
+  }
+  .hero-light-beam { filter: blur(48px); animation-name: lamp-beam-switch-mobile; }
   .hero-light-beam { clip-path: polygon(54% 4%,63% 4%,100% 63%,0 63%); }
   .hero-light-glow { top: 2%; left: 59%; width: clamp(100px,30vw,220px); }
 }
 @media (max-width: 600px) {
-  .hero-content { left: 18px; width: calc(100% - 36px); padding-top: clamp(300px,39svh,370px); padding-bottom: 46px; }
+  .hero-content { width: calc(100% - 36px); padding-top: clamp(260px,35svh,320px); padding-bottom: 46px; }
   .hero-content .hero-desc { max-width: 100%; }
   .hero-content .hero-cta { display: block; }
   .hero-content .hero-cta-link a { min-height: 44px; }
@@ -1167,6 +1185,9 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
 @media (prefers-reduced-motion: reduce) {
   .hero-scene-photo { animation: none; filter: brightness(.88); transform: none; }
   .hero-light-veil { animation: none; opacity: .3; }
-  .hero-light-beam { animation: none; opacity: .3; transform: none; }
+  .hero-light-beam { animation: none; opacity: .18; transform: none; }
   .hero-light-glow { animation: none; opacity: .5; }
+}
+@media (max-width: 900px) and (prefers-reduced-motion: reduce) {
+  .hero-light-veil { opacity: .65; }
 }
