@@ -1092,15 +1092,15 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
 }
 .hero-light-glow {
   position: absolute;
-  top: 2%;
-  left: 59.8%;
+  top: 38%;
+  left: 28%;
   width: clamp(80px,15vw,230px);
   aspect-ratio: 1;
   border-radius: 50%;
   background: radial-gradient(circle,rgba(255,241,196,.5) 0%,rgba(255,220,150,.2) 22%,rgba(255,218,160,.06) 48%,transparent 72%);
   filter: blur(8px);
   opacity: .5;
-  transform: translate(-50%,-4%);
+  transform: translate(-50%,-50%);
   animation: lamp-glow-switch 3s ease-out both, lamp-glow-breathe 4s ease-in-out 3s infinite alternate;
 }
 .hero-container { z-index: 2; }
@@ -1148,7 +1148,7 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
     background: linear-gradient(180deg,rgba(0,0,0,.04) 0%,rgba(0,0,0,.1) 23%,rgba(0,0,0,.82) 53%,rgba(0,0,0,.96) 88%),linear-gradient(90deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.58) 50%,rgba(0,0,0,.12) 100%);
     animation-name: kitchen-light-switch-mobile;
   }
-  .hero-light-glow { top: 2%; left: 59%; width: clamp(100px,30vw,220px); }
+  .hero-light-glow { top: 40%; left: 28%; width: clamp(100px,30vw,220px); }
 }
 @media (max-width: 600px) {
   .hero-content { width: calc(100% - 36px); padding-top: clamp(260px,35svh,320px); padding-bottom: 46px; }
