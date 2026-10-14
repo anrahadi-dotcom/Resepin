@@ -1568,13 +1568,13 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
 .floating-chef-button:focus-visible { outline: 3px solid #e1dcc9; outline-offset: 2px; border-radius: 42% 42% 30% 30%; }
 .floating-chef-button .chef-mascot { display: block; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 8px 8px rgba(0,0,0,.22)); }
 .chef-character { transform-box: fill-box; transform-origin: center bottom; animation: chef-body-sway 3.4s ease-in-out infinite; }
-.chef-arm-wave { transform-box: view-box; transform-origin: 76px 84px; animation: chef-wave .8s ease-in-out infinite alternate; }
+.chef-arm-wave { transform-box: view-box; transform-origin: 72px 81px; animation: chef-wave 1.35s ease-in-out infinite alternate; }
 .chef-hat { transform-box: fill-box; transform-origin: center bottom; animation: chef-hat-bob 2.4s ease-in-out infinite; }
 .chef-mascot .chef-character > circle { transform-box: fill-box; transform-origin: center; animation: full-chef-blink 4.8s ease-in-out infinite; }
 .floating-chef-button .floating-chef-tooltip { right: calc(100% - 4px); top: 50%; }
 @keyframes full-chef-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 @keyframes chef-body-sway { 0%,100% { transform: rotate(-1deg); } 50% { transform: rotate(1deg); } }
-@keyframes chef-wave { from { transform: rotate(-9deg); } to { transform: rotate(13deg); } }
+@keyframes chef-wave { from { transform: rotate(-5deg); } to { transform: rotate(7deg); } }
 @keyframes full-chef-blink { 0%,44%,48%,100% { transform: scaleY(1); } 46%,47% { transform: scaleY(.12); } }
 @media (max-width: 600px) {
   .floating-chef-button { right: max(12px,env(safe-area-inset-right)); bottom: max(10px,env(safe-area-inset-bottom)); width: 92px; height: 120px; }
