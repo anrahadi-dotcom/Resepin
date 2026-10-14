@@ -68,7 +68,13 @@ function generateAIResponse(message) {
     keju: 'boleh dilewati, atau gunakan sedikit susu/saus putih untuk memberi rasa gurih.',
     cabai: 'gunakan lada hitam atau paprika bubuk untuk rasa hangat tanpa pedas yang kuat.',
     susu: 'gunakan susu kedelai tanpa gula atau air/kaldu, tergantung resepnya.',
-    bawang: 'gunakan bawang putih atau bawang merah yang tersedia; bila keduanya habis, bubuk bawang bisa dipakai sedikit saja.'
+    bawang: 'gunakan bawang putih atau bawang merah yang tersedia; bila keduanya habis, bubuk bawang bisa dipakai sedikit saja.',
+    'tepung terigu': 'untuk pengental, coba maizena atau tapioka yang dilarutkan dulu dengan air. Untuk adonan kue, hasilnya bisa berbeda jadi perlu resep khusus.',
+    maizena: 'gunakan tapioka atau tepung terigu untuk mengentalkan, lalu tambahkan sedikit demi sedikit karena daya kentalnya berbeda.',
+    mentega: 'untuk tumisan, margarin atau sedikit minyak bisa dipakai. Untuk pastry dan kue, tekstur serta rasanya dapat berubah.',
+    'tepung panir': 'gunakan remah roti kering, biskuit tawar yang dihancurkan, atau cornflakes tanpa rasa yang diremukkan.',
+    kaldu: 'gunakan air dengan bumbu yang tersedia, seperti bawang, lada, dan sedikit garam. Tambahkan bertahap lalu cicipi.',
+    'daging sapi': 'untuk isian gurih, coba tempe, jamur, atau tahu padat. Potongan dan waktu masaknya perlu disesuaikan.'
   };
   const substitutionFor = ingredient => {
     const known = Object.keys(substitutionAdvice).find(name => textHasPhrase(ingredient, name));
@@ -76,13 +82,14 @@ function generateAIResponse(message) {
     if (/sayur|bayam|kangkung|brokoli|sawi|kol|wortel|selada/.test(ingredient)) return 'ganti dengan sayuran lain yang tekstur dan waktu masaknya mirip, seperti kol, sawi, atau wortel. Masukkan sayuran keras lebih dulu.';
     return 'sebutkan jenis masakannya supaya aku bisa pilih pengganti yang rasanya dan fungsinya paling mendekati. Kalau bahan ini hanya pelengkap, biasanya bisa dilewati.';
   };
-  const explicitRecipeRequest = /\b(resep|masak|menu|mau|bikin|buat)\b/.test(normalized) ||
+  const asksForRecipe = /\b(resep|masak|masakan|makanan|menu|ide|buat apa|bikin apa|mau masak|mau bikin)\b/.test(normalized) ||
     RECIPES_DB.some(recipe => textHasPhrase(normalized, recipe.title)) ||
     /\b(ayam\s+betutu|ayam\s+sere\s+lemo|ayam\s+sisit\s+sere\s+lemo|ayam\s+bakar\s+(?:khas\s+)?bali|coto|babi\s+guling|lawar|fried\s+chicken|pizza|burger|spaghetti|ramen|sushi|taco|pancake|teriyaki|sate\s+lilit)\b/.test(normalized);
+  const explicitRecipeRequest = asksForRecipe;
 
   // Handle conversation before looking for ingredients, so a greeting never
   // falls through to an unrelated recipe or generic zero-waste tip.
-  if (/^(hai|halo|hello|hi|hei|pagi|siang|sore|malam)(?:\s+(?:bro|kak|bang|sis|guys))?[!?.\s]*$/i.test(normalized.trim())) {
+  if (/^(hai|halo|hello|hi|hei|pagi|siang|sore|malam)(?:\s+(?:chef|bro|kak|bang|sis|guys))?[!?.\s]*$/i.test(normalized.trim())) {
     return { type: 'text', text: CHEF_PROMPTS.greeting };
   }
   if (/\b(terima kasih|makasih|thanks|thank you)\b/.test(normalized)) {
@@ -94,6 +101,43 @@ function generateAIResponse(message) {
 
   if (/\b(belum punya bahan|belum ada bahan|tidak punya bahan|tidak ada bahan|ga punya bahan|gak punya bahan|nggak punya bahan|gak ada bahan|nggak ada bahan|kehabisan bahan)\b/.test(normalized)) {
     return { type: 'text', text: CHEF_PROMPTS.noIngredients };
+  }
+
+  const asksStorage = /\b(simpan|menyimpan|disimpan|penyimpanan|tahan lama|awet|basi|panaskan ulang|hangatkan|kedaluwarsa|kadaluwarsa|aman dimakan|masih aman|aman dikonsumsi|layak dimakan|berapa lama|masih bagus)\b/.test(normalized) ||
+    (/\b(kulkas|lemari es|freezer|beku)\b/.test(normalized) && /\b(gimana|bagaimana|aman|simpan|tahan|berapa lama|berapa hari|cara)\b/.test(normalized));
+  if (asksStorage) {
+    const asksAboutLeftovers = /\b(sisa|nasi matang|makanan matang|masakan matang|sudah dimasak|makanan jadi|leftover)\b/.test(normalized);
+    const asksAboutRawProtein = /\b(ayam|daging|ikan|udang|seafood|telur)\b/.test(normalized);
+    if (asksAboutLeftovers) {
+      return {
+        type: 'text',
+        text: 'Untuk sisa makanan matang yang mudah rusak, masukkan ke kulkas dalam 2 jam (1 jam kalau suhu sekitar di atas 32°C). Bagi ke wadah dangkal supaya cepat dingin; umumnya habiskan dalam 3–4 hari atau bekukan. Kalau sudah terlalu lama di suhu ruang, lebih aman dibuang. Kalau kamu sebutkan jenis makanannya dan cara menyimpannya, aku bisa bantu arahkan lebih spesifik. Panduan umum: USDA FSIS.'
+      };
+    }
+    if (asksAboutRawProtein) {
+      return {
+        type: 'text',
+        text: 'Untuk bahan mentah seperti ayam, daging, ikan, atau telur, simpan tertutup di kulkas atau bekukan jika belum akan dipakai, dan pisahkan dari makanan siap santap. Lama simpannya bergantung pada jenis bahan, suhu, dan kondisi kemasan. Bahan apa yang kamu simpan, masih mentah atau sudah dimasak?'
+      };
+    }
+    return {
+      type: 'text',
+      text: 'Cara simpan tiap bahan bisa beda. Sebutkan bahannya (misalnya sayur daun, tahu, nasi, atau bumbu) dan mau disimpan di suhu ruang, kulkas, atau freezer—nanti aku bantu pilih cara yang cocok.'
+    };
+  }
+
+  if (/\b(menu mingguan|rencana menu|meal prep|meal plan|daftar belanja|belanja mingguan|menu\s+(?:untuk\s+)?\d+\s+hari)\b/.test(normalized)) {
+    return {
+      type: 'text',
+      text: 'Bisa 😊 Sebutkan berapa hari/porsi, bahan yang sudah ada, dan pantangan atau gaya makan yang kamu mau. Aku bisa bantu susun ide dari katalog resep dan daftar belanja pelengkap; datanya tetap perlu kamu sesuaikan dengan kebutuhan rumah.'
+    };
+  }
+
+  if (/\b(alergi|alergik|intoleransi|tidak cocok|reaksi makanan)\b/.test(normalized)) {
+    return {
+      type: 'text',
+      text: 'Kalau ada alergi atau intoleransi, sebutkan bahan yang harus dihindari. Aku bisa bantu menandai bahan yang terlihat di resep, tetapi tetap periksa label produk dan risiko kontaminasi silang di dapur. Untuk alergi berat, ikuti arahan tenaga kesehatan.'
+    };
   }
 
   const asksSubstitution = /\b(ganti|diganti|pengganti|alternatif|substitusi|tidak ada|tidak punya|nggak ada|ga ada|habis|kehabisan)\b/.test(normalized);
@@ -161,6 +205,26 @@ function generateAIResponse(message) {
     return { type: 'text', text: `Buat **${recipe.title}**, ${advice} Mau ubah bahan tertentu juga boleh—sebutkan bahan yang ingin diganti.` };
   }
 
+  const asksTechnique = /\b(cara|gimana|bagaimana|kenapa|supaya|biar|tips|trik)\b/.test(normalized);
+  if (asksTechnique && /\b(tumis|menumis|rebus|merebus|goreng|menggoreng|panggang|bakar|kukus|potong|iris|cincang|empuk|renyah|crispy|tidak amis|nggak amis|ga amis|bumbu|api kecil|api besar)\b/.test(normalized)) {
+    const techniqueTip = /\b(tumis|menumis)\b/.test(normalized)
+      ? 'Panaskan wajan lebih dulu, masukkan bahan yang keras lebih awal, lalu tumis dalam porsi kecil supaya bahan tidak menumpuk dan cepat berair.'
+      : /\b(goreng|menggoreng|renyah|crispy)\b/.test(normalized)
+        ? 'Keringkan permukaan bahan, jangan memenuhi wajan, dan beri ruang agar panas minyak tetap stabil. Tiriskan di rak atau tisu setelah matang.'
+        : /\b(rebus|merebus)\b/.test(normalized)
+          ? 'Potong bahan dengan ukuran seragam agar matangnya lebih merata. Masukkan bahan yang paling lama matang lebih dulu, lalu cek teksturnya berkala.'
+          : 'Aku bisa bantu. Sebutkan bahan dan hasil yang kamu inginkan—misalnya lebih empuk, renyah, cepat matang, atau bumbunya lebih meresap—karena caranya tergantung bahan.';
+    return { type: 'text', text: `${techniqueTip} Kalau kamu ceritakan bahan atau masakannya, aku bisa sesuaikan langkahnya.` };
+  }
+
+  if (/\b(kalori|nutrisi|gizi|protein|karbohidrat|lemak)\b/.test(normalized)) {
+    if (currentChatRecipeIdx !== null && RECIPES_DB[currentChatRecipeIdx]) {
+      const recipe = RECIPES_DB[currentChatRecipeIdx];
+      return { type: 'text', text: `Di katalog, **${recipe.title}** tercatat sekitar ${recipe.calories}. Angka pada situs ini hanya data contoh dan bukan analisis gizi terverifikasi. Kalau kamu punya kebutuhan diet atau kondisi kesehatan tertentu, jangan jadikan angka ini sebagai dasar keputusan.` };
+    }
+    return { type: 'text', text: 'Aku bisa melihat info kalori yang tercantum untuk resep di katalog, tapi datanya masih contoh dan belum diverifikasi. Sebutkan nama resep yang ingin dicek.' };
+  }
+
   // Match recipes against ingredients from this message and the scan list.
   const availableIngredients = [...new Set([
     ...detectedIngredients.map(item => item.name.toLowerCase()),
@@ -169,7 +233,6 @@ function generateAIResponse(message) {
     ...Object.keys(AI_RESPONSES.keywords).filter(item => item !== 'default' && textHasPhrase(normalized, item)),
     ...RECIPES_DB.flatMap(recipe => recipe.ingredients.map(item => item.replace(/^\S+\s*/, '').toLowerCase()).filter(item => textHasPhrase(normalized, item)))
   ])];
-  const asksForRecipe = /\b(resep|masak|masakan|makanan|ide|buat apa|bikin apa|menu)\b/.test(normalized);
   if (availableIngredients.length && (asksForRecipe || availableIngredients.some(item => normalized.includes(item)))) {
     const mentionsIngredient = (ingredient, available) => textHasPhrase(ingredient.replace(/^\S+\s*/, ''), available);
     const rankedRecipes = RECIPES_DB.map(recipe => {

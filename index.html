@@ -528,13 +528,17 @@
             <button class="qp-btn" onclick="sendQuickPrompt('Mau masak sesuatu yang kaya protein tapi cepat, ada ayam.')">🍗 Masak dari ayam</button>
             <button class="qp-btn" onclick="sendQuickPrompt('Ada tempe dan tahu, mau bikin lauk yang enak.')">🧱 Tempe & tahu</button>
             <button class="qp-btn" onclick="sendQuickPrompt('Bahan di kulkas tinggal sedikit, ada brokoli dan wortel saja.')">🥦 Sayuran sisa</button>
-          <button class="qp-btn" onclick="sendQuickPrompt('Apa pengganti santan kalau habis?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-bulb"/></svg> Substitusi bahan</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Apa pengganti santan kalau habis?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-bulb"/></svg> Substitusi bahan</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Bagaimana cara menyimpan sisa makanan dengan aman?')">Simpan sisa makanan</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Bagaimana cara menggoreng tempe agar renyah?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-bulb"/></svg> Teknik memasak</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Bantu susun menu 3 hari dari bahan telur, tahu, dan sayur.')">Rencana menu</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Aku alergi udang, apa yang perlu kuperhatikan di resep?')">Alergi & bahan</button>
           </div>
         </div>
 
         <div class="chat-input-area">
           <div class="chat-input-box">
-            <textarea id="chatInput" placeholder="Ketik pesanmu... (cth: aku punya wortel dan telur)" rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}" oninput="autoResizeTextarea(this)"></textarea>
+            <textarea id="chatInput" placeholder="Tanya resep, bahan, teknik, atau cara menyimpan makanan..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}" oninput="autoResizeTextarea(this)"></textarea>
             <button class="chat-send-btn" onclick="sendChat()" id="chatSendBtn">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>

@@ -1,11 +1,11 @@
 /* Chef Resepin's reusable Indonesian response copy. */
 const CHEF_PROMPTS = {
-  greeting: 'Hai, aku Chef Resepin. Kamu lagi punya bahan apa, atau mau tanya soal resep dan substitusi?',
+  greeting: 'Hai! Aku Chef Resepin. Kamu bisa ceritakan bahan yang tersedia, minta ide menu, atau tanya soal teknik memasak dan penyimpanan makanan.',
   thanks: 'Sama-sama! 😊 Kalau ada bahan lain atau ingin mengubah resepnya, bilang saja ya.',
-  help: 'Aku Chef Resepin. Aku bisa bantu mencari ide resep dari bahan yang tersedia, memberi tips memasak, dan menyarankan pengganti bahan. Coba sebutkan bahan atau pertanyaanmu.',
+  help: 'Aku bisa bantu cari ide dari bahan yang tersedia, memilih resep di katalog, menyesuaikan rasa atau porsi, mencari pengganti bahan, memberi tips teknik dasar, dan menyimpan makanan dengan lebih aman. Untuk saran yang pas, sebutkan bahan/masakan dan tujuanmu.',
   noIngredients: 'Nggak apa-apa 😊 Kita mulai dari yang paling sederhana. Coba cek apakah ada nasi, telur, mi, atau roti? Sebutkan satu saja yang ada—aku carikan ide paling simpel. Kalau benar-benar belum ada bahan, aku bisa bantu susun daftar belanja minimal untuk masakan yang kamu inginkan.',
   substitutionFollowup: 'Siap 😊 Sebutkan bahan yang mau diganti, nanti aku carikan pilihan yang paling cocok.',
   askMissingIngredient: 'Bisa banget! Bahan apa yang lagi kosong? Sebutkan namanya, nanti aku kasih pengganti yang paling masuk akal.',
-  okay: 'Oke 😊 Mau cari resep, tanya pengganti bahan, atau ceritakan bahan yang ada di dapur?',
-  fallback: message => `Aku menangkap pesanmu: “${escapeHtml(message)}”. Aku khusus membantu soal resep dan memasak. Ceritakan bahan yang tersedia atau tanyakan resep, cara memasak, maupun pengganti bahan supaya aku bisa memberi saran yang tepat.`
+  okay: 'Oke 😊 Mau cari ide menu, atur bahan pengganti, tanya teknik masak, atau bahas cara menyimpan makanan?',
+  fallback: message => `Aku belum menangkap maksudnya dengan tepat: “${escapeHtml(message)}”. Aku bisa bantu soal ide resep, bahan pengganti, teknik memasak dasar, penyesuaian rasa/porsi, serta penyimpanan makanan. Coba sebutkan bahan atau masakan yang dimaksud dan apa yang ingin kamu ketahui.`
 };
