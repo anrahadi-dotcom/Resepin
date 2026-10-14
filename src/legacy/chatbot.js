@@ -234,24 +234,48 @@ function generateAIResponse(message) {
     return { type: 'substitusi', text: `Untuk **${suppliedIngredient}**, ${substitutionFor(suppliedIngredient)}`, tip: 'Sesuaikan takaran sedikit demi sedikit dan cicipi sebelum menambah lagi.' };
   }
   if (asksSubstitution) {
-    const missingIngredient = Object.keys(substitutionAdvice).find(item => textHasPhrase(normalized, item));
+    const recipeIngredientNames = RECIPES_DB.flatMap(recipe => recipe.ingredients.map(item => item.replace(/^[^A-Za-zÀ-ÿ]+/, '').trim().toLowerCase()));
+    const knownIngredientNames = [...new Set([...Object.keys(substitutionAdvice), ...recipeIngredientNames])].sort((a, b) => b.length - a.length);
+    const missingIngredient = knownIngredientNames.find(item => textHasPhrase(normalized, item));
     if (missingIngredient) {
       awaitingSubstitutionIngredient = false;
       const swapMarker = normalized.search(/\b(?:ganti|diganti|gantikan)\b/);
       if (swapMarker >= 0) {
         const beforeSwap = normalized.slice(0, swapMarker);
         const afterSwap = normalized.slice(swapMarker + normalized.slice(swapMarker).match(/^\b(?:ganti|diganti|gantikan)\b/)[0].length);
-        const sourceIngredient = Object.keys(substitutionAdvice).find(item => textHasPhrase(beforeSwap, item));
-        const targetText = afterSwap.replace(/^\s*(?:pakai|pake|dengan|jadi|oleh)\s+/, '');
-        const targetIngredient = Object.keys(substitutionAdvice).find(item => textHasPhrase(targetText, item)) ||
-          (/\b(daging|sapi|ayam|ikan|udang)\b/.test(targetText) ? 'daging' : null);
-        const activeRecipe = currentChatRecipeIdx !== null ? RECIPES_DB[currentChatRecipeIdx] : null;
-        const mentionsFriedRice = /\bnasi\s+goreng\b/.test(normalized) || /nasi\s+goreng/i.test(activeRecipe?.title || '');
-        if (sourceIngredient && targetIngredient && mentionsFriedRice && sourceIngredient === 'telur' && targetIngredient === 'daging') {
-          return { type: 'substitusi', text: 'Bisa. Untuk nasi goreng, daging bisa jadi topping/protein pengganti telur, meski teksturnya berbeda. Iris tipis atau cincang, tumis sampai matang sepenuhnya, lalu masukkan nasi dan bumbu. Kalau dagingnya alot, masak terpisah dulu sampai empuk. Tidak perlu menambahkan maizena—itu pengganti telur untuk fungsi mengikat adonan, bukan untuk nasi goreng.' };
+        const connector = afterSwap.match(/^\s*(?:pakai|pake|dengan|jadi|oleh)\s+/);
+        const afterConnector = connector ? afterSwap.slice(connector[0].length) : afterSwap;
+        const sourceInBefore = knownIngredientNames.find(item => textHasPhrase(beforeSwap, item));
+        const sourceInAfter = knownIngredientNames.find(item => textHasPhrase(afterConnector.split(/\b(?:pakai|pake|dengan|jadi|oleh)\b/)[0], item));
+        const sourceIngredient = sourceInBefore || sourceInAfter;
+        const targetText = sourceInBefore ? afterConnector :
+          (afterSwap.match(/\b(?:pakai|pake|dengan|jadi|oleh)\s+(.+)/)?.[1] || '');
+        const targetAliases = [...new Set(['daging sapi', 'daging', 'ayam', 'ikan', 'udang', 'tempe', 'tahu', 'jamur', 'telur', 'sayur', 'santan', 'susu', 'keju', 'mentega', ...knownIngredientNames])].sort((a, b) => b.length - a.length);
+        const targetIngredient = targetAliases.find(item => textHasPhrase(targetText, item));
+        const activeRecipe = (currentChatRecipeIdx !== null ? RECIPES_DB[currentChatRecipeIdx] : null) ||
+          RECIPES_DB.find(recipe => textHasPhrase(normalized, recipe.title));
+        if (sourceIngredient && targetIngredient && activeRecipe) {
+          const recipeIngredients = activeRecipe.ingredients.map(item => item.replace(/^[^A-Za-zÀ-ÿ]+/, '').trim().toLowerCase());
+          const sourceIsInRecipe = recipeIngredients.some(item => textHasPhrase(item, sourceIngredient));
+          const isSweetRecipe = /pancake|kue|bolu|dessert|puding|roti manis/i.test(activeRecipe.title) ||
+            activeRecipe.tags.some(tag => /dessert|manis|kue/i.test(tag));
+          const isProtein = item => /ayam|daging|sapi|ikan|udang|telur|tempe|tahu|jamur/.test(item);
+          if (!sourceIsInRecipe) {
+            return { type: 'text', text: `Di resep **${activeRecipe.title}**, **${sourceIngredient}** tidak tercatat sebagai bahan. Kalau itu bahan tambahan versimu, penggantinya tergantung fungsi bahan tersebut; sebutkan bagian resep yang ingin kamu ubah supaya aku tidak salah menyarankan.` };
+          }
+          if (sourceIngredient === 'telur' && isProtein(targetIngredient) && isSweetRecipe) {
+            return { type: 'text', text: `Untuk **${activeRecipe.title}**, telur membantu mengikat dan membentuk adonan, jadi **${targetIngredient}** bukan pengganti yang cocok. Lebih baik pakai resep tanpa telur yang memang dirancang untuk hidangan ini; kalau kamu kirim bahan yang tersedia, aku bantu sesuaikan.` };
+          }
+          if (sourceIngredient === 'telur' && /daging|sapi|ayam|ikan|udang|tempe|tahu|jamur/.test(targetIngredient) && !isSweetRecipe) {
+            return { type: 'substitusi', text: `Bisa untuk **${activeRecipe.title}** kalau telur berfungsi sebagai lauk/topping: **${targetIngredient}** memberi protein tetapi tekstur dan rasanya berbeda. Potong kecil, masak terpisah sampai matang sepenuhnya, lalu campurkan di tahap akhir. Kalau telur dipakai untuk mengikat adonan atau melapisi, penggantian ini tidak cocok—beri tahu bagian resepnya agar aku pilihkan pengganti yang pas.` };
+          }
+          if (isProtein(sourceIngredient) && isProtein(targetIngredient)) {
+            return { type: 'substitusi', text: `Untuk **${activeRecipe.title}**, **${targetIngredient}** bisa dipakai sebagai sumber protein pengganti **${sourceIngredient}**. Potong dengan ukuran serupa, masak sampai matang sesuai jenis bahannya, dan sesuaikan waktunya—ikan/tahu biasanya lebih cepat daripada daging. Rasa serta teksturnya akan berubah.` };
+          }
+          return { type: 'text', text: `Untuk **${activeRecipe.title}**, kecocokan **${targetIngredient}** sebagai pengganti **${sourceIngredient}** bergantung pada fungsi bahan itu di resep (misalnya pengikat, pengental, atau penambah rasa). Aku belum bisa memastikan pertukaran ini setara; sebutkan bagian atau hasil yang ingin dipertahankan, nanti aku pilihkan opsi yang tepat.` };
         }
-        if (sourceIngredient && targetIngredient) {
-          return { type: 'substitusi', text: `Bisa dicoba mengganti **${sourceIngredient}** dengan **${targetIngredient}**, tetapi kecocokannya bergantung pada hidangan dan fungsi bahannya. Sebutkan nama masakannya supaya aku bisa menyesuaikan saran dan cara memasaknya.` };
+        if (sourceIngredient && targetIngredient && (sourceIngredient === 'telur' && /daging|sapi|ayam|ikan|udang|tempe|tahu|jamur/.test(targetIngredient))) {
+          return { type: 'substitusi', text: `Bisa untuk masakan gurih jika telur berfungsi sebagai lauk atau topping: **${targetIngredient}** memberi protein tetapi tekstur dan rasanya berbeda. Masak terpisah sampai matang, lalu campurkan. Kalau telur dipakai untuk mengikat adonan atau melapisi, penggantian ini tidak cocok. Sebutkan nama masakannya supaya aku bisa sesuaikan langkahnya.` };
         }
       }
       if (missingIngredient === 'telur' && /\b(kue|bolu|cake|adonan)\b/.test(normalized)) {
