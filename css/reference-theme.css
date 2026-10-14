@@ -1721,3 +1721,43 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
   .nav-search-trigger,
   .nav-ingredient-search { transition: none !important; }
 }
+
+/* Match the compact top-center reference while keeping Resepin's warm palette. */
+@media (min-width: 901px) {
+  .navbar,
+  .navbar.scrolled,
+  #app:has(#page-home.active) .navbar:not(.scrolled) {
+    top: 6px;
+    padding-inline: 12px;
+  }
+  .nav-container {
+    width: fit-content;
+    max-width: calc(100vw - 24px);
+    min-height: 44px;
+    margin-inline: auto;
+    padding: 4px 9px;
+    gap: clamp(4px,.8vw,10px);
+    background: rgba(20,16,13,.34);
+  }
+  .nav-logo { order: 0; flex-basis: 34px; width: 34px; height: 34px; }
+  .nav-logo .logo-icon { width: 28px; height: 28px; }
+  .nav-links { order: 1; flex: 0 0 auto; margin: 0; gap: 2px; }
+  .nav-link { padding: 8px 12px; font-size: .82rem; }
+  .nav-actions { order: 2; flex: 0 0 auto; margin: 0; gap: 5px; }
+  .btn-scan-nav, .btn-avatar, .nav-search-trigger { width: 34px; height: 34px; }
+  .btn-scan-nav, .btn-avatar, .nav-search-trigger { flex-basis: 34px; }
+}
+.nav-ingredient-search { top: calc(100% + 10px); }
+.nav-ingredient-search::before {
+  content: "";
+  position: absolute;
+  top: -14px;
+  left: 0;
+  right: 0;
+  height: 14px;
+  background: transparent;
+}
+@media (max-width: 900px) {
+  .nav-ingredient-search { top: calc(100% + 8px); }
+  .nav-ingredient-search::before { top: -12px; height: 12px; }
+}
