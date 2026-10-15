@@ -15,6 +15,7 @@ let currentFilter = 'all';
 let currentDietFilter = 'all';
 let currentBudgetFilter = null;
 let assumePantryBasics = true;
+let scanBackendAvailable = null;
 let cameraStream = null;
 let demoRunning = false;
 let currentChatRecipeIdx = null;
@@ -167,9 +168,18 @@ function updateRouteMetadata(page, recipe) {
   setMeta('meta[property="og:url"]', window.location.href);
   setMeta('meta[name="twitter:title"]', title);
   setMeta('meta[name="twitter:description"]', description);
-  const structuredData = document.getElementById('recipeJsonLd');
-  if (!structuredData) return;
-  structuredData.textContent = recipe ? JSON.stringify({
+  let structuredData = document.getElementById('recipeJsonLd');
+  if (!recipe) {
+    structuredData?.remove();
+    return;
+  }
+  if (!structuredData) {
+    structuredData = document.createElement('script');
+    structuredData.id = 'recipeJsonLd';
+    structuredData.type = 'application/ld+json';
+    document.head.appendChild(structuredData);
+  }
+  structuredData.textContent = JSON.stringify({
     '@context': 'https://schema.org', '@type': 'Recipe', name: recipe.title,
     image: new URL(getRecipeImage(recipe), window.location.href).href,
     recipeCategory: recipe.category, recipeCuisine: 'Indonesia', recipeYield: recipe.servings,
@@ -177,7 +187,7 @@ function updateRouteMetadata(page, recipe) {
     recipeIngredient: recipe.ingredientDetails.map(item => item.name),
     recipeInstructions: recipe.steps.map((step, index) => ({ '@type': 'HowToStep', position: index + 1, text: typeof step === 'string' ? step : step.text })),
     suitableForDiet: recipe.dietary.vegetarian ? 'https://schema.org/VegetarianDiet' : undefined
-  }) : '{}';
+  });
 }
 
 function renderLocationRoute() {
@@ -398,6 +408,11 @@ async function startCamera() {
     return;
   }
 
+  if (scanBackendAvailable === false) {
+    updateDetectionStatus('idle', 'Scan foto belum aktif di versi ini. Coba Mode Demo atau tambah bahan manual.');
+    return;
+  }
+
   if (!window.isSecureContext && !['localhost', '127.0.0.1'].includes(window.location.hostname)) {
     updateDetectionStatus('idle', 'Kamera butuh koneksi aman (HTTPS). Unggah foto atau tambahkan bahan secara manual.');
     showToast('Kamera hanya tersedia di HTTPS atau localhost.', 'error');
@@ -604,6 +619,40 @@ async function handleGalleryUpload(input) {
   }
 }
 
+async function checkScanBackendAvailability() {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 3500);
+  let ready = false;
+  try {
+    for (const endpoint of ['/api/health', '/api/detect']) {
+      try {
+        const response = await fetch(endpoint, { method: 'GET', cache: 'no-store', signal: controller.signal });
+        if (!response.ok) continue;
+        const result = await response.json().catch(() => ({}));
+        if (result.ready === true) { ready = true; break; }
+      } catch (_) {
+        if (controller.signal.aborted) break;
+      }
+    }
+  } finally {
+    clearTimeout(timeout);
+  }
+  scanBackendAvailable = ready;
+  const cameraButton = document.getElementById('startCamBtn');
+  const galleryLabel = document.getElementById('galleryUploadLabel');
+  const statusMessage = ready
+    ? 'Pemindai foto tersedia. Kamu bisa memakai kamera atau galeri, Mode Demo, maupun input manual.'
+    : 'Scan foto belum aktif di versi ini. Coba Mode Demo atau tambah bahan manual.';
+  if (cameraButton) cameraButton.hidden = !ready;
+  if (galleryLabel) galleryLabel.hidden = !ready;
+  const description = document.getElementById('scanAvailabilityNote');
+  if (description) description.textContent = ready
+    ? 'Foto akan diperiksa oleh model bahan yang tersedia di server. Periksa hasilnya dan lengkapi daftar secara manual.'
+    : 'Pemindai foto belum tersedia di server ini. Mode Demo dan input manual tetap bisa digunakan.';
+  updateDetectionStatus(ready ? 'idle' : 'unavailable', statusMessage);
+  return ready;
+}
+
 function loadGalleryImage(file) {
   return new Promise((resolve, reject) => {
     const objectUrl = URL.createObjectURL(file);
@@ -618,6 +667,7 @@ function updateDetectionStatus(type, message) {
   const el = document.getElementById('detectionStatus');
   if (!el) return;
   const dotClass = type === 'active' ? 'active' : type === 'detected' ? 'detected' : 'idle';
+  el.dataset.state = type;
   el.replaceChildren();
   const row = document.createElement('div');
   row.className = 'status-idle';
@@ -882,7 +932,7 @@ function createRecipeCardHTML(r) {
   const missing = match.missing.slice(0, 3).join(', ');
   const cost = window.ResepinRecipeUtils?.formatIDR(r.estimatedCostPerServingIDR) || '';
   return `
-    <button class="recipe-card" type="button" aria-label="Lihat resep ${escapeHtml(r.title)}. Kamu punya ${match.matched} dari ${match.total} bahan." onclick="openRecipeByIndex(${recipeIndex})">
+    <a class="recipe-card" href="#/resep/${recipeSlug(r)}" aria-label="Lihat resep ${escapeHtml(r.title)}. Kamu punya ${match.matched} dari ${match.total} bahan." onclick="event.preventDefault();openRecipeByIndex(${recipeIndex})">
       <div class="recipe-img" style="background:${r.gradient}">
         ${recipeImageHTML(r, 'recipe-img-photo')}
       </div>
@@ -897,7 +947,7 @@ function createRecipeCardHTML(r) {
           ${!available.length ? '<p>Tambahkan bahan untuk melihat kecocokan.</p>' : ''}
         </div>
       </div>
-    </button>
+    </a>
   `;
 }
 
@@ -1323,6 +1373,16 @@ document.addEventListener('DOMContentLoaded', () => {
   initParticles();
   initScrollEffects();
   initNavHint();
+  checkScanBackendAvailability().catch(() => {
+    scanBackendAvailable = false;
+    const cameraButton = document.getElementById('startCamBtn');
+    const galleryLabel = document.getElementById('galleryUploadLabel');
+    if (cameraButton) cameraButton.hidden = true;
+    if (galleryLabel) galleryLabel.hidden = true;
+    const description = document.getElementById('scanAvailabilityNote');
+    if (description) description.textContent = 'Scan foto belum aktif di versi ini. Coba Mode Demo atau tambah bahan manual.';
+    updateDetectionStatus('unavailable', 'Scan foto belum aktif di versi ini. Coba Mode Demo atau tambah bahan manual.');
+  });
   renderPersonalStats();
   const requestedIngredients = new URLSearchParams(window.location.search).getAll('bahan').map(value => value.trim()).filter(Boolean);
   if (requestedIngredients.length) {

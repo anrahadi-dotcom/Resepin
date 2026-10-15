@@ -51,3 +51,22 @@ test('recipe catalog has forty complete entries with available local photos', ()
     assert.ok(existsSync(photo), `${recipe.title} photo exists`);
   }
 });
+
+test('critical static UI controls stay accessible and independent of external Vue CDN', () => {
+  const html = readFileSync(resolve(root, 'index.html'), 'utf8');
+  const main = readFileSync(resolve(root, 'src/legacy/main.js'), 'utf8');
+  assert.match(html, /assets\/vendor\/vue-3\.5\.22\.global\.prod\.js" defer/);
+  assert.ok(existsSync(resolve(root, 'assets/vendor/vue-3.5.22.global.prod.js')));
+  assert.doesNotMatch(html, /unpkg\.com\/vue/);
+  assert.match(html, /id="galleryIngredientUpload" type="file" accept="image\/\*"/);
+  assert.doesNotMatch(html, /id="galleryIngredientUpload"[^>]*capture=/);
+  assert.match(html, /id="chatInput" aria-label=/);
+  assert.match(html, /aria-label="Kirim pesan"[^>]*id="chatSendBtn"/);
+  assert.match(html, /id="chatMessages" role="log" aria-live="polite"/);
+  assert.doesNotMatch(html, /href="#resep"/);
+  assert.doesNotMatch(html, /id="recipeJsonLd"/);
+  assert.match(html, /class="recipes-scroll" aria-label="Resep unggulan"><\/div>/);
+  assert.match(main, /RECIPES_DB\.slice\(0, 6\)\.map\(recipe => createRecipeCardHTML\(recipe\)\)/);
+  assert.match(main, /href="#\/resep\/\$\{recipeSlug\(r\)\}"/);
+  assert.match(main, /checkScanBackendAvailability/);
+});
