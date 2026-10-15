@@ -1,0 +1,12 @@
+@source "../index.html";
+@source "../src";
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@import "./style.css" layer(components);
+@import "./responsive.css" layer(components);
+@import "./reference-theme.css" layer(components);
+
+[v-cloak] {
+  @apply [display:none];
+}

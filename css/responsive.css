@@ -1,49 +1,49 @@
 /* Resepin responsive and accessibility styles. */
 
 @media (max-width: 900px) {
-  .nav-links { display: none; }
+  .nav-links { @apply [display:none]; }
   .nav-links.open {
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    top: 68px; left: 0; right: 0;
-    background: var(--navbar-bg);
-    backdrop-filter: blur(20px);
-    padding: 16px;
-    border-bottom: 1px solid var(--border);
-    gap: 4px;
-    z-index: 999;
+    @apply [display:flex];
+    @apply [flex-direction:column];
+    @apply [position:fixed];
+    @apply [top:68px]; @apply [left:0]; @apply [right:0];
+    @apply [background:var(--navbar-bg)];
+    @apply [backdrop-filter:blur(20px)];
+    @apply [padding:16px];
+    @apply [border-bottom:1px_solid_var(--border)];
+    @apply [gap:4px];
+    @apply [z-index:999];
   }
-  .btn-hamburger { display: flex; }
-  .btn-scan-nav span { display: none; }
-  .hero-container { grid-template-columns: 1fr; gap: 40px; }
-  .hero-visual { order: 0; }
-  .phone-mockup { width: 220px; height: 380px; }
-  .floating-card { display: none; }
-  .steps-grid { flex-direction: column; align-items: center; }
-  .step-connector { width: 2px; height: 40px; background: linear-gradient(180deg, rgba(182,92,58,0.3), rgba(182,92,58,0.6)); }
-  .step-connector::after { content: '▼'; right: unset; top: unset; bottom: -8px; left: 50%; transform: translateX(-50%); }
-  .scan-layout { grid-template-columns: 1fr; }
-  .ingredients-panel { position: static; max-height: none; }
-  .ai-cta-card { grid-template-columns: 1fr; }
-  .footer-grid { grid-template-columns: 1fr 1fr; }
-  .modal-grid { grid-template-columns: 1fr; }
-  .stats-banner { flex-direction: column; text-align: center; }
-  .stats-numbers { justify-content: center; }
+  .btn-hamburger { @apply [display:flex]; }
+  .btn-scan-nav span { @apply [display:none]; }
+  .hero-container { @apply [grid-template-columns:1fr]; @apply [gap:40px]; }
+  .hero-visual { @apply [order:0]; }
+  .phone-mockup { @apply [width:220px]; @apply [height:380px]; }
+  .floating-card { @apply [display:none]; }
+  .steps-grid { @apply [flex-direction:column]; @apply [align-items:center]; }
+  .step-connector { @apply [width:2px]; @apply [height:40px]; @apply [background:linear-gradient(180deg,_rgba(182,92,58,0.3),_rgba(182,92,58,0.6))]; }
+  .step-connector::after { @apply [content:'▼']; @apply [right:unset]; @apply [top:unset]; @apply [bottom:-8px]; @apply [left:50%]; @apply [transform:translateX(-50%)]; }
+  .scan-layout { @apply [grid-template-columns:1fr]; }
+  .ingredients-panel { @apply [position:static]; @apply [max-height:none]; }
+  .ai-cta-card { @apply [grid-template-columns:1fr]; }
+  .footer-grid { @apply [grid-template-columns:1fr_1fr]; }
+  .modal-grid { @apply [grid-template-columns:1fr]; }
+  .stats-banner { @apply [flex-direction:column]; @apply [text-align:center]; }
+  .stats-numbers { @apply [justify-content:center]; }
 }
 
 @media (max-width: 600px) {
-  .hero-stats { flex-direction: column; justify-content: center; align-items: center; }
-  .stat-divider { width: 100%; height: 1px; }
-  .hero-cta { flex-direction: column; }
-  .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
-  .footer-grid { grid-template-columns: 1fr; }
-  .stats-numbers { flex-direction: column; }
-  .chat-bubble { max-width: 90%; }
-  .category-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .hero-stats { @apply [flex-direction:column]; @apply [justify-content:center]; @apply [align-items:center]; }
+  .stat-divider { @apply [width:100%]; @apply [height:1px]; }
+  .hero-cta { @apply [flex-direction:column]; }
+  .btn-primary, .btn-secondary { @apply [width:100%]; @apply [justify-content:center]; }
+  .footer-grid { @apply [grid-template-columns:1fr]; }
+  .stats-numbers { @apply [flex-direction:column]; }
+  .chat-bubble { @apply [max-width:90%]; }
+  .category-grid { @apply [grid-template-columns:repeat(auto-fill,_minmax(150px,_1fr))]; }
 
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  *, *::before, *::after { @apply [scroll-behavior:auto]!; @apply [animation-duration:.01ms]!; @apply [transition-duration:.01ms]!; }
 }
