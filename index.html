@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Resepin — Temukan resep lezat dari bahan yang ada di dapur. Masak enak, hemat bahan, kurangi makanan terbuang." />
+  <meta property="og:title" content="Resepin — Masak dari Sisa, Praktis & Lezat" />
+  <meta property="og:description" content="Temukan ide masak dari bahan yang tersedia di dapurmu." />
+  <meta property="og:image" content="https://resepin-3k1.pages.dev/assets/img/og-resepin.jpg" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://resepin-3k1.pages.dev/" />
+  <link rel="canonical" href="https://resepin-3k1.pages.dev/" />
+  <meta property="og:locale" content="id_ID" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Resepin — Masak dari Sisa, Praktis & Lezat" />
+  <meta name="twitter:description" content="Temukan ide masak dari bahan yang tersedia di dapurmu." />
+  <meta name="twitter:image" content="https://resepin-3k1.pages.dev/assets/img/og-resepin.jpg" />
+  <meta name="theme-color" content="#e1dcc9" />
+  <script>
+    try {
+      const storedTheme = localStorage.getItem('resep-theme');
+      const preferredTheme = storedTheme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.dataset.theme = preferredTheme === 'dark' ? 'dark' : 'light';
+      document.querySelector('meta[name="theme-color"]').content = preferredTheme === 'dark' ? '#1f150c' : '#e1dcc9';
+    } catch (_) { document.documentElement.dataset.theme = 'light'; }
+  </script>
+  <title>Resepin — Masak dari Sisa, Praktis & Lezat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="/assets/img/chef-hero.jpg" fetchpriority="high" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/responsive.css" />
+  <link rel="stylesheet" href="/css/reference-theme.css" />
+  <script src="/assets/vendor/vue-3.5.22.global.prod.js" defer></script>
+  <style>[v-cloak] { display: none; }</style>
+</head>
+<body>
+  <script>document.body.dataset.theme = document.documentElement.dataset.theme || 'light';</script>
+  <a class="skip-link" href="#page-home" onclick="focusActivePage(event)">Lewati ke konten</a>
+  <div id="app" v-cloak>
+
+  <svg class="ui-icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+    <symbol id="ui-icon-carrot" viewBox="0 0 24 24"><path d="M12 8 5 15a3.5 3.5 0 0 0 5 5l7-7M12 8c1-3 3-4 6-5 0 3-1 5-4 6M12 8c-2-2-4-2-7-2 0 3 2 5 5 5M8 17l2 2m1-5 2 2"/></symbol>
+    <symbol id="ui-icon-basket" viewBox="0 0 24 24"><path d="m3 10 2 10h14l2-10H3Zm3 0 5-7m7 7-5-7M8 13v4m4-4v4m4-4v4"/></symbol>
+    <symbol id="ui-icon-pot" viewBox="0 0 24 24"><path d="M4 10h16l-1 10H5L4 10Zm-2 0h20M8 7h8M12 4v3M2 13H1m22 0h-1"/></symbol>
+    <symbol id="ui-icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="ui-icon-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2m16 0v-2a4 4 0 0 0-3-3.87M9.5 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7-7.87a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="ui-icon-flame" viewBox="0 0 24 24"><path d="M12 22a7 7 0 0 0 7-7c0-4-3-6-4-10-2 2-2 4-2 5-2-2-3-4-3-7-4 3-6 7-6 12a8 8 0 0 0 8 7Z"/><path d="M12 22a4 4 0 0 0 4-4c0-2-1-3-2-4-1 2-2 2-2 2s-1-2-2-3a6 6 0 0 0-2 5 4 4 0 0 0 4 4Z"/></symbol>
+    <symbol id="ui-icon-sprout" viewBox="0 0 24 24"><path d="M12 21v-9m0 4c0-5-3-8-8-8 0 5 3 8 8 8Zm0-4c0-5 3-8 8-8 0 5-3 8-8 8Z"/></symbol>
+    <symbol id="ui-icon-camera" viewBox="0 0 24 24"><path d="M4 7h3l2-3h6l2 3h3a2 2 0 0 1 2 2v10H2V9a2 2 0 0 1 2-2Z"/><circle cx="12" cy="13" r="4"/></symbol>
+    <symbol id="ui-icon-chef" viewBox="0 0 24 24"><path d="M6 11a4 4 0 1 1 2-7 5 5 0 0 1 8 0 4 4 0 1 1 2 7v9H6v-9Zm0 4h12m-8-4v3m4-3v3m-8 6h12"/></symbol>
+    <symbol id="ui-icon-book" viewBox="0 0 24 24"><path d="M12 7v14m0-14C9 4 5 4 2 5v14c3-1 7-1 10 2m0-14c3-3 7-3 10-2v14c-3-1-7-1-10 2"/></symbol>
+    <symbol id="ui-icon-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="ui-icon-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4M3 11V9a3 3 0 0 1 3-3h15m-14 16-4-4 4-4m14 1v2a3 3 0 0 1-3 3H3"/></symbol>
+    <symbol id="ui-icon-bulb" viewBox="0 0 24 24"><path d="M9 18h6m-5 4h4m-6.5-7.5A7 7 0 1 1 16.5 15c-.8.7-1.2 1.6-1.4 3H8.9c-.2-1.4-.6-2.3-1.4-3Z"/></symbol>
+    <symbol id="ui-icon-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0 1 16 0v1H4Z"/></symbol>
+    <symbol id="ui-icon-egg" viewBox="0 0 24 24"><path d="M12 3c-3.4 0-7 6.1-7 11a7 7 0 0 0 14 0c0-4.9-3.6-11-7-11Z"/><path d="M9 16c.4 1.4 1.4 2 2.7 2"/></symbol>
+    <symbol id="ui-icon-fish" viewBox="0 0 24 24"><path d="M3 12s3.5-6 10-6c3 0 5 2 7 6-2 4-4 6-7 6-6.5 0-10-6-10-6Z"/><path d="m3 12-2-4v8l2-4Zm10-2h.01M15 10c1.2 1 1.2 3 0 4"/></symbol>
+    <symbol id="ui-icon-food" viewBox="0 0 24 24"><path d="M4 11h16l-2 9H6l-2-9Zm-2 0h20M8 7h8M12 3v4"/><path d="M7 15h10"/></symbol>
+    <symbol id="ui-icon-tempe" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="3"/><path d="M8 9h.01M12 9h.01M16 9h.01M8 13h.01M12 13h.01M16 13h.01M8 17h.01M12 17h.01M16 17h.01"/></symbol>
+    <symbol id="ui-icon-chicken" viewBox="0 0 24 24"><path d="M7 15c-2.2-2.2-1.9-5.9.7-8.5s6.3-2.9 8.5-.7 1.9 5.9-.7 8.5S9.2 17.2 7 15Zm-1.5-1.5-2 2m2.8.8-2 2m4.9-1.9 2 2m-4.1-5.1 2-2"/></symbol>
+    <symbol id="ui-icon-rice" viewBox="0 0 24 24"><path d="M4 12h16l-2 8H6l-2-8Zm-2 0h20M7 9c0-2 1-3 2-4m3 4c0-2 1-3 2-4m3 4c0-2 1-3 2-4"/></symbol>
+    <symbol id="ui-icon-noodles" viewBox="0 0 24 24"><path d="M4 12h16l-2 8H6l-2-8Zm-2 0h20M8 9c0-2 1-3 2-4m2 4c0-2 1-3 2-4m2 4c0-2 1-3 2-4"/></symbol>
+    <symbol id="ui-icon-leaf" viewBox="0 0 24 24"><path d="M20 4C10 4 5 7 5 14a6 6 0 0 0 6 6c7 0 9-7 9-16ZM4 21c3-5 6-8 12-12"/></symbol>
+    <symbol id="ui-icon-corn" viewBox="0 0 24 24"><path d="M9 5c0-2 6-2 6 0v13a3 3 0 0 1-6 0V5Zm-2 7c-2 2-2 5 0 8l2-2m8-6c2 2 2 5 0 8l-2-2M11 7h2m-2 4h2m-2 4h2"/></symbol>
+    <symbol id="ui-icon-onion" viewBox="0 0 24 24"><path d="M12 3c0 3-7 6-7 12a7 7 0 0 0 14 0c0-6-7-9-7-12Zm0 4c-1 3-4 5-4 8a4 4 0 0 0 8 0c0-3-3-5-4-8Z"/></symbol>
+    <symbol id="ui-icon-chili" viewBox="0 0 24 24"><path d="M8 8c4-3 8-3 12 0-1 6-5 11-11 12-3 0-5-2-5-5 0-2 1-4 4-7Zm0 0c0-2 1-4 4-5m-4 5-3-2"/></symbol>
+    <symbol id="ui-icon-tofu" viewBox="0 0 24 24"><path d="m5 8 8-4 6 3-8 4-6-3Zm0 0v9l6 4v-10m8-4v9l-8 5m-6-9 6 4 8-4"/></symbol>
+    <symbol id="ui-icon-bean" viewBox="0 0 24 24"><path d="M18.5 5.5c-4-2-9-1-12 3s-3 8 0 10 7 1 10-2 5-8 2-11Zm-12 12c3-1 7-4 10-9"/></symbol>
+  </svg>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container" :class="{ 'menu-open': menuOpen }">
+      <a class="nav-logo" href="#/" aria-label="Resepin, kembali ke Beranda" @click.prevent="go('home')">
+        <div class="logo-icon">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="15" fill="url(#logoGrad)" opacity="0.12"/>
+            <circle cx="16" cy="17" r="8" stroke="url(#logoGrad)" stroke-width="2.2" fill="none"/>
+            <path d="M8 7v8M6 7v4a2 2 0 0 0 4 0V7M8 15v10M24 7v18M24 7c-3 2-4 5-4 8h4" stroke="url(#logoGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <defs>
+              <linearGradient id="logoGrad" x1="0" y1="0" x2="32" y2="32">
+                <stop offset="0%" stop-color="#412D15"/>
+                <stop offset="100%" stop-color="#1F150C"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+      </a>
+
+      <div class="nav-links" id="navLinks">
+        <a class="nav-link active" data-page="home" href="#/" aria-current="page" @click.prevent="go('home')">Beranda</a>
+        <a class="nav-link" data-page="resep" href="#/resep" @click.prevent="go('resep')">Resep</a>
+        <div class="nav-search-wrap" :class="{ 'is-open': navSearchOpen }">
+          <button class="nav-link nav-search-toggle" type="button" :aria-label="navSearchOpen ? 'Tutup pencarian resep' : 'Buka pencarian resep'" title="Cari resep" :aria-expanded="navSearchOpen" aria-controls="navIngredientSearch" @click.stop="toggleNavSearch">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+            <span class="visually-hidden">Cari resep</span>
+          </button>
+          <form class="nav-ingredient-search" id="navIngredientSearch" :aria-hidden="!navSearchOpen" :inert="!navSearchOpen" @submit.prevent="submitHeroSearch">
+            <label class="visually-hidden" for="heroIngredientSearch">Cari resep dari bahan</label>
+            <div class="nav-search-heading">
+              <strong>Masak dari bahan yang ada</strong>
+              <span>Pisahkan nama bahan dengan koma</span>
+            </div>
+            <input id="heroIngredientSearch" v-model="heroIngredientText" type="search" aria-label="Ketik bahan untuk mencari resep" placeholder="Contoh: telur, tomat, bawang..." autocomplete="off" />
+            <button class="nav-search-submit" type="submit" aria-label="Cari resep" title="Cari resep" :disabled="heroSearchIngredients.length === 0">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+            </button>
+            <div class="hero-popular-ingredients nav-ingredient-popular" role="group" aria-label="Bahan populer">
+              <span class="hero-popular-label">Populer:</span>
+              <button v-for="ingredient in popularIngredients" :key="ingredient" class="hero-ingredient-chip" :class="{active: heroSelectedIngredients.includes(ingredient)}" type="button" :aria-pressed="heroSelectedIngredients.includes(ingredient)" @click="toggleHeroIngredient(ingredient)">{{ ingredient }}</button>
+            </div>
+            <p v-if="heroSearchMessage" class="hero-search-message nav-search-message" role="status">{{ heroSearchMessage }}</p>
+          </form>
+        </div>
+        <a class="nav-link" data-page="chef" href="#/chef" @click.prevent="go('chef')">Chef Resepin</a>
+        <a class="nav-link" data-page="jelajahi" href="#/jelajahi" @click.prevent="go('jelajahi')">Jelajahi</a>
+        <a class="nav-link" data-page="tersimpan" href="#/tersimpan" @click.prevent="go('tersimpan')">Tersimpan</a>
+      </div>
+
+      <div class="nav-actions">
+        <button class="btn-scan-nav" aria-label="Scan bahan" title="Scan bahan" @click="go('scan')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3m8 0h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3m-8 0H5a1 1 0 0 1-1-1v-3"/><path d="M7 12h10"/><circle cx="12" cy="12" r="3.2"/></svg>
+          <span>Scan bahan</span>
+        </button>
+        <button class="btn-avatar" aria-label="Pengaturan" title="Pengaturan" @click="go('profil')">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+        <button class="btn-hamburger" id="hamburgerBtn" type="button" :aria-label="menuOpen ? 'Tutup menu navigasi' : 'Buka menu navigasi'" aria-controls="navLinks" :aria-expanded="menuOpen" @click="toggleMenu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <span class="nav-hint" aria-hidden="true">Arahkan mouse ke sini</span>
+  </nav>
+
+  <!-- ===== PAGE: HOME ===== -->
+  <div class="page active" id="page-home" role="main" tabindex="-1">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-scene" aria-hidden="true">
+        <video ref="heroVideo" class="hero-scene-video" :class="{'is-playing': heroVideoPlaying}" muted loop playsinline preload="metadata" poster="/assets/img/chef-hero.jpg" tabindex="-1" aria-hidden="true">
+          <source src="/assets/video/hero-tumis-tahu.mp4" type="video/mp4" />
+        </video>
+        <span class="hero-light-veil"></span>
+        <span class="hero-light-glow"></span>
+        <span class="hero-copy-spotlight"></span>
+      </div>
+      <div class="hero-bg-glow"></div>
+      <div class="hero-particles" id="heroParticles"></div>
+      <div id="heroApp" class="hero-container" v-cloak>
+        <div class="hero-content">
+          <div class="hero-copy">
+            <span class="hero-copy-eyebrow hero-enter hero-enter-2"><i aria-hidden="true"></i> DARI DAPUR, JADI CERITA</span>
+            <h1 class="hero-title" aria-label="Dari isi dapur, jadi menu istimewa."><span class="hero-title-line hero-enter-3">Dari isi dapur,</span><span class="title-gradient hero-title-line hero-enter-4">jadi menu</span><span class="hero-title-line hero-enter-5">istimewa.</span></h1>
+            <p class="hero-desc hero-enter hero-enter-6">Bahan yang hampir terlupa bisa jadi hidangan favorit berikutnya. Yuk, racik sesuatu dari yang sudah ada.</p>
+            <div class="hero-cta hero-cta-link hero-enter hero-enter-7">
+              <a href="#/resep" @click.prevent="go('resep')">Lihat inspirasi lainnya <span aria-hidden="true">→</span></a>
+            </div>
+          </div>
+          <section v-if="false" class="hero-demo-card" aria-hidden="true"></section>
+          <section class="hero-favorites hero-enter hero-enter-8" aria-label="Tiga menu favorit Resepin">
+            <div class="hero-favorites-heading">
+              <span><i aria-hidden="true"></i> FAVORIT RESEPIN</span>
+              <h2>Tiga menu, susah pilih satu.</h2>
+            </div>
+            <transition-group name="hero-favorite-shuffle" tag="div" class="hero-favorite-stage" aria-label="Menu yang sedang dipilih">
+              <button v-for="(recipe, index) in heroFavoriteRecipes" :key="recipe.id" class="hero-favorite-card" :class="`is-slot-${index}`" type="button" :aria-label="`Lihat resep ${recipe.title}, ${recipe.time}, ${recipe.difficulty}`" @click="openHeroFavorite(recipe.id)">
+                <img :src="heroFavoriteImage(recipe)" alt="" :loading="index === 1 ? 'eager' : 'lazy'" />
+                <span class="hero-favorite-shade" aria-hidden="true"></span>
+                <span class="hero-favorite-badge"><i aria-hidden="true"></i> MENU FAVORIT</span>
+                <span class="hero-favorite-copy"><strong>{{ recipe.title }}</strong><small>{{ recipe.time }} <i aria-hidden="true">·</i> {{ recipe.difficulty }}</small><span class="hero-favorite-cta" aria-hidden="true">Lihat resep <b>↗</b></span></span>
+              </button>
+            </transition-group>
+            <div class="hero-favorites-controls">
+              <span><i></i><i class="is-current"></i><i></i> <small>Berputar otomatis</small></span>
+              <button type="button" @click="shuffleHeroFavorites" aria-label="Acak urutan menu favorit">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m16 3 4 4-4 4M4 17l5-5m4-4 3-3m0 12 4-4-4-4M4 7l2 2m5 6 5 5"/></svg>
+                Acak menu
+              </button>
+            </div>
+          </section>
+        </div>
+      </div>
+      <div class="hero-scroll-hint">
+        <div class="scroll-dot"></div>
+        <span>Gulir untuk menjelajah</span>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section how-it-works">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Cara Kerja</span>
+          <h2>3 Langkah Mudah Masak<br/><span class="gradient-text">dari Sisa Dapur</span></h2>
+        </div>
+        <div class="steps-grid">
+          <div class="step-card" data-step="1">
+            <div class="step-card-heading"><span class="step-number">01</span><span class="step-kicker">Mulai dari dapurmu</span></div>
+            <div class="step-icon-wrap">
+              <div class="step-icon"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-carrot"/></svg></div>
+              <div class="step-ring"></div>
+            </div>
+            <h3>Pilih bahanmu</h3>
+            <p>Foto bahan yang tersisa atau ketik namanya, seperti jagung, wortel, atau ayam.</p>
+            <div class="step-tag"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-camera"/></svg><span>Kamera atau ketik</span></div>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step-card" data-step="2">
+            <div class="step-card-heading"><span class="step-number">02</span><span class="step-kicker">Cek sebentar</span></div>
+            <div class="step-icon-wrap">
+              <div class="step-icon"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-basket"/></svg></div>
+              <div class="step-ring"></div>
+            </div>
+            <h3>Periksa daftar bahanmu</h3>
+            <p>Periksa daftar bahan, lalu ubah atau lengkapi kalau ada yang kurang tepat.</p>
+            <div class="step-tag"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-book"/></svg><span>Daftarnya bisa diubah</span></div>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step-card" data-step="3">
+            <div class="step-card-heading"><span class="step-number">03</span><span class="step-kicker">Saatnya memasak</span></div>
+            <div class="step-icon-wrap">
+              <div class="step-icon"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-pot"/></svg></div>
+              <div class="step-ring"></div>
+            </div>
+            <h3>Dapat Resep & Masak!</h3>
+            <p>Dapatkan rekomendasi resep dari bahan yang kamu punya. Tanya Chef Resepin untuk variasi, pengganti bahan, dan tips memasak.</p>
+            <div class="step-tag"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-bulb"/></svg><span>Ide dari bahanmu</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Recipes -->
+    <section class="section featured-recipes">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">Resep Unggulan</span>
+          <h2>Resep Pilihan</h2>
+          <p class="featured-intro">Ide masakan rumahan yang enak, praktis, dan cocok untuk hari ini.</p>
+          <a class="see-all" href="#/resep" @click.prevent="go('resep')">Lihat Semua →</a>
+        </div>
+        <div class="recipes-scroll" aria-label="Resep unggulan"></div>
+      </div>
+    </section>
+
+    <!-- Zero Waste Stats -->
+    <section class="section waste-stats">
+      <div class="container">
+        <div class="stats-banner">
+          <div class="stats-content">
+            <span class="stats-kicker"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-sprout"/></svg> DAPUR LEBIH BIJAK</span>
+            <h2>Setiap bahan punya <em>kesempatan kedua.</em></h2>
+            <p class="stats-fact">Makanan yang terbuang berawal dari hal kecil: bahan terlupa di kulkas, belanja berlebih, atau bingung mau dimasak apa. Mulai dari dapur sendiri, satu bahan pada satu waktu.</p>
+            <div class="stats-actions">
+              <button class="stats-cta" type="button" @click="go('scan')">Cek bahan di dapur <span aria-hidden="true">→</span></button>
+              <a class="stats-source" href="https://greeneconomy.bappenas.go.id/home/bappenas-jabarkan-pentingnya-kelola-food-loss-and-waste-untuk-pembangunan-rendah-karbon-dan-ekonomi-sirkular/" target="_blank" rel="noopener noreferrer">Sumber data Bappenas <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+
+          <div class="impact-figure">
+            <div class="impact-figure-top"><span>INDONESIA · <span>{{ impactYear }}</span></span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-sprout"/></svg></div>
+            <output class="impact-number" for="impactYearSlider" aria-live="polite" aria-atomic="true">{{ impactTonnage }}</output>
+            <div class="impact-unit">juta ton <span>/ tahun</span></div>
+            <div class="impact-range">
+              <input id="impactYearSlider" v-model.number="impactYear" type="range" min="2000" max="2019" step="1" aria-label="Pilih tahun untuk melihat perkiraan timbulan food loss dan food waste" :aria-valuetext="`${impactYear}, ${impactTonnage} juta ton per tahun`" :style="{ '--slider-progress': `${((impactYear - 2000) / 19) * 100}%` }" />
+            </div>
+            <div class="impact-range-labels"><span>2000</span><span>2019</span></div>
+            <p>Geser untuk melihat tren tahunan. Kajian Bappenas menampilkan rentang dan grafik, bukan tabel tahunan; nilai di antara titik acuan adalah interpolasi visual.</p>
+          </div>
+
+          <div class="stats-personal">
+            <div class="stats-personal-heading">
+              <div><span class="stats-personal-title">Langkah kecilmu juga berarti</span><span class="stats-personal-note">Aktivitas tersimpan di perangkat ini</span></div>
+              <svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-book"/></svg>
+            </div>
+            <div class="stats-numbers" id="personalStatsNumbers" hidden>
+              <div class="waste-stat"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-sprout"/></svg><span class="ws-num" id="personalIngredientsUsed">0</span><span class="ws-label">Bahan dicari lewat Scan</span></div>
+              <div class="waste-stat"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-book"/></svg><span class="ws-num" id="personalRecipesOpened">0</span><span class="ws-label">Resep yang dibuka</span></div>
+            </div>
+            <p class="personal-stats-empty" id="personalStatsEmpty">Belum ada aktivitas. Mulai dengan mencatat bahan yang tersedia atau menemukan resep pertamamu.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid footer-grid-simple">
+          <div class="footer-brand">
+            <div class="footer-logo">
+              <div class="logo-icon"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-pot"/></svg></div>
+              <span>Resepin</span>
+            </div>
+            <p>Temukan ide masak dari bahan yang tersedia di dapurmu.</p>
+            <div class="footer-social">
+              <a href="https://github.com/anrahadi-dotcom/Resepin" class="social-link" target="_blank" rel="noopener noreferrer">GitHub</a>
+            </div>
+            <p class="portfolio-note">Project portofolio. Resep merupakan contoh; biaya per porsi adalah perkiraan kasar dan dapat berbeda menurut lokasi, merek, serta harga saat belanja.</p>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2026 Resepin</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ===== PAGE: SCAN ===== -->
+  <div class="page" id="page-scan" role="main" tabindex="-1">
+    <div class="scan-page">
+      <div class="scan-header">
+        <button class="back-btn" @click="go('home')">← Kembali</button>
+        <h1>Tambah bahan dapur</h1>
+        <p>Arahkan kamera ke bahan makanan; hasil pindai bisa kamu periksa dan koreksi</p>
+      </div>
+
+      <div class="scan-layout">
+        <!-- Camera Section -->
+        <div class="camera-section">
+          <div class="camera-viewport" id="cameraViewport">
+            <video id="cameraFeed" autoplay muted playsinline></video>
+            <canvas id="cameraCanvas"></canvas>
+            <!-- Scan overlay -->
+            <div class="scan-overlay" id="scanOverlay">
+              <div class="scan-corner-tl"></div>
+              <div class="scan-corner-tr"></div>
+              <div class="scan-corner-bl"></div>
+              <div class="scan-corner-br"></div>
+              <div class="scan-laser" id="scanLaser"></div>
+            </div>
+            <!-- Detection boxes (simulated) -->
+            <div class="detection-boxes" id="detectionBoxes"></div>
+            <!-- Camera placeholder -->
+            <div class="camera-placeholder" id="cameraPlaceholder">
+              <div class="cp-icon"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-camera"/></svg></div>
+              <p>Gunakan kamera untuk mengenali bahan</p>
+              <p class="cp-sub">atau pilih bahan secara manual</p>
+            </div>
+          </div>
+          <div class="camera-controls">
+            <button class="cam-btn primary" id="startCamBtn" onclick="startCamera()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+              Buka kamera
+            </button>
+            <label class="cam-btn gallery-upload" id="galleryUploadLabel">Unggah dari galeri
+              <input class="visually-hidden" id="galleryIngredientUpload" type="file" accept="image/*" onchange="handleGalleryUpload(this)" />
+            </label>
+            <button class="cam-btn demo" onclick="runDemo()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5,3 19,12 5,21"/></svg>
+              Coba contoh
+            </button>
+            <button class="cam-btn capture" id="captureBtn" onclick="captureAndDetect()" disabled>
+              <svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-camera"/></svg> Ambil Foto
+            </button>
+          </div>
+          <p class="cp-sub" id="scanAvailabilityNote">Memeriksa ketersediaan pemindai foto…</p>
+          <div class="detection-status" id="detectionStatus">
+            <div class="status-idle">
+              <div class="status-dot idle"></div>
+              <span>Menunggu kamera aktif...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ingredients Panel -->
+        <div class="ingredients-panel">
+          <div class="ip-header">
+            <h3>Bahan pilihanmu</h3>
+            <span class="ip-count" id="ingredientCount">0 bahan</span>
+          </div>
+
+          <div class="ip-list" id="ingredientList">
+            <div class="ip-empty" id="ipEmpty">
+              <div class="ip-empty-icon"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-search"/></svg></div>
+              <h4>Belum ada bahan</h4>
+              <p>Coba contoh bahan tanpa membuka kamera, atau tambahkan bahan secara manual.</p>
+              <button class="btn-primary ip-empty-example" type="button" onclick="runDemo()">Coba contoh</button>
+            </div>
+          </div>
+
+          <div class="ip-manual">
+            <h4>+ Tambah Manual</h4>
+            <div class="ip-manual-input">
+              <input type="text" id="manualIngredientInput" aria-label="Nama bahan untuk ditambahkan" placeholder="Cth: tomat, kentang..." onkeydown="if(event.key==='Enter') addManualIngredient()" />
+              <button onclick="addManualIngredient()">Tambah</button>
+            </div>
+            <div class="quick-add-chips">
+              <button type="button" class="chip" onclick="addIngredient('Telur')">Telur</button>
+              <button type="button" class="chip" onclick="addIngredient('Nasi')">Nasi</button>
+              <button type="button" class="chip" onclick="addIngredient('Ayam')">Ayam</button>
+              <button type="button" class="chip" onclick="addIngredient('Tempe')">Tempe</button>
+              <button type="button" class="chip" onclick="addIngredient('Kangkung')">Kangkung</button>
+              <button type="button" class="chip" onclick="addIngredient('Mie')">Mi</button>
+            </div>
+          </div>
+
+          <div class="ip-actions">
+            <button class="btn-primary full-width" id="findRecipesBtn" @click="findRecipesFromScan" disabled>
+              <svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-pot"/></svg> Cari Resep (<span id="ingredientCountBtn">0</span> bahan)
+            </button>
+            <button class="btn-secondary full-width" @click="go('chef')">
+              Tanya Chef Resepin
+            </button>
+          </div>
+
+          <div class="ip-confidence" id="confidenceBar" style="display:none">
+            <span>Tingkat keyakinan</span>
+            <div class="conf-bar-wrap">
+              <div class="conf-bar-fill" id="confFill" style="width:0%"></div>
+            </div>
+            <span id="confPct">0%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE: RESEP ===== -->
+  <div class="page" id="page-resep" role="main" tabindex="-1">
+    <div class="resep-page">
+      <div class="resep-header">
+        <button class="back-btn" @click="go('home')">← Kembali</button>
+        <h1><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-book"/></svg> Semua Resep</h1>
+        <p>Temukan resep terbaik dari bahan yang kamu punya</p>
+      </div>
+
+      <!-- Search & Filter -->
+      <div class="resep-filters">
+        <div class="search-box">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="search" id="recipeSearch" aria-label="Cari nama resep atau bahan" placeholder="Cari resep atau bahan..." oninput="filterRecipes()" />
+        </div>
+        <div class="filter-chips" id="basicRecipeFilters" role="group" aria-label="Filter kategori resep">
+          <button type="button" class="filter-chip active" aria-pressed="true" onclick="setFilter('all', this)">Semua</button>
+          <button type="button" class="filter-chip" aria-pressed="false" onclick="setFilter('mudah', this)">Mudah</button>
+          <button type="button" class="filter-chip" aria-pressed="false" onclick="setFilter('cepat', this)">&lt; 15 Menit</button>
+          <button type="button" class="filter-chip" aria-pressed="false" onclick="setFilter('sehat', this)">Sehat</button>
+          <button type="button" class="filter-chip" aria-pressed="false" onclick="setFilter('sayur', this)">Sayur</button>
+          <button type="button" class="filter-chip" aria-pressed="false" onclick="setFilter('berkuah', this)">Berkuah</button>
+          <button type="button" class="filter-chip" aria-pressed="false" onclick="setFilter('5bahan', this)">≤ 5 Bahan</button>
+        </div>
+        <div class="filter-chips" role="group" aria-label="Filter kebutuhan makan">
+          <button type="button" class="filter-chip" aria-pressed="false" onclick="setDietFilter('vegetarian', this)">Vegetarian</button>
+          <button type="button" class="filter-chip" aria-pressed="false" onclick="setDietFilter('no-egg', this)">Tanpa telur</button>
+          <button type="button" class="filter-chip" aria-pressed="false" onclick="setDietFilter('no-seafood', this)">Tanpa seafood</button>
+          <button type="button" class="filter-chip" aria-pressed="false" onclick="setDietFilter('no-peanut', this)">Tanpa kacang</button>
+        </div>
+        <div class="filter-chips" role="group" aria-label="Filter perkiraan biaya per porsi">
+          <button type="button" class="filter-chip" aria-pressed="false" onclick="setBudgetFilter(10000, this)">≤ Rp10.000</button>
+          <button type="button" class="filter-chip" aria-pressed="false" onclick="setBudgetFilter(20000, this)">≤ Rp20.000</button>
+        </div>
+        <div class="pantry-filter-group" role="group" aria-label="Preferensi bahan dasar dapur">
+          <label class="pantry-toggle"><input id="assumePantryBasics" type="checkbox" checked onchange="setAssumePantryBasics(this.checked)" /> <span>Anggap bahan dasar dapur selalu ada</span></label>
+        </div>
+        <div class="recipe-sort-group" role="group" aria-label="Urutkan resep">
+          <label for="recipeSort">Urutkan</label>
+          <select id="recipeSort" onchange="setRecipeSort(this.value)">
+            <option value="match">Paling cocok</option>
+            <option value="fastest">Tercepat</option>
+            <option value="cheapest">Termurah</option>
+          </select>
+        </div>
+        <button class="clear-recipe-filters" id="clearRecipeFilters" type="button" onclick="clearRecipeFilters()" hidden>Hapus filter</button>
+        <p class="recipe-results-status" id="recipeResultsStatus" aria-live="polite"></p>
+      </div>
+
+      <!-- Recipes Grid -->
+      <div class="container">
+        <div class="recipes-grid" id="recipesGrid">
+          <!-- populated by JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE: CHEF RESEPIN ===== -->
+  <div class="page" id="page-chef" role="main" tabindex="-1">
+    <div class="chef-page">
+      <div class="chef-header">
+        <button class="back-btn" @click="go('home')">← Kembali</button>
+        <div class="chef-title-area">
+          <div class="chef-avatar"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
+          <div>
+            <h1>Chef Resepin</h1>
+            <span class="chef-status"><span class="status-online"></span> Siap membantu di dapur</span>
+          </div>
+        </div>
+        <div class="chef-bahan-badge" id="chefBahanBadge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M7 12h10M10 18h4"/></svg>
+          <span id="chefBahanText">Belum ada bahan</span>
+        </div>
+      </div>
+
+      <div class="chat-container">
+        <div class="chat-messages" id="chatMessages" role="log" aria-live="polite" aria-relevant="additions text">
+          <div class="chat-bubble bot-bubble">
+            <div class="bubble-avatar"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
+            <div class="bubble-content">
+              <p>Hai, aku <strong>Chef Resepin</strong>.</p>
+              <p>Mau cari ide masak? Pilih salah satu topik di bawah, atau ceritakan bahan yang kamu punya.</p>
+            </div>
+            <span class="bubble-time">Sekarang</span>
+          </div>
+        </div>
+
+        <div class="quick-prompts" id="quickPrompts">
+          <div class="qp-scroll">
+            <button class="qp-btn" onclick="sendQuickPrompt('Aku punya wortel, jagung, dan bawang. Bisa masak apa?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-carrot"/></svg> Punya wortel & jagung</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Ada nasi sisa dan telur di kulkas. Ada resep simpel?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-rice"/></svg> Nasi sisa + telur</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Mau masak sesuatu yang kaya protein tapi cepat, ada ayam.')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chicken"/></svg> Masak dari ayam</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Ada tempe dan tahu, mau bikin lauk yang enak.')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-tempe"/></svg> Tempe & tahu</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Bahan di kulkas tinggal sedikit, ada brokoli dan wortel saja.')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-leaf"/></svg> Sayuran sisa</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Apa pengganti santan kalau habis?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-bulb"/></svg> Substitusi bahan</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Bagaimana cara menyimpan sisa makanan dengan aman?')">Simpan sisa makanan</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Bagaimana cara menggoreng tempe agar renyah?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-bulb"/></svg> Teknik memasak</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Bantu susun menu 3 hari dari bahan telur, tahu, dan sayur.')">Rencana menu</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Aku alergi udang, apa yang perlu kuperhatikan di resep?')">Alergi & bahan</button>
+          </div>
+        </div>
+
+        <div class="chat-input-area">
+          <div class="chat-input-box">
+            <textarea id="chatInput" aria-label="Pesan untuk Chef Resepin" placeholder="Tanya resep, bahan, teknik, atau cara menyimpan makanan..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}" oninput="autoResizeTextarea(this)"></textarea>
+            <button class="chat-send-btn" aria-label="Kirim pesan" onclick="sendChat()" id="chatSendBtn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE: JELAJAHI ===== -->
+  <div class="page" id="page-jelajahi" role="main" tabindex="-1">
+    <div class="jelajahi-page">
+      <div class="jelajahi-header">
+        <button class="back-btn" @click="go('home')">← Kembali</button>
+        <h1>Jelajahi Resep</h1>
+        <p>Temukan inspirasi masakan dari berbagai kategori</p>
+      </div>
+
+      <div class="container">
+        <section class="jelajahi-section">
+          <h2>Kategori Masakan</h2>
+          <div class="category-grid" id="exploreCategories"></div>
+        </section>
+
+        <section class="jelajahi-section">
+          <h2>Masak praktis, 30 menit atau kurang</h2>
+          <p class="explore-results-count" id="quickRecipesCount"></p>
+          <div class="quick-recipes-list" id="quickRecipesList"></div>
+        </section>
+
+        <section class="jelajahi-section">
+          <h2>Resep dengan 5 bahan atau kurang</h2>
+          <div class="recipes-grid mini" id="fiveBahanGrid">
+            <!-- populated by JS -->
+          </div>
+        </section>
+
+        <section class="jelajahi-section explore-results" id="exploreResults">
+          <h2 id="exploreResultsTitle">Koleksi pilihan</h2>
+          <p id="exploreResultsCount" class="explore-results-count"></p>
+          <div class="recipes-grid" id="exploreResultsGrid"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== PAGE: ACCOUNT SETTINGS ===== -->
+  <div class="page" id="page-profil" role="main" tabindex="-1">
+    <div class="account-page container">
+      <button class="back-btn" @click="go('home')">← Kembali</button>
+      <header class="account-header">
+        <span class="account-avatar"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2m8-10a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/></svg></span>
+        <div><p class="account-eyebrow">RESEPIN</p><h1>Pengaturan</h1><p>Atur tampilan Resepin sesuai kenyamananmu.</p></div>
+      </header>
+      <section class="account-settings-card" aria-labelledby="appearanceTitle">
+        <div class="account-setting-copy">
+          <span class="account-setting-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.9 13A8.5 8.5 0 0 1 11 3.1 8.5 8.5 0 1 0 20.9 13Z"/></svg></span>
+          <div><h2 id="appearanceTitle">Tampilan</h2><p>Gunakan tema terang atau gelap.</p></div>
+        </div>
+        <button class="theme-toggle account-theme-toggle" id="themeToggle" type="button" @click="toggleTheme" aria-label="Aktifkan mode gelap" title="Ganti tema warna">
+          <svg id="themeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
+          <span id="themeLabel">Gelap</span>
+        </button>
+      </section>
+    </div>
+  </div>
+
+  <div class="page" id="page-tersimpan" role="main" tabindex="-1">
+    <div class="resep-page">
+      <header class="resep-header">
+        <button class="back-btn" @click="go('home')">← Kembali</button>
+        <h1><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-book"/></svg> Resep Tersimpan</h1>
+        <p>Kumpulan resep yang kamu simpan di browser ini.</p>
+      </header>
+      <div class="container"><div class="recipes-grid" id="savedRecipesGrid"></div></div>
+    </div>
+  </div>
+
+  <div class="page" id="page-not-found" role="main" tabindex="-1">
+    <div class="route-not-found container">
+      <svg class="ui-icon route-not-found-icon" aria-hidden="true"><use href="#ui-icon-food"/></svg>
+      <h1>Halaman tidak ditemukan</h1>
+      <p>Tautan ini belum punya halaman Resepin.</p>
+      <button class="btn-primary" type="button" @click="go('home')">Kembali ke Beranda</button>
+    </div>
+  </div>
+
+  <!-- ===== RECIPE DETAIL MODAL ===== -->
+  <div class="modal-overlay" id="recipeModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1" onclick="closeModal(event)">
+    <div class="modal-content">
+      <button class="modal-close" type="button" aria-label="Tutup detail resep" onclick="closeRecipeModal()">✕</button>
+      <div class="modal-hero" id="modalHero">
+        <div class="modal-hero-media" id="modalHeroMedia"></div>
+        <div class="modal-hero-emoji" id="modalHeroEmoji" aria-hidden="true"><svg class="ui-icon ingredient-icon"><use href="#ui-icon-food"/></svg></div>
+      </div>
+      <div class="modal-body">
+        <div class="modal-header-info">
+          <h2 id="modalTitle">Nama Resep</h2>
+          <div class="modal-meta" id="modalMeta">
+            <span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>20 mnt</span>
+            <span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-users"/></svg>2 Porsi</span>
+          </div>
+          <div class="modal-match-summary" id="modalMatchSummary"></div>
+          <div class="modal-servings-control" id="modalServingsControl" hidden>
+            <span>Porsi</span><button type="button" aria-label="Kurangi porsi" onclick="changeRecipeServings(-1)">−</button><strong id="modalServingsValue"></strong><button type="button" aria-label="Tambah porsi" onclick="changeRecipeServings(1)">+</button>
+          </div>
+        </div>
+
+        <div class="modal-grid">
+          <div class="modal-ingredients">
+            <h3><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-basket"/></svg> Bahan-bahan <small id="checklistProgress"></small></h3>
+            <ul id="modalIngredients"></ul>
+          </div>
+          <div class="modal-steps">
+            <h3><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chef"/></svg> Langkah Memasak</h3>
+            <ol id="modalSteps"></ol>
+          </div>
+        </div>
+
+        <div class="modal-ai-tip">
+          <div class="tip-icon"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
+          <div>
+            <strong>Tips Chef Resepin:</strong>
+            <p id="modalTip">Jika tidak punya salah satu bahan, tanyakan ke Chef Resepin untuk saran penggantinya.</p>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-primary" @click="closeModalAndGo('chef')">Tanya Chef Resepin</button>
+          <button class="btn-secondary" type="button" onclick="startCookingMode()">Mode Memasak</button>
+          <button class="btn-secondary" id="saveRecipeButton" onclick="saveRecipe()">Simpan Resep</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="cooking-mode" id="cookingMode" aria-modal="true" aria-labelledby="cookingModeTitle" role="dialog" hidden>
+    <button class="cooking-close" type="button" aria-label="Tutup mode memasak" onclick="closeCookingMode()">×</button>
+    <p id="cookingModeTitle" class="cooking-step-count"></p>
+    <h2 id="cookingStepText"></h2>
+    <div class="cooking-controls">
+      <button type="button" class="btn-secondary" id="cookingPrevious" onclick="moveCookingStep(-1)">Sebelumnya</button>
+      <button type="button" class="btn-primary" id="cookingNext" onclick="moveCookingStep(1)">Langkah berikutnya</button>
+    </div>
+    <p id="cookingTimerNote" class="cooking-timer-note"></p>
+    <button class="btn-secondary" id="cookingTimerButton" type="button" onclick="startCookingTimer()" hidden>Mulai timer</button>
+  </section>
+
+  <!-- ===== TOAST ===== -->
+  <div class="toast" id="toast"></div>
+
+  <section v-show="activePage !== 'chef' && floatingChefChatOpen" class="floating-chef-chat" role="dialog" aria-modal="false" aria-labelledby="miniChatTitle" @keydown.esc.prevent="floatingChefChatOpen = false">
+    <header class="floating-chef-chat-header">
+      <span class="floating-chef-chat-avatar" aria-hidden="true"><svg class="ui-icon"><use href="#ui-icon-chef"/></svg></span>
+      <span class="floating-chef-chat-title"><strong id="miniChatTitle">Chef Resepin</strong><small><i></i> Siap bantu di dapur</small></span>
+      <button class="floating-chef-chat-close" type="button" aria-label="Tutup chat" @click="floatingChefChatOpen = false">×</button>
+    </header>
+    <div class="floating-chef-chat-messages" id="miniChatMessages" aria-live="polite">
+      <div class="chat-bubble bot-bubble">
+        <div class="bubble-avatar"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
+        <div class="bubble-content"><p>Hai! Mau masak apa hari ini? 🍳</p></div>
+      </div>
+      <div class="floating-chat-suggestions" id="miniChatSuggestions" aria-label="Mulai dari topik ini">
+        <button type="button" onclick="sendMiniPrompt('Aku punya nasi sisa dan telur. Ada resep simpel?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-rice"/></svg> Nasi + telur</button>
+        <button type="button" onclick="sendMiniPrompt('Aku punya sayuran sisa. Ada ide masak yang praktis?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-carrot"/></svg> Sayuran sisa</button>
+        <button type="button" onclick="sendMiniPrompt('Aku mau tanya substitusi bahan.')">↔️ Substitusi</button>
+      </div>
+    </div>
+    <form class="floating-chef-chat-composer" onsubmit="event.preventDefault(); sendMiniChat()">
+      <textarea id="miniChatInput" aria-label="Tulis pesan untuk Chef Resepin" placeholder="Ceritakan bahan yang ada..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMiniChat()}" oninput="autoResizeTextarea(this)"></textarea>
+      <button type="submit" aria-label="Kirim pesan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4 20-7ZM22 2 11 13"/></svg></button>
+    </form>
+  </section>
+
+  <button v-if="activePage !== 'chef'" class="floating-chef-button" type="button" :aria-label="floatingChefChatOpen ? 'Tutup chat Chef Resepin' : 'Ceritakan apa saja yang ada di rumahmu. Buka chat Chef Resepin'" :aria-expanded="floatingChefChatOpen" @click="toggleFloatingChefChat()">
+    <svg class="chef-mascot" viewBox="0 0 104 132" fill="none" aria-hidden="true">
+      <ellipse cx="53" cy="124" rx="28" ry="5" fill="#1f150c" opacity=".2"/>
+      <g class="chef-character">
+        <g class="chef-arm chef-arm-wave">
+          <path d="M69 79c7-3 12-9 14-17l4-14c1-4 7-3 6 1l-3 14c-2 11-6 19-15 24Z" fill="#fff8df" stroke="#1f150c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="m84 56 8 2" stroke="#946d6d" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M87 55 89 44c.6-3.5 5-3.3 5 0l-.5 8 3.8-6.5c1.8-2.9 5.6-.5 4 2.2l-3.6 6.4 3-3.4c2.1-2.4 5.3.4 3.5 2.8l-5.6 7.2c-2.8 3.7-7.9 4.5-11.6 1.7l-2.5-2.1Z" fill="#f3bd8b" stroke="#1f150c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+        <path d="M38 79h29c4 2 6 6 6 11v30H31V90c0-5 3-9 7-11Z" fill="#fff8df" stroke="#1f150c" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="M34 82 28 86c-4 3-5 7-4 12l2 10 7 1 5-14Z" fill="#fff8df" stroke="#1f150c" stroke-width="2.1" stroke-linejoin="round"/>
+        <path d="m27 108-1 6c-.5 3 1 5 3 5s4-2 4-5l1-5" fill="#f3bd8b" stroke="#1f150c" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="m35 79 18 14 18-14 5 36H30l5-36Z" fill="#e1dcc9" stroke="#1f150c" stroke-width="2.4" stroke-linejoin="round"/>
+        <path d="m46 82 7 8 7-8m-7 9v22" stroke="#946d6d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M32 47c0-13 9-22 21-22s21 9 21 22v15c0 13-9 21-21 21s-21-8-21-21V47Z" fill="#f3bd8b" stroke="#1f150c" stroke-width="2.6"/>
+        <g class="chef-hat">
+          <path d="M32 38c-8-2-12-9-8-16 2-4 6-6 11-6-1-8 5-13 12-12 4 0 7 2 9 5 5-5 15-4 18 3 2 3 2 6 1 9 7 1 11 8 8 14-2 4-6 6-11 6H32v-3Z" fill="#fff8df" stroke="#1f150c" stroke-width="2.6" stroke-linejoin="round"/>
+          <path d="M29 38h47v7H29z" fill="#e1dcc9" stroke="#1f150c" stroke-width="2.6" stroke-linejoin="round"/>
+        </g>
+        <circle cx="45" cy="56" r="2" fill="#1f150c"/><circle cx="62" cy="56" r="2" fill="#1f150c"/>
+        <path d="M47 66c3 4 10 4 13 0" stroke="#1f150c" stroke-width="2.3" stroke-linecap="round"/>
+        <path d="m38 74 4 3m26-3-4 3" stroke="#d98778" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+        <path d="M31 115v7m41-7v7" stroke="#1f150c" stroke-width="3" stroke-linecap="round"/>
+        <path d="M25 122c-2 4 1 6 12 5m42-5c2 4-1 6-12 5" fill="#946d6d" stroke="#1f150c" stroke-width="2.4" stroke-linecap="round"/>
+      </g>
+    </svg>
+    <span v-if="!floatingChefChatOpen" class="floating-chef-tooltip" aria-hidden="true">Ceritakan apa saja yang ada di rumahmu 👨‍🍳</span>
+  </button>
+
+  </div>
+  <script src="/src/legacy/recipes.js" defer></script>
+  <script src="/src/legacy/chef-prompts.js" defer></script>
+  <script src="/src/legacy/main.js" defer></script>
+  <script src="/src/legacy/chatbot.js" defer></script>
+  <script src="/src/app.js" defer></script>
+  <script type="module" src="/src/recipe-utils.mjs"></script>
+</body>
+</html>
