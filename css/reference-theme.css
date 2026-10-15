@@ -993,7 +993,7 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
 .modal-servings-control[hidden] { display: none; }
 .modal-servings-control button { min-width: 44px; min-height: 44px; border: 1px solid var(--border); border-radius: 50%; color: var(--text-primary); background: var(--bg-surface); font: inherit; }
 .gallery-upload { display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
-.camera-controls .visually-hidden:focus-visible + .cam-btn { outline: 3px solid var(--primary); outline-offset: 3px; }
+.gallery-upload:focus-within { outline: 3px solid var(--primary); outline-offset: 3px; }
 .cooking-mode { position: fixed; z-index: 3000; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom)); color: var(--text-primary); background: var(--bg); text-align: center; }
 .cooking-mode[hidden] { display: none; }
 .cooking-mode h2 { width: min(820px, 100%); font-family: var(--font-body); font-size: clamp(1.5rem, 4vw, 2.8rem); line-height: 1.45; }
@@ -3087,6 +3087,74 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-copy-spotlight { animation: none; opacity: .34; transform: none; }
+}
+
+/* Final warm design tokens and loaded states. */
+:root {
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 24px; --space-6: 32px; --space-7: 48px; --space-8: 64px;
+  --z-base: 0; --z-sticky: 100; --z-nav: 1000; --z-floating: 1200; --z-modal: 2000;
+  --radius-sm: 8px; --radius: 14px; --radius-lg: 22px; --radius-xl: 28px;
+  --font-size-sm: .875rem; --font-size-body: 1rem; --font-size-title: clamp(1.5rem, 3vw, 2.2rem);
+  --bg: #e1dcc9; --bg-card: #ebe5d3; --bg-surface: #d5cebb;
+  --bg-glass: rgba(31,21,12,.06); --border: rgba(31,21,12,.2); --border-hover: rgba(65,45,21,.55);
+  --text-primary: #1f150c; --text-secondary: #412d15; --text-muted: #625744;
+  --navbar-bg: rgba(225,220,201,.9); --action-bg: #412d15; --action-text: #fff8e6;
+  --shadow-card: 0 8px 28px rgba(31,21,12,.11);
+}
+body[data-theme="dark"] {
+  --bg: #1f150c; --bg-card: #2b2116; --bg-surface: #392b1c;
+  --bg-glass: rgba(225,220,201,.07); --border: rgba(225,220,201,.24); --border-hover: rgba(225,220,201,.55);
+  --text-primary: #f2ead8; --text-secondary: #ded3bd; --text-muted: #c4b79e;
+  --navbar-bg: rgba(31,21,12,.92); --primary: #e1dcc9; --primary-light: #f2ead8;
+  --primary-dark: #412d15; --secondary: #d7c8a8; --accent: #d7c8a8;
+  --action-bg: #e1dcc9; --action-text: #1f150c;
+  --shadow-card: 0 8px 28px rgba(0,0,0,.28);
+}
+body { background: var(--bg); color: var(--text-primary); }
+.btn-primary, .btn-scan-nav { color: var(--action-text); background: var(--action-bg); }
+.btn-primary:hover, .btn-scan-nav:hover { color: var(--action-text); background: var(--primary-dark); box-shadow: var(--shadow-card); }
+body[data-theme="dark"] .btn-primary:hover, body[data-theme="dark"] .btn-scan-nav:hover { color: #fff8e6; background: #412d15; }
+.section-tag, .hero-badge { color: var(--text-primary); }
+.filter-chip:hover, .filter-chip.active { color: var(--text-primary); background: var(--bg-surface); border-color: var(--border-hover); }
+.hero .title-gradient { background: linear-gradient(115deg,#e1dcc9,#c9b99a); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
+.section .gradient-text { background: linear-gradient(115deg,#412d15,#755b36); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
+body[data-theme="dark"] .section .gradient-text { background: linear-gradient(115deg,#f2ead8,#cdbb9c); }
+.recipe-tags span { color: var(--text-primary); background: var(--bg-surface); border-color: var(--border); }
+.recipe-info h3 { color: var(--text-primary); }
+.recipe-img { isolation: isolate; background-color: var(--bg-surface); }
+.recipe-img::before { content: ""; position: absolute; z-index: 0; inset: 0; background: linear-gradient(100deg,transparent 18%,rgba(255,255,255,.24) 42%,transparent 68%),var(--bg-surface); background-size: 220% 100%; animation: recipe-image-shimmer 1.5s linear infinite; transition: opacity .2s ease; }
+.recipe-img.image-loaded::before { opacity: 0; }
+.recipe-img picture, .recipe-img > img, .recipe-img > span { z-index: 1; }
+.recipe-img::after { z-index: 2; }
+@keyframes recipe-image-shimmer { to { background-position: -220% 0; } }
+.recipe-card:hover { box-shadow: var(--shadow-card); }
+.recipe-meta, .recipe-match-label, .recipe-cost-estimate { font-variant-numeric: tabular-nums; }
+.modal-overlay { background: rgba(31,21,12,.78); }
+.modal-content { max-height: min(90dvh, 900px); }
+.recipe-match-track span { background: var(--primary); }
+.nav-link:focus-visible, .btn-primary:focus-visible, .btn-secondary:focus-visible,
+.filter-chip:focus-visible, .recipe-card:focus-visible, .cat-card:focus-visible {
+  outline: 3px solid var(--primary); outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .recipe-img::before { animation: none; }
+}
+.navbar { z-index: var(--z-nav); }
+.floating-chef-chat, .floating-chef-button { z-index: var(--z-floating); }
+.modal-overlay { z-index: var(--z-modal); }
+.skip-link { position: fixed; z-index: 4000; top: 8px; left: 8px; padding: 12px 16px; transform: translateY(-160%); border-radius: 10px; color: var(--action-text); background: var(--action-bg); font-weight: 700; }
+.skip-link:focus { transform: translateY(0); outline: 3px solid var(--primary); outline-offset: 3px; }
+.page[role="main"]:focus { outline: none; }
+.ing-icon { display: grid; place-items: center; }
+.ing-icon .ingredient-icon, .checklist-item .ingredient-icon { width: 20px; height: 20px; color: var(--primary); }
+.checklist-item label > span { display: flex; align-items: center; gap: 8px; }
+.recipe-img-fallback { display: grid; width: 100%; height: 100%; place-items: center; color: var(--primary); background: linear-gradient(135deg,var(--bg-surface),var(--bg-card)); }
+.recipe-img-fallback .ui-icon { width: 48px; height: 48px; opacity: .72; }
+.recipe-img.image-loaded::before { opacity: 0; }
+@media (max-width: 600px) {
+  .floating-chef-chat { bottom: calc(92px + env(safe-area-inset-bottom)); }
+  .resep-page, .jelajahi-page, .account-page { padding-bottom: calc(70px + env(safe-area-inset-bottom)); }
 }
 
 /* Let the lamp reveal the copy in a softer top-down sweep. */
