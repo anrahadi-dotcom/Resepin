@@ -184,7 +184,7 @@
         <div class="hero-content">
           <div class="hero-copy">
             <span class="hero-copy-eyebrow hero-enter hero-enter-2"><i aria-hidden="true"></i> DARI DAPUR, JADI CERITA</span>
-            <h1 class="hero-title" aria-label="Dari isi dapur, jadi menu istimewa."><span class="hero-title-line hero-enter-3">Dari isi dapur,</span><span class="title-gradient hero-title-line hero-enter-4">jadi menu</span><span class="hero-title-line hero-enter-5">istimewa.</span></h1>
+            <h1 class="hero-title" :aria-label="heroHeadlines[heroHeadlineIndex].label"><span class="hero-title-line hero-enter-3">Dari isi dapur,</span><Transition name="hero-title-swap" mode="out-in"><span :key="heroHeadlineIndex" class="hero-title-swap"><span class="title-gradient hero-title-swap-line">{{ heroHeadlines[heroHeadlineIndex].highlight }}</span><span class="hero-title-swap-line">{{ heroHeadlines[heroHeadlineIndex].ending }}</span></span></Transition></h1>
             <p class="hero-desc hero-enter hero-enter-6">Bahan yang hampir terlupa bisa jadi hidangan favorit berikutnya. Yuk, racik sesuatu dari yang sudah ada.</p>
             <div class="hero-cta hero-cta-link hero-enter hero-enter-7">
               <a href="#/resep" @click.prevent="go('resep')">Lihat inspirasi lainnya <span aria-hidden="true">→</span></a>

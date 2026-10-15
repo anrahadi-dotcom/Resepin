@@ -4663,12 +4663,28 @@ body[data-theme="dark"] .section .gradient-text { @apply [background:linear-grad
   @apply [padding:.12em_.16em_.18em_.14em];
   @apply [margin:0_0_-.18em_-.14em];
 }
+.hero-title-swap { @apply [display:block]; }
+.hero-title-swap-line { @apply [display:block]; }
+.hero-title-swap-line.title-gradient {
+  @apply [padding:.12em_.16em_.18em_.14em];
+  @apply [margin:0_0_-.18em_-.14em];
+}
+.hero-title-swap-enter-active,
+.hero-title-swap-leave-active { @apply [transition:opacity_.32s_ease,_transform_.32s_ease,_filter_.32s_ease]; }
+.hero-title-swap-enter-from,
+.hero-title-swap-leave-to { @apply [opacity:0]; @apply [filter:blur(5px)]; @apply [transform:translateY(9px)]; }
 @keyframes hero-title-safe-reveal {
   from { opacity: 0; filter: blur(7px); transform: translateY(12px); }
   to { opacity: 1; filter: blur(0); transform: translateY(0); }
 }
 @media (max-width: 600px) {
   .hero-copy .hero-title { @apply [line-height:1.1]; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-title-swap-enter-active,
+  .hero-title-swap-leave-active { @apply [transition:none]; }
+  .hero-title-swap-enter-from,
+  .hero-title-swap-leave-to { @apply [filter:none]; @apply [transform:none]; }
 }
 
 /* FreshMenu-inspired recipe tiles with clear food photography and a recipe CTA. */
