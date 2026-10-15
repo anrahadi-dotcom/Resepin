@@ -7,6 +7,8 @@ createApp({
       heroIngredientText: '',
       heroSelectedIngredients: [],
       heroSearchMessage: '',
+      heroVideoPlaying: false,
+      heroVideoUserChoice: null,
       popularIngredients: ['Telur', 'Ayam', 'Tahu', 'Nasi', 'Tempe'],
       activePage: 'home',
       menuOpen: false,
@@ -27,19 +29,58 @@ createApp({
   watch: {
     floatingChefChatOpen(isOpen, wasOpen) {
       if (!isOpen && wasOpen) this.$nextTick(() => document.querySelector('.floating-chef-button')?.focus());
+    },
+    activePage() {
+      this.$nextTick(() => this.syncHeroVideo());
     }
   },
   mounted() {
     window.resepinApp = this;
     document.addEventListener('click', this.closeMenuOnOutside);
     document.addEventListener('keydown', this.closeMenuOnEscape);
-    this.$nextTick(() => window.refreshMotionReveals?.());
+    document.addEventListener('visibilitychange', this.syncHeroVideo);
+    this.$nextTick(() => {
+      window.refreshMotionReveals?.();
+      this.syncHeroVideo();
+    });
   },
   beforeUnmount() {
     document.removeEventListener('click', this.closeMenuOnOutside);
     document.removeEventListener('keydown', this.closeMenuOnEscape);
+    document.removeEventListener('visibilitychange', this.syncHeroVideo);
   },
   methods: {
+    syncHeroVideo() {
+      const video = document.querySelector('.hero-scene-video');
+      if (!video) return;
+      const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      const optedInToMotion = this.heroVideoUserChoice === 'playing';
+      const shouldPlay = this.activePage === 'home'
+        && !document.hidden
+        && this.heroVideoUserChoice !== 'paused'
+        && (!reducedMotion || optedInToMotion);
+      if (!shouldPlay) {
+        video.pause();
+        this.heroVideoPlaying = false;
+        return;
+      }
+      video.muted = true;
+      video.play().then(() => {
+        this.heroVideoPlaying = true;
+      }).catch(() => {
+        this.heroVideoPlaying = false;
+      });
+    },
+    toggleHeroVideo() {
+      this.heroVideoUserChoice = this.heroVideoPlaying ? 'paused' : 'playing';
+      this.syncHeroVideo();
+    },
+    searchHeroDemo() {
+      this.heroIngredientText = '';
+      this.heroSelectedIngredients = ['Telur', 'Nasi', 'Cabai'];
+      this.heroSearchMessage = '';
+      this.$nextTick(() => this.submitHeroSearch());
+    },
     go(page) {
       this.floatingChefChatOpen = false;
       this.menuOpen = false;

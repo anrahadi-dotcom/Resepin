@@ -136,8 +136,9 @@
     <!-- Hero Section -->
     <section class="hero">
       <div class="hero-scene" aria-hidden="true">
-        <!-- Photo: Mikhail Nilov / Pexels, free to use — https://www.pexels.com/photo/photo-of-a-chef-in-a-restaurant-kitchen-8093546/ -->
-        <img class="hero-scene-photo" src="/assets/img/chef-hero.jpg" alt="" fetchpriority="high" />
+        <video ref="heroVideo" class="hero-scene-video" :class="{'is-playing': heroVideoPlaying}" muted loop playsinline preload="metadata" poster="/assets/img/chef-hero.jpg" tabindex="-1" aria-hidden="true">
+          <source src="/assets/video/hero-tumis-tahu.mp4" type="video/mp4" />
+        </video>
         <span class="hero-light-veil"></span>
         <span class="hero-light-glow"></span>
         <span class="hero-copy-spotlight"></span>
@@ -147,9 +148,27 @@
       <div id="heroApp" class="hero-container" v-cloak>
         <div class="hero-content">
           <h1 class="hero-title" aria-label="Apa yang ada di dapurmu? Jadikan hidangan istimewa."><span class="hero-title-line hero-enter-2">Apa yang ada</span> <span class="hero-title-line hero-enter-3">di dapurmu?</span> <span class="title-gradient hero-title-line hero-enter-4">Jadikan hidangan</span> <span class="title-accent hero-title-line hero-enter-5">istimewa.</span></h1>
-          <p class="hero-desc hero-enter hero-enter-6">Punya bahan tersisa? Temukan masakan rumahan yang enak, praktis, dan cocok dengan isi dapurmu.</p>
+          <p class="hero-desc hero-enter hero-enter-6">Punya bahan tersisa? Ubah jadi masakan rumahan yang enak, praktis, dan cocok dengan isi dapurmu.</p>
           <div class="hero-cta hero-cta-link hero-enter hero-enter-7">
             <a href="#/resep" @click.prevent="go('resep')">Lihat semua resep <span aria-hidden="true">→</span></a>
+          </div>
+          <div class="hero-demo-card hero-enter hero-enter-8" aria-label="Contoh mengubah sisa bahan menjadi resep">
+            <div class="hero-demo-heading"><span class="hero-demo-kicker">IDE DARI 3 BAHAN</span><span class="hero-demo-note">Yang ada di dapurmu</span></div>
+            <div class="hero-demo-flow">
+              <div class="hero-demo-ingredients" aria-label="Telur, nasi, dan cabai">
+                <span>Telur</span><i aria-hidden="true">+</i><span>Nasi</span><i aria-hidden="true">+</i><span>Cabai</span>
+              </div>
+              <span class="hero-demo-arrow" aria-hidden="true">→</span>
+              <div class="hero-demo-result"><span>Jadi</span><strong>Nasi goreng</strong><small>15 mnt · Mudah</small></div>
+            </div>
+            <div class="hero-demo-footer">
+              <button class="hero-demo-submit" type="button" @click="searchHeroDemo">Coba kombinasi ini <span aria-hidden="true">↗</span></button>
+              <button class="hero-video-toggle" type="button" :aria-label="heroVideoPlaying ? 'Jeda video latar' : 'Putar video latar'" :aria-pressed="heroVideoPlaying" @click="toggleHeroVideo">
+                <svg v-if="heroVideoPlaying" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg>
+                <svg v-else viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg>
+                <span>{{ heroVideoPlaying ? 'Jeda suasana' : 'Putar suasana' }}</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
