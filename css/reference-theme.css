@@ -3514,6 +3514,79 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
   .nav-hint { transition: none; animation: none; }
 }
 
+/* Keep the desktop menu expanded while the pointer moves into the search card. */
+@media (min-width: 901px) {
+  #navbar .nav-container { padding-bottom: 10px; }
+  #navbar .nav-container:hover,
+  #navbar .nav-container:focus-within { padding-bottom: 10px; }
+  #navbar .nav-ingredient-search,
+  #navbar .nav-container:hover .nav-ingredient-search,
+  #navbar .nav-container:focus-within .nav-ingredient-search {
+    top: calc(100% - 8px);
+  }
+  #navbar .nav-ingredient-search::before {
+    top: -12px;
+    height: 14px;
+  }
+  #navbar .nav-link { position: relative; z-index: 2; }
+}
+
+/* A slower, continuous lamp warm-up with a softer beam and reveal timing. */
+.hero-light-veil {
+  animation: kitchen-light-warmup 4.8s cubic-bezier(.33,0,.18,1) both;
+}
+.hero-light-glow {
+  animation: lamp-glow-warmup 4.8s cubic-bezier(.2,.7,.2,1) both,
+    lamp-glow-breathe 7s ease-in-out 4.8s infinite alternate;
+}
+.hero-copy-spotlight {
+  clip-path: none !important;
+  filter: blur(38px);
+  animation: beam-warmup 4.8s cubic-bezier(.25,.7,.2,1) both;
+}
+@keyframes kitchen-light-warmup {
+  0% { opacity: 1; }
+  30% { opacity: .97; }
+  68% { opacity: .48; }
+  100% { opacity: .3; }
+}
+@keyframes lamp-glow-warmup {
+  0% { opacity: 0; transform: translate(-50%,-50%) scale(.72); }
+  38% { opacity: .08; transform: translate(-50%,-50%) scale(.84); }
+  74% { opacity: .42; transform: translate(-50%,-50%) scale(1.02); }
+  100% { opacity: .5; transform: translate(-50%,-50%) scale(1); }
+}
+@keyframes beam-warmup {
+  0% { opacity: 0; transform: scaleY(.78); filter: blur(48px); }
+  40% { opacity: .035; transform: scaleY(.88); filter: blur(44px); }
+  78% { opacity: .16; transform: scaleY(1.015); filter: blur(39px); }
+  100% { opacity: .2; transform: scaleY(1); filter: blur(38px); }
+}
+.hero-enter,
+.hero-title-line { animation-duration: .9s !important; }
+.hero-enter-2 { animation-delay: 1.35s !important; }
+.hero-enter-3 { animation-delay: 1.52s !important; }
+.hero-enter-4 { animation-delay: 1.69s !important; }
+.hero-enter-5 { animation-delay: 1.86s !important; }
+.hero-enter-6 { animation-delay: 2.12s !important; }
+.hero-enter-7 { animation-delay: 2.34s !important; }
+@media (max-width: 900px) {
+  .hero-enter-2 { animation-delay: 1.08s !important; }
+  .hero-enter-3 { animation-delay: 1.24s !important; }
+  .hero-enter-4 { animation-delay: 1.4s !important; }
+  .hero-enter-5 { animation-delay: 1.56s !important; }
+  .hero-enter-6 { animation-delay: 1.8s !important; }
+  .hero-enter-7 { animation-delay: 2.02s !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-light-veil,
+  .hero-light-glow,
+  .hero-copy-spotlight { animation: none !important; }
+  .hero-light-veil { opacity: .3; }
+  .hero-light-glow { opacity: .5; transform: translate(-50%,-50%); }
+  .hero-copy-spotlight { opacity: .2; transform: none; filter: none; }
+}
+
 @media (min-width: 901px) {
   #navbar .nav-ingredient-search,
   #navbar .nav-container:hover .nav-ingredient-search,
