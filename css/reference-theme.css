@@ -4534,3 +4534,42 @@ body[data-theme="dark"] .section .gradient-text { background: linear-gradient(11
 @media (prefers-reduced-motion: reduce) {
   .hero-favorite-card, .hero-favorite-card img, .hero-favorites-controls button, .hero-favorite-shuffle-move { transition: none !important; }
 }
+
+/* Keep the desktop headline and favourite deck inside short laptop viewports. */
+@media (min-width: 901px) and (max-height: 820px) {
+  .hero {
+    height: auto;
+    min-height: max(720px, 100svh);
+  }
+  .hero-container { height: max(720px, 100svh); }
+  .hero-content {
+    top: 50%;
+    width: min(1240px, calc(100% - 80px));
+    grid-template-columns: minmax(0, 1fr) minmax(0, .96fr);
+    gap: clamp(28px, 4vw, 58px);
+  }
+  .hero-copy { min-width: 0; }
+  .hero-copy-eyebrow { margin-bottom: 16px; }
+  .hero-copy .hero-title {
+    max-width: 100%;
+    font-size: clamp(2.8rem, 4.35vw, 4.25rem);
+    line-height: 1.02;
+  }
+  .hero-copy .hero-desc { margin: 15px 0 19px; line-height: 1.58; }
+  .hero-favorites { min-width: 0; width: 100%; }
+  .hero-favorites-heading h2 { font-size: clamp(1.2rem, 1.65vw, 1.48rem); }
+  .hero-favorite-stage { height: 300px; }
+  .hero-favorite-card { width: clamp(176px, 40%, 212px); height: 264px; }
+  .hero-favorite-card.is-slot-0 { left: 21%; }
+  .hero-favorite-card.is-slot-2 { left: 79%; }
+}
+
+@media (min-width: 901px) and (max-height: 680px) {
+  .hero { min-height: 680px; }
+  .hero-container { height: 680px; }
+  .hero-content { gap: 24px; }
+  .hero-copy .hero-title { font-size: clamp(2.55rem, 4vw, 3.7rem); }
+  .hero-favorite-stage { height: 270px; }
+  .hero-favorite-card { height: 238px; }
+  .hero-favorite-copy { right: 12px; bottom: 13px; left: 12px; }
+}
