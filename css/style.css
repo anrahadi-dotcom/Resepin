@@ -1195,6 +1195,8 @@ span.recipe-img-photo {
 .ip-manual-input button:hover { background: var(--primary-dark); }
 .quick-add-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chip {
+  font: inherit;
+  color: var(--text-secondary);
   padding: 4px 10px;
   background: var(--bg-surface);
   border: 1px solid var(--border);
@@ -1266,6 +1268,7 @@ span.recipe-img-photo {
 .search-box input::placeholder { color: var(--text-muted); }
 .filter-chips { display: flex; gap: 8px; flex-wrap: wrap; }
 .filter-chip {
+  font: inherit;
   padding: 6px 14px;
   background: var(--bg-card);
   border: 1px solid var(--border);

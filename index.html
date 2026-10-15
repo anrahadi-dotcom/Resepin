@@ -322,10 +322,8 @@
               <span>Resepin</span>
             </div>
             <p>Temukan ide masak dari bahan yang tersedia di dapurmu.</p>
-            <!-- TODO: replace these homepage URLs with your GitHub and LinkedIn profile URLs. -->
             <div class="footer-social">
-              <a href="https://github.com/" class="social-link" data-url-placeholder="TODO: ganti dengan URL profil GitHub">GitHub</a>
-              <a href="https://www.linkedin.com/" class="social-link" data-url-placeholder="TODO: ganti dengan URL profil LinkedIn">LinkedIn</a>
+              <a href="https://github.com/anrahadi-dotcom/Resepin" class="social-link" target="_blank" rel="noopener noreferrer">GitHub</a>
             </div>
             <p class="portfolio-note">Project portofolio. Data resep bersifat contoh.</p>
           </div>
@@ -414,12 +412,12 @@
               <button onclick="addManualIngredient()">Tambah</button>
             </div>
             <div class="quick-add-chips">
-              <span class="chip" onclick="addIngredient('🥚 Telur')">🥚 Telur</span>
-              <span class="chip" onclick="addIngredient('🍚 Nasi')">🍚 Nasi</span>
-              <span class="chip" onclick="addIngredient('🍗 Ayam')">🍗 Ayam</span>
-              <span class="chip" onclick="addIngredient('🧱 Tempe')">🧱 Tempe</span>
-              <span class="chip" onclick="addIngredient('🥬 Kangkung')">🥬 Kangkung</span>
-              <span class="chip" onclick="addIngredient('🍜 Mie')">🍜 Mie</span>
+              <button type="button" class="chip" onclick="addIngredient('🥚 Telur')">🥚 Telur</button>
+              <button type="button" class="chip" onclick="addIngredient('🍚 Nasi')">🍚 Nasi</button>
+              <button type="button" class="chip" onclick="addIngredient('🍗 Ayam')">🍗 Ayam</button>
+              <button type="button" class="chip" onclick="addIngredient('🧱 Tempe')">🧱 Tempe</button>
+              <button type="button" class="chip" onclick="addIngredient('🥬 Kangkung')">🥬 Kangkung</button>
+              <button type="button" class="chip" onclick="addIngredient('🍜 Mie')">🍜 Mie</button>
             </div>
           </div>
 
@@ -460,13 +458,13 @@
           <input type="text" id="recipeSearch" placeholder="Cari resep atau bahan..." oninput="filterRecipes()" />
         </div>
         <div class="filter-chips">
-          <span class="filter-chip active" onclick="setFilter('all', this)">Semua</span>
-          <span class="filter-chip" onclick="setFilter('mudah', this)">Mudah</span>
-          <span class="filter-chip" onclick="setFilter('cepat', this)">< 15 Menit</span>
-          <span class="filter-chip" onclick="setFilter('sehat', this)">Sehat</span>
-          <span class="filter-chip" onclick="setFilter('sayur', this)">Sayur</span>
-          <span class="filter-chip" onclick="setFilter('berkuah', this)">Berkuah</span>
-          <span class="filter-chip" onclick="setFilter('5bahan', this)">≤ 5 Bahan</span>
+          <button type="button" class="filter-chip active" aria-pressed="true" onclick="setFilter('all', this)">Semua</button>
+          <button type="button" class="filter-chip" aria-pressed="false" onclick="setFilter('mudah', this)">Mudah</button>
+          <button type="button" class="filter-chip" aria-pressed="false" onclick="setFilter('cepat', this)">&lt; 15 Menit</button>
+          <button type="button" class="filter-chip" aria-pressed="false" onclick="setFilter('sehat', this)">Sehat</button>
+          <button type="button" class="filter-chip" aria-pressed="false" onclick="setFilter('sayur', this)">Sayur</button>
+          <button type="button" class="filter-chip" aria-pressed="false" onclick="setFilter('berkuah', this)">Berkuah</button>
+          <button type="button" class="filter-chip" aria-pressed="false" onclick="setFilter('5bahan', this)">≤ 5 Bahan</button>
         </div>
       </div>
 

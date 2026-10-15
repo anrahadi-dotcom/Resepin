@@ -18,7 +18,15 @@ let currentChatRecipeIdx = null;
 let awaitingSubstitutionIngredient = false;
 let selectedExploreCategory = 'all';
 const PERSONAL_STATS_KEY = 'resepin-personal-stats-v1';
+const FAVORITE_RECIPE_IDS_KEY = 'resep-favorite-ids-v1';
 let personalStatsMemory = { ingredientsUsed: 0, recipesOpened: 0 };
+
+function readFavoriteRecipeIds() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(FAVORITE_RECIPE_IDS_KEY) || '[]');
+    return Array.isArray(stored) ? stored.filter(id => Number.isInteger(id)) : [];
+  } catch (_) { return []; }
+}
 
 function readPersonalStats() {
   try {
@@ -64,7 +72,7 @@ const EXPLORE_CATEGORIES = [
   { id: 'snacks', label: 'Camilan', color: '#B97859', matches: recipe => recipe.tags.includes('Camilan') },
   { id: 'noodles', label: 'Mi dan pasta', color: '#6F8061', matches: recipe => recipe.tags.includes('Mi') || recipe.tags.includes('Pasta') || /\b(mie|mi|ramen|spaghetti|pasta)\b/i.test(recipe.title) },
   { id: 'vegetarian', label: 'Tanpa daging', color: '#87906C', matches: recipe => recipe.tags.includes('Vegetarian') },
-  { id: 'favorites', label: 'Favorit', color: '#C28B45', matches: recipe => recipe.tags.includes('Favorit') }
+  { id: 'favorites', label: 'Favorit', color: '#C28B45', matches: recipe => readFavoriteRecipeIds().includes(recipe.id) }
 ];
 
 // AI Response database
@@ -95,6 +103,7 @@ const AI_RESPONSES = {
 // NAVIGATION
 // ============================================================
 function showPage(pageId) {
+  if (pageId !== 'scan' && cameraStream) stopCamera();
   // Hide all pages
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   // Show target page
@@ -215,6 +224,11 @@ async function startCamera() {
   const feed = document.getElementById('cameraFeed');
   const overlay = document.getElementById('scanOverlay');
 
+  if (cameraStream) {
+    stopCamera();
+    return;
+  }
+
   if (!navigator.mediaDevices?.getUserMedia) {
     const message = 'Kamera tidak tersedia di browser ini. Kamu tetap bisa mencoba contoh atau menambahkan bahan secara manual.';
     updateDetectionStatus('idle', message);
@@ -238,10 +252,7 @@ async function startCamera() {
     const captureBtn = document.getElementById('captureBtn');
     captureBtn.disabled = false;
 
-    btn.innerHTML = `
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v3M12 20v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M1 12h3M20 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
-      Kamera Aktif
-    `;
+    btn.textContent = 'Matikan kamera';
     btn.style.background = 'linear-gradient(135deg, #27AE60, #1E8449)';
     btn.disabled = false;
 
@@ -256,6 +267,22 @@ async function startCamera() {
     updateDetectionStatus('idle', message);
     showToast('Kamera tidak aktif. Coba contoh atau input manual.', 'error');
   }
+}
+
+function stopCamera() {
+  cameraStream?.getTracks().forEach(track => track.stop());
+  cameraStream = null;
+  const feed = document.getElementById('cameraFeed');
+  const placeholder = document.getElementById('cameraPlaceholder');
+  const overlay = document.getElementById('scanOverlay');
+  const button = document.getElementById('startCamBtn');
+  const capture = document.getElementById('captureBtn');
+  if (feed) { feed.pause(); feed.srcObject = null; feed.style.display = 'none'; }
+  if (placeholder) placeholder.style.display = '';
+  if (overlay) overlay.style.display = 'none';
+  if (capture) capture.disabled = true;
+  if (button) { button.textContent = 'Buka kamera'; button.style.background = ''; button.disabled = false; }
+  updateDetectionStatus('idle', 'Kamera dimatikan. Kamu tetap bisa mencoba contoh atau menambahkan bahan secara manual.');
 }
 
 function runDemo() {
@@ -274,10 +301,10 @@ function runDemo() {
   updateDetectionStatus('active', 'Menyiapkan contoh bahan...');
 
   const demoItems = [
-    { emoji: '🌽', name: 'Jagung', conf: 97, box: { top: '15%', left: '8%', width: '38%', height: '38%' } },
-    { emoji: '🥕', name: 'Wortel', conf: 94, box: { top: '45%', left: '25%', width: '35%', height: '32%' } },
-    { emoji: '🧅', name: 'Bawang Merah', conf: 89, box: { top: '20%', left: '55%', width: '30%', height: '28%' } },
-    { emoji: '🧄', name: 'Bawang Putih', conf: 86, box: { top: '55%', left: '60%', width: '25%', height: '25%' } },
+    { emoji: '🌽', name: 'Jagung', box: { top: '15%', left: '8%', width: '38%', height: '38%' } },
+    { emoji: '🥕', name: 'Wortel', box: { top: '45%', left: '25%', width: '35%', height: '32%' } },
+    { emoji: '🧅', name: 'Bawang Merah', box: { top: '20%', left: '55%', width: '30%', height: '28%' } },
+    { emoji: '🧄', name: 'Bawang Putih', box: { top: '55%', left: '60%', width: '25%', height: '25%' } },
   ];
 
   // Animate detection box appearance + ingredient adding
@@ -287,20 +314,23 @@ function runDemo() {
       const box = document.createElement('div');
       box.className = 'det-box';
       box.style.cssText = `top:${item.box.top};left:${item.box.left};width:${item.box.width};height:${item.box.height}`;
-      box.innerHTML = `<div class="det-box-label">${item.emoji} ${item.name} ${item.conf}%</div>`;
+      const label = document.createElement('div');
+      label.className = 'det-box-label';
+      label.textContent = `${item.emoji} ${item.name} · contoh`;
+      box.appendChild(label);
       detBoxes.appendChild(box);
       box.style.animation = 'slideIn 0.3s ease';
 
       // Add to ingredient list
-      setTimeout(() => addIngredientItem(item.emoji, item.name, item.conf), 300);
+      setTimeout(() => addIngredientItem(item.emoji, item.name, null), 300);
 
       // Final state
       if (idx === demoItems.length - 1) {
         setTimeout(() => {
-          updateDetectionStatus('detected', `${demoItems.length} bahan terdeteksi! Cari resep atau tanya Chef Resepin.`);
-          showConfidenceBar(91);
+          updateDetectionStatus('idle', `Contoh ${demoItems.length} bahan ditampilkan — ini bukan hasil deteksi kamera.`);
+          document.getElementById('confidenceBar').style.display = 'none';
           demoRunning = false;
-          document.getElementById('captureBtn').disabled = false;
+          document.getElementById('captureBtn').disabled = !cameraStream;
         }, 500);
       }
     }, 800 + idx * 1000);
@@ -378,13 +408,17 @@ async function captureAndDetect() {
 
 function updateDetectionStatus(type, message) {
   const el = document.getElementById('detectionStatus');
+  if (!el) return;
   const dotClass = type === 'active' ? 'active' : type === 'detected' ? 'detected' : 'idle';
-  el.innerHTML = `
-    <div class="status-idle">
-      <div class="status-dot ${dotClass}"></div>
-      <span>${message}</span>
-    </div>
-  `;
+  el.replaceChildren();
+  const row = document.createElement('div');
+  row.className = 'status-idle';
+  const dot = document.createElement('div');
+  dot.className = 'status-dot ' + dotClass;
+  const text = document.createElement('span');
+  text.textContent = message;
+  row.append(dot, text);
+  el.appendChild(row);
 }
 
 function showConfidenceBar(pct) {
@@ -402,10 +436,10 @@ function showConfidenceBar(pct) {
 // INGREDIENT MANAGEMENT
 // ============================================================
 function addIngredientItem(emoji, name, conf) {
-  // Check duplicate
-  if (detectedIngredients.find(i => i.name.toLowerCase() === name.toLowerCase())) return;
+  const cleanName = String(name || '').trim().replace(/\s+/g, ' ');
+  if (!cleanName || detectedIngredients.some(i => i.name.toLocaleLowerCase('id') === cleanName.toLocaleLowerCase('id'))) return;
 
-  const ingredient = { emoji, name, conf };
+  const ingredient = { emoji: String(emoji || '🥘'), name: cleanName, conf };
   detectedIngredients.push(ingredient);
 
   renderIngredientList();
@@ -422,7 +456,7 @@ function addIngredient(label) {
 
 function addManualIngredient() {
   const input = document.getElementById('manualIngredientInput');
-  const val = input.value.trim();
+  const val = input.value.trim().replace(/\s+/g, ' ');
   if (!val) return;
 
   addIngredientItem('🥘', val, null);
@@ -446,16 +480,31 @@ function renderIngredientList() {
     return;
   }
 
-  list.innerHTML = detectedIngredients.map(item => `
-    <div class="ingredient-item">
-      <span class="ing-icon">${item.emoji}</span>
-      <div class="ing-info">
-        <span class="ing-name">${item.name}</span>
-        ${item.conf ? `<span class="ing-conf">Kepercayaan: ${item.conf}%</span>` : '<span class="ing-conf">Diinput manual</span>'}
-      </div>
-      <button class="ing-remove" onclick="removeIngredient('${item.name}')" title="Hapus">✕</button>
-    </div>
-  `).join('');
+  list.replaceChildren(...detectedIngredients.map(item => {
+    const row = document.createElement('div');
+    row.className = 'ingredient-item';
+    const emoji = document.createElement('span');
+    emoji.className = 'ing-icon';
+    emoji.textContent = item.emoji;
+    const info = document.createElement('div');
+    info.className = 'ing-info';
+    const name = document.createElement('span');
+    name.className = 'ing-name';
+    name.textContent = item.name;
+    const confidence = document.createElement('span');
+    confidence.className = 'ing-conf';
+    confidence.textContent = item.conf ? ('Kepercayaan: ' + item.conf + '%') : 'Diinput manual';
+    info.append(name, confidence);
+    const remove = document.createElement('button');
+    remove.className = 'ing-remove';
+    remove.type = 'button';
+    remove.title = 'Hapus ' + item.name;
+    remove.setAttribute('aria-label', 'Hapus ' + item.name);
+    remove.textContent = '✕';
+    remove.addEventListener('click', () => removeIngredient(item.name));
+    row.append(emoji, info, remove);
+    return row;
+  }));
 }
 
 function createEmptyEl() {
@@ -497,20 +546,21 @@ function recipeIngredientMatches(ingredient, term) {
 function renderRecipesGrid() {
   const grid = document.getElementById('recipesGrid');
   if (!grid) return;
-  const query = document.getElementById('recipeSearch')?.value?.toLowerCase() || '';
+  const query = document.getElementById('recipeSearch')?.value?.toLocaleLowerCase('id') || '';
+  const searchTerms = query.split(',').map(term => term.trim()).filter(Boolean);
   const ingredientQuery = new URLSearchParams(window.location.search).getAll('bahan').map(value => value.trim().toLocaleLowerCase('id')).filter(Boolean);
   let filtered = RECIPES_DB;
 
   // Query parameters from the hero match any selected ingredient in the recipe data.
   if (ingredientQuery.length) {
     filtered = filtered.filter(recipe => ingredientQuery.some(term => recipe.ingredients.some(ingredient => recipeIngredientMatches(ingredient, term))));
-  } else if (query) {
-    // Apply existing free-text search.
-    filtered = filtered.filter(r =>
-      r.title.toLowerCase().includes(query) ||
-      r.tags.some(t => t.toLowerCase().includes(query)) ||
-      r.ingredients.some(i => i.toLowerCase().includes(query))
-    );
+  } else if (searchTerms.length) {
+    // Comma-separated ingredient queries match any term; ordinary text remains a single term.
+    filtered = filtered.filter(recipe => searchTerms.some(term =>
+      recipe.title.toLocaleLowerCase('id').includes(term) ||
+      recipe.tags.some(tag => tag.toLocaleLowerCase('id').includes(term)) ||
+      recipe.ingredients.some(ingredient => recipeIngredientMatches(ingredient, term))
+    ));
   }
 
   // Apply filter chip
@@ -518,7 +568,7 @@ function renderRecipesGrid() {
     filtered = filtered.filter(r => {
       switch (currentFilter) {
         case 'mudah': return r.difficulty === 'Mudah';
-        case 'cepat': return parseInt(r.time) <= 15;
+        case 'cepat': return parseInt(r.time, 10) < 15;
         case 'sehat': return r.tags.includes('Sehat');
         case 'sayur': return r.tags.some(t => ['Sayur', 'Sehat'].includes(t));
         case 'berkuah': return r.tags.includes('Berkuah');
@@ -603,8 +653,11 @@ function filterRecipes() {
 
 function setFilter(filter, el) {
   currentFilter = filter;
-  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-  el.classList.add('active');
+  document.querySelectorAll('.filter-chip').forEach(c => {
+    const active = c === el;
+    c.classList.toggle('active', active);
+    c.setAttribute('aria-pressed', String(active));
+  });
   renderRecipesGrid();
 }
 
@@ -696,16 +749,16 @@ const EMOJI_GRADIENTS = {
   '🍗': 'linear-gradient(135deg,#f39c12,#d68910)',
 };
 
-function openRecipeModal(title, time, servings, calories, ingredients, steps) {
+function openRecipeModal(title, time, servings, ingredients, steps) {
   const modal = document.getElementById('recipeModal');
   document.getElementById('modalTitle').textContent = title;
+  const recipe = RECIPES_DB.find(r => r.title === title);
   document.getElementById('modalMeta').innerHTML = `
     <span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>${time}</span>
     <span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-users"/></svg>${servings}</span>
-    <span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-flame"/></svg>${calories}</span>
+    ${recipe?.difficulty ? `<span>${escapeHtml(recipe.difficulty)}</span>` : ''}
   `;
 
-  const recipe = RECIPES_DB.find(r => r.title === title);
   if (recipe) updatePersonalStats({ recipesOpened: 1 });
   const hero = document.getElementById('modalHero');
   const heroMedia = document.getElementById('modalHeroMedia');
@@ -734,6 +787,8 @@ function openRecipeModal(title, time, servings, calories, ingredients, steps) {
   const ingredientName = ingredients[0]?.split(' ').slice(1).join(' ').toLowerCase() || '';
   const tip = findAITip(ingredientName);
   document.getElementById('modalTip').textContent = tip;
+  const favoriteButton = document.querySelector('#recipeModal .btn-secondary');
+  if (favoriteButton) favoriteButton.textContent = recipe && readFavoriteRecipeIds().includes(recipe.id) ? 'Hapus dari Favorit' : 'Simpan Resep';
 
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -742,7 +797,7 @@ function openRecipeModal(title, time, servings, calories, ingredients, steps) {
 function openRecipeByIndex(index) {
   const recipe = RECIPES_DB[index];
   if (!recipe) return;
-  openRecipeModal(recipe.title, recipe.time, recipe.servings, recipe.calories, recipe.ingredients, recipe.steps);
+  openRecipeModal(recipe.title, recipe.time, recipe.servings, recipe.ingredients, recipe.steps);
 }
 
 function findAITip(ingredientName) {
@@ -762,8 +817,18 @@ function closeModal(event) {
 }
 
 function saveRecipe() {
-  showToast('Resep disimpan ke Favorit!', 'success');
-  closeRecipeModal();
+  const title = document.getElementById('modalTitle')?.textContent;
+  const recipe = RECIPES_DB.find(item => item.title === title);
+  if (!recipe) return;
+  const ids = readFavoriteRecipeIds();
+  const saved = ids.includes(recipe.id);
+  const next = saved ? ids.filter(id => id !== recipe.id) : [...ids, recipe.id];
+  try { localStorage.setItem(FAVORITE_RECIPE_IDS_KEY, JSON.stringify(next)); }
+  catch (_) { showToast('Favorit tidak bisa disimpan di browser ini.', 'error'); return; }
+  const button = document.querySelector('#recipeModal .btn-secondary');
+  if (button) button.textContent = saved ? 'Simpan Resep' : 'Hapus dari Favorit';
+  showToast(saved ? 'Resep dihapus dari Favorit.' : 'Resep disimpan ke Favorit!', 'success');
+  if (document.getElementById('page-jelajahi')?.classList.contains('active')) renderJelajahiGrid();
 }
 
 // ============================================================
