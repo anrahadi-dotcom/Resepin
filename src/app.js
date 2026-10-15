@@ -43,6 +43,11 @@ createApp({
     go(page) {
       this.floatingChefChatOpen = false;
       this.menuOpen = false;
+      if (page === 'home') {
+        this.heroIngredientText = '';
+        this.heroSelectedIngredients = [];
+        this.heroSearchMessage = '';
+      }
       window.navigateToPage(page);
       this.$nextTick(() => window.refreshMotionReveals?.());
     },

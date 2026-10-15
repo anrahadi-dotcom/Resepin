@@ -3089,6 +3089,7 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
   .hero-copy-spotlight { animation: none; opacity: .34; transform: none; }
 }
 
+
 /* Click-to-open navigation: one compact trigger, one orderly menu panel. */
 #navbar,
 #navbar.scrolled,
@@ -3844,4 +3845,33 @@ body[data-theme="dark"] .section .gradient-text { background: linear-gradient(11
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-copy-spotlight { animation: none; opacity: .34; transform: none; }
+}
+/* Keep desktop navigation centered and give it a little breathing room from the viewport edge. */
+@media (min-width: 901px) {
+  #navbar {
+    padding-top: 12px;
+  }
+  #navbar .nav-container,
+  #navbar .nav-container:hover,
+  #navbar .nav-container:focus-within,
+  #navbar .nav-container.menu-open {
+    align-items: center !important;
+  }
+  #navbar #navLinks {
+    align-items: center;
+  }
+  #navbar .nav-link {
+    align-self: center;
+    margin-block: auto;
+  }
+  #navbar .nav-ingredient-search,
+  #navbar .nav-container:hover .nav-ingredient-search,
+  #navbar .nav-container:focus-within .nav-ingredient-search {
+    top: calc(100% + 8px);
+    z-index: 11;
+  }
+  #navbar .nav-ingredient-search::before {
+    top: -24px;
+    height: 26px;
+  }
 }

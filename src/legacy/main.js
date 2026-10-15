@@ -135,7 +135,7 @@ function recipeSlug(recipe) {
 function routeFromLocation() {
   const raw = window.location.hash.replace(/^#\/?/, '');
   const parts = raw.split('/').filter(Boolean).map(part => decodeURIComponent(part));
-  if (!raw && new URLSearchParams(window.location.search).has('bahan')) return { page: 'resep' };
+  if (!window.location.hash && new URLSearchParams(window.location.search).has('bahan')) return { page: 'resep' };
   if (!parts.length) return { page: 'home' };
   if (parts[0] === 'resep') return { page: 'resep', recipeSlug: parts[1] || '' };
   const routePages = { chef: 'chef', jelajahi: 'jelajahi', scan: 'scan', pengaturan: 'profil', tersimpan: 'tersimpan' };
@@ -203,7 +203,9 @@ function navigateToPage(page, { replace = false } = {}) {
   if (!route) return;
   closeRecipeModal({ preserveRoute: true });
   previousRecipeFocus = null;
-  const next = `${window.location.pathname}${window.location.search}${route}`;
+  const url = new URL(window.location.href);
+  if (page === 'home') url.searchParams.delete('bahan');
+  const next = `${url.pathname}${url.search}${route}`;
   window.history[replace ? 'replaceState' : 'pushState']({}, '', next);
   renderLocationRoute();
 }
