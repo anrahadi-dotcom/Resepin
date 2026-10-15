@@ -3857,6 +3857,11 @@ body[data-theme="dark"] .section .gradient-text { background: linear-gradient(11
   #navbar .nav-container.menu-open {
     align-items: center !important;
   }
+  #navbar .nav-container,
+  #navbar .nav-container:hover,
+  #navbar .nav-container:focus-within {
+    padding-bottom: 0 !important;
+  }
   #navbar #navLinks {
     align-items: center;
   }
