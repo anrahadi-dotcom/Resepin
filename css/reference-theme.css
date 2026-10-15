@@ -4678,3 +4678,25 @@ body[data-theme="dark"] .section .gradient-text { background: linear-gradient(11
   .hero-favorite-card { height: 238px; }
   .hero-favorite-copy { right: 10px; bottom: 12px; left: 10px; }
 }
+
+/* Preserve the italic title's descenders and side bearings during reveal. */
+.hero-copy .hero-title {
+  line-height: 1.12;
+}
+.hero-copy .hero-title .hero-title-line {
+  overflow: visible;
+  clip-path: none !important;
+  animation-name: hero-title-safe-reveal !important;
+  will-change: opacity, transform;
+}
+.hero-copy .hero-title .title-gradient.hero-title-line {
+  padding: .12em .16em .18em .14em;
+  margin: 0 0 -.18em -.14em;
+}
+@keyframes hero-title-safe-reveal {
+  from { opacity: 0; transform: translateY(9px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 600px) {
+  .hero-copy .hero-title { line-height: 1.1; }
+}
