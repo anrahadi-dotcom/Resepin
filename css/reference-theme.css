@@ -3344,6 +3344,176 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
   #navbar .btn-hamburger span { transition: none !important; }
 }
 
+/* Desktop returns to hover-to-expand; only touch layouts use the menu button. */
+@media (min-width: 901px) {
+  #navbar .nav-container,
+  #navbar .nav-container:hover,
+  #navbar .nav-container:focus-within {
+    width: 88px;
+    min-width: 88px;
+    height: 54px;
+    min-height: 54px;
+    padding: 0 10px;
+    gap: 8px;
+    border-radius: 999px;
+    justify-content: center;
+    transition: width .46s cubic-bezier(.2,1.1,.3,1), border-radius .25s ease, background .25s ease, box-shadow .25s ease;
+  }
+  #navbar .nav-container:hover,
+  #navbar .nav-container:focus-within {
+    width: min(760px, calc(100vw - 32px));
+    padding-inline: 18px;
+    justify-content: space-between;
+    border-radius: 28px;
+  }
+  #navbar .nav-container.menu-open { width: 88px; }
+  #navbar .nav-container.menu-open:hover,
+  #navbar .nav-container.menu-open:focus-within { width: min(760px, calc(100vw - 32px)); }
+  #navbar .nav-logo { flex: 0 0 34px; width: 34px; }
+  #navbar .nav-actions,
+  #navbar .nav-container:hover .nav-actions,
+  #navbar .nav-container:focus-within .nav-actions {
+    width: 0;
+    flex: 0 0 0;
+    gap: 0;
+    overflow: hidden;
+    visibility: hidden;
+    opacity: 0;
+    transition: width .3s ease, flex-basis .3s ease, opacity .18s ease, visibility 0s linear .2s;
+  }
+  #navbar .nav-container:hover .nav-actions,
+  #navbar .nav-container:focus-within .nav-actions {
+    width: 77px;
+    flex: 0 0 77px;
+    gap: 5px;
+    overflow: visible;
+    visibility: visible;
+    opacity: 1;
+    transition-delay: .08s, .08s, .08s, 0s;
+  }
+  #navbar .btn-scan-nav,
+  #navbar .btn-avatar,
+  #navbar .nav-container.menu-open .btn-scan-nav,
+  #navbar .nav-container.menu-open .btn-avatar { display: inline-flex; }
+  #navbar .btn-hamburger { display: none; }
+  #navbar #navLinks,
+  #navbar .nav-container:hover #navLinks,
+  #navbar .nav-container:focus-within #navLinks {
+    position: static;
+    display: flex !important;
+    width: auto;
+    max-width: none;
+    height: 52px;
+    max-height: none;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    flex: 1 1 auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(9px, 1.35vw, 19px);
+    overflow: visible;
+    visibility: hidden;
+    opacity: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    transform: none;
+    transition: opacity .18s ease, visibility 0s linear .2s;
+  }
+  #navbar .nav-container:hover #navLinks,
+  #navbar .nav-container:focus-within #navLinks { visibility: visible; opacity: 1; transition-delay: .08s, 0s; }
+  #navbar .nav-link,
+  #app:has(#page-home.active) #navbar:not(.scrolled) .nav-link,
+  #navbar .nav-container:hover .nav-link,
+  #navbar .nav-container:focus-within .nav-link {
+    width: auto;
+    min-height: 38px;
+    padding: 8px 11px;
+    flex: 0 0 auto;
+    border-radius: 999px;
+    color: rgba(225,220,201,.82);
+    font-size: .86rem;
+    white-space: nowrap;
+  }
+  #navbar .nav-link:hover,
+  #navbar .nav-link.active,
+  #app:has(#page-home.active) #navbar:not(.scrolled) .nav-link:hover,
+  #app:has(#page-home.active) #navbar:not(.scrolled) .nav-link.active { color: #1f150c; background: #e1dcc9; }
+  #navbar .nav-ingredient-search,
+  #navbar .nav-container:hover .nav-ingredient-search,
+  #navbar .nav-container:focus-within .nav-ingredient-search {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    z-index: 11;
+    display: grid;
+    width: min(440px, calc(100vw - 32px));
+    max-width: calc(100vw - 32px);
+    margin: 0;
+    padding: 12px;
+    border: 1px solid rgba(225,220,201,.22);
+    border-radius: 20px;
+    background: rgba(31,21,12,.94);
+    box-shadow: 0 18px 42px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.12);
+    backdrop-filter: blur(22px) saturate(135%);
+    -webkit-backdrop-filter: blur(22px) saturate(135%);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translate(-50%, -7px);
+    transition: opacity .18s ease, transform .24s ease, visibility 0s linear .24s;
+  }
+  #navbar .nav-container:hover .nav-ingredient-search,
+  #navbar .nav-container:focus-within .nav-ingredient-search {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translate(-50%, 0);
+    transition-delay: .1s, .1s, 0s;
+  }
+  #navbar .nav-hint { top: 71px; }
+  #navbar .nav-container:hover + .nav-hint,
+  #navbar .nav-container:focus-within + .nav-hint,
+  #navbar .nav-container.menu-open + .nav-hint { opacity: 0; visibility: hidden; transform: translate(-50%, -4px); }
+}
+.nav-hint {
+  position: absolute;
+  top: 72px;
+  left: 50%;
+  z-index: 5;
+  padding: 7px 11px;
+  border: 1px solid rgba(225,220,201,.16);
+  border-radius: 999px;
+  color: rgba(225,220,201,.9);
+  background: rgba(31,21,12,.76);
+  box-shadow: 0 8px 20px rgba(0,0,0,.18);
+  font: 500 .72rem/1.2 var(--font-body);
+  white-space: nowrap;
+  pointer-events: none;
+  display: block;
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%);
+  animation: nav-hint-float 2.2s ease-in-out infinite;
+  transition: opacity .18s ease, visibility .18s ease, transform .18s ease;
+}
+@media (max-width: 900px) {
+  .nav-hint { display: block !important; }
+  #navbar .nav-container:hover + .nav-hint,
+  #navbar .nav-container:focus-within + .nav-hint,
+  #navbar .nav-container.menu-open + .nav-hint { opacity: 0; visibility: hidden; }
+  .nav-hint { top: 72px; font-size: 0; }
+  .nav-hint::after { content: "Klik di sini"; font-size: .72rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-hint { transition: none; animation: none; }
+}
+
 /* Final warm design tokens and loaded states. */
 :root {
   --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
