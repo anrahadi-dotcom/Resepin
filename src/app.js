@@ -74,6 +74,7 @@ createApp({
     },
     findRecipesFromScan() {
       window.recordScanIngredientUsage?.();
+      window.prepareScanRecipeSearch?.();
       this.go('resep');
     },
   }

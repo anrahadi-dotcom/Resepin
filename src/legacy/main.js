@@ -12,11 +12,19 @@ function escapeHtml(text) {
 // ============================================================
 let detectedIngredients = [];
 let currentFilter = 'all';
+let currentDietFilter = 'all';
+let currentBudgetFilter = null;
+let assumePantryBasics = true;
 let cameraStream = null;
 let demoRunning = false;
 let currentChatRecipeIdx = null;
 let awaitingSubstitutionIngredient = false;
 let selectedExploreCategory = 'bali';
+let activeModalRecipe = null;
+let activeModalServings = 1;
+let activeCookingStep = 0;
+let cookingWakeLock = null;
+let cookingTimerInterval = null;
 const PERSONAL_STATS_KEY = 'resepin-personal-stats-v1';
 const FAVORITE_RECIPE_IDS_KEY = 'resep-favorite-ids-v1';
 let personalStatsMemory = { ingredientsUsed: 0, recipesOpened: 0 };
@@ -64,6 +72,16 @@ function updatePersonalStats(delta) {
 window.recordScanIngredientUsage = function recordScanIngredientUsage() {
   const count = detectedIngredients.length;
   if (count > 0) updatePersonalStats({ ingredientsUsed: count });
+};
+
+window.prepareScanRecipeSearch = function prepareScanRecipeSearch() {
+  const names = detectedIngredients.map(item => item.name).filter(Boolean);
+  const search = document.getElementById('recipeSearch');
+  if (search) search.value = names.join(', ');
+  const url = new URL(window.location.href);
+  url.searchParams.delete('bahan');
+  names.forEach(name => url.searchParams.append('bahan', name));
+  window.history.replaceState(window.history.state, '', url);
 };
 
 const EXPLORE_CATEGORIES = [
@@ -279,6 +297,12 @@ async function startCamera() {
     return;
   }
 
+  if (!window.isSecureContext && !['localhost', '127.0.0.1'].includes(window.location.hostname)) {
+    updateDetectionStatus('idle', 'Kamera butuh koneksi aman (HTTPS). Unggah foto atau tambahkan bahan secara manual.');
+    showToast('Kamera hanya tersedia di HTTPS atau localhost.', 'error');
+    return;
+  }
+
   if (!navigator.mediaDevices?.getUserMedia) {
     const message = 'Kamera tidak tersedia di browser ini. Kamu tetap bisa mencoba contoh atau menambahkan bahan secara manual.';
     updateDetectionStatus('idle', message);
@@ -390,7 +414,6 @@ function runDemo() {
 async function captureAndDetect() {
   const video = document.getElementById('cameraFeed');
   const canvas = document.getElementById('cameraCanvas');
-  const boxes = document.getElementById('detectionBoxes');
   if (!cameraStream || !video.videoWidth) {
     showToast('Aktifkan kamera sebelum mengambil foto.', 'error');
     return;
@@ -403,57 +426,91 @@ async function captureAndDetect() {
   canvas.width = Math.round(video.videoWidth * imageScale);
   canvas.height = Math.round(video.videoHeight * imageScale);
   canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-  boxes.innerHTML = '';
-
   try {
     const imageBlob = await new Promise((resolve, reject) => {
       canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('Foto tidak bisa disiapkan.')), 'image/jpeg', 0.82);
     });
-    if (imageBlob.size > 3_900_000) throw new Error('Foto masih terlalu besar. Coba ambil foto dari jarak lebih dekat.');
-    const formData = new FormData();
-    formData.append('file', imageBlob, 'bahan.jpg');
-    const response = await fetch('/api/detect', { method: 'POST', body: formData });
-    const result = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(result.detail || 'Deteksi gagal. Pastikan server Resepin sedang berjalan.');
-
-    const foodEmojis = {
-      'Ayam': '🍗', 'Bawang Bombai': '🧅', 'Bawang Merah': '🧅', 'Bawang Putih': '🧄',
-      'Bayam': '🥬', 'Biji Kemiri': '🌰', 'Cabai Hijau': '🫑', 'Cabai Merah': '🌶️',
-      'Daging Sapi': '🥩', 'Daun Bawang': '🌿', 'Ikan': '🐟', 'Jagung': '🌽', 'Jahe': '🫚',
-      'Kacang Panjang': '🫘', 'Kangkung': '🥬', 'Kencur': '🌿', 'Kentang': '🥔',
-      'Ketumbar': '🌿', 'Kol': '🥬', 'Kunyit': '🫚', 'Lada': '⚫', 'Lengkuas': '🌿',
-      'Selada': '🥬', 'Tahu': '🟨', 'Telur': '🥚', 'Tempe': '🧱', 'Terong': '🍆',
-      'Tomat': '🍅', 'Udang': '🦐', 'Wortel': '🥕'
-    };
-    const matches = result.detections || [];
-    matches.forEach(({ label, confidence, bbox }) => {
-      const emoji = foodEmojis[label] || '🥗';
-      const name = label;
-      const [x1, y1, x2, y2] = bbox;
-      const box = document.createElement('div');
-      box.className = 'det-box';
-      box.style.cssText = `left:${x1 / canvas.width * 100}%;top:${y1 / canvas.height * 100}%;width:${(x2 - x1) / canvas.width * 100}%;height:${(y2 - y1) / canvas.height * 100}%`;
-      const caption = document.createElement('div');
-      caption.className = 'det-box-label';
-      caption.textContent = `${emoji} ${name} ${Math.round(confidence * 100)}%`;
-      box.appendChild(caption);
-      boxes.appendChild(box);
-      addIngredientItem(emoji, name, Math.round(confidence * 100));
-    });
-    if (matches.length) {
-      const confidence = Math.round(matches.reduce((sum, item) => sum + item.confidence, 0) / matches.length * 100);
-      updateDetectionStatus('detected', `${matches.length} bahan terdeteksi. Periksa hasilnya sebelum mencari resep.`);
-      showConfidenceBar(confidence);
-      showToast('Foto berhasil dipindai.', 'success');
-    } else {
-      updateDetectionStatus('idle', 'Belum menemukan bahan yang didukung. Coba dekatkan objek atau tambah bahan secara manual.');
-    }
+    await submitPhotoForDetection(imageBlob, canvas.width, canvas.height, 'bahan.jpg');
   } catch (error) {
     updateDetectionStatus('idle', error.message || 'Deteksi gagal. Pastikan server Resepin dan model PyTorch siap.');
     showToast(error.message || 'Deteksi bahan gagal.', 'error');
   } finally {
     button.disabled = false;
   }
+}
+
+const FOOD_EMOJIS = {
+  'Ayam': '🍗', 'Bawang Bombai': '🧅', 'Bawang Merah': '🧅', 'Bawang Putih': '🧄',
+  'Bayam': '🥬', 'Biji Kemiri': '🌰', 'Cabai Hijau': '🫑', 'Cabai Merah': '🌶️',
+  'Daging Sapi': '🥩', 'Daun Bawang': '🌿', 'Ikan': '🐟', 'Jagung': '🌽', 'Jahe': '🫚',
+  'Kacang Panjang': '🫘', 'Kangkung': '🥬', 'Kencur': '🌿', 'Kentang': '🥔',
+  'Ketumbar': '🌿', 'Kol': '🥬', 'Kunyit': '🫚', 'Lada': '⚫', 'Lengkuas': '🌿',
+  'Selada': '🥬', 'Tahu': '🟨', 'Telur': '🥚', 'Tempe': '🫘', 'Terong': '🍆',
+  'Tomat': '🍅', 'Udang': '🦐', 'Wortel': '🥕'
+};
+
+async function submitPhotoForDetection(imageBlob, width, height, filename) {
+  if (imageBlob.size > 3_900_000) throw new Error('Foto masih terlalu besar setelah diperkecil. Coba gambar yang lebih sederhana.');
+  const boxes = document.getElementById('detectionBoxes');
+  boxes.replaceChildren();
+  updateDetectionStatus('active', 'Memeriksa foto dengan model bahan...');
+  const formData = new FormData();
+  formData.append('file', imageBlob, filename);
+  const response = await fetch('/api/detect', { method: 'POST', body: formData });
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(result.detail || 'Deteksi belum tersedia. Tambahkan bahan secara manual.');
+  const matches = Array.isArray(result.detections) ? result.detections : [];
+  matches.forEach(({ label, confidence, bbox }) => {
+    const emoji = FOOD_EMOJIS[label] || '🥗';
+    const [x1, y1, x2, y2] = bbox;
+    const box = document.createElement('div');
+    box.className = 'det-box';
+    box.style.cssText = `left:${x1 / width * 100}%;top:${y1 / height * 100}%;width:${(x2 - x1) / width * 100}%;height:${(y2 - y1) / height * 100}%`;
+    const caption = document.createElement('div');
+    caption.className = 'det-box-label';
+    caption.textContent = `${emoji} ${label} ${Math.round(confidence * 100)}%`;
+    box.appendChild(caption);
+    boxes.appendChild(box);
+    addIngredientItem(emoji, label, Math.round(confidence * 100));
+  });
+  if (matches.length) {
+    const confidence = Math.round(matches.reduce((sum, item) => sum + item.confidence, 0) / matches.length * 100);
+    updateDetectionStatus('detected', `${matches.length} bahan terdeteksi. Periksa hasilnya sebelum mencari resep.`);
+    showConfidenceBar(confidence);
+    showToast('Foto berhasil dipindai.', 'success');
+  } else updateDetectionStatus('idle', 'Belum menemukan bahan yang didukung. Coba foto lain atau tambah bahan secara manual.');
+}
+
+async function handleGalleryUpload(input) {
+  const file = input.files?.[0];
+  if (!file) return;
+  input.value = '';
+  if (!['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif', 'image/bmp'].includes(file.type)) { showToast('Pilih foto JPG, PNG, WebP, AVIF, GIF, atau BMP.', 'error'); return; }
+  if (file.size > 15_000_000) { showToast('Ukuran foto maksimal 15 MB.', 'error'); return; }
+  try {
+    const bitmap = typeof createImageBitmap === 'function' ? await createImageBitmap(file) : await loadGalleryImage(file);
+    const canvas = document.getElementById('cameraCanvas');
+    const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
+    canvas.width = Math.round(bitmap.width * scale);
+    canvas.height = Math.round(bitmap.height * scale);
+    canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close?.();
+    const blob = await new Promise((resolve, reject) => canvas.toBlob(value => value ? resolve(value) : reject(new Error('Foto tidak bisa disiapkan.')), 'image/jpeg', .82));
+    await submitPhotoForDetection(blob, canvas.width, canvas.height, 'galeri.jpg');
+  } catch (error) {
+    updateDetectionStatus('idle', error.message || 'Foto tidak dapat dibaca. Coba file gambar lain atau input manual.');
+    showToast(error.message || 'Foto gagal diproses.', 'error');
+  }
+}
+
+function loadGalleryImage(file) {
+  return new Promise((resolve, reject) => {
+    const objectUrl = URL.createObjectURL(file);
+    const image = new Image();
+    image.onload = () => { URL.revokeObjectURL(objectUrl); resolve(image); };
+    image.onerror = () => { URL.revokeObjectURL(objectUrl); reject(new Error('Foto tidak dapat dibaca. Coba JPG atau PNG.')); };
+    image.src = objectUrl;
+  });
 }
 
 function updateDetectionStatus(type, message) {
@@ -586,32 +643,64 @@ function updateIngredientCount() {
 // RECIPES GRID
 // ============================================================
 function recipeIngredientMatches(ingredient, term) {
-  const words = value => value.toLocaleLowerCase('id').match(/[\p{L}\p{N}]+/gu) || [];
-  const ingredientWords = words(ingredient);
-  const termWords = words(term);
-  if (!termWords.length) return false;
-  return ingredientWords.some((_, start) => termWords.every((word, offset) => ingredientWords[start + offset] === word));
+  return window.ResepinRecipeUtils?.textMatches(ingredient, term) || false;
+}
+
+function currentIngredientNames() {
+  const urlIngredients = new URLSearchParams(window.location.search).getAll('bahan').map(value => value.trim()).filter(Boolean);
+  if (urlIngredients.length) return urlIngredients;
+  const input = document.getElementById('recipeSearch')?.value?.trim() || '';
+  const queryItems = input.split(/[,;\n]+/).map(value => value.trim()).filter(Boolean);
+  if (queryItems.length > 1 || (queryItems.length === 1 && RECIPES_DB.some(recipe => recipe.ingredients.some(ingredient => recipeIngredientMatches(ingredient, queryItems[0]))))) return queryItems;
+  return detectedIngredients.map(item => item.name);
+}
+
+function assumedStapleNames() {
+  if (!assumePantryBasics) return [];
+  return ['garam', 'gula', 'minyak', 'air', 'merica', 'lada', 'bawang putih', 'bawang merah'];
+}
+
+function recipeMatch(recipe, available = currentIngredientNames()) {
+  return window.ResepinRecipeUtils?.calculateRecipeMatch(recipe, available, assumedStapleNames()) || { matched: 0, total: recipe.ingredients.length, percentage: 0, missing: recipe.ingredients };
+}
+
+function setAssumePantryBasics(enabled) {
+  assumePantryBasics = Boolean(enabled);
+  try { localStorage.setItem('resep-assume-pantry-basics', String(assumePantryBasics)); } catch (_) { /* Keep the current page preference for this session. */ }
+  renderRecipesGrid();
 }
 
 function renderRecipesGrid() {
   const grid = document.getElementById('recipesGrid');
   if (!grid) return;
-  const query = document.getElementById('recipeSearch')?.value?.toLocaleLowerCase('id') || '';
-  const searchTerms = query.split(',').map(term => term.trim()).filter(Boolean);
-  const ingredientQuery = new URLSearchParams(window.location.search).getAll('bahan').map(value => value.trim().toLocaleLowerCase('id')).filter(Boolean);
+  const query = document.getElementById('recipeSearch')?.value?.trim() || '';
+  const searchTerms = query.split(/[,;\n]+/).map(term => term.trim()).filter(Boolean);
+  const ingredientQuery = currentIngredientNames();
   let filtered = RECIPES_DB;
 
   // Query parameters from the hero match any selected ingredient in the recipe data.
   if (ingredientQuery.length) {
-    filtered = filtered.filter(recipe => ingredientQuery.some(term => recipe.ingredients.some(ingredient => recipeIngredientMatches(ingredient, term))));
+    filtered = filtered.filter(recipe => recipeMatch(recipe, ingredientQuery).matched > 0);
   } else if (searchTerms.length) {
     // Comma-separated ingredient queries match any term; ordinary text remains a single term.
     filtered = filtered.filter(recipe => searchTerms.some(term =>
-      recipe.title.toLocaleLowerCase('id').includes(term) ||
-      recipe.tags.some(tag => tag.toLocaleLowerCase('id').includes(term)) ||
+      recipeIngredientMatches(recipe.title, term) ||
+      recipe.tags.some(tag => recipeIngredientMatches(tag, term)) ||
       recipe.ingredients.some(ingredient => recipeIngredientMatches(ingredient, term))
     ));
   }
+
+  if (currentDietFilter !== 'all') {
+    filtered = filtered.filter(recipe => {
+      if (currentDietFilter === 'vegetarian') return recipe.dietary.vegetarian;
+      if (currentDietFilter === 'no-egg') return !recipe.dietary.contains.includes('telur');
+      if (currentDietFilter === 'no-seafood') return !recipe.dietary.contains.some(item => ['ikan', 'udang'].includes(item));
+      if (currentDietFilter === 'no-peanut') return !recipe.dietary.contains.includes('kacang');
+      return true;
+    });
+  }
+  if (currentBudgetFilter) filtered = filtered.filter(recipe => recipe.estimatedCostPerServingIDR <= currentBudgetFilter);
+  if (ingredientQuery.length) filtered.sort((left, right) => recipeMatch(right, ingredientQuery).percentage - recipeMatch(left, ingredientQuery).percentage);
 
   // Apply filter chip
   if (currentFilter !== 'all') {
@@ -628,6 +717,8 @@ function renderRecipesGrid() {
     });
   }
 
+  const status = document.getElementById('recipeResultsStatus');
+  if (status) status.textContent = `${filtered.length} resep ditemukan${ingredientQuery.length ? `, diurutkan dari kecocokan bahan tertinggi` : ''}.`;
   grid.innerHTML = filtered.length === 0
     ? `<div class="recipe-empty-state"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-book"/></svg><p>Tidak ada resep yang cocok.<br/>Coba kata kunci lain!</p></div>`
     : filtered.map(r => createRecipeCardHTML(r)).join('');
@@ -671,15 +762,25 @@ function bindRecipeImageFallbacks(root = document) {
 function createRecipeCardHTML(r) {
   const recipeIndex = RECIPES_DB.indexOf(r);
   const ingredientCount = Array.isArray(r.ingredients) ? r.ingredients.length : null;
+  const available = currentIngredientNames();
+  const match = recipeMatch(r, available);
+  const missing = match.missing.slice(0, 3).join(', ');
+  const cost = window.ResepinRecipeUtils?.formatIDR(r.estimatedCostPerServingIDR) || '';
   return `
-    <button class="recipe-card" type="button" aria-label="Lihat resep ${escapeHtml(r.title)}" onclick="openRecipeByIndex(${recipeIndex})">
+    <button class="recipe-card" type="button" aria-label="Lihat resep ${escapeHtml(r.title)}. Kamu punya ${match.matched} dari ${match.total} bahan." onclick="openRecipeByIndex(${recipeIndex})">
       <div class="recipe-img" style="background:${r.gradient}">
         ${recipeImageHTML(r, 'recipe-img-photo')}
       </div>
       <div class="recipe-badge-diff ${r.difficulty === 'Mudah' ? 'easy' : 'medium'}">${r.difficulty}</div>
       <div class="recipe-info">
         <h3>${escapeHtml(r.title)}</h3>
-        <p class="recipe-meta"><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>${escapeHtml(r.time)}</span>${ingredientCount === null ? '' : `<span class="recipe-ingredient-count">${ingredientCount} bahan</span>`}</p>
+        <p class="recipe-meta"><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>${escapeHtml(r.time)}</span><span class="recipe-cost-estimate">Est. ${cost}/porsi</span></p>
+        <div class="recipe-match" aria-label="Kecocokan bahan: ${match.matched} dari ${match.total}">
+          <div class="recipe-match-label"><strong>Kamu punya ${match.matched}/${match.total} bahan</strong><span>${Math.round(match.percentage * 100)}%</span></div>
+          <div class="recipe-match-track" role="progressbar" aria-valuemin="0" aria-valuemax="${match.total}" aria-valuenow="${match.matched}" aria-label="Kecocokan bahan"><span style="width:${Math.round(match.percentage * 100)}%"></span></div>
+          ${available.length && missing ? `<p>Kurang: ${escapeHtml(missing)}${match.missing.length > 3 ? ' +' + (match.missing.length - 3) : ''}</p>` : ''}
+          ${!available.length ? '<p>Tambahkan bahan untuk melihat kecocokan.</p>' : ''}
+        </div>
       </div>
     </button>
   `;
@@ -714,10 +815,30 @@ function filterRecipes() {
 
 function setFilter(filter, el) {
   currentFilter = filter;
-  document.querySelectorAll('.filter-chip').forEach(c => {
+  document.querySelectorAll('#basicRecipeFilters .filter-chip').forEach(c => {
     const active = c === el;
     c.classList.toggle('active', active);
     c.setAttribute('aria-pressed', String(active));
+  });
+  renderRecipesGrid();
+}
+
+function setDietFilter(filter, el) {
+  currentDietFilter = currentDietFilter === filter ? 'all' : filter;
+  document.querySelectorAll('[aria-label="Filter kebutuhan makan"] .filter-chip').forEach(button => {
+    const active = button === el && currentDietFilter !== 'all';
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+  renderRecipesGrid();
+}
+
+function setBudgetFilter(amount, el) {
+  currentBudgetFilter = currentBudgetFilter === amount ? null : amount;
+  document.querySelectorAll('[aria-label="Filter perkiraan biaya per porsi"] .filter-chip').forEach(button => {
+    const active = button === el && currentBudgetFilter !== null;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
   });
   renderRecipesGrid();
 }
@@ -814,17 +935,34 @@ function openRecipeModal(title, time, servings, ingredients, steps, { updateRout
   const modal = document.getElementById('recipeModal');
   const recipe = RECIPES_DB.find(r => r.title === title);
   if (updateRoute && recipe) {
+    if (!document.getElementById('page-resep')?.classList.contains('active')) {
+      if (window.resepinApp) window.resepinApp.activePage = 'resep';
+      showPage('resep');
+    }
     const nextHash = `#/resep/${recipeSlug(recipe)}`;
     if (window.location.hash !== nextHash) {
       window.history.pushState({ recipeModal: true }, '', `${window.location.pathname}${window.location.search}${nextHash}`);
     }
   }
   document.getElementById('modalTitle').textContent = title;
+  activeModalRecipe = recipe;
+  activeModalServings = recipe?.servingsCount || Number.parseInt(servings, 10) || 1;
   document.getElementById('modalMeta').innerHTML = `
     <span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>${time}</span>
     <span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-users"/></svg>${servings}</span>
     ${recipe?.difficulty ? `<span>${escapeHtml(recipe.difficulty)}</span>` : ''}
+    ${recipe ? `<span class="recipe-cost-estimate">Est. ${window.ResepinRecipeUtils?.formatIDR(recipe.estimatedCostPerServingIDR) || ''}/porsi</span>` : ''}
   `;
+
+  if (recipe) {
+    const match = recipeMatch(recipe);
+    const summary = document.getElementById('modalMatchSummary');
+    if (summary) summary.innerHTML = `<strong>Kamu punya ${match.matched}/${match.total} bahan</strong><div class="recipe-match-track" role="progressbar" aria-valuemin="0" aria-valuemax="${match.total}" aria-valuenow="${match.matched}"><span style="width:${Math.round(match.percentage * 100)}%"></span></div>${match.missing.length ? `<p>Kurang: ${escapeHtml(match.missing.join(', '))}</p>` : '<p>Semua bahan cocok dengan daftar yang tersedia.</p>'}`;
+    const servingControl = document.getElementById('modalServingsControl');
+    const hasQuantities = recipe.ingredientDetails?.some(item => Number.isFinite(item.amount));
+    if (servingControl) servingControl.hidden = !hasQuantities;
+    if (hasQuantities) document.getElementById('modalServingsValue').textContent = activeModalServings;
+  }
 
   if (recipe) updatePersonalStats({ recipesOpened: 1 });
   const hero = document.getElementById('modalHero');
@@ -844,21 +982,116 @@ function openRecipeModal(title, time, servings, ingredients, steps, { updateRout
   const gradient = EMOJI_GRADIENTS[firstEmoji] || 'linear-gradient(135deg,rgba(255,107,53,0.2),rgba(46,196,182,0.15))';
   hero.style.background = gradient;
 
-  document.getElementById('modalIngredients').innerHTML = ingredients.map(ing => {
-    const detected = detectedIngredients.some(d => ing.toLowerCase().includes(d.name.toLowerCase()));
-    return `<li style="${detected ? 'border-color:rgba(46,196,182,0.5);background:rgba(46,196,182,0.08)' : ''}">${ing}${detected ? ' (tersedia)' : ''}</li>`;
+  document.getElementById('modalIngredients').innerHTML = ingredients.map((ing, index) => {
+    const detected = currentIngredientNames().some(value => recipeIngredientMatches(ing, value)) || assumedStapleNames().some(value => recipeIngredientMatches(ing, value));
+    const details = recipe?.ingredientDetails?.[index];
+    const amount = details && Number.isFinite(details.amount) ? `${window.ResepinRecipeUtils.scaleQuantity(details.amount, recipe.servingsCount, activeModalServings)} ${details.unit} ` : '';
+    return `<li class="checklist-item${detected ? ' is-available' : ''}"><label><input type="checkbox" aria-label="Tandai ${escapeHtml(details?.name || ing)} sudah disiapkan" onchange="updateIngredientChecklist()" /><span>${amount}${escapeHtml(ing)}${detected ? ' <small>(tersedia)</small>' : ''}</span></label></li>`;
   }).join('');
+  updateIngredientChecklist();
 
-  document.getElementById('modalSteps').innerHTML = steps.map(s => `<li>${s}</li>`).join('');
+  document.getElementById('modalSteps').innerHTML = steps.map(s => `<li>${escapeHtml(typeof s === 'string' ? s : s.text || '')}</li>`).join('');
 
   const ingredientName = ingredients[0]?.split(' ').slice(1).join(' ').toLowerCase() || '';
   const tip = findAITip(ingredientName);
   document.getElementById('modalTip').textContent = tip;
-  const favoriteButton = document.querySelector('#recipeModal .btn-secondary');
+  const favoriteButton = document.getElementById('saveRecipeButton');
   if (favoriteButton) favoriteButton.textContent = recipe && readFavoriteRecipeIds().includes(recipe.id) ? 'Hapus dari Favorit' : 'Simpan Resep';
 
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
+}
+
+function updateIngredientChecklist() {
+  const items = [...document.querySelectorAll('#modalIngredients input[type="checkbox"]')];
+  const checked = items.filter(item => item.checked).length;
+  const progress = document.getElementById('checklistProgress');
+  if (progress) progress.textContent = `${checked}/${items.length} disiapkan`;
+}
+
+function changeRecipeServings(delta) {
+  if (!activeModalRecipe?.ingredientDetails?.some(item => Number.isFinite(item.amount))) return;
+  activeModalServings = Math.max(1, Math.min(12, activeModalServings + delta));
+  document.getElementById('modalServingsValue').textContent = activeModalServings;
+  const list = document.getElementById('modalIngredients');
+  list.innerHTML = activeModalRecipe.ingredients.map((ingredient, index) => {
+    const detail = activeModalRecipe.ingredientDetails[index];
+    const scaled = Number.isFinite(detail?.amount) ? window.ResepinRecipeUtils.scaleQuantity(detail.amount, activeModalRecipe.servingsCount, activeModalServings) : null;
+    const quantity = scaled === null ? '' : `${scaled} ${detail.unit} `;
+    return `<li class="checklist-item"><label><input type="checkbox" aria-label="Tandai ${escapeHtml(detail?.name || ingredient)} sudah disiapkan" onchange="updateIngredientChecklist()" /><span>${quantity}${escapeHtml(ingredient)}</span></label></li>`;
+  }).join('');
+  updateIngredientChecklist();
+}
+
+async function startCookingMode() {
+  if (!activeModalRecipe?.steps?.length) return;
+  activeCookingStep = 0;
+  const mode = document.getElementById('cookingMode');
+  mode.hidden = false;
+  document.body.style.overflow = 'hidden';
+  renderCookingStep();
+  document.querySelector('.cooking-close')?.focus();
+  if ('wakeLock' in navigator) {
+    try { cookingWakeLock = await navigator.wakeLock.request('screen'); }
+    catch (_) { document.getElementById('cookingTimerNote').textContent = 'Layar bisa terkunci otomatis; ketuk layar untuk tetap melihat langkah.'; }
+  }
+}
+
+function renderCookingStep() {
+  const steps = activeModalRecipe?.steps || [];
+  const step = steps[activeCookingStep];
+  if (!step) return;
+  const text = typeof step === 'string' ? step : step.text || '';
+  const seconds = typeof step === 'object' ? Number(step.timerSeconds) : 0;
+  document.getElementById('cookingModeTitle').textContent = `Langkah ${activeCookingStep + 1} dari ${steps.length}`;
+  document.getElementById('cookingStepText').textContent = text;
+  document.getElementById('cookingPrevious').disabled = activeCookingStep === 0;
+  document.getElementById('cookingNext').textContent = activeCookingStep === steps.length - 1 ? 'Selesai' : 'Langkah berikutnya';
+  const timer = document.getElementById('cookingTimerButton');
+  timer.hidden = !(seconds > 0);
+  timer.dataset.seconds = seconds > 0 ? seconds : '';
+  document.getElementById('cookingTimerNote').textContent = seconds > 0 ? `Timer langkah: ${Math.ceil(seconds / 60)} menit.` : 'Belum ada timer untuk langkah ini.';
+  clearInterval(cookingTimerInterval);
+}
+
+function startCookingTimer() {
+  const button = document.getElementById('cookingTimerButton');
+  let remaining = Number(button.dataset.seconds);
+  if (!remaining) return;
+  button.disabled = true;
+  clearInterval(cookingTimerInterval);
+  const update = () => {
+    const minutes = Math.floor(remaining / 60);
+    const seconds = remaining % 60;
+    button.textContent = `${minutes}:${String(seconds).padStart(2, '0')}`;
+    if (remaining <= 0) {
+      clearInterval(cookingTimerInterval);
+      button.textContent = 'Timer selesai';
+      button.disabled = false;
+      showToast('Timer langkah memasak selesai.', 'success');
+      return;
+    }
+    remaining -= 1;
+  };
+  update();
+  cookingTimerInterval = setInterval(update, 1000);
+}
+
+function moveCookingStep(delta) {
+  const next = activeCookingStep + delta;
+  if (next < 0) return;
+  if (next >= activeModalRecipe.steps.length) { closeCookingMode(); return; }
+  activeCookingStep = next;
+  renderCookingStep();
+}
+
+function closeCookingMode() {
+  document.getElementById('cookingMode').hidden = true;
+  clearInterval(cookingTimerInterval);
+  cookingWakeLock?.release?.().catch?.(() => {});
+  cookingWakeLock = null;
+  document.body.style.overflow = document.getElementById('recipeModal').classList.contains('open') ? 'hidden' : '';
+  document.querySelector('#recipeModal .modal-close')?.focus();
 }
 
 function openRecipeByIndex(index) {
@@ -896,7 +1129,7 @@ function saveRecipe() {
   const next = saved ? ids.filter(id => id !== recipe.id) : [...ids, recipe.id];
   try { localStorage.setItem(FAVORITE_RECIPE_IDS_KEY, JSON.stringify(next)); }
   catch (_) { showToast('Favorit tidak bisa disimpan di browser ini.', 'error'); return; }
-  const button = document.querySelector('#recipeModal .btn-secondary');
+  const button = document.getElementById('saveRecipeButton');
   if (button) button.textContent = saved ? 'Simpan Resep' : 'Hapus dari Favorit';
   showToast(saved ? 'Resep dihapus dari Favorit.' : 'Resep disimpan ke Favorit!', 'success');
   if (document.getElementById('page-jelajahi')?.classList.contains('active')) renderJelajahiGrid();
@@ -922,6 +1155,7 @@ function showToast(message, type = 'success') {
 // ============================================================
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
+    if (!document.getElementById('cookingMode')?.hidden) { closeCookingMode(); return; }
     closeRecipeModal();
     document.getElementById('navLinks').classList.remove('open');
   }
@@ -934,6 +1168,9 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('popstate', renderLocationRoute);
   window.addEventListener('hashchange', renderLocationRoute);
   initTheme();
+  try { assumePantryBasics = localStorage.getItem('resep-assume-pantry-basics') !== 'false'; } catch (_) { /* Keep the default pantry assumption for this session. */ }
+  const pantryToggle = document.getElementById('assumePantryBasics');
+  if (pantryToggle) pantryToggle.checked = assumePantryBasics;
   initQuickPromptDragging();
   initParticles();
   initScrollEffects();
@@ -953,4 +1190,15 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     renderJelajahiGrid();
   }, 100);
+
+  let swipeStartX = null;
+  const cookingMode = document.getElementById('cookingMode');
+  cookingMode?.addEventListener('touchstart', event => { swipeStartX = event.changedTouches[0]?.clientX ?? null; }, { passive: true });
+  cookingMode?.addEventListener('touchend', event => {
+    const endX = event.changedTouches[0]?.clientX;
+    if (swipeStartX === null || endX === undefined) return;
+    const distance = endX - swipeStartX;
+    if (Math.abs(distance) > 70) moveCookingStep(distance < 0 ? 1 : -1);
+    swipeStartX = null;
+  }, { passive: true });
 });

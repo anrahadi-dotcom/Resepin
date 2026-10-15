@@ -11,7 +11,9 @@ const RECIPE_IMAGES = {
   13: "coto-makassar", 14: "babi-guling", 15: "ayam-betutu", 16: "ayam-sere-lemo",
   17: "ayam-bakar-bali", 18: "lawar", 19: "ayam-bakar-kecap", 20: "fried-chicken",
   21: "pizza-teflon", 22: "burger", 23: "spaghetti", 24: "ramen",
-  25: "sushi", 26: "taco", 27: "pancake", 28: "teriyaki", 29: "sate-lilit"
+  25: "sushi", 26: "taco", 27: "pancake", 28: "teriyaki", 29: "sate-lilit",
+  30: "balado-telur", 31: "sayur-lodeh", 32: "capcay", 33: "sup-jagung", 34: "soto-ayam",
+  35: "mie-goreng", 36: "pancake", 37: "lawar", 38: "tahu-bacem", 39: "capcay", 40: "tempe-orek"
 };
 
 // WebP companions are generated for the largest recipe photos; JPG remains the fallback.
@@ -266,5 +268,80 @@ const RECIPES_DB = [
     id: 29, title: "Sate Lilit Bali", emoji: "🍢🥥", gradient: "linear-gradient(135deg,#c56d38,#7b4835)", time: "40 mnt", servings: "3 Porsi", calories: "300 kal", difficulty: "Sedang", tags: ["Bali", "Tradisional", "Bakar"],
     ingredients: ["🐟 Ikan cincang atau ayam cincang", "🥥 Kelapa parut", "🧅 Bawang merah", "🧄 Bawang putih", "🌶️ Cabai", "🌿 Serai atau tusuk sate", "🫚 Kencur", "🧂 Garam"],
     steps: ["Haluskan bawang, cabai, kencur, dan garam", "Campur bumbu dengan ikan atau ayam cincang dan kelapa parut", "Lilitkan adonan pada batang serai atau tusuk sate pipih", "Panggang sambil diputar sampai matang merata dan harum", "Sajikan dengan nasi, sambal matah, atau jeruk limau" ]
+  },
+  {
+    id: 30, title: "Telur Dadar Daun Bawang", emoji: "🥚🌿", gradient: "linear-gradient(135deg,#e7b84e,#9c6b2f)", time: "12 mnt", servings: "2 Porsi", calories: "210 kal", difficulty: "Mudah", tags: ["Telur", "Sarapan", "Cepat"],
+    ingredients: ["🥚 Telur", "🌿 Daun bawang", "🧅 Bawang merah", "🧂 Garam", "⚫ Merica"],
+    steps: ["Iris daun bawang dan bawang merah tipis", "Kocok telur dengan garam dan merica", "Masukkan irisan bawang, lalu aduk rata", "Panaskan sedikit minyak dan tuang telur", "Masak api kecil sampai bagian bawah matang, balik, lalu sajikan"]
+  },
+  {
+    id: 31, title: "Sup Sayur Sisa", emoji: "🥕🥬", gradient: "linear-gradient(135deg,#82a66b,#416744)", time: "25 mnt", servings: "3 Porsi", calories: "130 kal", difficulty: "Mudah", tags: ["Sayur", "Sehat", "Berkuah", "Vegetarian"],
+    ingredients: ["🥕 Wortel", "🥬 Kol atau sawi", "🥔 Kentang", "🧄 Bawang putih", "🧂 Garam dan merica", "💧 Air"],
+    steps: ["Potong sayuran dengan ukuran seragam", "Tumis bawang putih sebentar jika minyak tersedia", "Didihkan air, masukkan kentang dan wortel terlebih dahulu", "Setelah hampir empuk, masukkan kol atau sawi", "Bumbui garam dan merica; matikan api saat sayur matang"]
+  },
+  {
+    id: 32, title: "Oseng Tahu Tauge", emoji: "🟨🌱", gradient: "linear-gradient(135deg,#d4b36b,#607c55)", time: "15 mnt", servings: "2 Porsi", calories: "190 kal", difficulty: "Mudah", tags: ["Tahu", "Sayur", "Cepat", "Vegetarian"],
+    ingredients: ["🟨 Tahu putih", "🌱 Tauge", "🧄 Bawang putih", "🌶️ Cabai", "🫙 Kecap manis", "🧂 Garam"],
+    steps: ["Potong tahu dadu dan tiriskan tauge", "Goreng atau panggang tahu sebentar sampai permukaannya kokoh", "Tumis bawang putih dan cabai hingga harum", "Masukkan tahu, sedikit air, dan kecap; aduk perlahan", "Masukkan tauge terakhir dan masak singkat agar tetap renyah"]
+  },
+  {
+    id: 33, title: "Perkedel Kentang Rumahan", emoji: "🥔🍳", gradient: "linear-gradient(135deg,#d6a34b,#8d5b32)", time: "35 mnt", servings: "3 Porsi", calories: "230 kal", difficulty: "Sedang", tags: ["Kentang", "Lauk", "Camilan"],
+    ingredients: ["🥔 Kentang", "🥚 Telur", "🌿 Daun seledri", "🧄 Bawang putih", "🧂 Garam dan merica", "🫒 Minyak untuk menggoreng"],
+    steps: ["Kupas dan potong kentang, lalu goreng atau kukus sampai lunak", "Haluskan kentang bersama bawang putih, garam, dan merica", "Campur seledri iris, bentuk bulatan pipih", "Celupkan ke telur kocok", "Goreng api sedang sampai kedua sisi kecokelatan dan matang"]
+  },
+  {
+    id: 34, title: "Bubur Ayam Sederhana", emoji: "🍚🍗", gradient: "linear-gradient(135deg,#d9bd80,#8a6948)", time: "45 mnt", servings: "3 Porsi", calories: "260 kal", difficulty: "Mudah", tags: ["Ayam", "Sarapan", "Berkuah"],
+    ingredients: ["🍚 Nasi matang", "🍗 Ayam", "🧄 Bawang putih", "🌿 Daun bawang", "🧂 Garam", "💧 Air atau kaldu"],
+    steps: ["Rebus ayam sampai matang, angkat lalu suwir; simpan kaldunya", "Masukkan nasi dan kaldu ke panci, tambahkan air bila perlu", "Masak sambil diaduk sampai nasi menjadi bubur lembut", "Bumbui garam dan bawang putih tumis", "Sajikan dengan ayam suwir dan daun bawang"]
+  },
+  {
+    id: 35, title: "Mie Goreng Sayur", emoji: "🍜🥬", gradient: "linear-gradient(135deg,#d78a3d,#6e7846)", time: "18 mnt", servings: "2 Porsi", calories: "330 kal", difficulty: "Mudah", tags: ["Mi", "Sayur", "Cepat"],
+    ingredients: ["🍜 Mi telur", "🥬 Sawi", "🥚 Telur", "🧄 Bawang putih", "🫙 Kecap manis", "🧂 Garam dan merica"],
+    steps: ["Rebus mi sampai hampir matang, tiriskan", "Tumis bawang putih sampai harum lalu masukkan telur", "Masukkan sawi dan aduk sampai mulai layu", "Tambahkan mi, kecap, garam, dan merica", "Aduk dengan api sedang sampai bumbu merata dan mi matang"]
+  },
+  {
+    id: 36, title: "Pisang Goreng Sederhana", emoji: "🍌🍯", gradient: "linear-gradient(135deg,#e7bd50,#a56a2d)", time: "20 mnt", servings: "3 Porsi", calories: "270 kal", difficulty: "Mudah", tags: ["Camilan", "Pisang", "Vegetarian"],
+    ingredients: ["🍌 Pisang matang", "🌾 Tepung terigu", "🧂 Sejumput garam", "🍬 Gula (opsional)", "💧 Air", "🫒 Minyak untuk menggoreng"],
+    steps: ["Campur tepung, garam, gula bila dipakai, dan air hingga menjadi adonan kental", "Kupas pisang lalu belah memanjang", "Celupkan pisang ke adonan sampai terlapisi", "Goreng dalam minyak panas dengan api sedang", "Balik sekali dan angkat setelah keemasan; tiriskan"]
+  },
+  {
+    id: 37, title: "Urap Sayur Praktis", emoji: "🥬🥥", gradient: "linear-gradient(135deg,#7fa75c,#416b48)", time: "25 mnt", servings: "3 Porsi", calories: "180 kal", difficulty: "Mudah", tags: ["Sayur", "Vegetarian", "Tradisional"],
+    ingredients: ["🥬 Kacang panjang", "🥬 Tauge", "🥥 Kelapa parut", "🌶️ Cabai", "🧄 Bawang putih", "🧂 Garam"],
+    steps: ["Rebus kacang panjang sampai empuk tetapi masih renyah", "Seduh tauge sebentar lalu tiriskan", "Kukus kelapa parut agar lebih awet dan matang", "Haluskan cabai, bawang putih, dan garam lalu campur dengan kelapa", "Aduk sayuran dengan bumbu kelapa sesaat sebelum disajikan"]
+  },
+  {
+    id: 38, title: "Tahu Kecap Bawang", emoji: "🟨🧄", gradient: "linear-gradient(135deg,#c89a57,#694b32)", time: "20 mnt", servings: "2 Porsi", calories: "220 kal", difficulty: "Mudah", tags: ["Tahu", "Lauk", "Vegetarian"],
+    ingredients: ["🟨 Tahu putih", "🧄 Bawang putih", "🧅 Bawang merah", "🫙 Kecap manis", "🌶️ Cabai (opsional)", "💧 Air"],
+    steps: ["Potong tahu dan goreng atau panggang sampai permukaannya kecokelatan", "Iris bawang dan cabai", "Tumis bawang sampai harum", "Tambahkan kecap dan sedikit air, didihkan", "Masukkan tahu, aduk hati-hati sampai bumbu meresap"]
+  },
+  {
+    id: 39, title: "Tumis Buncis Telur", emoji: "🫘🥚", gradient: "linear-gradient(135deg,#84a75a,#557441)", time: "18 mnt", servings: "2 Porsi", calories: "205 kal", difficulty: "Mudah", tags: ["Sayur", "Telur", "Cepat"],
+    ingredients: ["🫘 Buncis", "🥚 Telur", "🧄 Bawang putih", "🧅 Bawang merah", "🫙 Kecap asin", "🧂 Garam"],
+    steps: ["Iris buncis serong dan cincang bawang", "Orak-arik telur sampai matang lalu sisihkan", "Tumis bawang hingga harum", "Masukkan buncis dan sedikit air, masak sampai empuk-renyah", "Masukkan telur kembali, bumbui kecap asin dan garam"]
+  },
+  {
+    id: 40, title: "Tumis Tempe Kacang Panjang", emoji: "🫘🌶️", gradient: "linear-gradient(135deg,#a97a45,#55734a)", time: "25 mnt", servings: "3 Porsi", calories: "245 kal", difficulty: "Mudah", tags: ["Tempe", "Sayur", "Vegetarian"],
+    ingredients: ["🧱 Tempe", "🫘 Kacang panjang", "🧄 Bawang putih", "🧅 Bawang merah", "🫙 Kecap manis", "🧂 Garam"],
+    steps: ["Potong tempe kecil dan kacang panjang seragam", "Goreng atau panggang tempe sebentar, lalu sisihkan", "Tumis bawang merah dan bawang putih sampai harum", "Masukkan kacang panjang dan sedikit air, masak sampai hampir empuk", "Tambahkan tempe dan kecap, aduk rata sampai matang"]
   }
 ];
+
+const ESTIMATED_RECIPE_COSTS = [8500,7000,6000,7500,11000,14000,6500,8000,9000,8000,9000,38000,30000,45000,23000,18000,18000,8000,17000,15000,12000,16000,18000,18000,22000,24000,8000,19000,20000,6500,9000,8500,8000,10000,7000,5000,7500,7000,7000,8500];
+RECIPES_DB.forEach((recipe, index) => {
+  recipe.slug = recipe.title.toLocaleLowerCase('id').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  recipe.category = recipe.tags[0] || 'Rumahan';
+  recipe.servingsCount = Number.parseInt(recipe.servings, 10) || 1;
+  recipe.estimatedCostPerServingIDR ??= ESTIMATED_RECIPE_COSTS[index];
+  const ingredientText = recipe.ingredients.join(' ').toLocaleLowerCase('id');
+  recipe.dietary = {
+    vegetarian: recipe.tags.includes('Vegetarian'),
+    contains: [
+      ['telur', /telur/], ['ikan', /ikan|teri|terasi/], ['udang', /udang|terasi/],
+      ['kacang', /kacang/], ['susu', /susu|keju|mentega/], ['gluten', /terigu|roti|mi |mie|spaghetti|tortilla|tepung/]
+    ].filter(([, pattern]) => pattern.test(ingredientText)).map(([name]) => name)
+  };
+  recipe.ingredientDetails = recipe.ingredients.map(text => {
+    const name = text.replace(/^\p{Extended_Pictographic}+(?:\uFE0F)?\s*/u, '').trim();
+    return { name, amount: null, unit: '', optional: /opsional/i.test(name), staple: /garam|gula|minyak|air|merica|lada/i.test(name) };
+  });
+});
