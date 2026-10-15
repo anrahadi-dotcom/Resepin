@@ -4573,3 +4573,23 @@ body[data-theme="dark"] .section .gradient-text { background: linear-gradient(11
   .hero-favorite-card { height: 238px; }
   .hero-favorite-copy { right: 12px; bottom: 13px; left: 12px; }
 }
+
+/* Keep the titles on the two peek cards readable around the featured card. */
+@media (min-width: 901px) {
+  .hero-favorite-stage { overflow: visible; }
+  .hero-favorite-card { width: clamp(184px, 40%, 216px); }
+  .hero-favorite-card.is-slot-0 { left: 16%; }
+  .hero-favorite-card.is-slot-2 { left: 84%; }
+  .hero-favorite-card.is-slot-0 .hero-favorite-copy {
+    right: auto;
+    width: calc(100% - 24px);
+  }
+  .hero-favorite-card.is-slot-2 .hero-favorite-copy {
+    right: 12px;
+    left: auto;
+    width: calc(100% - 24px);
+    justify-items: end;
+    text-align: right;
+  }
+  .hero-favorite-card.is-slot-2 .hero-favorite-copy small { justify-content: flex-end; }
+}
