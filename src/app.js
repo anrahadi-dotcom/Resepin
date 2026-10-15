@@ -5,10 +5,11 @@ createApp({
   data() {
     return {
       heroIngredientText: '',
-      heroSelectedIngredients: [],
+      heroSelectedIngredients: ['Nasi', 'Telur', 'Cabai'],
       heroSearchMessage: '',
       heroVideoPlaying: false,
       heroVideoUserChoice: null,
+      heroIngredientOptions: ['Nasi', 'Telur', 'Cabai', 'Tahu', 'Ayam', 'Tempe', 'Jagung', 'Wortel'],
       popularIngredients: ['Telur', 'Ayam', 'Tahu', 'Nasi', 'Tempe'],
       activePage: 'home',
       menuOpen: false,
@@ -24,6 +25,21 @@ createApp({
         if (!unique.has(key)) unique.set(key, value);
       });
       return [...unique.values()];
+    },
+    heroRecipeSuggestion() {
+      if (!this.heroSelectedIngredients.length || typeof RECIPES_DB === 'undefined') return null;
+      const normalize = value => value.toLocaleLowerCase('id').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      return RECIPES_DB.map(recipe => {
+        const matchedIngredients = this.heroSelectedIngredients.filter(selected =>
+          recipe.ingredients.some(ingredient => normalize(ingredient).includes(normalize(selected)))
+        );
+        return { recipe, matchedCount: matchedIngredients.length };
+      }).filter(result => result.matchedCount > 0)
+        .sort((a, b) => b.matchedCount - a.matchedCount || (Number.parseInt(a.recipe.time, 10) || 999) - (Number.parseInt(b.recipe.time, 10) || 999))
+        .map(result => ({ ...result.recipe, matchedCount: result.matchedCount }))[0] || null;
+    },
+    heroRecipeMatchCount() {
+      return this.heroRecipeSuggestion?.matchedCount || 0;
     }
   },
   watch: {
@@ -77,7 +93,6 @@ createApp({
     },
     searchHeroDemo() {
       this.heroIngredientText = '';
-      this.heroSelectedIngredients = ['Telur', 'Nasi', 'Cabai'];
       this.heroSearchMessage = '';
       this.$nextTick(() => this.submitHeroSearch());
     },
