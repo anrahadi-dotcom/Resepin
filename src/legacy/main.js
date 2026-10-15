@@ -188,6 +188,7 @@ function renderLocationRoute() {
   if (window.resepinApp) {
     window.resepinApp.activePage = page;
     window.resepinApp.floatingChefChatOpen = false;
+    window.resepinApp.menuOpen = false;
   }
   showPage(page);
   if (recipe) openRecipeModal(recipe.title, recipe.time, recipe.servings, recipe.ingredients, recipe.steps, { updateRoute: false });
@@ -229,7 +230,7 @@ function showPage(pageId) {
     }
   });
   // Close mobile menu
-  document.getElementById('navLinks').classList.remove('open');
+  toggleMenu(false);
 
   // Page-specific init
   if (pageId === 'resep') renderRecipesGrid();
@@ -261,8 +262,11 @@ window.refreshMotionReveals = function refreshMotionReveals() {
   });
 };
 
-function toggleMenu() {
-  document.getElementById('navLinks').classList.toggle('open');
+function toggleMenu(isOpen) {
+  const links = document.getElementById('navLinks');
+  if (!links) return;
+  const shouldOpen = typeof isOpen === 'boolean' ? isOpen : !links.classList.contains('open');
+  links.classList.toggle('open', shouldOpen);
 }
 
 function applyTheme(theme) {
@@ -1247,7 +1251,8 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     if (!document.getElementById('cookingMode')?.hidden) { closeCookingMode(); return; }
     closeRecipeModal();
-    document.getElementById('navLinks').classList.remove('open');
+    if (window.resepinApp) window.resepinApp.menuOpen = false;
+    toggleMenu(false);
     return;
   }
   if (document.getElementById('recipeModal')?.classList.contains('open')) trapRecipeModalFocus(e);

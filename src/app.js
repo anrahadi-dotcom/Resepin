@@ -31,7 +31,13 @@ createApp({
   },
   mounted() {
     window.resepinApp = this;
+    document.addEventListener('click', this.closeMenuOnOutside);
+    document.addEventListener('keydown', this.closeMenuOnEscape);
     this.$nextTick(() => window.refreshMotionReveals?.());
+  },
+  beforeUnmount() {
+    document.removeEventListener('click', this.closeMenuOnOutside);
+    document.removeEventListener('keydown', this.closeMenuOnEscape);
   },
   methods: {
     go(page) {
@@ -42,7 +48,19 @@ createApp({
     },
     toggleMenu() {
       this.menuOpen = !this.menuOpen;
-      window.toggleMenu();
+      window.toggleMenu(this.menuOpen);
+      if (this.menuOpen) this.$nextTick(() => document.querySelector('#navLinks .nav-link')?.focus());
+    },
+    closeMenuOnOutside(event) {
+      if (!this.menuOpen || event.target.closest?.('#navbar')) return;
+      this.menuOpen = false;
+      window.toggleMenu(false);
+    },
+    closeMenuOnEscape(event) {
+      if (event.key !== 'Escape' || !this.menuOpen) return;
+      this.menuOpen = false;
+      window.toggleMenu(false);
+      this.$nextTick(() => document.getElementById('hamburgerBtn')?.focus());
     },
     toggleFloatingChefChat() {
       this.floatingChefChatOpen = !this.floatingChefChatOpen;

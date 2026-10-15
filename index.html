@@ -56,7 +56,7 @@
 
   <!-- ===== NAVBAR ===== -->
   <nav class="navbar" id="navbar">
-    <div class="nav-container">
+    <div class="nav-container" :class="{ 'menu-open': menuOpen }">
       <a class="nav-logo" href="#/" aria-label="Resepin, kembali ke Beranda" @click.prevent="go('home')">
         <div class="logo-icon">
           <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -106,7 +106,7 @@
         <button class="btn-avatar" aria-label="Pengaturan" title="Pengaturan" @click="go('profil')">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         </button>
-        <button class="btn-hamburger" id="hamburgerBtn" type="button" aria-label="Buka menu navigasi" aria-controls="navLinks" :aria-expanded="menuOpen" @click="toggleMenu">
+        <button class="btn-hamburger" id="hamburgerBtn" type="button" :aria-label="menuOpen ? 'Tutup menu navigasi' : 'Buka menu navigasi'" aria-controls="navLinks" :aria-expanded="menuOpen" @click="toggleMenu">
           <span></span><span></span><span></span>
         </button>
       </div>
