@@ -60,6 +60,13 @@ export function calculateRecipeMatch(recipe, availableIngredients = [], assumedS
   return { matched: matched.length, total: required.length, percentage: required.length ? matched.length / required.length : 0, missing };
 }
 
+export function matchesAnyIngredient(recipe, queries = []) {
+  const terms = (Array.isArray(queries) ? queries : [queries]).filter(Boolean);
+  return (recipe?.ingredients || []).some(ingredient =>
+    terms.some(term => textMatches(getIngredientName(ingredient), term))
+  );
+}
+
 export function sortRecipes(recipes = [], sortBy = 'match', availableIngredients = [], assumedStaples = []) {
   const source = Array.isArray(recipes) ? recipes : [];
   const ranked = source.map((recipe, index) => ({ recipe, index }));
@@ -93,5 +100,5 @@ export function formatIDR(amount) {
 }
 
 if (typeof window !== 'undefined') {
-  window.ResepinRecipeUtils = { calculateRecipeMatch, formatIDR, getIngredientName, normalizeIngredient, scaleQuantity, sortRecipes, textMatches };
+  window.ResepinRecipeUtils = { calculateRecipeMatch, formatIDR, getIngredientName, matchesAnyIngredient, normalizeIngredient, scaleQuantity, sortRecipes, textMatches };
 }

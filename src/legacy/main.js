@@ -914,7 +914,7 @@ function renderRecipesGrid() {
 
   // Query parameters from the hero match any selected ingredient in the recipe data.
   if (ingredientQuery.length) {
-    filtered = filtered.filter(recipe => recipeMatch(recipe, ingredientQuery).matched > 0);
+    filtered = filtered.filter(recipe => window.ResepinRecipeUtils?.matchesAnyIngredient(recipe, ingredientQuery));
   } else if (searchTerms.length) {
     // Comma-separated ingredient queries match any term; ordinary text remains a single term.
     filtered = filtered.filter(recipe => searchTerms.some(term =>

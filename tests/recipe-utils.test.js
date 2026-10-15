@@ -4,7 +4,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
-import { calculateRecipeMatch, formatIDR, normalizeIngredient, scaleQuantity, sortRecipes, textMatches } from '../src/recipe-utils.mjs';
+import { calculateRecipeMatch, formatIDR, matchesAnyIngredient, normalizeIngredient, scaleQuantity, sortRecipes, textMatches } from '../src/recipe-utils.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const source = readFileSync(resolve(root, 'src/legacy/recipes.js'), 'utf8');
@@ -22,6 +22,15 @@ test('normalizes common Indonesian spelling without merging distinct ingredients
 test('ingredient matching supports a small typo tolerance', () => {
   assert.equal(textMatches('Nasi Goreng Sederhana', 'nasi gorengg'), true);
   assert.equal(textMatches('Nasi Goreng Sederhana', 'soto'), false);
+});
+
+test('ingredient search filters on requested ingredients, not assumed pantry basics', () => {
+  const pisangGoreng = { ingredients: ['Pisang matang', 'Tepung terigu', 'Garam', 'Air', 'Minyak'] };
+  const nasiGoreng = { ingredients: ['Nasi putih', 'Telur', 'Bawang putih', 'Minyak'] };
+  assert.equal(matchesAnyIngredient(pisangGoreng, ['nasi']), false);
+  assert.equal(matchesAnyIngredient(nasiGoreng, ['nasi']), true);
+  assert.equal(matchesAnyIngredient(pisangGoreng, ['nasi', 'pisang']), true);
+  assert.equal(matchesAnyIngredient(pisangGoreng, ['nasi', 'ayam']), false);
 });
 
 test('calculates available and missing ingredients with assumed staples', () => {
