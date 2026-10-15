@@ -24,6 +24,13 @@ function sendMiniChat() {
   sendChat({ inputId: 'miniChatInput', messagesId: 'miniChatMessages', mini: true });
 }
 
+function sendMiniPrompt(text) {
+  const input = document.getElementById('miniChatInput');
+  if (!input) return;
+  input.value = text;
+  sendMiniChat();
+}
+
 function sendChat(options = {}) {
   const inputId = options.inputId || 'chatInput';
   const messagesId = options.messagesId || 'chatMessages';
@@ -44,7 +51,12 @@ function sendChat(options = {}) {
   input.style.height = 'auto';
 
   appendChatMessage(message, 'user', messagesId);
-  if (!options.mini) hideQuickPrompts();
+  if (options.mini) {
+    const suggestions = document.getElementById('miniChatSuggestions');
+    if (suggestions) suggestions.hidden = true;
+  } else {
+    hideQuickPrompts();
+  }
 
   // Show typing indicator
   const typingId = 'typing-' + Date.now();

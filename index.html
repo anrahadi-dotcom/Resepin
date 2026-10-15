@@ -651,7 +651,12 @@
     <div class="floating-chef-chat-messages" id="miniChatMessages" aria-live="polite">
       <div class="chat-bubble bot-bubble">
         <div class="bubble-avatar"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
-        <div class="bubble-content"><p>Hai! Ada bahan apa di rumahmu? Aku bantu cari ide masaknya. 🍳</p></div>
+        <div class="bubble-content"><p>Hai! Mau masak apa hari ini? 🍳</p></div>
+      </div>
+      <div class="floating-chat-suggestions" id="miniChatSuggestions" aria-label="Mulai dari topik ini">
+        <button type="button" onclick="sendMiniPrompt('Aku punya nasi sisa dan telur. Ada resep simpel?')">🍚 Nasi + telur</button>
+        <button type="button" onclick="sendMiniPrompt('Aku punya sayuran sisa. Ada ide masak yang praktis?')">🥕 Sayuran sisa</button>
+        <button type="button" onclick="sendMiniPrompt('Aku mau tanya substitusi bahan.')">↔️ Substitusi</button>
       </div>
     </div>
     <form class="floating-chef-chat-composer" onsubmit="event.preventDefault(); sendMiniChat()">
