@@ -2954,6 +2954,57 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
   .hero-copy-spotlight { animation: none; opacity: .34; transform: none; }
 }
 
+/* Let the lamp reveal the copy in a softer top-down sweep. */
+.hero-enter,
+.hero-title-line {
+  animation-name: hero-text-under-lamp !important;
+  animation-duration: 1s !important;
+  animation-timing-function: cubic-bezier(.2,.68,.2,1) !important;
+  will-change: clip-path, opacity, filter, transform;
+}
+.hero-enter-2 { animation-delay: 1.15s !important; }
+.hero-enter-3 { animation-delay: 1.34s !important; }
+.hero-enter-4 { animation-delay: 1.53s !important; }
+.hero-enter-5 { animation-delay: 1.72s !important; }
+.hero-enter-6 { animation-delay: 2s !important; }
+.hero-enter-7 { animation-delay: 2.25s !important; }
+@keyframes hero-text-under-lamp {
+  0% {
+    clip-path: inset(0 0 100% 0);
+    opacity: .08;
+    filter: brightness(.55) blur(5px);
+    transform: translateY(13px);
+  }
+  58% {
+    opacity: .9;
+    filter: brightness(1.2) blur(1px);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+    filter: brightness(1.04) blur(0);
+    transform: translateY(0);
+  }
+}
+@media (max-width: 900px) {
+  .hero-enter-2 { animation-delay: .95s !important; }
+  .hero-enter-3 { animation-delay: 1.12s !important; }
+  .hero-enter-4 { animation-delay: 1.29s !important; }
+  .hero-enter-5 { animation-delay: 1.46s !important; }
+  .hero-enter-6 { animation-delay: 1.72s !important; }
+  .hero-enter-7 { animation-delay: 1.95s !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-enter, .hero-title-line {
+    animation: none !important;
+    clip-path: none;
+    opacity: 1;
+    filter: none;
+    transform: none;
+    will-change: auto;
+  }
+}
+
 /* Diffuse lamp spill without the visible straight edges from the cone mask. */
 .hero-copy-spotlight {
   clip-path: none !important;
