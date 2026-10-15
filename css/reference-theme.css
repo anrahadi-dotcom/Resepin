@@ -2960,7 +2960,7 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
   animation-name: hero-text-under-lamp !important;
   animation-duration: 1s !important;
   animation-timing-function: cubic-bezier(.2,.68,.2,1) !important;
-  will-change: clip-path, opacity, filter, transform;
+  will-change: clip-path, opacity, transform;
 }
 .hero-enter-2 { animation-delay: 1.15s !important; }
 .hero-enter-3 { animation-delay: 1.34s !important; }
@@ -2971,18 +2971,15 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
 @keyframes hero-text-under-lamp {
   0% {
     clip-path: inset(0 0 100% 0);
-    opacity: .08;
-    filter: brightness(.55) blur(5px);
-    transform: translateY(13px);
+    opacity: 0;
+    transform: translateY(10px);
   }
   58% {
-    opacity: .9;
-    filter: brightness(1.2) blur(1px);
+    opacity: .82;
   }
   100% {
     clip-path: inset(0 0 0 0);
     opacity: 1;
-    filter: brightness(1.04) blur(0);
     transform: translateY(0);
   }
 }
@@ -2999,7 +2996,6 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
     animation: none !important;
     clip-path: none;
     opacity: 1;
-    filter: none;
     transform: none;
     will-change: auto;
   }
