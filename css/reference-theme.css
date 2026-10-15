@@ -4998,7 +4998,7 @@ body:has(#navbar .nav-search-wrap.is-open)::before {
   body:has(#navbar .nav-search-wrap.is-open)::before { @apply [animation:none]; }
 }
 
-/* Keep the text navigation chips aligned and use one glass treatment for each state. */
+/* Keep desktop navigation controls aligned without stacking extra blur inside the capsule. */
 @media (min-width: 901px) {
   #navbar #navLinks > .nav-link:not(.nav-search-toggle) {
     @apply [height:40px];
@@ -5007,9 +5007,17 @@ body:has(#navbar .nav-search-wrap.is-open)::before {
     @apply [box-sizing:border-box];
     @apply [align-items:center];
   }
-  #navbar #navLinks > .nav-link:not(.nav-search-toggle):hover,
-  #navbar #navLinks > .nav-link:not(.nav-search-toggle).active {
-    @apply [backdrop-filter:blur(10px)_saturate(125%)];
-    @apply [-webkit-backdrop-filter:blur(10px)_saturate(125%)];
+  #navbar .btn-scan-nav,
+  #navbar .btn-avatar {
+    @apply [flex:0_0_40px];
+    @apply [width:40px];
+    @apply [min-width:40px];
+    @apply [height:40px];
+    @apply [min-height:40px];
+  }
+  #navbar .nav-container:hover .nav-actions,
+  #navbar .nav-container:focus-within .nav-actions {
+    @apply [width:85px];
+    @apply [flex:0_0_85px];
   }
 }
