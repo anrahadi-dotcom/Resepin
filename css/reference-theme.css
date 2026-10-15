@@ -3542,6 +3542,14 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
   #navbar .nav-link { position: relative; z-index: 2; }
 }
 
+/* Don't let moving links receive a click while the compact island is expanding. */
+@media (min-width: 901px) and (hover: hover) and (pointer: fine) {
+  #navbar .nav-container:not(.hover-ready):not(:focus-within) #navLinks,
+  #navbar .nav-container:not(.hover-ready):not(:focus-within) .nav-actions {
+    pointer-events: none !important;
+  }
+}
+
 /* A slower, continuous lamp warm-up with a softer beam and reveal timing. */
 .hero-light-veil {
   animation: kitchen-light-warmup 4.8s cubic-bezier(.33,0,.18,1) both;

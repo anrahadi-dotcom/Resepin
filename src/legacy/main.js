@@ -408,6 +408,33 @@ function initNavHint() {
   trigger.addEventListener('click', dismiss, { once: true });
 }
 
+function initDesktopNavHoverGuard() {
+  const nav = document.querySelector('#navbar .nav-container');
+  if (!nav || !window.matchMedia('(min-width: 901px) and (hover: hover) and (pointer: fine)').matches) return;
+  let readyTimer;
+  const revealAfterExpand = () => {
+    clearTimeout(readyTimer);
+    nav.classList.remove('hover-ready');
+    const delay = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 480;
+    readyTimer = setTimeout(() => {
+      if (nav.matches(':hover')) nav.classList.add('hover-ready');
+    }, delay);
+  };
+  const conceal = () => {
+    clearTimeout(readyTimer);
+    nav.classList.remove('hover-ready');
+  };
+  nav.addEventListener('pointerenter', revealAfterExpand);
+  nav.addEventListener('pointerleave', conceal);
+  nav.addEventListener('focusin', () => {
+    clearTimeout(readyTimer);
+    nav.classList.add('hover-ready');
+  });
+  nav.addEventListener('focusout', event => {
+    if (!nav.contains(event.relatedTarget)) conceal();
+  });
+}
+
 // ============================================================
 // CAMERA / SCAN FUNCTIONALITY
 // ============================================================
@@ -1417,6 +1444,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initParticles();
   initScrollEffects();
   initNavHint();
+  initDesktopNavHoverGuard();
   checkScanBackendAvailability().catch(() => {
     scanBackendAvailable = false;
     const cameraButton = document.getElementById('startCamBtn');
