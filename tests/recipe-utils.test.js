@@ -90,7 +90,11 @@ test('critical static UI controls stay accessible and independent of external Vu
   assert.match(main, /RECIPES_DB\.slice\(0, 6\)\.map\(recipe => createRecipeCardHTML\(recipe\)\)/);
   assert.match(main, /href="#\/resep\/\$\{recipeSlug\(r\)\}"/);
   assert.match(main, /checkScanBackendAvailability/);
-  assert.match(html, /Cari resep dari bahan di rumah/);
+  assert.match(html, /id="navIngredientSearch"/);
+  assert.match(html, /id="heroIngredientSearch" v-model="heroIngredientText"/);
+  assert.doesNotMatch(html, /class="hero-search-form/);
+  assert.match(html, /class="btn-scan-nav" aria-label="Scan bahan"/);
+  assert.doesNotMatch(html, /class="nav-wordmark"/);
   assert.match(html, /id="recipeSort"/);
   assert.match(html, /id="clearRecipeFilters"[^>]*hidden/);
   assert.doesNotMatch(html, /🧺|🍲/u);
@@ -111,15 +115,12 @@ test('phase three preserves one main landmark per route and manages focus and th
   assert.doesNotMatch(html, /trapFloatingChatFocus/);
 });
 
-test('desktop navbar waits for its expansion before links and actions accept pointer clicks', () => {
+test('restored navbar keeps its search field inside the navigation', () => {
   const html = readFileSync(resolve(root, 'index.html'), 'utf8');
   const main = readFileSync(resolve(root, 'src/legacy/main.js'), 'utf8');
   const styles = readFileSync(resolve(root, 'css/reference-theme.css'), 'utf8');
-  assert.match(main, /function initDesktopNavHoverGuard\(\)/);
-  assert.match(main, /setTimeout\(\(\) => \{\s*if \(nav\.matches\(':hover'\)\) nav\.classList\.add\('hover-ready'\);\s*\}, delay\)/);
-  assert.match(main, /pointerMovedAfterEntry = true/);
-  assert.match(main, /event\.stopImmediatePropagation\(\);\s*navigateToPage\('home'\);/);
-  assert.match(main, /initDesktopNavHoverGuard\(\);/);
-  assert.match(styles, /\.nav-container:not\(\.hover-ready\):not\(:focus-within\) #navLinks,[\s\S]*?pointer-events: none !important;/);
+  assert.doesNotMatch(main, /initDesktopNavHoverGuard/);
+  assert.match(html, /id="navIngredientSearch"/);
+  assert.match(styles, /\.nav-container:hover \.nav-ingredient-search/);
   assert.match(html, /class="nav-logo" href="#\/"[^>]*aria-label="Resepin, kembali ke Beranda"/);
 });

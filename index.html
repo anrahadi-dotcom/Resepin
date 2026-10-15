@@ -89,7 +89,6 @@
             </defs>
           </svg>
         </div>
-        <span class="nav-wordmark" aria-hidden="true">Resepin</span>
       </a>
 
       <div class="nav-links" id="navLinks">
@@ -98,9 +97,29 @@
         <a class="nav-link" data-page="chef" href="#/chef" @click.prevent="go('chef')">Chef Resepin</a>
         <a class="nav-link" data-page="jelajahi" href="#/jelajahi" @click.prevent="go('jelajahi')">Jelajahi</a>
         <a class="nav-link" data-page="tersimpan" href="#/tersimpan" @click.prevent="go('tersimpan')">Tersimpan</a>
+        <form class="nav-ingredient-search" id="navIngredientSearch" @submit.prevent="submitHeroSearch">
+          <label class="visually-hidden" for="heroIngredientSearch">Cari resep dari bahan</label>
+          <div class="nav-search-heading">
+            <strong>Masak dari bahan yang ada</strong>
+            <span>Pisahkan nama bahan dengan koma</span>
+          </div>
+          <input id="heroIngredientSearch" v-model="heroIngredientText" type="search" aria-label="Ketik bahan untuk mencari resep" placeholder="Contoh: telur, tomat, bawang..." autocomplete="off" />
+          <button class="nav-search-submit" type="submit" aria-label="Cari resep" title="Cari resep" :disabled="heroSearchIngredients.length === 0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
+          </button>
+          <div class="hero-popular-ingredients nav-ingredient-popular" role="group" aria-label="Bahan populer">
+            <span class="hero-popular-label">Populer:</span>
+            <button v-for="ingredient in popularIngredients" :key="ingredient" class="hero-ingredient-chip" :class="{active: heroSelectedIngredients.includes(ingredient)}" type="button" :aria-pressed="heroSelectedIngredients.includes(ingredient)" @click="toggleHeroIngredient(ingredient)">{{ ingredient }}</button>
+          </div>
+          <p v-if="heroSearchMessage" class="hero-search-message nav-search-message" role="status">{{ heroSearchMessage }}</p>
+        </form>
       </div>
 
       <div class="nav-actions">
+        <button class="btn-scan-nav" aria-label="Scan bahan" title="Scan bahan" @click="go('scan')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3m8 0h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3m-8 0H5a1 1 0 0 1-1-1v-3"/><path d="M7 12h10"/><circle cx="12" cy="12" r="3.2"/></svg>
+          <span>Scan bahan</span>
+        </button>
         <button class="btn-avatar" aria-label="Pengaturan" title="Pengaturan" @click="go('profil')">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         </button>
@@ -129,23 +148,8 @@
         <div class="hero-content">
           <h1 class="hero-title" aria-label="Apa yang ada di dapurmu? Jadikan hidangan istimewa."><span class="hero-title-line hero-enter-2">Apa yang ada</span> <span class="hero-title-line hero-enter-3">di dapurmu?</span> <span class="title-gradient hero-title-line hero-enter-4">Jadikan hidangan</span> <span class="title-accent hero-title-line hero-enter-5">istimewa.</span></h1>
           <p class="hero-desc hero-enter hero-enter-6">Punya bahan tersisa? Temukan masakan rumahan yang enak, praktis, dan cocok dengan isi dapurmu.</p>
-          <form class="hero-search-form hero-enter hero-enter-7" @submit.prevent="submitHeroSearch">
-            <label class="hero-search-label" for="heroIngredientSearch">Cari resep dari bahan di rumah</label>
-            <div class="hero-search-control">
-              <input id="heroIngredientSearch" v-model="heroIngredientText" type="search" aria-label="Ketik bahan untuk mencari resep" placeholder="Ketik bahan: telur, tomat, bawang..." autocomplete="off" />
-              <button class="btn-primary hero-search-submit" type="submit" :disabled="heroSearchIngredients.length === 0">
-                <svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-search"/></svg> Cari resep
-              </button>
-            </div>
-            <div class="hero-popular-ingredients" role="group" aria-label="Pilih bahan populer">
-              <span class="hero-popular-label">Coba:</span>
-              <button v-for="ingredient in popularIngredients" :key="ingredient" class="hero-ingredient-chip" :class="{active: heroSelectedIngredients.includes(ingredient)}" type="button" :aria-pressed="heroSelectedIngredients.includes(ingredient)" @click="toggleHeroIngredient(ingredient)">{{ ingredient }}</button>
-            </div>
-            <p v-if="heroSearchMessage" class="hero-search-message" role="status">{{ heroSearchMessage }}</p>
-          </form>
-          <div class="hero-secondary-actions hero-enter hero-enter-8">
-            <button class="btn-secondary" type="button" @click="go('scan')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-camera"/></svg> Scan bahan</button>
-            <a class="hero-see-all" href="#/resep" @click.prevent="go('resep')">Lihat semua resep <span aria-hidden="true">→</span></a>
+          <div class="hero-cta hero-cta-link hero-enter hero-enter-7">
+            <a href="#/resep" @click.prevent="go('resep')">Lihat semua resep <span aria-hidden="true">→</span></a>
           </div>
         </div>
       </div>
