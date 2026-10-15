@@ -11,6 +11,8 @@ createApp({
       heroVideoUserChoice: null,
       heroIngredientOptions: ['Nasi', 'Telur', 'Cabai', 'Tahu', 'Ayam', 'Tempe', 'Jagung', 'Wortel'],
       heroDropActive: false,
+      heroFavoriteOrder: [19, 23, 28],
+      heroFavoriteTimer: null,
       popularIngredients: ['Telur', 'Ayam', 'Tahu', 'Nasi', 'Tempe'],
       activePage: 'home',
       menuOpen: false,
@@ -46,6 +48,9 @@ createApp({
       if (!this.heroRecipeSuggestion || typeof RECIPE_IMAGES === 'undefined') return '/assets/img/chef-hero.jpg';
       const imageSlug = RECIPE_IMAGES[this.heroRecipeSuggestion.id];
       return imageSlug ? `/assets/img/${imageSlug}.jpg` : '/assets/img/chef-hero.jpg';
+    },
+    heroFavoriteRecipes() {
+      return this.heroFavoriteOrder.map(id => RECIPES_DB.find(recipe => recipe.id === id)).filter(Boolean);
     }
   },
   watch: {
@@ -64,9 +69,14 @@ createApp({
     this.$nextTick(() => {
       window.refreshMotionReveals?.();
       this.syncHeroVideo();
+      this.heroFavoriteTimer = window.setInterval(() => {
+        if (this.activePage !== 'home' || document.hidden || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+        this.shuffleHeroFavorites();
+      }, 5200);
     });
   },
   beforeUnmount() {
+    if (this.heroFavoriteTimer) window.clearInterval(this.heroFavoriteTimer);
     document.removeEventListener('click', this.closeMenuOnOutside);
     document.removeEventListener('keydown', this.closeMenuOnEscape);
     document.removeEventListener('visibilitychange', this.syncHeroVideo);
@@ -158,6 +168,18 @@ createApp({
     },
     endHeroIngredientDrag() {
       this.heroDropActive = false;
+    },
+    heroFavoriteImage(recipe) {
+      const imageSlug = typeof RECIPE_IMAGES === 'undefined' ? null : RECIPE_IMAGES[recipe.id];
+      return imageSlug ? `/assets/img/${imageSlug}.jpg` : '/assets/img/chef-hero.jpg';
+    },
+    shuffleHeroFavorites() {
+      const [first, ...rest] = this.heroFavoriteOrder;
+      this.heroFavoriteOrder = [...rest, first];
+    },
+    openHeroFavorite(recipeId) {
+      const recipeIndex = RECIPES_DB.findIndex(recipe => recipe.id === recipeId);
+      if (recipeIndex >= 0) window.openRecipeByIndex(recipeIndex);
     },
     dropHeroIngredient(event) {
       const ingredient = event.dataTransfer.getData('text/plain');

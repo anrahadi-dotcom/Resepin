@@ -155,36 +155,26 @@
               <a href="#/resep" @click.prevent="go('resep')">Lihat inspirasi lainnya <span aria-hidden="true">→</span></a>
             </div>
           </div>
-          <section class="hero-demo-card hero-enter hero-enter-8" aria-label="Racik resep dari bahan yang tersedia">
-            <div class="hero-demo-heading">
-              <div><span class="hero-demo-kicker">01 <i></i> RACIK MENU</span><h2>Apa isi dapurmu?</h2></div>
-              <span class="hero-demo-count">{{ heroSelectedIngredients.length }} bahan</span>
+          <section v-if="false" class="hero-demo-card" aria-hidden="true"></section>
+          <section class="hero-favorites hero-enter hero-enter-8" aria-label="Tiga menu favorit Resepin">
+            <div class="hero-favorites-heading">
+              <span><i aria-hidden="true"></i> FAVORIT RESEPIN</span>
+              <h2>Tiga menu, susah pilih satu.</h2>
             </div>
-            <p class="hero-demo-instruction">Seret bahan ke area racik, atau sentuh untuk memilih.</p>
-            <div class="hero-demo-ingredients" aria-label="Bahan yang bisa dipilih">
-              <button v-for="ingredient in heroIngredientOptions" :key="ingredient" class="hero-demo-ingredient" :class="{active: heroSelectedIngredients.includes(ingredient)}" type="button" draggable="true" :aria-pressed="heroSelectedIngredients.includes(ingredient)" @click="toggleHeroIngredient(ingredient)" @dragstart="startHeroIngredientDrag($event, ingredient)" @dragend="endHeroIngredientDrag">
-                <span class="hero-demo-ingredient-mark" aria-hidden="true">{{ heroSelectedIngredients.includes(ingredient) ? '✓' : '+' }}</span>{{ ingredient }}<span class="hero-demo-drag-mark" aria-hidden="true">⠿</span>
+            <transition-group name="hero-favorite-shuffle" tag="div" class="hero-favorite-stage" aria-label="Menu yang sedang dipilih">
+              <button v-for="(recipe, index) in heroFavoriteRecipes" :key="recipe.id" class="hero-favorite-card" :class="`is-slot-${index}`" type="button" :aria-label="`Lihat resep ${recipe.title}, ${recipe.time}, ${recipe.difficulty}`" @click="openHeroFavorite(recipe.id)">
+                <img :src="heroFavoriteImage(recipe)" alt="" :loading="index === 1 ? 'eager' : 'lazy'" />
+                <span class="hero-favorite-shade" aria-hidden="true"></span>
+                <span class="hero-favorite-badge"><i aria-hidden="true"></i> MENU FAVORIT</span>
+                <span class="hero-favorite-copy"><strong>{{ recipe.title }}</strong><small>{{ recipe.time }} <i aria-hidden="true">·</i> {{ recipe.difficulty }}</small></span>
+                <span class="hero-favorite-arrow" aria-hidden="true">↗</span>
               </button>
-            </div>
-            <div class="hero-demo-mix-zone" :class="{'is-drop-active': heroDropActive}" aria-label="Area bahan pilihan" aria-live="polite" @dragover.prevent="heroDropActive = true" @dragenter.prevent="heroDropActive = true" @dragleave.self="heroDropActive = false" @drop.prevent="dropHeroIngredient">
-              <div class="hero-demo-mix-label"><span>02 <i></i> BAHAN PILIHAN</span><small v-if="heroSelectedIngredients.length">{{ heroRecipeMatchCount }} bahan cocok</small></div>
-              <transition-group v-if="heroSelectedIngredients.length" name="hero-token" tag="div" class="hero-demo-mix-tokens">
-                <button v-for="ingredient in heroSelectedIngredients" :key="ingredient" class="hero-demo-mix-token" type="button" :aria-label="`Hapus ${ingredient} dari racikan`" @click="removeHeroIngredient(ingredient)">{{ ingredient }} <span aria-hidden="true">×</span></button>
-              </transition-group>
-              <span v-else class="hero-demo-mix-empty">Lepaskan bahan di sini <span aria-hidden="true">↓</span></span>
-            </div>
-            <article v-if="heroRecipeSuggestion" class="hero-demo-recommendation" aria-live="polite" aria-atomic="true">
-              <img class="hero-demo-dish-photo" :src="heroRecipeImage" :alt="`Hasil masakan ${heroRecipeSuggestion.title}`" loading="lazy" />
-              <div class="hero-demo-result"><span class="hero-demo-result-label">03 <i></i> HASIL RACIKAN</span><strong>{{ heroRecipeSuggestion.title }}</strong><small>{{ heroRecipeSuggestion.time }} <i aria-hidden="true">·</i> {{ heroRecipeSuggestion.difficulty }} <i aria-hidden="true">·</i> {{ heroRecipeMatchCount }} bahanmu cocok</small></div>
-              <button class="hero-demo-result-open" type="button" aria-label="Lihat resep yang direkomendasikan" @click="searchHeroDemo">↗</button>
-            </article>
-            <div v-else class="hero-demo-recommendation is-empty" aria-live="polite"><div class="hero-demo-result"><span class="hero-demo-result-label">03 <i></i> HASIL RACIKAN</span><strong>Pilih bahan untuk mulai</strong><small>Resep dan waktu masak akan muncul di sini.</small></div></div>
-            <div class="hero-demo-footer">
-              <button class="hero-demo-submit" type="button" :disabled="!heroRecipeSuggestion" @click="searchHeroDemo">Temukan resep <span aria-hidden="true">↗</span></button>
-              <button class="hero-video-toggle" type="button" :aria-label="heroVideoPlaying ? 'Jeda video latar' : 'Putar video latar'" :aria-pressed="heroVideoPlaying" @click="toggleHeroVideo">
-                <svg v-if="heroVideoPlaying" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg>
-                <svg v-else viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg>
-                <span>{{ heroVideoPlaying ? 'Jeda suasana' : 'Putar suasana' }}</span>
+            </transition-group>
+            <div class="hero-favorites-controls">
+              <span><i></i><i class="is-current"></i><i></i> <small>Berputar otomatis</small></span>
+              <button type="button" @click="shuffleHeroFavorites" aria-label="Acak urutan menu favorit">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m16 3 4 4-4 4M4 17l5-5m4-4 3-3m0 12 4-4-4-4M4 7l2 2m5 6 5 5"/></svg>
+                Acak menu
               </button>
             </div>
           </section>
