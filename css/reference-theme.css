@@ -3004,13 +3004,57 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
 /* Keep the hero headline bold while giving the lamp and photo more breathing room. */
 .hero-content h1 {
   font-size: clamp(2.45rem, 4.1vw, 4.25rem);
-  line-height: 1.1;
+  line-height: 1.14;
 }
 @media (max-width: 900px) {
-  .hero-content h1 { font-size: clamp(2.2rem, 5.9vw, 3.2rem); line-height: 1.1; }
+  .hero-content h1 { font-size: clamp(2.2rem, 5.9vw, 3.2rem); line-height: 1.14; }
 }
 @media (max-width: 600px) {
-  .hero-content h1 { font-size: clamp(2.05rem, 8.8vw, 2.7rem); line-height: 1.1; }
+  .hero-content h1 { font-size: clamp(2.05rem, 8.8vw, 2.7rem); line-height: 1.14; }
+}
+.hero-content .title-gradient.hero-title-line {
+  padding-bottom: .16em;
+  margin-bottom: -.16em;
+}
+
+/* Tiny gradient bubbles to add a little motion beside the headline. */
+.hero-content::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 24%;
+  right: 5%;
+  width: 150px;
+  height: 210px;
+  pointer-events: none;
+  opacity: .72;
+  background-image:
+    radial-gradient(circle, #e1dcc9 0 22%, #a290b7 64%, transparent 72%),
+    radial-gradient(circle, #a290b7 0 28%, #b0cde6 70%, transparent 78%),
+    radial-gradient(circle, #b0cde6 0 24%, #e1dcc9 68%, transparent 76%),
+    radial-gradient(circle, #e1dcc9 0 24%, #a290b7 68%, transparent 76%),
+    radial-gradient(circle, #a290b7 0 25%, #b0cde6 68%, transparent 76%),
+    radial-gradient(circle, #b0cde6 0 25%, #e1dcc9 68%, transparent 76%);
+  background-size: 13px 13px, 9px 9px, 16px 16px, 8px 8px, 12px 12px, 7px 7px;
+  background-position: 8px 14px, 68px 38px, 118px 75px, 38px 107px, 91px 142px, 12px 181px;
+  background-repeat: no-repeat;
+  animation: hero-gradient-bubbles 7s ease-in-out infinite alternate;
+}
+.hero-content > h1,
+.hero-content > .hero-desc,
+.hero-content > .hero-cta { position: relative; z-index: 1; }
+@keyframes hero-gradient-bubbles {
+  from { transform: translate3d(0,0,0); }
+  to { transform: translate3d(4px,-9px,0); }
+}
+@media (max-width: 900px) {
+  .hero-content::before { top: 7%; right: 2%; opacity: .5; transform: scale(.78); transform-origin: top right; }
+}
+@media (max-width: 600px) {
+  .hero-content::before { top: -28px; right: 8px; opacity: .42; transform: scale(.62); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-content::before { animation: none; }
 }
 
 /* Diffuse lamp spill without the visible straight edges from the cone mask. */
