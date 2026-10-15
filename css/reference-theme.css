@@ -605,7 +605,7 @@ body[data-theme="dark"] .recipe-tags span { @apply [background:#383047]; @apply 
 .floating-chef-button:hover { @apply [background:#fff]; }
 .floating-chef-button:focus-visible { @apply [outline-color:#e1dcc9]; }
 
-body[data-theme="dark"] .nav-links { @apply [background:rgba(0,0,0,.9)]; }
+body[data-theme="dark"] .nav-links.open { @apply [background:rgba(0,0,0,.9)]; }
 body[data-theme="dark"] .nav-link { @apply [color:rgba(225,220,201,.72)]; }
 body[data-theme="dark"] .nav-link.active { @apply [color:#1f150c]; @apply [background:#e1dcc9]; }
 body[data-theme="dark"] .theme-toggle, body[data-theme="dark"] .btn-avatar { @apply [color:#e1dcc9]; @apply [border-color:rgba(225,220,201,.2)]; @apply [background:rgba(65,45,21,.72)]; }
@@ -709,7 +709,7 @@ body[data-theme="dark"] .recipe-tags span { @apply [color:#e1dcc9]; @apply [back
 .btn-scan-nav:hover, .theme-toggle:hover, .btn-avatar:hover { @apply [transform:translateY(-2px)]; @apply [color:#1f150c]; @apply [background:#e1dcc9]; @apply [border-color:#e1dcc9]; }
 .btn-hamburger { @apply [border-radius:50%]; }
 body[data-theme="dark"] .navbar { @apply [background:transparent]; }
-body[data-theme="dark"] .nav-links { @apply [background:rgba(0,0,0,.56)]; }
+body[data-theme="dark"] .nav-links.open { @apply [background:rgba(0,0,0,.56)]; }
 
 /* Subtle photo movement keeps the hero lively without competing with its copy. */
 .hero-food-photo { @apply [animation:hero-photo-fade_.65s_ease_both,_hero-photo-drift_18s_ease-in-out_.65s_infinite_alternate]; @apply [transform-origin:center]; }
@@ -4998,19 +4998,3 @@ body:has(#navbar .nav-search-wrap.is-open)::before {
   body:has(#navbar .nav-search-wrap.is-open)::before { @apply [animation:none]; }
 }
 
-/* Keep the desktop link row from drawing a second rectangular glass surface. */
-@media (min-width: 901px) {
-  #navbar .nav-container #navLinks,
-  #navbar .nav-container:hover #navLinks,
-  #navbar .nav-container:focus-within #navLinks {
-    padding: 0 !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-    background: transparent !important;
-    background-image: none !important;
-    box-shadow: none !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-    filter: none !important;
-  }
-}
