@@ -990,6 +990,7 @@ function createRecipeCardHTML(r) {
     <a class="recipe-card" href="#/resep/${recipeSlug(r)}" aria-label="Lihat resep ${escapeHtml(r.title)}. Kamu punya ${match.matched} dari ${match.total} bahan." onclick="event.preventDefault();openRecipeByIndex(${recipeIndex})">
       <div class="recipe-img" style="background:${r.gradient}">
         ${recipeImageHTML(r, 'recipe-img-photo')}
+        <span class="recipe-card-action" aria-hidden="true">Lihat resep <span>↗</span></span>
       </div>
       <div class="recipe-badge-diff ${r.difficulty === 'Mudah' ? 'easy' : 'medium'}">${r.difficulty}</div>
       <div class="recipe-info">
