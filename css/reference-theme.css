@@ -4977,3 +4977,48 @@ body[data-theme="dark"] .section .gradient-text { @apply [background:linear-grad
   #navbar .nav-search-toggle,
   #navbar .nav-search-wrap .nav-ingredient-search { @apply [transition:none]!; }
 }
+
+/* Keep the search trigger aligned with the other nav links. */
+#navbar .nav-search-toggle {
+  @apply [width:34px]!;
+  @apply [min-width:34px]!;
+  @apply [height:34px]!;
+  @apply [min-height:34px]!;
+  @apply [padding:8px_12px]!;
+  @apply [border:0]!;
+  @apply [border-radius:999px]!;
+  @apply [color:inherit]!;
+  @apply [background:transparent]!;
+  @apply [box-shadow:none]!;
+}
+#navbar .nav-search-toggle:hover,
+#navbar .nav-search-wrap.is-open .nav-search-toggle {
+  @apply [color:#f4eedf]!;
+  @apply [background:rgba(225,220,201,.12)]!;
+}
+
+/* Focusing the search should not resize or lift the navigation capsule. */
+.nav-container:focus-within {
+  @apply [transform:none]!;
+  @apply [box-shadow:none]!;
+}
+
+/* Dim and soften the page only while the ingredient search is open. */
+body:has(#navbar .nav-search-wrap.is-open)::before {
+  content: "";
+  @apply [position:fixed];
+  @apply [inset:0];
+  @apply [z-index:999];
+  @apply [background:rgba(13,11,9,.24)];
+  @apply [backdrop-filter:blur(5px)];
+  @apply [-webkit-backdrop-filter:blur(5px)];
+  @apply [pointer-events:none];
+  @apply [animation:search-backdrop-in_.2s_ease_both];
+}
+@keyframes search-backdrop-in {
+  from { opacity:0; }
+  to { opacity:1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body:has(#navbar .nav-search-wrap.is-open)::before { @apply [animation:none]; }
+}
