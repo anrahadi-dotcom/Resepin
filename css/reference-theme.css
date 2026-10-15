@@ -4998,26 +4998,18 @@ body:has(#navbar .nav-search-wrap.is-open)::before {
   body:has(#navbar .nav-search-wrap.is-open)::before { @apply [animation:none]; }
 }
 
-/* Keep desktop navigation controls aligned without stacking extra blur inside the capsule. */
+/* Keep the desktop link row from drawing a second rectangular glass surface. */
 @media (min-width: 901px) {
-  #navbar #navLinks > .nav-link:not(.nav-search-toggle) {
-    @apply [height:40px];
-    @apply [min-height:40px];
-    @apply [padding-block:0];
-    @apply [box-sizing:border-box];
-    @apply [align-items:center];
-  }
-  #navbar .btn-scan-nav,
-  #navbar .btn-avatar {
-    @apply [flex:0_0_40px];
-    @apply [width:40px];
-    @apply [min-width:40px];
-    @apply [height:40px];
-    @apply [min-height:40px];
-  }
-  #navbar .nav-container:hover .nav-actions,
-  #navbar .nav-container:focus-within .nav-actions {
-    @apply [width:85px];
-    @apply [flex:0_0_85px];
+  #navbar .nav-container #navLinks,
+  #navbar .nav-container:hover #navLinks,
+  #navbar .nav-container:focus-within #navLinks {
+    @apply [padding:0]!;
+    @apply [border:0]!;
+    @apply [border-radius:0]!;
+    @apply [background:transparent]!;
+    @apply [box-shadow:none]!;
+    @apply [backdrop-filter:none]!;
+    @apply [-webkit-backdrop-filter:none]!;
+    @apply [filter:none]!;
   }
 }
