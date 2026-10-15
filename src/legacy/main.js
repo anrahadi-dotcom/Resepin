@@ -244,8 +244,38 @@ function showPage(pageId) {
 
 // Reveal content gently as it enters the viewport, while keeping all text visible without JS.
 let motionRevealObserver;
+let scrollProgressFrame = 0;
+let scrollProgressListenerReady = false;
+function updateScrollProgress() {
+  if (scrollProgressFrame) return;
+  scrollProgressFrame = requestAnimationFrame(() => {
+    scrollProgressFrame = 0;
+    const progress = document.querySelector('.scroll-progress');
+    if (!progress) return;
+    const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const amount = scrollableHeight > 0 ? Math.min(1, Math.max(0, window.scrollY / scrollableHeight)) : 0;
+    progress.style.transform = `scaleX(${amount})`;
+  });
+}
+
+function ensureScrollProgress() {
+  if (!document.querySelector('.scroll-progress')) {
+    const progress = document.createElement('div');
+    progress.className = 'scroll-progress';
+    progress.setAttribute('aria-hidden', 'true');
+    document.body.append(progress);
+  }
+  if (!scrollProgressListenerReady) {
+    window.addEventListener('scroll', updateScrollProgress, { passive: true });
+    window.addEventListener('resize', updateScrollProgress, { passive: true });
+    scrollProgressListenerReady = true;
+  }
+  updateScrollProgress();
+}
+
 window.refreshMotionReveals = function refreshMotionReveals() {
-  const targets = document.querySelectorAll('.section-header, .step-card, .recipe-card, .cat-card, .scan-layout, .ingredients-panel, .camera-viewport, .ai-cta-card, .chat-container, .profile-card');
+  ensureScrollProgress();
+  const targets = document.querySelectorAll('.section-header, .step-card, .recipe-card, .cat-card, .stats-banner, .footer-grid, .jelajahi-section, .scan-layout, .ingredients-panel, .camera-viewport, .ai-cta-card, .chat-container, .profile-card');
   if (!motionRevealObserver) {
     motionRevealObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -254,12 +284,12 @@ window.refreshMotionReveals = function refreshMotionReveals() {
           motionRevealObserver.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -24px 0px' });
+    }, { threshold: 0.1, rootMargin: '0px 0px -36px 0px' });
   }
   targets.forEach((element, index) => {
     if (element.classList.contains('motion-ready')) return;
     element.classList.add('motion-ready');
-    element.style.setProperty('--motion-delay', `${(index % 4) * 75}ms`);
+    element.style.setProperty('--motion-delay', `${(index % 5) * 90}ms`);
     motionRevealObserver.observe(element);
   });
 };

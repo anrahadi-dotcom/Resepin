@@ -3881,3 +3881,60 @@ body[data-theme="dark"] .section .gradient-text { background: linear-gradient(11
     height: 26px;
   }
 }
+
+/* Smooth scroll storytelling and a quiet page progress cue. */
+.scroll-progress {
+  position: fixed;
+  z-index: 2200;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  pointer-events: none;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: linear-gradient(90deg, #e1dcc9 0%, #946d6d 52%, #412d15 100%);
+  box-shadow: 0 0 10px rgba(148,109,109,.4);
+  will-change: transform;
+}
+.motion-ready {
+  opacity: 0;
+  filter: blur(6px);
+  transform: translate3d(0, 34px, 0) scale(.985);
+  transition:
+    opacity 900ms cubic-bezier(.2,.75,.25,1) var(--motion-delay,0ms),
+    transform 1050ms cubic-bezier(.16,1,.3,1) var(--motion-delay,0ms),
+    filter 1000ms cubic-bezier(.2,.75,.25,1) var(--motion-delay,0ms);
+  will-change: opacity, transform, filter;
+}
+.motion-ready.motion-visible {
+  opacity: 1;
+  filter: blur(0);
+  transform: translate3d(0,0,0) scale(1);
+}
+.step-card.motion-ready { transform: translate3d(0,38px,0) rotateX(3deg) scale(.985); transform-origin: center top; }
+.step-card.motion-ready.motion-visible { transform: translate3d(0,0,0) rotateX(0) scale(1); }
+.step-card.motion-ready.motion-visible:hover { transform: translate3d(0,-4px,0) rotateX(0) scale(1); }
+.recipe-card.motion-ready.motion-visible:hover,
+.cat-card.motion-ready.motion-visible:hover { transform: translate3d(0,-5px,0) scale(1.01); }
+.recipe-card .recipe-img-photo,
+.cat-card img { transition: transform 900ms cubic-bezier(.2,.7,.2,1); }
+.recipe-card:hover .recipe-img-photo,
+.cat-card:hover img { transform: scale(1.055); }
+@media (max-width: 600px) {
+  .motion-ready { filter: blur(3px); transform: translate3d(0,22px,0) scale(.99); }
+  .motion-ready.motion-visible { filter: blur(0); transform: translate3d(0,0,0) scale(1); }
+  .step-card.motion-ready { transform: translate3d(0,25px,0) scale(.99); }
+  .step-card.motion-ready.motion-visible { transform: translate3d(0,0,0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-progress { display: none; }
+  .motion-ready,
+  .motion-ready.motion-visible,
+  .step-card.motion-ready,
+  .step-card.motion-ready.motion-visible,
+  .recipe-card.motion-ready.motion-visible:hover,
+  .cat-card.motion-ready.motion-visible:hover { opacity: 1; filter: none; transform: none; transition: none; }
+  .recipe-card .recipe-img-photo,
+  .cat-card img { transition: none; }
+}
