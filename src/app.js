@@ -5,7 +5,7 @@ createApp({
   data() {
     return {
       heroIngredientText: '',
-      heroSelectedIngredients: ['Nasi', 'Telur', 'Cabai'],
+      heroSelectedIngredients: [],
       heroSearchMessage: '',
       heroVideoPlaying: false,
       heroVideoUserChoice: null,
@@ -32,10 +32,11 @@ createApp({
       return [...unique.values()];
     },
     heroRecipeSuggestion() {
-      if (!this.heroSelectedIngredients.length || typeof RECIPES_DB === 'undefined') return null;
+      const ingredients = this.heroSearchIngredients;
+      if (!ingredients.length || typeof RECIPES_DB === 'undefined') return null;
       const normalize = value => value.toLocaleLowerCase('id').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
       return RECIPES_DB.map(recipe => {
-        const matchedIngredients = this.heroSelectedIngredients.filter(selected =>
+        const matchedIngredients = ingredients.filter(selected =>
           recipe.ingredients.some(ingredient => normalize(ingredient).includes(normalize(selected)))
         );
         return { recipe, matchedCount: matchedIngredients.length };

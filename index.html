@@ -102,19 +102,50 @@
           <form class="nav-ingredient-search" id="navIngredientSearch" :aria-hidden="!navSearchOpen" :inert="!navSearchOpen" @submit.prevent="submitHeroSearch">
             <label class="visually-hidden" for="heroIngredientSearch">Cari resep dari bahan</label>
             <div class="nav-search-heading">
-              <small>RESEP DARI DAPURMU</small>
-              <strong>Ada apa di kulkas?</strong>
-              <span>Tulis bahan yang kamu punya, pisahkan dengan koma.</span>
+              <div class="nav-search-heading-top">
+                <small><span class="nav-search-spark" aria-hidden="true">✳</span> RACIK DARI ISI DAPUR</small>
+                <span class="nav-search-count"><b>{{ heroSearchIngredients.length }}</b> bahan dipilih</span>
+              </div>
+              <strong>Apa yang tersedia hari ini?</strong>
+              <span>Mulai dari bahan yang kamu punya. Kami carikan ide masaknya.</span>
             </div>
-            <input id="heroIngredientSearch" v-model="heroIngredientText" type="search" aria-label="Ketik bahan untuk mencari resep" placeholder="Contoh: telur, tomat, bawang..." autocomplete="off" />
-            <button class="nav-search-submit" type="submit" aria-label="Cari resep" title="Cari resep" :disabled="heroSearchIngredients.length === 0">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
-            </button>
-            <div class="hero-popular-ingredients nav-ingredient-popular" role="group" aria-label="Bahan populer">
-              <span class="hero-popular-label">Coba bahan ini</span>
-              <button v-for="ingredient in popularIngredients" :key="ingredient" class="hero-ingredient-chip" :class="{active: heroSelectedIngredients.includes(ingredient)}" type="button" :aria-pressed="heroSelectedIngredients.includes(ingredient)" @click="toggleHeroIngredient(ingredient)">{{ ingredient }}</button>
+            <div class="nav-search-layout">
+              <div class="nav-search-controls">
+                <div class="nav-search-field">
+                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+                  <input id="heroIngredientSearch" v-model="heroIngredientText" type="search" aria-label="Ketik bahan untuk mencari resep" placeholder="Contoh: telur, tomat, bawang..." autocomplete="off" />
+                  <button class="nav-search-submit" type="submit" aria-label="Cari resep" title="Cari resep" :disabled="heroSearchIngredients.length === 0">
+                    <span>Cari resep</span>
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+                  </button>
+                </div>
+                <div class="hero-popular-ingredients nav-ingredient-popular" role="group" aria-label="Bahan populer">
+                  <span class="hero-popular-label">Tambahkan bahan</span>
+                  <button v-for="ingredient in popularIngredients" :key="ingredient" class="hero-ingredient-chip" :class="{active: heroSelectedIngredients.includes(ingredient)}" type="button" :aria-pressed="heroSelectedIngredients.includes(ingredient)" @click="toggleHeroIngredient(ingredient)">
+                    <span class="nav-chip-mark" aria-hidden="true">{{ heroSelectedIngredients.includes(ingredient) ? '✓' : '+' }}</span>{{ ingredient }}
+                  </button>
+                </div>
+                <p v-if="heroSearchMessage" class="hero-search-message nav-search-message" role="status">{{ heroSearchMessage }}</p>
+                <div class="nav-search-note"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3v18m9-9H3"/></svg><span>Pisahkan bahan dengan koma untuk memilih beberapa sekaligus</span></div>
+              </div>
+              <button v-if="heroRecipeSuggestion" class="nav-search-preview" type="button" :aria-label="`Lihat resep ${heroRecipeSuggestion.title}, cocok dengan ${heroRecipeMatchCount} bahan`" @click="openHeroFavorite(heroRecipeSuggestion.id)">
+                <img :src="heroRecipeImage" :alt="heroRecipeSuggestion.title" />
+                <span class="nav-search-preview-shade"></span>
+                <span class="nav-search-preview-top"><i></i> IDE PALING COCOK</span>
+                <span class="nav-search-preview-copy">
+                  <small>{{ heroRecipeMatchCount }} bahanmu cocok</small>
+                  <strong>{{ heroRecipeSuggestion.title }}</strong>
+                  <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>{{ heroRecipeSuggestion.time }} <b>·</b> {{ heroRecipeSuggestion.difficulty }}</span>
+                </span>
+                <span class="nav-search-preview-arrow" aria-hidden="true">↗</span>
+              </button>
+              <div v-else class="nav-search-preview nav-search-preview-empty">
+                <span class="nav-preview-doodle" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25"><path d="M4 11h16l-2 9H6l-2-9Zm-2 0h20M8 7h8M12 3v4"/><path d="M7 15h10"/></svg></span>
+                <small>IDE MASAK MENUNGGU</small>
+                <strong>Pilih bahan<br />di dapurmu.</strong>
+                <span>Rekomendasi akan muncul di sini.</span>
+              </div>
             </div>
-            <p v-if="heroSearchMessage" class="hero-search-message nav-search-message" role="status">{{ heroSearchMessage }}</p>
           </form>
         </div>
       </div>
