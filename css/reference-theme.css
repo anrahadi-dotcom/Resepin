@@ -4694,8 +4694,8 @@ body[data-theme="dark"] .section .gradient-text { background: linear-gradient(11
   margin: 0 0 -.18em -.14em;
 }
 @keyframes hero-title-safe-reveal {
-  from { opacity: 0; transform: translateY(9px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; filter: blur(7px); transform: translateY(12px); }
+  to { opacity: 1; filter: blur(0); transform: translateY(0); }
 }
 @media (max-width: 600px) {
   .hero-copy .hero-title { line-height: 1.1; }
