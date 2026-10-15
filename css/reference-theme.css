@@ -3514,6 +3514,35 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
   .nav-hint { transition: none; animation: none; }
 }
 
+@media (min-width: 901px) {
+  #navbar .nav-ingredient-search,
+  #navbar .nav-container:hover .nav-ingredient-search,
+  #navbar .nav-container:focus-within .nav-ingredient-search {
+    top: calc(100% + 2px);
+  }
+  #navbar .nav-ingredient-search::before {
+    content: "";
+    position: absolute;
+    top: -14px;
+    right: 0;
+    left: 0;
+    height: 16px;
+    background: transparent;
+    pointer-events: auto;
+  }
+  #navbar .nav-search-submit {
+    display: grid;
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+    padding: 0;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 50%;
+  }
+  #navbar .nav-search-submit span { display: none !important; }
+}
+
 /* Final warm design tokens and loaded states. */
 :root {
   --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
