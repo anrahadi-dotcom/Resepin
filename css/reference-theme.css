@@ -4923,6 +4923,10 @@ body[data-theme="dark"] .section .gradient-text { @apply [background:linear-grad
   #navbar .nav-search-submit { @apply [width:44px]; @apply [padding:0]; }
   #navbar .nav-search-submit span { @apply [display:none]; }
 }
+@media (min-width: 561px) {
+  #navbar .nav-search-submit { @apply [width:auto]!; @apply [min-width:0]!; @apply [overflow:visible]!; }
+  #navbar .nav-search-submit span { @apply [display:inline]!; }
+}
 
 /* Native, keyboard-accessible year control for the historical impact graphic. */
 .impact-range { @apply [background:color-mix(in_srgb,var(--primary-light)_24%,transparent)]; }
