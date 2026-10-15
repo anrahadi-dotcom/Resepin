@@ -16,6 +16,8 @@ createApp({
       popularIngredients: ['Telur', 'Ayam', 'Tahu', 'Nasi', 'Tempe'],
       activePage: 'home',
       menuOpen: false,
+      navSearchOpen: false,
+      impactYear: 2000,
       floatingChefChatOpen: false
     };
   },
@@ -43,6 +45,13 @@ createApp({
     },
     heroRecipeMatchCount() {
       return this.heroRecipeSuggestion?.matchedCount || 0;
+    },
+    impactTonnage() {
+      // The Bappenas study publishes an annual chart, not a year-by-year data table.
+      // Use rounded visual estimates between the chart's 2000 and 2018 endpoints.
+      if (this.impactYear >= 2019) return '≈ 46';
+      const progress = (this.impactYear - 2000) / 18;
+      return `≈ ${Math.round(23 + progress * 25)}`;
     },
     heroRecipeImage() {
       if (!this.heroRecipeSuggestion || typeof RECIPE_IMAGES === 'undefined') return '/assets/img/chef-hero.jpg';
@@ -115,6 +124,7 @@ createApp({
     go(page) {
       this.floatingChefChatOpen = false;
       this.menuOpen = false;
+      this.navSearchOpen = false;
       if (page === 'home') {
         this.heroIngredientText = '';
         this.heroSelectedIngredients = [];
@@ -125,16 +135,30 @@ createApp({
     },
     toggleMenu() {
       this.menuOpen = !this.menuOpen;
+      this.navSearchOpen = false;
       window.toggleMenu(this.menuOpen);
       if (this.menuOpen) this.$nextTick(() => document.querySelector('#navLinks .nav-link')?.focus());
     },
+    toggleNavSearch() {
+      this.navSearchOpen = !this.navSearchOpen;
+      if (this.navSearchOpen) this.$nextTick(() => document.getElementById('heroIngredientSearch')?.focus());
+    },
     closeMenuOnOutside(event) {
-      if (!this.menuOpen || event.target.closest?.('#navbar')) return;
-      this.menuOpen = false;
-      window.toggleMenu(false);
+      if (event.target.closest?.('#navbar')) return;
+      if (this.navSearchOpen) this.navSearchOpen = false;
+      if (this.menuOpen) {
+        this.menuOpen = false;
+        window.toggleMenu(false);
+      }
     },
     closeMenuOnEscape(event) {
-      if (event.key !== 'Escape' || !this.menuOpen) return;
+      if (event.key !== 'Escape') return;
+      if (this.navSearchOpen) {
+        this.navSearchOpen = false;
+        this.$nextTick(() => document.querySelector('.nav-search-toggle')?.focus());
+        return;
+      }
+      if (!this.menuOpen) return;
       this.menuOpen = false;
       window.toggleMenu(false);
       this.$nextTick(() => document.getElementById('hamburgerBtn')?.focus());
