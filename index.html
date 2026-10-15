@@ -166,8 +166,7 @@
                 <img :src="heroFavoriteImage(recipe)" alt="" :loading="index === 1 ? 'eager' : 'lazy'" />
                 <span class="hero-favorite-shade" aria-hidden="true"></span>
                 <span class="hero-favorite-badge"><i aria-hidden="true"></i> MENU FAVORIT</span>
-                <span class="hero-favorite-copy"><strong>{{ recipe.title }}</strong><small>{{ recipe.time }} <i aria-hidden="true">·</i> {{ recipe.difficulty }}</small></span>
-                <span class="hero-favorite-arrow" aria-hidden="true">↗</span>
+                <span class="hero-favorite-copy"><strong>{{ recipe.title }}</strong><small>{{ recipe.time }} <i aria-hidden="true">·</i> {{ recipe.difficulty }}</small><span class="hero-favorite-cta" aria-hidden="true">Lihat resep <b>↗</b></span></span>
               </button>
             </transition-group>
             <div class="hero-favorites-controls">

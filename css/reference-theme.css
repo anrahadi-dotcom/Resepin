@@ -4701,64 +4701,84 @@ body[data-theme="dark"] .section .gradient-text { background: linear-gradient(11
   .hero-copy .hero-title { line-height: 1.1; }
 }
 
-/* Editorial food covers: arched photography with a calm, readable recipe footer. */
+/* FreshMenu-inspired recipe tiles with clear food photography and a recipe CTA. */
 .hero-favorite-card {
-  border: 1px solid rgba(225,220,201,.76);
-  border-radius: 46% 46% 21px 21px / 16% 16% 21px 21px;
+  border: 1px solid rgba(225,220,201,.68);
+  border-radius: 25px 25px 14px 25px;
   background: #e1dcc9;
   box-shadow: 0 22px 52px rgba(0,0,0,.3), 0 4px 12px rgba(0,0,0,.15);
   color: #2b2116;
 }
 .hero-favorite-card img {
-  inset: 0 0 30% 0;
+  inset: 0 0 40% 0;
   width: 100%;
-  height: 70%;
-  border-radius: 50% 50% 0 0 / 22% 22% 0 0;
+  height: 60%;
+  border-radius: 24px 24px 0 0;
   object-position: center 45%;
 }
 .hero-favorite-shade {
-  inset: 0 0 30% 0;
-  border-radius: 50% 50% 0 0 / 22% 22% 0 0;
-  background: linear-gradient(180deg,rgba(20,14,9,.3),transparent 44%,rgba(20,14,9,.14));
+  inset: 0 0 40% 0;
+  border-radius: 24px 24px 0 0;
+  background: linear-gradient(180deg,rgba(20,14,9,.3),transparent 46%,rgba(20,14,9,.16));
 }
 .hero-favorite-badge {
   top: 12px;
-  left: 50%;
+  left: 12px;
   padding: 7px 10px;
   border-color: rgba(225,220,201,.36);
   background: rgba(31,21,12,.5);
-  transform: translateX(-50%);
   white-space: nowrap;
 }
 .hero-favorite-copy {
   right: 0;
   bottom: 0;
   left: 0;
-  min-height: 30%;
-  align-content: center;
+  min-height: 40%;
+  align-content: start;
   gap: 5px;
-  padding: 10px 38px 10px 13px;
-  border-radius: 0 0 20px 20px;
+  padding: 11px 13px 12px;
+  border-radius: 0 0 13px 24px;
   background: #e1dcc9;
   text-shadow: none;
   text-align: left;
 }
 .hero-favorite-copy strong {
   color: #2b2116;
-  font-size: clamp(.9rem,1.12vw,1.08rem);
-  line-height: 1.12;
+  font-size: clamp(.96rem,1.18vw,1.14rem);
+  line-height: 1.08;
 }
 .hero-favorite-copy small { color: #6b604e; font-size: .62rem; }
 .hero-favorite-copy small i { color: #8063ad; }
-.hero-favorite-arrow {
-  right: 10px;
-  bottom: 12px;
-  z-index: 1;
-  width: 26px;
-  height: 26px;
-  border-color: rgba(65,45,21,.18);
-  color: #493923;
-  background: rgba(255,253,245,.78);
+.hero-favorite-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-height: 30px;
+  margin-top: 3px;
+  padding: 0 10px 0 11px;
+  border: 1px solid rgba(65,45,21,.12);
+  border-radius: 999px;
+  color: #fffaf0;
+  background: #493923;
+  font: 700 .64rem var(--font-body);
+  transition: background .2s ease, transform .2s ease;
+}
+.hero-favorite-cta b {
+  display: grid;
+  width: 20px;
+  height: 20px;
+  place-items: center;
+  border-radius: 50%;
+  color: #302442;
+  background: #d8c8f2;
+  font-size: .8rem;
+  line-height: 1;
+}
+.hero-favorite-card:hover .hero-favorite-cta {
+  transform: translateY(-1px);
+  background: #352818;
 }
 @media (min-width: 601px) {
   .hero-favorite-card.is-slot-0 { transform: translateY(8px) rotate(-3deg) scale(.94); }
@@ -4770,7 +4790,7 @@ body[data-theme="dark"] .section .gradient-text { background: linear-gradient(11
 }
 @media (max-width: 600px) {
   .hero-favorite-card { flex-basis: min(76vw,232px); height: 270px; }
-  .hero-favorite-copy { right: 0; bottom: 0; left: 0; min-height: 30%; padding: 10px 38px 10px 13px; }
+  .hero-favorite-copy { right: 0; bottom: 0; left: 0; min-height: 40%; padding: 10px 12px 11px; }
   .hero-favorite-copy strong { font-size: 1.03rem; }
   .hero-favorite-copy small { font-size: .62rem; }
 }
