@@ -42,10 +42,13 @@ function readPersonalStats() {
 function renderPersonalStats(stats = readPersonalStats()) {
   const ingredients = document.getElementById('personalIngredientsUsed');
   const recipes = document.getElementById('personalRecipesOpened');
+  const numbers = document.getElementById('personalStatsNumbers');
   const empty = document.getElementById('personalStatsEmpty');
   if (ingredients) ingredients.textContent = stats.ingredientsUsed.toLocaleString('id-ID');
   if (recipes) recipes.textContent = stats.recipesOpened.toLocaleString('id-ID');
-  if (empty) empty.hidden = stats.ingredientsUsed > 0 || stats.recipesOpened > 0;
+  const hasActivity = stats.ingredientsUsed > 0 || stats.recipesOpened > 0;
+  if (numbers) numbers.hidden = !hasActivity;
+  if (empty) empty.hidden = hasActivity;
 }
 
 function updatePersonalStats(delta) {
@@ -859,16 +862,6 @@ document.addEventListener('keydown', (e) => {
 // INIT
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
-  const nav = document.getElementById('navbar');
-  const navHint = document.getElementById('navHint');
-  const desktopHover = window.matchMedia('(min-width: 901px) and (hover: hover) and (pointer: fine)');
-  if (nav && navHint && desktopHover.matches) {
-    nav.classList.add('nav-hint-visible');
-    const dismissHint = () => nav.classList.remove('nav-hint-visible');
-    nav.addEventListener('pointerenter', dismissHint, { once: true });
-    nav.addEventListener('focusin', dismissHint, { once: true });
-  }
-
   initTheme();
   initQuickPromptDragging();
   initParticles();
