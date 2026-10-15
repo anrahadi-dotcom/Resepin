@@ -148,32 +148,39 @@
       <div id="heroApp" class="hero-container" v-cloak>
         <div class="hero-content">
           <div class="hero-copy">
-            <span class="hero-copy-eyebrow hero-enter hero-enter-2"><i aria-hidden="true"></i> MASAK DARI YANG ADA</span>
-            <h1 class="hero-title" aria-label="Masak enak dari bahan yang ada."><span class="hero-title-line hero-enter-3">Masak enak,</span><span class="title-gradient hero-title-line hero-enter-4">dari bahan</span><span class="hero-title-line hero-enter-5">yang ada.</span></h1>
-            <p class="hero-desc hero-enter hero-enter-6">Pilih bahan yang tersedia. Kami bantu temukan hidangan rumahan yang pas, lengkap dengan waktu masaknya.</p>
+            <span class="hero-copy-eyebrow hero-enter hero-enter-2"><i aria-hidden="true"></i> DARI DAPUR, JADI CERITA</span>
+            <h1 class="hero-title" aria-label="Dari isi dapur, jadi menu istimewa."><span class="hero-title-line hero-enter-3">Dari isi dapur,</span><span class="title-gradient hero-title-line hero-enter-4">jadi menu</span><span class="hero-title-line hero-enter-5">istimewa.</span></h1>
+            <p class="hero-desc hero-enter hero-enter-6">Bahan yang hampir terlupa bisa jadi hidangan favorit berikutnya. Yuk, racik sesuatu dari yang sudah ada.</p>
             <div class="hero-cta hero-cta-link hero-enter hero-enter-7">
-              <a href="#/resep" @click.prevent="go('resep')">Jelajahi semua resep <span aria-hidden="true">→</span></a>
+              <a href="#/resep" @click.prevent="go('resep')">Lihat inspirasi lainnya <span aria-hidden="true">→</span></a>
             </div>
           </div>
           <section class="hero-demo-card hero-enter hero-enter-8" aria-label="Racik resep dari bahan yang tersedia">
             <div class="hero-demo-heading">
-              <div><span class="hero-demo-kicker">RACIK DARI DAPURMU</span><h2>Punya bahan apa?</h2></div>
-              <span class="hero-demo-count"><strong>{{ heroSelectedIngredients.length }}</strong> dipilih</span>
+              <div><span class="hero-demo-kicker">01 <i></i> RACIK MENU</span><h2>Apa isi dapurmu?</h2></div>
+              <span class="hero-demo-count">{{ heroSelectedIngredients.length }} bahan</span>
             </div>
-            <p class="hero-demo-instruction">Sentuh bahan untuk menambah atau melepasnya.</p>
-            <div class="hero-demo-ingredients" aria-label="Pilih bahan yang tersedia">
-              <button v-for="ingredient in heroIngredientOptions" :key="ingredient" class="hero-demo-ingredient" :class="{active: heroSelectedIngredients.includes(ingredient)}" type="button" :aria-pressed="heroSelectedIngredients.includes(ingredient)" @click="toggleHeroIngredient(ingredient)">
-                <span class="hero-demo-ingredient-mark" aria-hidden="true">{{ heroSelectedIngredients.includes(ingredient) ? '✓' : '+' }}</span>{{ ingredient }}
+            <p class="hero-demo-instruction">Seret bahan ke area racik, atau sentuh untuk memilih.</p>
+            <div class="hero-demo-ingredients" aria-label="Bahan yang bisa dipilih">
+              <button v-for="ingredient in heroIngredientOptions" :key="ingredient" class="hero-demo-ingredient" :class="{active: heroSelectedIngredients.includes(ingredient)}" type="button" draggable="true" :aria-pressed="heroSelectedIngredients.includes(ingredient)" @click="toggleHeroIngredient(ingredient)" @dragstart="startHeroIngredientDrag($event, ingredient)" @dragend="endHeroIngredientDrag">
+                <span class="hero-demo-ingredient-mark" aria-hidden="true">{{ heroSelectedIngredients.includes(ingredient) ? '✓' : '+' }}</span>{{ ingredient }}<span class="hero-demo-drag-mark" aria-hidden="true">⠿</span>
               </button>
             </div>
-            <div class="hero-demo-recommendation" aria-live="polite" aria-atomic="true">
-              <div class="hero-demo-dish-icon" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><path d="M8 25h32c-1.4 10-7.3 15-16 15S9.4 35 8 25Z"/><path d="M5 22h38M15 16c-3-3 2-5 0-8m9 8c-3-3 2-5 0-8m9 8c-3-3 2-5 0-8"/></svg></div>
-              <div class="hero-demo-result" v-if="heroRecipeSuggestion"><span class="hero-demo-result-label">COBA MASAK INI</span><strong>{{ heroRecipeSuggestion.title }}</strong><small>{{ heroRecipeSuggestion.time }} <i aria-hidden="true">·</i> {{ heroRecipeSuggestion.difficulty }} <i aria-hidden="true">·</i> {{ heroRecipeMatchCount }} bahan cocok</small></div>
-              <div class="hero-demo-result is-empty" v-else><span class="hero-demo-result-label">REKOMENDASI DAPUR</span><strong>Pilih satu bahan dulu</strong><small>Resep cocokmu akan muncul di sini.</small></div>
-              <span class="hero-demo-sparkle" aria-hidden="true">✳</span>
+            <div class="hero-demo-mix-zone" :class="{'is-drop-active': heroDropActive}" aria-label="Area bahan pilihan" aria-live="polite" @dragover.prevent="heroDropActive = true" @dragenter.prevent="heroDropActive = true" @dragleave.self="heroDropActive = false" @drop.prevent="dropHeroIngredient">
+              <div class="hero-demo-mix-label"><span>02 <i></i> BAHAN PILIHAN</span><small v-if="heroSelectedIngredients.length">{{ heroRecipeMatchCount }} bahan cocok</small></div>
+              <transition-group v-if="heroSelectedIngredients.length" name="hero-token" tag="div" class="hero-demo-mix-tokens">
+                <button v-for="ingredient in heroSelectedIngredients" :key="ingredient" class="hero-demo-mix-token" type="button" :aria-label="`Hapus ${ingredient} dari racikan`" @click="removeHeroIngredient(ingredient)">{{ ingredient }} <span aria-hidden="true">×</span></button>
+              </transition-group>
+              <span v-else class="hero-demo-mix-empty">Lepaskan bahan di sini <span aria-hidden="true">↓</span></span>
             </div>
+            <article v-if="heroRecipeSuggestion" class="hero-demo-recommendation" aria-live="polite" aria-atomic="true">
+              <img class="hero-demo-dish-photo" :src="heroRecipeImage" :alt="`Hasil masakan ${heroRecipeSuggestion.title}`" loading="lazy" />
+              <div class="hero-demo-result"><span class="hero-demo-result-label">03 <i></i> HASIL RACIKAN</span><strong>{{ heroRecipeSuggestion.title }}</strong><small>{{ heroRecipeSuggestion.time }} <i aria-hidden="true">·</i> {{ heroRecipeSuggestion.difficulty }} <i aria-hidden="true">·</i> {{ heroRecipeMatchCount }} bahanmu cocok</small></div>
+              <button class="hero-demo-result-open" type="button" aria-label="Lihat resep yang direkomendasikan" @click="searchHeroDemo">↗</button>
+            </article>
+            <div v-else class="hero-demo-recommendation is-empty" aria-live="polite"><div class="hero-demo-result"><span class="hero-demo-result-label">03 <i></i> HASIL RACIKAN</span><strong>Pilih bahan untuk mulai</strong><small>Resep dan waktu masak akan muncul di sini.</small></div></div>
             <div class="hero-demo-footer">
-              <button class="hero-demo-submit" type="button" :disabled="!heroRecipeSuggestion" @click="searchHeroDemo">Lihat resepnya <span aria-hidden="true">↗</span></button>
+              <button class="hero-demo-submit" type="button" :disabled="!heroRecipeSuggestion" @click="searchHeroDemo">Temukan resep <span aria-hidden="true">↗</span></button>
               <button class="hero-video-toggle" type="button" :aria-label="heroVideoPlaying ? 'Jeda video latar' : 'Putar video latar'" :aria-pressed="heroVideoPlaying" @click="toggleHeroVideo">
                 <svg v-if="heroVideoPlaying" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg>
                 <svg v-else viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg>

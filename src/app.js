@@ -10,6 +10,7 @@ createApp({
       heroVideoPlaying: false,
       heroVideoUserChoice: null,
       heroIngredientOptions: ['Nasi', 'Telur', 'Cabai', 'Tahu', 'Ayam', 'Tempe', 'Jagung', 'Wortel'],
+      heroDropActive: false,
       popularIngredients: ['Telur', 'Ayam', 'Tahu', 'Nasi', 'Tempe'],
       activePage: 'home',
       menuOpen: false,
@@ -40,6 +41,11 @@ createApp({
     },
     heroRecipeMatchCount() {
       return this.heroRecipeSuggestion?.matchedCount || 0;
+    },
+    heroRecipeImage() {
+      if (!this.heroRecipeSuggestion || typeof RECIPE_IMAGES === 'undefined') return '/assets/img/chef-hero.jpg';
+      const imageSlug = RECIPE_IMAGES[this.heroRecipeSuggestion.id];
+      return imageSlug ? `/assets/img/${imageSlug}.jpg` : '/assets/img/chef-hero.jpg';
     }
   },
   watch: {
@@ -141,6 +147,24 @@ createApp({
         ? this.heroSelectedIngredients.filter(item => item !== ingredient)
         : [...this.heroSelectedIngredients, ingredient];
       this.heroSearchMessage = '';
+    },
+    removeHeroIngredient(ingredient) {
+      this.heroSelectedIngredients = this.heroSelectedIngredients.filter(item => item !== ingredient);
+    },
+    startHeroIngredientDrag(event, ingredient) {
+      this.heroDropActive = true;
+      event.dataTransfer.effectAllowed = 'copy';
+      event.dataTransfer.setData('text/plain', ingredient);
+    },
+    endHeroIngredientDrag() {
+      this.heroDropActive = false;
+    },
+    dropHeroIngredient(event) {
+      const ingredient = event.dataTransfer.getData('text/plain');
+      if (this.heroIngredientOptions.includes(ingredient) && !this.heroSelectedIngredients.includes(ingredient)) {
+        this.heroSelectedIngredients = [...this.heroSelectedIngredients, ingredient];
+      }
+      this.heroDropActive = false;
     },
     submitHeroSearch() {
       const ingredients = this.heroSearchIngredients;
