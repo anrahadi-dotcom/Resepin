@@ -73,16 +73,6 @@ createApp({
         this.$nextTick(() => document.getElementById('miniChatInput')?.focus());
       }
     },
-    trapFloatingChatFocus(event) {
-      if (event.key !== 'Tab') return;
-      const panel = event.currentTarget;
-      const focusable = [...panel.querySelectorAll('button:not([disabled]), textarea:not([disabled]), input:not([disabled]), a[href]')];
-      if (!focusable.length) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
-    },
     toggleTheme() {
       window.toggleTheme();
     },

@@ -16,6 +16,14 @@
   <meta name="twitter:description" content="Temukan ide masak dari bahan yang tersedia di dapurmu." />
   <meta name="twitter:image" content="https://resepin-3k1.pages.dev/assets/img/og-resepin.jpg" />
   <meta name="theme-color" content="#e1dcc9" />
+  <script>
+    try {
+      const storedTheme = localStorage.getItem('resep-theme');
+      const preferredTheme = storedTheme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.dataset.theme = preferredTheme === 'dark' ? 'dark' : 'light';
+      document.querySelector('meta[name="theme-color"]').content = preferredTheme === 'dark' ? '#1f150c' : '#e1dcc9';
+    } catch (_) { document.documentElement.dataset.theme = 'light'; }
+  </script>
   <title>Resepin — Masak dari Sisa, Praktis & Lezat</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -30,7 +38,8 @@
   <style>[v-cloak] { display: none; }</style>
 </head>
 <body>
-  <a class="skip-link" href="#page-home">Lewati ke konten</a>
+  <script>document.body.dataset.theme = document.documentElement.dataset.theme || 'light';</script>
+  <a class="skip-link" href="#page-home" onclick="focusActivePage(event)">Lewati ke konten</a>
   <div id="app" v-cloak>
 
   <svg class="ui-icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
@@ -514,7 +523,7 @@
 
   <!-- ===== PAGE: ACCOUNT SETTINGS ===== -->
   <div class="page" id="page-profil" role="main" tabindex="-1">
-    <main class="account-page container">
+    <div class="account-page container">
       <button class="back-btn" @click="go('home')">← Kembali</button>
       <header class="account-header">
         <span class="account-avatar"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2m8-10a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/></svg></span>
@@ -530,27 +539,27 @@
           <span id="themeLabel">Gelap</span>
         </button>
       </section>
-    </main>
+    </div>
   </div>
 
   <div class="page" id="page-tersimpan" role="main" tabindex="-1">
-    <main class="resep-page">
+    <div class="resep-page">
       <header class="resep-header">
         <button class="back-btn" @click="go('home')">← Kembali</button>
         <h1><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-book"/></svg> Resep Tersimpan</h1>
         <p>Kumpulan resep yang kamu simpan di browser ini.</p>
       </header>
       <div class="container"><div class="recipes-grid" id="savedRecipesGrid"></div></div>
-    </main>
+    </div>
   </div>
 
   <div class="page" id="page-not-found" role="main" tabindex="-1">
-    <main class="route-not-found container">
+    <div class="route-not-found container">
       <svg class="ui-icon route-not-found-icon" aria-hidden="true"><use href="#ui-icon-food"/></svg>
       <h1>Halaman tidak ditemukan</h1>
       <p>Tautan ini belum punya halaman Resepin.</p>
       <button class="btn-primary" type="button" @click="go('home')">Kembali ke Beranda</button>
-    </main>
+    </div>
   </div>
 
   <!-- ===== RECIPE DETAIL MODAL ===== -->
@@ -617,7 +626,7 @@
   <!-- ===== TOAST ===== -->
   <div class="toast" id="toast"></div>
 
-  <section v-show="activePage !== 'chef' && floatingChefChatOpen" class="floating-chef-chat" role="dialog" aria-modal="false" aria-labelledby="miniChatTitle" @keydown.esc.prevent="floatingChefChatOpen = false" @keydown="trapFloatingChatFocus">
+  <section v-show="activePage !== 'chef' && floatingChefChatOpen" class="floating-chef-chat" role="dialog" aria-modal="false" aria-labelledby="miniChatTitle" @keydown.esc.prevent="floatingChefChatOpen = false">
     <header class="floating-chef-chat-header">
       <span class="floating-chef-chat-avatar" aria-hidden="true"><svg class="ui-icon"><use href="#ui-icon-chef"/></svg></span>
       <span class="floating-chef-chat-title"><strong id="miniChatTitle">Chef Resepin</strong><small><i></i> Siap bantu di dapur</small></span>

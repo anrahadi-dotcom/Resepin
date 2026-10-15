@@ -206,8 +206,18 @@ function renderLocationRoute() {
   else {
     closeRecipeModal({ preserveRoute: true });
     restoreRecipeFocus();
+    requestAnimationFrame(() => document.getElementById(`page-${page}`)?.focus({ preventScroll: true }));
   }
 }
+
+function focusActivePage(event) {
+  event?.preventDefault();
+  const activePage = document.querySelector('.page.active[role="main"]');
+  if (!activePage) return;
+  activePage.focus({ preventScroll: true });
+  activePage.scrollIntoView({ block: 'start', behavior: 'smooth' });
+}
+window.focusActivePage = focusActivePage;
 
 function navigateToPage(page, { replace = false } = {}) {
   const route = PAGE_HASHES[page];
@@ -231,6 +241,8 @@ function showPage(pageId) {
   const target = document.getElementById(`page-${pageId}`);
   if (target) {
     target.classList.add('active');
+    const skipLink = document.querySelector('.skip-link');
+    if (skipLink) skipLink.href = `#${target.id}`;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
   // Update nav links
@@ -314,6 +326,7 @@ function toggleMenu(isOpen) {
 
 function applyTheme(theme) {
   const selected = theme === 'dark' ? 'dark' : 'light';
+  document.documentElement.dataset.theme = selected;
   document.body.dataset.theme = selected;
   const themeColor = document.querySelector('meta[name="theme-color"]');
   if (themeColor) themeColor.content = selected === 'dark' ? '#1f150c' : '#e1dcc9';

@@ -87,3 +87,17 @@ test('critical static UI controls stay accessible and independent of external Vu
   assert.doesNotMatch(html, /🧺|🍲/u);
   assert.doesNotMatch(readFileSync(resolve(root, 'src/legacy/recipes.js'), 'utf8'), /🧱|emoji:/u);
 });
+
+test('phase three preserves one main landmark per route and manages focus and theme before paint', () => {
+  const html = readFileSync(resolve(root, 'index.html'), 'utf8');
+  const main = readFileSync(resolve(root, 'src/legacy/main.js'), 'utf8');
+  assert.doesNotMatch(html, /<main\b/i);
+  assert.equal((html.match(/class="page[^\"]*" id="page-[^\"]+" role="main" tabindex="-1"/g) || []).length, 8);
+  assert.match(html, /<a class="skip-link"[^>]*onclick="focusActivePage\(event\)"/);
+  assert.match(main, /window\.focusActivePage = focusActivePage/);
+  assert.match(main, /requestAnimationFrame\(\(\) => document\.getElementById\(`page-\$\{page\}`\)\?\.focus/);
+  assert.ok(html.indexOf("localStorage.getItem('resep-theme')") < html.indexOf('rel="stylesheet"'));
+  assert.match(html, /document\.body\.dataset\.theme = document\.documentElement\.dataset\.theme/);
+  assert.match(html, /role="dialog" aria-modal="false"/);
+  assert.doesNotMatch(html, /trapFloatingChatFocus/);
+});

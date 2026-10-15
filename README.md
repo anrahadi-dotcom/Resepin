@@ -90,7 +90,7 @@ Beranda → Scan Bahan → izinkan kamera → arahkan ke bahan → Ambil Foto �
 
 ## Pengembangan, build, dan pemeriksaan
 
-Frontend tetap memakai Vue 3 dari CDN, HTML, dan CSS; skrip build hanya menyalin file statis ke `dist/` untuk Cloudflare Pages. Untuk menyiapkan deploy dan menjalankan cek lokal:
+Frontend memakai Vue 3 yang disimpan di repo, HTML, dan CSS; skrip build hanya menyalin file statis ke `dist/` untuk Cloudflare Pages. Untuk menyiapkan deploy dan menjalankan cek lokal:
 
 ```powershell
 npm test
@@ -101,7 +101,15 @@ npm run build
 
 ## Implementasi dan batasan
 
-Antarmuka memakai Vue 3 dari CDN, HTML, dan CSS responsif. Server Python bawaan memuat `models/best.pt` menggunakan Ultralytics/PyTorch saat server mulai; checkpoint ini berisi 30 kelas bahan berbahasa Indonesia, yang juga dicatat di `data_classes.yaml`. Foto kamera dikirim ke endpoint lokal `/api/detect`, diproses di komputer yang menjalankan server, lalu dibuang setelah inferensi. File gambar tidak disimpan. Model mendeteksi objek sesuai kelas yang dipelajari; periksa hasilnya dan tambahkan bahan lain secara manual bila perlu. Mode Demo selalu menghasilkan bahan contoh dan bukan deteksi model.
+### Keputusan desain
+
+- Navigasi memakai satu landmark utama per halaman. Pembungkus `.page` tetap menjadi landmark agar perpindahan rute bisa memindahkan fokus dan tautan “Lewati ke konten” selalu menuju halaman aktif.
+- Chat koki mengambang tetap non-modal: pengguna boleh berpindah ke kontrol halaman lain saat chat terbuka, jadi fokus tidak dikunci di panel.
+- Pilihan tema dibaca sebelum stylesheet merender halaman, dengan preferensi sistem sebagai cadangan. Google Fonts tetap dimuat dari layanan Google; font sistem menjadi fallback jika jaringan font tidak tersedia.
+- Foto katalog menetapkan dimensi intrinsik 800×600, sedangkan gambar modal mempertahankan rasio melalui kontainer dan CSS. Gambar hero bukan gambar konten dan memakai ukuran cover.
+- Petunjuk navbar tetap mengajarkan hover pada desktop dan klik pada perangkat sentuh; petunjuk menghilang setelah interaksi pertama.
+
+Antarmuka memakai Vue 3 yang disimpan di repo, HTML, dan CSS responsif. Server Python bawaan memuat `models/best.pt` menggunakan Ultralytics/PyTorch saat server mulai; checkpoint ini berisi 30 kelas bahan berbahasa Indonesia, yang juga dicatat di `data_classes.yaml`. Foto kamera dikirim ke endpoint lokal `/api/detect`, diproses di komputer yang menjalankan server, lalu dibuang setelah inferensi. File gambar tidak disimpan. Model mendeteksi objek sesuai kelas yang dipelajari; periksa hasilnya dan tambahkan bahan lain secara manual bila perlu. Mode Demo selalu menghasilkan bahan contoh dan bukan deteksi model.
 
 Server deteksi hanya bind ke `127.0.0.1`, memeriksa origin permintaan, membatasi foto ke JPG/PNG/WebP hingga 10 MB, dan hanya menyajikan file frontend yang diperlukan. Checkpoint tidak bisa diunduh melalui web. Chef memakai aturan JavaScript lokal terlebih dulu dan meneruskan pertanyaan yang belum dikenali ke Cloudflare Workers AI. Binding `AI` dikonfigurasi di `wrangler.jsonc`; tidak ada kunci API di browser. Workers AI memiliki alokasi gratis harian yang terbatas, sehingga jawaban AI bisa tidak tersedia saat kuota habis. Saat lokal, jalankan `npm run build` lalu `npx wrangler pages dev dist --ai=AI`; penggunaan binding AI lokal tetap memanggil layanan Cloudflare. Jika layanan gagal, Chef menampilkan jawaban fallback lokal. Maksimal enam pesan percakapan terakhir dikirim untuk konteks; jangan masukkan data pribadi/sensitif. Font masih dimuat dari Google Fonts.
 
