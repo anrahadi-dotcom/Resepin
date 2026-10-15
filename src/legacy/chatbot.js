@@ -20,16 +20,22 @@ function sendQuickPrompt(text) {
   sendChat();
 }
 
-function sendChat() {
-  const input = document.getElementById('chatInput');
+function sendMiniChat() {
+  sendChat({ inputId: 'miniChatInput', messagesId: 'miniChatMessages', mini: true });
+}
+
+function sendChat(options = {}) {
+  const inputId = options.inputId || 'chatInput';
+  const messagesId = options.messagesId || 'chatMessages';
+  const input = document.getElementById(inputId);
   const message = input.value.trim();
   if (!message) return;
   if (message.length > 1000) {
-    appendChatMessage('Pesan maksimal 1.000 karakter. Ringkas pertanyaanmu lalu coba lagi.', 'assistant');
+    appendChatMessage('Pesan maksimal 1.000 karakter. Ringkas pertanyaanmu lalu coba lagi.', 'assistant', messagesId);
     return;
   }
 
-  const history = [...document.querySelectorAll('#chatMessages .chat-bubble')].slice(-6).map(bubble => ({
+  const history = [...document.querySelectorAll(`#${messagesId} .chat-bubble`)].slice(-6).map(bubble => ({
     role: bubble.classList.contains('user-bubble') ? 'user' : 'assistant',
     content: bubble.querySelector('.bubble-content')?.innerText?.trim() || ''
   })).filter(item => item.content);
@@ -37,19 +43,19 @@ function sendChat() {
   input.value = '';
   input.style.height = 'auto';
 
-  appendChatMessage(message, 'user');
-  hideQuickPrompts();
+  appendChatMessage(message, 'user', messagesId);
+  if (!options.mini) hideQuickPrompts();
 
   // Show typing indicator
   const typingId = 'typing-' + Date.now();
-  appendTypingIndicator(typingId);
+  appendTypingIndicator(typingId, messagesId);
 
   // Simulate AI response delay
   const delay = 1200 + Math.random() * 800;
   setTimeout(() => {
     generateAIResponseAsync(message, history).then(response => {
       removeTypingIndicator(typingId);
-      appendAIResponse(response);
+      appendAIResponse(response, messagesId, options);
     });
   }, delay);
 }
@@ -618,8 +624,8 @@ function generateAIResponse(message) {
   };
 }
 
-function appendChatMessage(text, role) {
-  const container = document.getElementById('chatMessages');
+function appendChatMessage(text, role, containerId = 'chatMessages') {
+  const container = document.getElementById(containerId);
   const time = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
   const div = document.createElement('div');
   div.className = `chat-bubble ${role === 'user' ? 'user-bubble' : 'bot-bubble'}`;
@@ -643,8 +649,8 @@ function appendChatMessage(text, role) {
   container.scrollTop = container.scrollHeight;
 }
 
-function appendAIResponse(response) {
-  const container = document.getElementById('chatMessages');
+function appendAIResponse(response, containerId = 'chatMessages', options = {}) {
+  const container = document.getElementById(containerId);
   const time = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
   const div = document.createElement('div');
   div.className = 'chat-bubble bot-bubble';
@@ -662,11 +668,11 @@ function appendAIResponse(response) {
         <h4>Langkah memasak</h4>
         <ol class="chat-recipe-steps">${r.steps.map(step => `<li>${escapeHtml(step)}</li>`).join('')}</ol>
         <button class="crc-link" type="button" onclick="openRecipeByIndex(${response.recipe.idx})">Buka tampilan resep ↗</button>
-        <div class="chat-recipe-actions">
+        ${options.mini ? '' : `<div class="chat-recipe-actions">
           <button type="button" onclick="sendQuickPrompt('Bikin versi lebih pedas')">🌶️ Bikin lebih pedas</button>
           <button type="button" onclick="sendQuickPrompt('Bahan apa yang bisa diganti?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-repeat"/></svg> Tanya substitusi</button>
           <button type="button" onclick="sendQuickPrompt('Kasih tips biar lebih hemat')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-bulb"/></svg> Tips hemat</button>
-        </div>
+        </div>`}
       </section>
     `;
   }
@@ -685,8 +691,8 @@ function appendAIResponse(response) {
   container.scrollTop = container.scrollHeight;
 }
 
-function appendTypingIndicator(id) {
-  const container = document.getElementById('chatMessages');
+function appendTypingIndicator(id, containerId = 'chatMessages') {
+  const container = document.getElementById(containerId);
   const div = document.createElement('div');
   div.id = id;
   div.className = 'chat-bubble bot-bubble';

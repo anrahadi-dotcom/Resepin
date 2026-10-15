@@ -9,7 +9,8 @@ createApp({
       heroSearchMessage: '',
       popularIngredients: ['Telur', 'Ayam', 'Tahu', 'Nasi', 'Tempe'],
       activePage: 'home',
-      menuOpen: false
+      menuOpen: false,
+      floatingChefChatOpen: false
     };
   },
   computed: {
@@ -42,6 +43,7 @@ createApp({
   },
   methods: {
     go(page) {
+      this.floatingChefChatOpen = false;
       this.activePage = page;
       this.menuOpen = false;
       window.showPage(page);
@@ -50,6 +52,12 @@ createApp({
     toggleMenu() {
       this.menuOpen = !this.menuOpen;
       window.toggleMenu();
+    },
+    toggleFloatingChefChat() {
+      this.floatingChefChatOpen = !this.floatingChefChatOpen;
+      if (this.floatingChefChatOpen) {
+        this.$nextTick(() => document.getElementById('miniChatInput')?.focus());
+      }
     },
     toggleTheme() {
       window.toggleTheme();

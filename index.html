@@ -642,7 +642,25 @@
   <!-- ===== TOAST ===== -->
   <div class="toast" id="toast"></div>
 
-  <button v-if="activePage !== 'chef'" class="floating-chef-button" type="button" aria-label="Ceritakan apa saja yang ada di rumahmu. Buka chat Chef Resepin" @click="go('chef')">
+  <section v-show="activePage !== 'chef' && floatingChefChatOpen" class="floating-chef-chat" aria-label="Chat singkat Chef Resepin" @keydown.esc.prevent="floatingChefChatOpen = false">
+    <header class="floating-chef-chat-header">
+      <span class="floating-chef-chat-avatar" aria-hidden="true"><svg class="ui-icon"><use href="#ui-icon-chef"/></svg></span>
+      <span class="floating-chef-chat-title"><strong>Chef Resepin</strong><small><i></i> Siap bantu di dapur</small></span>
+      <button class="floating-chef-chat-close" type="button" aria-label="Tutup chat" @click="floatingChefChatOpen = false">×</button>
+    </header>
+    <div class="floating-chef-chat-messages" id="miniChatMessages" aria-live="polite">
+      <div class="chat-bubble bot-bubble">
+        <div class="bubble-avatar"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
+        <div class="bubble-content"><p>Hai! Ada bahan apa di rumahmu? Aku bantu cari ide masaknya. 🍳</p></div>
+      </div>
+    </div>
+    <form class="floating-chef-chat-composer" onsubmit="event.preventDefault(); sendMiniChat()">
+      <textarea id="miniChatInput" aria-label="Tulis pesan untuk Chef Resepin" placeholder="Ceritakan bahan yang ada..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMiniChat()}" oninput="autoResizeTextarea(this)"></textarea>
+      <button type="submit" aria-label="Kirim pesan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4 20-7ZM22 2 11 13"/></svg></button>
+    </form>
+  </section>
+
+  <button v-if="activePage !== 'chef'" class="floating-chef-button" type="button" :aria-label="floatingChefChatOpen ? 'Tutup chat Chef Resepin' : 'Ceritakan apa saja yang ada di rumahmu. Buka chat Chef Resepin'" :aria-expanded="floatingChefChatOpen" @click="toggleFloatingChefChat()">
     <svg class="chef-mascot" viewBox="0 0 104 132" fill="none" aria-hidden="true">
       <ellipse cx="53" cy="124" rx="28" ry="5" fill="#1f150c" opacity=".2"/>
       <g class="chef-character">
@@ -668,7 +686,7 @@
         <path d="M25 122c-2 4 1 6 12 5m42-5c2 4-1 6-12 5" fill="#946d6d" stroke="#1f150c" stroke-width="2.4" stroke-linecap="round"/>
       </g>
     </svg>
-    <span class="floating-chef-tooltip" aria-hidden="true">Ceritakan apa saja yang ada di rumahmu 👨‍🍳</span>
+    <span v-if="!floatingChefChatOpen" class="floating-chef-tooltip" aria-hidden="true">Ceritakan apa saja yang ada di rumahmu 👨‍🍳</span>
   </button>
 
   </div>
