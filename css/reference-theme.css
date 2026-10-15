@@ -3067,6 +3067,42 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
 @media (prefers-reduced-motion: reduce) {
   .hero-content::before, .hero-content::after { animation: none; }
 }
+.hero-content::before,
+.hero-content::after { display: none; }
+.hero-glow-orb {
+  position: absolute;
+  z-index: 0;
+  display: block;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(24px);
+  background: radial-gradient(circle at 42% 38%, rgba(225,220,201,.56), rgba(225,220,201,.24) 30%, rgba(65,45,21,.2) 56%, transparent 78%);
+  animation: hero-gradient-bubbles 8s ease-in-out infinite alternate;
+}
+.hero-glow-orb-one { top: 4%; left: 66%; width: 160px; height: 160px; opacity: .56; }
+.hero-glow-orb-two {
+  top: 40%; left: 78%; width: 125px; height: 145px; opacity: .43;
+  background: radial-gradient(circle at 45% 42%, rgba(65,45,21,.68), rgba(65,45,21,.3) 38%, rgba(225,220,201,.14) 62%, transparent 80%);
+  animation-delay: -3s;
+}
+.hero-glow-orb-three {
+  top: 68%; left: 25%; width: 105px; height: 110px; opacity: .36;
+  background: radial-gradient(circle at 42% 38%, rgba(225,220,201,.58), rgba(65,45,21,.26) 46%, transparent 78%);
+  animation-delay: -5s;
+}
+@media (max-width: 900px) {
+  .hero-glow-orb-one { top: 4%; left: 65%; width: 130px; height: 140px; opacity: .42; }
+  .hero-glow-orb-two { top: 45%; left: 78%; width: 105px; height: 115px; opacity: .32; }
+  .hero-glow-orb-three { top: 72%; left: 14%; width: 90px; height: 90px; opacity: .26; }
+}
+@media (max-width: 600px) {
+  .hero-glow-orb-one { top: 1%; left: 66%; width: 105px; height: 115px; opacity: .34; filter: blur(20px); }
+  .hero-glow-orb-two { top: 48%; left: 74%; width: 85px; height: 100px; opacity: .25; filter: blur(18px); }
+  .hero-glow-orb-three { top: 76%; left: 8%; width: 75px; height: 78px; opacity: .22; filter: blur(18px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-glow-orb { animation: none; }
+}
 
 /* Diffuse lamp spill without the visible straight edges from the cone mask. */
 .hero-copy-spotlight {
