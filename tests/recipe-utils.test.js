@@ -108,6 +108,8 @@ test('desktop navbar waits for its expansion before links and actions accept poi
   const styles = readFileSync(resolve(root, 'css/reference-theme.css'), 'utf8');
   assert.match(main, /function initDesktopNavHoverGuard\(\)/);
   assert.match(main, /setTimeout\(\(\) => \{\s*if \(nav\.matches\(':hover'\)\) nav\.classList\.add\('hover-ready'\);\s*\}, delay\)/);
+  assert.match(main, /pointerMovedAfterEntry = true/);
+  assert.match(main, /event\.stopImmediatePropagation\(\);\s*navigateToPage\('home'\);/);
   assert.match(main, /initDesktopNavHoverGuard\(\);/);
   assert.match(styles, /\.nav-container:not\(\.hover-ready\):not\(:focus-within\) #navLinks,[\s\S]*?pointer-events: none !important;/);
   assert.match(html, /class="nav-logo" href="#\/"[^>]*aria-label="Resepin, kembali ke Beranda"/);

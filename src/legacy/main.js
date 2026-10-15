@@ -412,6 +412,8 @@ function initDesktopNavHoverGuard() {
   const nav = document.querySelector('#navbar .nav-container');
   if (!nav || !window.matchMedia('(min-width: 901px) and (hover: hover) and (pointer: fine)').matches) return;
   let readyTimer;
+  let pointerEntry = null;
+  let pointerMovedAfterEntry = false;
   const revealAfterExpand = () => {
     clearTimeout(readyTimer);
     nav.classList.remove('hover-ready');
@@ -424,8 +426,29 @@ function initDesktopNavHoverGuard() {
     clearTimeout(readyTimer);
     nav.classList.remove('hover-ready');
   };
-  nav.addEventListener('pointerenter', revealAfterExpand);
-  nav.addEventListener('pointerleave', conceal);
+  nav.addEventListener('pointerenter', event => {
+    pointerEntry = { x: event.clientX, y: event.clientY };
+    pointerMovedAfterEntry = false;
+    revealAfterExpand();
+  });
+  nav.addEventListener('pointermove', event => {
+    if (pointerEntry && Math.hypot(event.clientX - pointerEntry.x, event.clientY - pointerEntry.y) > 18) {
+      pointerMovedAfterEntry = true;
+    }
+  });
+  nav.addEventListener('pointerleave', () => {
+    pointerEntry = null;
+    conceal();
+  });
+  nav.addEventListener('click', event => {
+    const link = event.target.closest?.('.nav-link');
+    if (!link || !pointerEntry || pointerMovedAfterEntry) return;
+    // The logo is centered while collapsed. If its click lands on a link that
+    // slid under the stationary pointer, honor the original home intent.
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    navigateToPage('home');
+  }, true);
   nav.addEventListener('focusin', () => {
     clearTimeout(readyTimer);
     nav.classList.add('hover-ready');
