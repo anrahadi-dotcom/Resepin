@@ -60,6 +60,25 @@ export function calculateRecipeMatch(recipe, availableIngredients = [], assumedS
   return { matched: matched.length, total: required.length, percentage: required.length ? matched.length / required.length : 0, missing };
 }
 
+export function sortRecipes(recipes = [], sortBy = 'match', availableIngredients = [], assumedStaples = []) {
+  const source = Array.isArray(recipes) ? recipes : [];
+  const ranked = source.map((recipe, index) => ({ recipe, index }));
+  const compareStable = (left, right, compare) => compare(left.recipe, right.recipe) || left.index - right.index;
+  if (sortBy === 'fastest') {
+    ranked.sort((left, right) => compareStable(left, right, (a, b) =>
+      (Number.parseInt(a.time, 10) || Number.POSITIVE_INFINITY) - (Number.parseInt(b.time, 10) || Number.POSITIVE_INFINITY)));
+  } else if (sortBy === 'cheapest') {
+    ranked.sort((left, right) => compareStable(left, right, (a, b) =>
+      (Number.isFinite(a.estimatedCostPerServingIDR) ? a.estimatedCostPerServingIDR : Number.POSITIVE_INFINITY) -
+      (Number.isFinite(b.estimatedCostPerServingIDR) ? b.estimatedCostPerServingIDR : Number.POSITIVE_INFINITY)));
+  } else {
+    ranked.sort((left, right) => compareStable(left, right, (a, b) =>
+      calculateRecipeMatch(b, availableIngredients, assumedStaples).percentage -
+      calculateRecipeMatch(a, availableIngredients, assumedStaples).percentage));
+  }
+  return ranked.map(item => item.recipe);
+}
+
 export function scaleQuantity(amount, originalServings, targetServings) {
   if (!Number.isFinite(amount) || !Number.isFinite(originalServings) || originalServings <= 0 || targetServings <= 0) return null;
   const raw = amount * targetServings / originalServings;
@@ -74,5 +93,5 @@ export function formatIDR(amount) {
 }
 
 if (typeof window !== 'undefined') {
-  window.ResepinRecipeUtils = { calculateRecipeMatch, formatIDR, getIngredientName, normalizeIngredient, scaleQuantity, textMatches };
+  window.ResepinRecipeUtils = { calculateRecipeMatch, formatIDR, getIngredientName, normalizeIngredient, scaleQuantity, sortRecipes, textMatches };
 }

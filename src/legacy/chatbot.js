@@ -673,7 +673,7 @@ function appendAIResponse(response, containerId = 'chatMessages', options = {}) 
     currentChatRecipeIdx = response.recipe.idx;
     recipeCardHTML = `
       <section class="chat-recipe-card" aria-label="Resep ${escapeHtml(r.title)}">
-        <div class="crc-title">${r.emoji} ${escapeHtml(r.title)}</div>
+        <div class="crc-title">${recipeIconHTML(r)} ${escapeHtml(r.title)}</div>
         <div class="crc-meta"><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>${escapeHtml(r.time)}</span><span>${escapeHtml(r.difficulty)}</span><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-users"/></svg>${escapeHtml(r.servings)}</span></div>
         <h4>Bahan-bahan</h4>
         <ul class="chat-recipe-ingredients">${r.ingredients.map(ingredient => `<li>${escapeHtml(ingredient)}</li>`).join('')}</ul>
@@ -681,7 +681,7 @@ function appendAIResponse(response, containerId = 'chatMessages', options = {}) 
         <ol class="chat-recipe-steps">${r.steps.map(step => `<li>${escapeHtml(step)}</li>`).join('')}</ol>
         <button class="crc-link" type="button" onclick="openRecipeByIndex(${response.recipe.idx})">Buka tampilan resep ↗</button>
         ${options.mini ? '' : `<div class="chat-recipe-actions">
-          <button type="button" onclick="sendQuickPrompt('Bikin versi lebih pedas')">🌶️ Bikin lebih pedas</button>
+          <button type="button" onclick="sendQuickPrompt('Bikin versi lebih pedas')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chili"/></svg> Bikin lebih pedas</button>
           <button type="button" onclick="sendQuickPrompt('Bahan apa yang bisa diganti?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-repeat"/></svg> Tanya substitusi</button>
           <button type="button" onclick="sendQuickPrompt('Kasih tips biar lebih hemat')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-bulb"/></svg> Tips hemat</button>
         </div>`}

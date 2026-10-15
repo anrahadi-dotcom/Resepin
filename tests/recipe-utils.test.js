@@ -4,7 +4,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
-import { calculateRecipeMatch, formatIDR, normalizeIngredient, scaleQuantity, textMatches } from '../src/recipe-utils.mjs';
+import { calculateRecipeMatch, formatIDR, normalizeIngredient, scaleQuantity, sortRecipes, textMatches } from '../src/recipe-utils.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const source = readFileSync(resolve(root, 'src/legacy/recipes.js'), 'utf8');
@@ -38,6 +38,18 @@ test('scales quantities conservatively and formats Indonesian currency', () => {
   assert.equal(formatIDR(12500), 'Rp12.500');
 });
 
+test('recipe sorting is stable and orders by match, time, and estimated cost', () => {
+  const recipes = [
+    { title: 'Lama', time: '40 mnt', estimatedCostPerServingIDR: 5000, ingredients: ['nasi', 'ayam'] },
+    { title: 'Murah', time: '15 mnt', estimatedCostPerServingIDR: 3000, ingredients: ['nasi'] },
+    { title: 'Cocok', time: '25 mnt', estimatedCostPerServingIDR: 4000, ingredients: ['nasi', 'telur', 'ayam'] }
+  ];
+  assert.deepEqual(sortRecipes(recipes, 'fastest').map(recipe => recipe.title), ['Murah', 'Cocok', 'Lama']);
+  assert.deepEqual(sortRecipes(recipes, 'cheapest').map(recipe => recipe.title), ['Murah', 'Cocok', 'Lama']);
+  assert.deepEqual(sortRecipes(recipes, 'match', ['nasi', 'ayam']).map(recipe => recipe.title), ['Lama', 'Murah', 'Cocok']);
+  assert.deepEqual(sortRecipes(recipes, 'unknown').map(recipe => recipe.title), recipes.map(recipe => recipe.title));
+});
+
 test('recipe catalog has forty complete entries with available local photos', () => {
   const recipes = recipeContext.catalog;
   assert.equal(recipes.length, 40);
@@ -69,4 +81,9 @@ test('critical static UI controls stay accessible and independent of external Vu
   assert.match(main, /RECIPES_DB\.slice\(0, 6\)\.map\(recipe => createRecipeCardHTML\(recipe\)\)/);
   assert.match(main, /href="#\/resep\/\$\{recipeSlug\(r\)\}"/);
   assert.match(main, /checkScanBackendAvailability/);
+  assert.match(html, /Cari resep dari bahan di rumah/);
+  assert.match(html, /id="recipeSort"/);
+  assert.match(html, /id="clearRecipeFilters"[^>]*hidden/);
+  assert.doesNotMatch(html, /🧺|🍲/u);
+  assert.doesNotMatch(readFileSync(resolve(root, 'src/legacy/recipes.js'), 'utf8'), /🧱|emoji:/u);
 });

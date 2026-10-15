@@ -14,6 +14,7 @@ let detectedIngredients = [];
 let currentFilter = 'all';
 let currentDietFilter = 'all';
 let currentBudgetFilter = null;
+let currentRecipeSort = 'match';
 let assumePantryBasics = true;
 let scanBackendAvailable = null;
 let cameraStream = null;
@@ -491,10 +492,10 @@ function runDemo() {
   updateDetectionStatus('active', 'Menyiapkan contoh bahan...');
 
   const demoItems = [
-    { emoji: '🌽', name: 'Jagung', box: { top: '15%', left: '8%', width: '38%', height: '38%' } },
-    { emoji: '🥕', name: 'Wortel', box: { top: '45%', left: '25%', width: '35%', height: '32%' } },
-    { emoji: '🧅', name: 'Bawang Merah', box: { top: '20%', left: '55%', width: '30%', height: '28%' } },
-    { emoji: '🧄', name: 'Bawang Putih', box: { top: '55%', left: '60%', width: '25%', height: '25%' } },
+    { name: 'Jagung', box: { top: '15%', left: '8%', width: '38%', height: '38%' } },
+    { name: 'Wortel', box: { top: '45%', left: '25%', width: '35%', height: '32%' } },
+    { name: 'Bawang Merah', box: { top: '20%', left: '55%', width: '30%', height: '28%' } },
+    { name: 'Bawang Putih', box: { top: '55%', left: '60%', width: '25%', height: '25%' } },
   ];
 
   // Animate detection box appearance + ingredient adding
@@ -506,13 +507,13 @@ function runDemo() {
       box.style.cssText = `top:${item.box.top};left:${item.box.left};width:${item.box.width};height:${item.box.height}`;
       const label = document.createElement('div');
       label.className = 'det-box-label';
-      label.textContent = `${item.emoji} ${item.name} · contoh`;
+      label.innerHTML = `${ingredientIconHTML(item.name)} ${escapeHtml(item.name)} · contoh`;
       box.appendChild(label);
       detBoxes.appendChild(box);
       box.style.animation = 'slideIn 0.3s ease';
 
       // Add to ingredient list
-      setTimeout(() => addIngredientItem(item.emoji, item.name, null), 300);
+      setTimeout(() => addIngredientItem(item.name, null), 300);
 
       // Final state
       if (idx === demoItems.length - 1) {
@@ -555,16 +556,6 @@ async function captureAndDetect() {
   }
 }
 
-const FOOD_EMOJIS = {
-  'Ayam': '🍗', 'Bawang Bombai': '🧅', 'Bawang Merah': '🧅', 'Bawang Putih': '🧄',
-  'Bayam': '🥬', 'Biji Kemiri': '🌰', 'Cabai Hijau': '🫑', 'Cabai Merah': '🌶️',
-  'Daging Sapi': '🥩', 'Daun Bawang': '🌿', 'Ikan': '🐟', 'Jagung': '🌽', 'Jahe': '🫚',
-  'Kacang Panjang': '🫘', 'Kangkung': '🥬', 'Kencur': '🌿', 'Kentang': '🥔',
-  'Ketumbar': '🌿', 'Kol': '🥬', 'Kunyit': '🫚', 'Lada': '⚫', 'Lengkuas': '🌿',
-  'Selada': '🥬', 'Tahu': '🟨', 'Telur': '🥚', 'Tempe': '🫘', 'Terong': '🍆',
-  'Tomat': '🍅', 'Udang': '🦐', 'Wortel': '🥕'
-};
-
 async function submitPhotoForDetection(imageBlob, width, height, filename) {
   if (imageBlob.size > 3_900_000) throw new Error('Foto masih terlalu besar setelah diperkecil. Coba gambar yang lebih sederhana.');
   const boxes = document.getElementById('detectionBoxes');
@@ -577,17 +568,16 @@ async function submitPhotoForDetection(imageBlob, width, height, filename) {
   if (!response.ok) throw new Error(result.detail || 'Deteksi belum tersedia. Tambahkan bahan secara manual.');
   const matches = Array.isArray(result.detections) ? result.detections : [];
   matches.forEach(({ label, confidence, bbox }) => {
-    const emoji = FOOD_EMOJIS[label] || '🥗';
     const [x1, y1, x2, y2] = bbox;
     const box = document.createElement('div');
     box.className = 'det-box';
     box.style.cssText = `left:${x1 / width * 100}%;top:${y1 / height * 100}%;width:${(x2 - x1) / width * 100}%;height:${(y2 - y1) / height * 100}%`;
     const caption = document.createElement('div');
     caption.className = 'det-box-label';
-    caption.textContent = `${emoji} ${label} ${Math.round(confidence * 100)}%`;
+    caption.innerHTML = `${ingredientIconHTML(label)} ${escapeHtml(label)} ${Math.round(confidence * 100)}%`;
     box.appendChild(caption);
     boxes.appendChild(box);
-    addIngredientItem(emoji, label, Math.round(confidence * 100));
+    addIngredientItem(label, Math.round(confidence * 100));
   });
   if (matches.length) {
     const confidence = Math.round(matches.reduce((sum, item) => sum + item.confidence, 0) / matches.length * 100);
@@ -693,11 +683,11 @@ function showConfidenceBar(pct) {
 // ============================================================
 // INGREDIENT MANAGEMENT
 // ============================================================
-function addIngredientItem(emoji, name, conf) {
+function addIngredientItem(name, conf) {
   const cleanName = String(name || '').trim().replace(/\s+/g, ' ');
   if (!cleanName || detectedIngredients.some(i => i.name.toLocaleLowerCase('id') === cleanName.toLocaleLowerCase('id'))) return;
 
-  const ingredient = { emoji: String(emoji || '🥘'), name: cleanName, conf };
+  const ingredient = { name: cleanName, conf };
   detectedIngredients.push(ingredient);
 
   renderIngredientList();
@@ -707,7 +697,7 @@ function addIngredientItem(emoji, name, conf) {
 function addIngredient(label) {
   const name = String(label || '').trim().replace(/\s+/g, ' ');
   if (!name) return;
-  addIngredientItem('', name, null);
+  addIngredientItem(name, null);
   showToast(`${name} ditambahkan!`, 'success');
 }
 
@@ -716,7 +706,7 @@ function addManualIngredient() {
   const val = input.value.trim().replace(/\s+/g, ' ');
   if (!val) return;
 
-  addIngredientItem('🥘', val, null);
+  addIngredientItem(val, null);
   input.value = '';
   showToast(`🥘 ${val} ditambahkan!`, 'success');
 }
@@ -820,6 +810,37 @@ function setAssumePantryBasics(enabled) {
   renderRecipesGrid();
 }
 
+function setRecipeSort(sortBy) {
+  currentRecipeSort = ['fastest', 'cheapest'].includes(sortBy) ? sortBy : 'match';
+  renderRecipesGrid();
+}
+
+function clearRecipeFilters() {
+  currentFilter = 'all';
+  currentDietFilter = 'all';
+  currentBudgetFilter = null;
+  currentRecipeSort = 'match';
+  assumePantryBasics = true;
+  try { localStorage.setItem('resep-assume-pantry-basics', 'true'); } catch (_) { /* Keep the reset for this page view. */ }
+  const search = document.getElementById('recipeSearch');
+  const pantry = document.getElementById('assumePantryBasics');
+  const sort = document.getElementById('recipeSort');
+  if (search) search.value = '';
+  if (pantry) pantry.checked = true;
+  if (sort) sort.value = 'match';
+  document.querySelectorAll('#basicRecipeFilters .filter-chip, [aria-label="Filter kebutuhan makan"] .filter-chip, [aria-label="Filter perkiraan biaya per porsi"] .filter-chip').forEach(button => {
+    button.classList.remove('active');
+    button.setAttribute('aria-pressed', 'false');
+  });
+  const allButton = document.querySelector('#basicRecipeFilters .filter-chip');
+  allButton?.classList.add('active');
+  allButton?.setAttribute('aria-pressed', 'true');
+  const url = new URL(window.location.href);
+  url.searchParams.delete('bahan');
+  window.history.replaceState(window.history.state, '', url);
+  renderRecipesGrid();
+}
+
 function renderRecipesGrid() {
   const grid = document.getElementById('recipesGrid');
   if (!grid) return;
@@ -850,8 +871,6 @@ function renderRecipesGrid() {
     });
   }
   if (currentBudgetFilter) filtered = filtered.filter(recipe => recipe.estimatedCostPerServingIDR <= currentBudgetFilter);
-  if (ingredientQuery.length) filtered.sort((left, right) => recipeMatch(right, ingredientQuery).percentage - recipeMatch(left, ingredientQuery).percentage);
-
   // Apply filter chip
   if (currentFilter !== 'all') {
     filtered = filtered.filter(r => {
@@ -867,8 +886,15 @@ function renderRecipesGrid() {
     });
   }
 
+  filtered = window.ResepinRecipeUtils?.sortRecipes(filtered, currentRecipeSort, ingredientQuery, assumedStapleNames()) || filtered;
+
   const status = document.getElementById('recipeResultsStatus');
-  if (status) status.textContent = `${filtered.length} resep ditemukan${ingredientQuery.length ? `, diurutkan dari kecocokan bahan tertinggi` : ''}.`;
+  const sortDescriptions = { match: 'kecocokan tertinggi', fastest: 'waktu tercepat', cheapest: 'biaya terendah' };
+  if (status) status.textContent = `${filtered.length} resep ditemukan, diurutkan berdasarkan ${sortDescriptions[currentRecipeSort] || sortDescriptions.match}${ingredientQuery.length ? ' dengan bahan yang tersedia' : ''}.`;
+  const clearButton = document.getElementById('clearRecipeFilters');
+  const activeQuery = Boolean(document.getElementById('recipeSearch')?.value?.trim());
+  const hasIngredientParams = new URLSearchParams(window.location.search).has('bahan');
+  if (clearButton) clearButton.hidden = !(activeQuery || hasIngredientParams || currentFilter !== 'all' || currentDietFilter !== 'all' || currentBudgetFilter !== null || currentRecipeSort !== 'match' || !assumePantryBasics);
   grid.innerHTML = filtered.length === 0
     ? `<div class="recipe-empty-state"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-book"/></svg><p>Tidak ada resep yang cocok.<br/>Coba kata kunci lain!</p></div>`
     : filtered.map(r => createRecipeCardHTML(r)).join('');
@@ -889,8 +915,24 @@ function ingredientDisplayName(value) {
 
 function ingredientIconHTML(name) {
   const normalized = window.ResepinRecipeUtils?.normalizeIngredient(name) || String(name).toLocaleLowerCase('id');
-  const icon = /telur/.test(normalized) ? 'egg' : /ikan|udang|teri|terasi/.test(normalized) ? 'fish' : /ayam|daging|sapi|babi/.test(normalized) ? 'chef' : /sayur|daun|cabai|bawang|wortel|jagung|bayam|kangkung|kol|brokoli|tomat|tauge|buncis/.test(normalized) ? 'sprout' : 'food';
+  const icon = /tempe/.test(normalized) ? 'tempe'
+    : /telur/.test(normalized) ? 'egg'
+      : /tahu/.test(normalized) ? 'tofu'
+        : /ayam|daging|sapi|babi/.test(normalized) ? 'chicken'
+          : /nasi|beras/.test(normalized) ? 'rice'
+            : /mi |mie|soun|spaghetti|pasta/.test(`${normalized} `) ? 'noodles'
+              : /jagung/.test(normalized) ? 'corn'
+                : /wortel/.test(normalized) ? 'carrot'
+                  : /bawang/.test(normalized) ? 'onion'
+                    : /cabai|cabe|lombok/.test(normalized) ? 'chili'
+                      : /ikan|udang|teri|terasi/.test(normalized) ? 'fish'
+                        : /kacang|buncis/.test(normalized) ? 'bean'
+                          : /sayur|daun|bayam|kangkung|kol|sawi|selada|brokoli|tauge|paprika/.test(normalized) ? 'leaf' : 'food';
   return `<svg class="ui-icon ingredient-icon" aria-hidden="true"><use href="#ui-icon-${icon}"/></svg>`;
+}
+
+function recipeIconHTML(recipe) {
+  return ingredientIconHTML(ingredientDisplayName(recipe?.ingredients?.[0] || recipe?.title || ''));
 }
 
 // Use one calm illustration when a food photograph is unavailable or fails.
@@ -1087,15 +1129,6 @@ function renderExploreResults() {
 // ============================================================
 // RECIPE MODAL
 // ============================================================
-const EMOJI_GRADIENTS = {
-  '🌽': 'linear-gradient(135deg,#e67e22,#f39c12)',
-  '🍚': 'linear-gradient(135deg,#8e44ad,#9b59b6)',
-  '🥬': 'linear-gradient(135deg,#27ae60,#2ecc71)',
-  '🧱': 'linear-gradient(135deg,#e74c3c,#c0392b)',
-  '🥦': 'linear-gradient(135deg,#1abc9c,#16a085)',
-  '🍗': 'linear-gradient(135deg,#f39c12,#d68910)',
-};
-
 function openRecipeModal(title, time, servings, ingredients, steps, { updateRoute = true } = {}) {
   const modal = document.getElementById('recipeModal');
   if (!modal.classList.contains('open')) previousRecipeFocus = document.activeElement;
@@ -1140,14 +1173,12 @@ function openRecipeModal(title, time, servings, ingredients, steps, { updateRout
     document.getElementById('modalHeroEmoji').style.display = 'none';
   } else {
     heroMedia.innerHTML = '';
-    const firstEmoji = ingredients[0]?.split(' ')[0] || '🍳';
     const heroEmoji = document.getElementById('modalHeroEmoji');
-    heroEmoji.textContent = firstEmoji + (ingredients[1]?.split(' ')[0] || '');
     heroEmoji.style.display = 'flex';
   }
-  const firstEmoji = ingredients[0]?.split(' ')[0] || '🍳';
-  const gradient = EMOJI_GRADIENTS[firstEmoji] || 'linear-gradient(135deg,rgba(255,107,53,0.2),rgba(46,196,182,0.15))';
-  hero.style.background = gradient;
+  const heroEmoji = document.getElementById('modalHeroEmoji');
+  heroEmoji.innerHTML = recipeIconHTML(recipe || { ingredients });
+  hero.style.background = recipe?.gradient || 'linear-gradient(135deg, var(--bg-surface), var(--bg-card))';
 
   document.getElementById('modalIngredients').innerHTML = ingredients.map((ing, index) => {
     const detected = currentIngredientNames().some(value => recipeIngredientMatches(ing, value)) || assumedStapleNames().some(value => recipeIngredientMatches(ing, value));
@@ -1160,7 +1191,7 @@ function openRecipeModal(title, time, servings, ingredients, steps, { updateRout
 
   document.getElementById('modalSteps').innerHTML = steps.map(s => `<li>${escapeHtml(typeof s === 'string' ? s : s.text || '')}</li>`).join('');
 
-  const ingredientName = ingredients[0]?.split(' ').slice(1).join(' ').toLowerCase() || '';
+  const ingredientName = ingredientDisplayName(ingredients[0]).toLowerCase();
   const tip = findAITip(ingredientName);
   document.getElementById('modalTip').textContent = tip;
   const favoriteButton = document.getElementById('saveRecipeButton');

@@ -51,6 +51,16 @@
     <symbol id="ui-icon-egg" viewBox="0 0 24 24"><path d="M12 3c-3.4 0-7 6.1-7 11a7 7 0 0 0 14 0c0-4.9-3.6-11-7-11Z"/><path d="M9 16c.4 1.4 1.4 2 2.7 2"/></symbol>
     <symbol id="ui-icon-fish" viewBox="0 0 24 24"><path d="M3 12s3.5-6 10-6c3 0 5 2 7 6-2 4-4 6-7 6-6.5 0-10-6-10-6Z"/><path d="m3 12-2-4v8l2-4Zm10-2h.01M15 10c1.2 1 1.2 3 0 4"/></symbol>
     <symbol id="ui-icon-food" viewBox="0 0 24 24"><path d="M4 11h16l-2 9H6l-2-9Zm-2 0h20M8 7h8M12 3v4"/><path d="M7 15h10"/></symbol>
+    <symbol id="ui-icon-tempe" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="3"/><path d="M8 9h.01M12 9h.01M16 9h.01M8 13h.01M12 13h.01M16 13h.01M8 17h.01M12 17h.01M16 17h.01"/></symbol>
+    <symbol id="ui-icon-chicken" viewBox="0 0 24 24"><path d="M7 15c-2.2-2.2-1.9-5.9.7-8.5s6.3-2.9 8.5-.7 1.9 5.9-.7 8.5S9.2 17.2 7 15Zm-1.5-1.5-2 2m2.8.8-2 2m4.9-1.9 2 2m-4.1-5.1 2-2"/></symbol>
+    <symbol id="ui-icon-rice" viewBox="0 0 24 24"><path d="M4 12h16l-2 8H6l-2-8Zm-2 0h20M7 9c0-2 1-3 2-4m3 4c0-2 1-3 2-4m3 4c0-2 1-3 2-4"/></symbol>
+    <symbol id="ui-icon-noodles" viewBox="0 0 24 24"><path d="M4 12h16l-2 8H6l-2-8Zm-2 0h20M8 9c0-2 1-3 2-4m2 4c0-2 1-3 2-4m2 4c0-2 1-3 2-4"/></symbol>
+    <symbol id="ui-icon-leaf" viewBox="0 0 24 24"><path d="M20 4C10 4 5 7 5 14a6 6 0 0 0 6 6c7 0 9-7 9-16ZM4 21c3-5 6-8 12-12"/></symbol>
+    <symbol id="ui-icon-corn" viewBox="0 0 24 24"><path d="M9 5c0-2 6-2 6 0v13a3 3 0 0 1-6 0V5Zm-2 7c-2 2-2 5 0 8l2-2m8-6c2 2 2 5 0 8l-2-2M11 7h2m-2 4h2m-2 4h2"/></symbol>
+    <symbol id="ui-icon-onion" viewBox="0 0 24 24"><path d="M12 3c0 3-7 6-7 12a7 7 0 0 0 14 0c0-6-7-9-7-12Zm0 4c-1 3-4 5-4 8a4 4 0 0 0 8 0c0-3-3-5-4-8Z"/></symbol>
+    <symbol id="ui-icon-chili" viewBox="0 0 24 24"><path d="M8 8c4-3 8-3 12 0-1 6-5 11-11 12-3 0-5-2-5-5 0-2 1-4 4-7Zm0 0c0-2 1-4 4-5m-4 5-3-2"/></symbol>
+    <symbol id="ui-icon-tofu" viewBox="0 0 24 24"><path d="m5 8 8-4 6 3-8 4-6-3Zm0 0v9l6 4v-10m8-4v9l-8 5m-6-9 6 4 8-4"/></symbol>
+    <symbol id="ui-icon-bean" viewBox="0 0 24 24"><path d="M18.5 5.5c-4-2-9-1-12 3s-3 8 0 10 7 1 10-2 5-8 2-11Zm-12 12c3-1 7-4 10-9"/></symbol>
   </svg>
 
   <!-- ===== NAVBAR ===== -->
@@ -70,6 +80,7 @@
             </defs>
           </svg>
         </div>
+        <span class="nav-wordmark" aria-hidden="true">Resepin</span>
       </a>
 
       <div class="nav-links" id="navLinks">
@@ -78,29 +89,9 @@
         <a class="nav-link" data-page="chef" href="#/chef" @click.prevent="go('chef')">Chef Resepin</a>
         <a class="nav-link" data-page="jelajahi" href="#/jelajahi" @click.prevent="go('jelajahi')">Jelajahi</a>
         <a class="nav-link" data-page="tersimpan" href="#/tersimpan" @click.prevent="go('tersimpan')">Tersimpan</a>
-        <form class="nav-ingredient-search" id="navIngredientSearch" @submit.prevent="submitHeroSearch">
-          <label class="visually-hidden" for="heroIngredientSearch">Cari resep dari bahan</label>
-          <div class="nav-search-heading">
-            <strong>Masak dari bahan yang ada</strong>
-            <span>Pisahkan nama bahan dengan koma</span>
-          </div>
-          <input id="heroIngredientSearch" v-model="heroIngredientText" type="search" aria-label="Ketik bahan untuk mencari resep" placeholder="Contoh: telur, tomat, bawang..." autocomplete="off" />
-          <button class="nav-search-submit" type="submit" aria-label="Cari resep" title="Cari resep" :disabled="heroSearchIngredients.length === 0">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>
-          </button>
-          <div class="hero-popular-ingredients nav-ingredient-popular" role="group" aria-label="Bahan populer">
-            <span class="hero-popular-label">Populer:</span>
-            <button v-for="ingredient in popularIngredients" :key="ingredient" class="hero-ingredient-chip" :class="{active: heroSelectedIngredients.includes(ingredient)}" type="button" :aria-pressed="heroSelectedIngredients.includes(ingredient)" @click="toggleHeroIngredient(ingredient)">{{ ingredient }}</button>
-          </div>
-          <p v-if="heroSearchMessage" class="hero-search-message nav-search-message" role="status">{{ heroSearchMessage }}</p>
-        </form>
       </div>
 
       <div class="nav-actions">
-        <button class="btn-scan-nav" aria-label="Scan bahan" title="Scan bahan" @click="go('scan')">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3m8 0h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3m-8 0H5a1 1 0 0 1-1-1v-3"/><path d="M7 12h10"/><circle cx="12" cy="12" r="3.2"/></svg>
-          <span>Scan bahan</span>
-        </button>
         <button class="btn-avatar" aria-label="Pengaturan" title="Pengaturan" @click="go('profil')">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         </button>
@@ -127,10 +118,25 @@
       <div class="hero-particles" id="heroParticles"></div>
       <div id="heroApp" class="hero-container" v-cloak>
         <div class="hero-content">
-          <h1 class="hero-title"><span class="hero-title-line hero-enter-2">Apa yang ada</span><span class="hero-title-line hero-enter-3">di dapurmu?</span><span class="title-gradient hero-title-line hero-enter-4">Jadikan hidangan</span><span class="title-accent hero-title-line hero-enter-5">istimewa.</span></h1>
+          <h1 class="hero-title" aria-label="Apa yang ada di dapurmu? Jadikan hidangan istimewa."><span class="hero-title-line hero-enter-2">Apa yang ada</span> <span class="hero-title-line hero-enter-3">di dapurmu?</span> <span class="title-gradient hero-title-line hero-enter-4">Jadikan hidangan</span> <span class="title-accent hero-title-line hero-enter-5">istimewa.</span></h1>
           <p class="hero-desc hero-enter hero-enter-6">Punya bahan tersisa? Temukan masakan rumahan yang enak, praktis, dan cocok dengan isi dapurmu.</p>
-          <div class="hero-cta hero-cta-link hero-enter hero-enter-7">
-            <a href="#/resep" @click.prevent="go('resep')">Lihat semua resep <span aria-hidden="true">→</span></a>
+          <form class="hero-search-form hero-enter hero-enter-7" @submit.prevent="submitHeroSearch">
+            <label class="hero-search-label" for="heroIngredientSearch">Cari resep dari bahan di rumah</label>
+            <div class="hero-search-control">
+              <input id="heroIngredientSearch" v-model="heroIngredientText" type="search" aria-label="Ketik bahan untuk mencari resep" placeholder="Ketik bahan: telur, tomat, bawang..." autocomplete="off" />
+              <button class="btn-primary hero-search-submit" type="submit" :disabled="heroSearchIngredients.length === 0">
+                <svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-search"/></svg> Cari resep
+              </button>
+            </div>
+            <div class="hero-popular-ingredients" role="group" aria-label="Pilih bahan populer">
+              <span class="hero-popular-label">Coba:</span>
+              <button v-for="ingredient in popularIngredients" :key="ingredient" class="hero-ingredient-chip" :class="{active: heroSelectedIngredients.includes(ingredient)}" type="button" :aria-pressed="heroSelectedIngredients.includes(ingredient)" @click="toggleHeroIngredient(ingredient)">{{ ingredient }}</button>
+            </div>
+            <p v-if="heroSearchMessage" class="hero-search-message" role="status">{{ heroSearchMessage }}</p>
+          </form>
+          <div class="hero-secondary-actions hero-enter hero-enter-8">
+            <button class="btn-secondary" type="button" @click="go('scan')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-camera"/></svg> Scan bahan</button>
+            <a class="hero-see-all" href="#/resep" @click.prevent="go('resep')">Lihat semua resep <span aria-hidden="true">→</span></a>
           </div>
         </div>
       </div>
@@ -165,7 +171,7 @@
               <div class="step-icon"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-basket"/></svg></div>
               <div class="step-ring"></div>
             </div>
-            <h3>Masukkan bahan yang ada</h3>
+            <h3>Periksa daftar bahanmu</h3>
             <p>Periksa daftar bahan, lalu ubah atau lengkapi kalau ada yang kurang tepat.</p>
             <div class="step-tag">Daftarnya bisa diubah</div>
           </div>
@@ -369,7 +375,7 @@
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           <input type="search" id="recipeSearch" aria-label="Cari nama resep atau bahan" placeholder="Cari resep atau bahan..." oninput="filterRecipes()" />
         </div>
-        <div class="filter-chips" id="basicRecipeFilters">
+        <div class="filter-chips" id="basicRecipeFilters" role="group" aria-label="Filter kategori resep">
           <button type="button" class="filter-chip active" aria-pressed="true" onclick="setFilter('all', this)">Semua</button>
           <button type="button" class="filter-chip" aria-pressed="false" onclick="setFilter('mudah', this)">Mudah</button>
           <button type="button" class="filter-chip" aria-pressed="false" onclick="setFilter('cepat', this)">&lt; 15 Menit</button>
@@ -387,8 +393,19 @@
         <div class="filter-chips" role="group" aria-label="Filter perkiraan biaya per porsi">
           <button type="button" class="filter-chip" aria-pressed="false" onclick="setBudgetFilter(10000, this)">≤ Rp10.000</button>
           <button type="button" class="filter-chip" aria-pressed="false" onclick="setBudgetFilter(20000, this)">≤ Rp20.000</button>
+        </div>
+        <div class="pantry-filter-group" role="group" aria-label="Preferensi bahan dasar dapur">
           <label class="pantry-toggle"><input id="assumePantryBasics" type="checkbox" checked onchange="setAssumePantryBasics(this.checked)" /> <span>Anggap bahan dasar dapur selalu ada</span></label>
         </div>
+        <div class="recipe-sort-group" role="group" aria-label="Urutkan resep">
+          <label for="recipeSort">Urutkan</label>
+          <select id="recipeSort" onchange="setRecipeSort(this.value)">
+            <option value="match">Paling cocok</option>
+            <option value="fastest">Tercepat</option>
+            <option value="cheapest">Termurah</option>
+          </select>
+        </div>
+        <button class="clear-recipe-filters" id="clearRecipeFilters" type="button" onclick="clearRecipeFilters()" hidden>Hapus filter</button>
         <p class="recipe-results-status" id="recipeResultsStatus" aria-live="polite"></p>
       </div>
 
@@ -433,11 +450,11 @@
 
         <div class="quick-prompts" id="quickPrompts">
           <div class="qp-scroll">
-            <button class="qp-btn" onclick="sendQuickPrompt('Aku punya wortel, jagung, dan bawang. Bisa masak apa?')">🥕 Punya wortel & jagung</button>
-            <button class="qp-btn" onclick="sendQuickPrompt('Ada nasi sisa dan telur di kulkas. Ada resep simpel?')">🍚 Nasi sisa + telur</button>
-            <button class="qp-btn" onclick="sendQuickPrompt('Mau masak sesuatu yang kaya protein tapi cepat, ada ayam.')">🍗 Masak dari ayam</button>
-            <button class="qp-btn" onclick="sendQuickPrompt('Ada tempe dan tahu, mau bikin lauk yang enak.')">🧱 Tempe & tahu</button>
-            <button class="qp-btn" onclick="sendQuickPrompt('Bahan di kulkas tinggal sedikit, ada brokoli dan wortel saja.')">🥦 Sayuran sisa</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Aku punya wortel, jagung, dan bawang. Bisa masak apa?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-carrot"/></svg> Punya wortel & jagung</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Ada nasi sisa dan telur di kulkas. Ada resep simpel?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-rice"/></svg> Nasi sisa + telur</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Mau masak sesuatu yang kaya protein tapi cepat, ada ayam.')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chicken"/></svg> Masak dari ayam</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Ada tempe dan tahu, mau bikin lauk yang enak.')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-tempe"/></svg> Tempe & tahu</button>
+            <button class="qp-btn" onclick="sendQuickPrompt('Bahan di kulkas tinggal sedikit, ada brokoli dan wortel saja.')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-leaf"/></svg> Sayuran sisa</button>
             <button class="qp-btn" onclick="sendQuickPrompt('Apa pengganti santan kalau habis?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-bulb"/></svg> Substitusi bahan</button>
             <button class="qp-btn" onclick="sendQuickPrompt('Bagaimana cara menyimpan sisa makanan dengan aman?')">Simpan sisa makanan</button>
             <button class="qp-btn" onclick="sendQuickPrompt('Bagaimana cara menggoreng tempe agar renyah?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-bulb"/></svg> Teknik memasak</button>
@@ -529,7 +546,7 @@
 
   <div class="page" id="page-not-found" role="main" tabindex="-1">
     <main class="route-not-found container">
-      <span aria-hidden="true">🍲</span>
+      <svg class="ui-icon route-not-found-icon" aria-hidden="true"><use href="#ui-icon-food"/></svg>
       <h1>Halaman tidak ditemukan</h1>
       <p>Tautan ini belum punya halaman Resepin.</p>
       <button class="btn-primary" type="button" @click="go('home')">Kembali ke Beranda</button>
@@ -542,7 +559,7 @@
       <button class="modal-close" type="button" aria-label="Tutup detail resep" onclick="closeRecipeModal()">✕</button>
       <div class="modal-hero" id="modalHero">
         <div class="modal-hero-media" id="modalHeroMedia"></div>
-        <div class="modal-hero-emoji" id="modalHeroEmoji">🍳</div>
+        <div class="modal-hero-emoji" id="modalHeroEmoji" aria-hidden="true"><svg class="ui-icon ingredient-icon"><use href="#ui-icon-food"/></svg></div>
       </div>
       <div class="modal-body">
         <div class="modal-header-info">
@@ -559,7 +576,7 @@
 
         <div class="modal-grid">
           <div class="modal-ingredients">
-            <h3>🧺 Bahan-bahan <small id="checklistProgress"></small></h3>
+            <h3><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-basket"/></svg> Bahan-bahan <small id="checklistProgress"></small></h3>
             <ul id="modalIngredients"></ul>
           </div>
           <div class="modal-steps">
@@ -612,8 +629,8 @@
         <div class="bubble-content"><p>Hai! Mau masak apa hari ini? 🍳</p></div>
       </div>
       <div class="floating-chat-suggestions" id="miniChatSuggestions" aria-label="Mulai dari topik ini">
-        <button type="button" onclick="sendMiniPrompt('Aku punya nasi sisa dan telur. Ada resep simpel?')">🍚 Nasi + telur</button>
-        <button type="button" onclick="sendMiniPrompt('Aku punya sayuran sisa. Ada ide masak yang praktis?')">🥕 Sayuran sisa</button>
+        <button type="button" onclick="sendMiniPrompt('Aku punya nasi sisa dan telur. Ada resep simpel?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-rice"/></svg> Nasi + telur</button>
+        <button type="button" onclick="sendMiniPrompt('Aku punya sayuran sisa. Ada ide masak yang praktis?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-carrot"/></svg> Sayuran sisa</button>
         <button type="button" onclick="sendMiniPrompt('Aku mau tanya substitusi bahan.')">↔️ Substitusi</button>
       </div>
     </div>
