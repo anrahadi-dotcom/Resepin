@@ -2978,7 +2978,7 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
     opacity: .82;
   }
   100% {
-    clip-path: inset(0 0 0 0);
+    clip-path: inset(-.1em 0 -.18em 0);
     opacity: 1;
     transform: translateY(0);
   }
@@ -3004,13 +3004,13 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
 /* Keep the hero headline bold while giving the lamp and photo more breathing room. */
 .hero-content h1 {
   font-size: clamp(2.45rem, 4.1vw, 4.25rem);
-  line-height: .98;
+  line-height: 1.04;
 }
 @media (max-width: 900px) {
-  .hero-content h1 { font-size: clamp(2.2rem, 5.9vw, 3.2rem); }
+  .hero-content h1 { font-size: clamp(2.2rem, 5.9vw, 3.2rem); line-height: 1.04; }
 }
 @media (max-width: 600px) {
-  .hero-content h1 { font-size: clamp(2.05rem, 8.8vw, 2.7rem); }
+  .hero-content h1 { font-size: clamp(2.05rem, 8.8vw, 2.7rem); line-height: 1.04; }
 }
 
 /* Diffuse lamp spill without the visible straight edges from the cone mask. */
