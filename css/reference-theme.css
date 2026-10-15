@@ -2906,17 +2906,17 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
 .hero-light-glow { top: 36%; left: 25%; }
 .hero-copy-spotlight {
   background:
-    radial-gradient(ellipse 26% 15% at 25% 36%, rgba(255,235,190,.38), transparent 78%),
-    linear-gradient(180deg, rgba(255,226,168,.2), rgba(255,226,168,.08) 52%, transparent 92%);
-  clip-path: polygon(19% 34%, 31% 34%, 72% 100%, 0% 100%);
-  filter: blur(42px);
+    radial-gradient(ellipse 20% 12% at 25% 36%, rgba(255,235,190,.3), transparent 78%),
+    linear-gradient(180deg, rgba(255,226,168,.16), rgba(255,226,168,.06) 52%, transparent 92%);
+  clip-path: polygon(22% 34%, 28% 34%, 50% 100%, 4% 100%);
+  filter: blur(32px);
   transform-origin: 25% 36%;
   animation: lamp-beam-visible 2s cubic-bezier(.2,.7,.2,1) both;
 }
 @keyframes lamp-beam-visible {
   0%,34% { opacity: 0; transform: scaleY(.3); }
-  54% { opacity: .42; transform: scaleY(1.02); }
-  62%,100% { opacity: .34; transform: scaleY(1); }
+  54% { opacity: .34; transform: scaleY(1.02); }
+  62%,100% { opacity: .28; transform: scaleY(1); }
 }
 .hero-enter-2 { animation-delay: 1.35s !important; }
 .hero-enter-3 { animation-delay: 1.52s !important; }
@@ -2928,9 +2928,9 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
   .hero-light-glow { top: 21%; left: 47%; }
   .hero-copy-spotlight {
     background:
-      radial-gradient(ellipse 24% 13% at 47% 21%, rgba(255,235,190,.34), transparent 78%),
-      linear-gradient(180deg, rgba(255,226,168,.16), rgba(255,226,168,.065) 52%, transparent 92%);
-    clip-path: polygon(39% 19%, 55% 19%, 94% 100%, 7% 100%);
+      radial-gradient(ellipse 20% 11% at 47% 21%, rgba(255,235,190,.28), transparent 78%),
+      linear-gradient(180deg, rgba(255,226,168,.13), rgba(255,226,168,.05) 52%, transparent 92%);
+    clip-path: polygon(43% 19%, 51% 19%, 79% 100%, 15% 100%);
     transform-origin: 47% 21%;
   }
 }
@@ -2938,9 +2938,9 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
   .hero-light-glow { top: 40%; left: 28%; }
   .hero-copy-spotlight {
     background:
-      radial-gradient(ellipse 28% 12% at 28% 40%, rgba(255,235,190,.32), transparent 78%),
-      linear-gradient(180deg, rgba(255,226,168,.15), rgba(255,226,168,.06) 52%, transparent 92%);
-    clip-path: polygon(15% 39%, 41% 39%, 92% 100%, 0% 100%);
+      radial-gradient(ellipse 22% 10% at 28% 40%, rgba(255,235,190,.27), transparent 78%),
+      linear-gradient(180deg, rgba(255,226,168,.12), rgba(255,226,168,.045) 52%, transparent 92%);
+    clip-path: polygon(22% 39%, 34% 39%, 76% 100%, 4% 100%);
     transform-origin: 28% 40%;
   }
   .hero-enter-2 { animation-delay: 1.05s !important; }
