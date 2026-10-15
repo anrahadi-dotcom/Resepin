@@ -3710,7 +3710,7 @@ body[data-theme="dark"] .section .gradient-text { background: linear-gradient(11
 .hero-enter-7 { animation-delay: 2.25s !important; }
 @keyframes hero-text-under-lamp {
   0% {
-    clip-path: inset(0 0 100% 0);
+    clip-path: inset(0 -.18em 100% -.18em);
     opacity: 0;
     transform: translateY(10px);
   }
@@ -3718,7 +3718,7 @@ body[data-theme="dark"] .section .gradient-text { background: linear-gradient(11
     opacity: .82;
   }
   100% {
-    clip-path: inset(-.12em 0 -.38em 0);
+    clip-path: inset(-.12em -.18em -.38em -.18em);
     opacity: 1;
     transform: translateY(0);
   }
