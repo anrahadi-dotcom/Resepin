@@ -1336,8 +1336,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initial recipe grid render
   renderFeaturedRecipes();
+  // Featured cards are created after the first reveal scan above. Register them
+  // once they are in the DOM so refresh/reload gets the same scroll animation.
+  requestAnimationFrame(() => window.refreshMotionReveals?.());
   setTimeout(() => {
     renderJelajahiGrid();
+    requestAnimationFrame(() => window.refreshMotionReveals?.());
   }, 100);
 
   let swipeStartX = null;
