@@ -979,7 +979,7 @@ function bindRecipeImageFallbacks(root = document) {
   });
 }
 
-function createRecipeCardHTML(r) {
+function createRecipeCardHTML(r, { keepCurrentPage = false } = {}) {
   const recipeIndex = RECIPES_DB.indexOf(r);
   const ingredientCount = Array.isArray(r.ingredients) ? r.ingredients.length : null;
   const available = currentIngredientNames();
@@ -987,10 +987,10 @@ function createRecipeCardHTML(r) {
   const missing = match.missing.slice(0, 3).join(', ');
   const cost = window.ResepinRecipeUtils?.formatIDR(r.estimatedCostPerServingIDR) || '';
   return `
-    <a class="recipe-card" href="#/resep/${recipeSlug(r)}" aria-label="Lihat resep ${escapeHtml(r.title)}. Kamu punya ${match.matched} dari ${match.total} bahan." onclick="event.preventDefault();openRecipeByIndex(${recipeIndex})">
+    <a class="recipe-card" href="#/resep/${recipeSlug(r)}" aria-label="Lihat resep ${escapeHtml(r.title)}. Kamu punya ${match.matched} dari ${match.total} bahan." onclick="event.preventDefault();${keepCurrentPage ? 'openFeaturedRecipeByIndex' : 'openRecipeByIndex'}(${recipeIndex})">
       <div class="recipe-img" style="background:${r.gradient}">
         ${recipeImageHTML(r, 'recipe-img-photo')}
-        <span class="recipe-card-action" aria-hidden="true">Lihat resep <span>↗</span></span>
+        <span class="recipe-card-action" aria-hidden="true"><span class="recipe-card-action-label">Intip resep</span><span class="recipe-card-action-arrow">↗</span></span>
       </div>
       <div class="recipe-badge-diff ${r.difficulty === 'Mudah' ? 'easy' : 'medium'}">${r.difficulty}</div>
       <div class="recipe-info">
@@ -1010,7 +1010,7 @@ function createRecipeCardHTML(r) {
 function renderFeaturedRecipes() {
   const list = document.querySelector('.featured-recipes .recipes-scroll');
   if (!list) return;
-  list.innerHTML = RECIPES_DB.slice(0, 6).map(recipe => createRecipeCardHTML(recipe)).join('');
+  list.innerHTML = RECIPES_DB.slice(0, 6).map(recipe => createRecipeCardHTML(recipe, { keepCurrentPage: true })).join('');
   bindRecipeImageFallbacks(list);
 }
 
@@ -1320,6 +1320,12 @@ function openRecipeByIndex(index) {
   const recipe = RECIPES_DB[index];
   if (!recipe) return;
   openRecipeModal(recipe.title, recipe.time, recipe.servings, recipe.ingredients, recipe.steps);
+}
+
+function openFeaturedRecipeByIndex(index) {
+  const recipe = RECIPES_DB[index];
+  if (!recipe) return;
+  openRecipeModal(recipe.title, recipe.time, recipe.servings, recipe.ingredients, recipe.steps, { updateRoute: false });
 }
 
 function findAITip(ingredientName) {
