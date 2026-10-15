@@ -4997,3 +4997,19 @@ body:has(#navbar .nav-search-wrap.is-open)::before {
 @media (prefers-reduced-motion: reduce) {
   body:has(#navbar .nav-search-wrap.is-open)::before { @apply [animation:none]; }
 }
+
+/* Keep the text navigation chips aligned and use one glass treatment for each state. */
+@media (min-width: 901px) {
+  #navbar #navLinks > .nav-link:not(.nav-search-toggle) {
+    @apply [height:40px];
+    @apply [min-height:40px];
+    @apply [padding-block:0];
+    @apply [box-sizing:border-box];
+    @apply [align-items:center];
+  }
+  #navbar #navLinks > .nav-link:not(.nav-search-toggle):hover,
+  #navbar #navLinks > .nav-link:not(.nav-search-toggle).active {
+    @apply [backdrop-filter:blur(10px)_saturate(125%)];
+    @apply [-webkit-backdrop-filter:blur(10px)_saturate(125%)];
+  }
+}
