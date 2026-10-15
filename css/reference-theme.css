@@ -3001,6 +3001,18 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
   }
 }
 
+/* Keep the hero headline bold while giving the lamp and photo more breathing room. */
+.hero-content h1 {
+  font-size: clamp(2.45rem, 4.1vw, 4.25rem);
+  line-height: .98;
+}
+@media (max-width: 900px) {
+  .hero-content h1 { font-size: clamp(2.2rem, 5.9vw, 3.2rem); }
+}
+@media (max-width: 600px) {
+  .hero-content h1 { font-size: clamp(2.05rem, 8.8vw, 2.7rem); }
+}
+
 /* Diffuse lamp spill without the visible straight edges from the cone mask. */
 .hero-copy-spotlight {
   clip-path: none !important;
