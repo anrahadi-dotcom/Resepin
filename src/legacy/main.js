@@ -16,7 +16,7 @@ let cameraStream = null;
 let demoRunning = false;
 let currentChatRecipeIdx = null;
 let awaitingSubstitutionIngredient = false;
-let selectedExploreCategory = 'all';
+let selectedExploreCategory = 'bali';
 const PERSONAL_STATS_KEY = 'resepin-personal-stats-v1';
 const FAVORITE_RECIPE_IDS_KEY = 'resep-favorite-ids-v1';
 let personalStatsMemory = { ingredientsUsed: 0, recipesOpened: 0 };
@@ -67,15 +67,13 @@ window.recordScanIngredientUsage = function recordScanIngredientUsage() {
 };
 
 const EXPLORE_CATEGORIES = [
-  { id: 'all', label: 'Semua resep', color: '#B65C3A', matches: () => true },
   { id: 'bali', label: 'Masakan Bali', color: '#788466', matches: recipe => recipe.tags.includes('Bali') },
   { id: 'quick', label: '30 menit atau kurang', color: '#D3A64F', matches: recipe => parseInt(recipe.time, 10) <= 30 },
   { id: 'soups', label: 'Sup dan berkuah', color: '#A96F4C', matches: recipe => recipe.tags.includes('Berkuah') },
   { id: 'chicken', label: 'Menu ayam', color: '#8B7653', matches: recipe => recipe.title.toLowerCase().includes('ayam') || recipe.ingredients.some(item => /\bayam\b/i.test(item)) },
   { id: 'snacks', label: 'Camilan', color: '#B97859', matches: recipe => recipe.tags.includes('Camilan') },
   { id: 'noodles', label: 'Mi dan pasta', color: '#6F8061', matches: recipe => recipe.tags.includes('Mi') || recipe.tags.includes('Pasta') || /\b(mie|mi|ramen|spaghetti|pasta)\b/i.test(recipe.title) },
-  { id: 'vegetarian', label: 'Tanpa daging', color: '#87906C', matches: recipe => recipe.tags.includes('Vegetarian') },
-  { id: 'favorites', label: 'Favorit', color: '#C28B45', matches: recipe => readFavoriteRecipeIds().includes(recipe.id) }
+  { id: 'vegetarian', label: 'Tanpa daging', color: '#87906C', matches: recipe => recipe.tags.includes('Vegetarian') }
 ];
 
 // AI Response database
@@ -105,6 +103,50 @@ const AI_RESPONSES = {
 // ============================================================
 // NAVIGATION
 // ============================================================
+const PAGE_HASHES = {
+  home: '#/', resep: '#/resep', chef: '#/chef', jelajahi: '#/jelajahi',
+  scan: '#/scan', profil: '#/pengaturan', tersimpan: '#/tersimpan'
+};
+
+function recipeSlug(recipe) {
+  return recipe.title.toLocaleLowerCase('id').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+}
+
+function routeFromLocation() {
+  const raw = window.location.hash.replace(/^#\/?/, '');
+  const parts = raw.split('/').filter(Boolean).map(part => decodeURIComponent(part));
+  if (!raw && new URLSearchParams(window.location.search).has('bahan')) return { page: 'resep' };
+  if (!parts.length) return { page: 'home' };
+  if (parts[0] === 'resep') return { page: 'resep', recipeSlug: parts[1] || '' };
+  const routePages = { chef: 'chef', jelajahi: 'jelajahi', scan: 'scan', pengaturan: 'profil', tersimpan: 'tersimpan' };
+  return routePages[parts[0]] ? { page: routePages[parts[0]] } : { page: 'not-found' };
+}
+
+function renderLocationRoute() {
+  const route = routeFromLocation();
+  const recipe = route.recipeSlug && RECIPES_DB.find(item => recipeSlug(item) === route.recipeSlug);
+  const page = route.recipeSlug && !recipe ? 'not-found' : route.page;
+  if (window.resepinApp) {
+    window.resepinApp.activePage = page;
+    window.resepinApp.floatingChefChatOpen = false;
+  }
+  showPage(page);
+  if (recipe) openRecipeModal(recipe.title, recipe.time, recipe.servings, recipe.ingredients, recipe.steps, { updateRoute: false });
+  else closeRecipeModal({ preserveRoute: true });
+}
+
+function navigateToPage(page, { replace = false } = {}) {
+  const route = PAGE_HASHES[page];
+  if (!route) return;
+  closeRecipeModal({ preserveRoute: true });
+  const next = `${window.location.pathname}${window.location.search}${route}`;
+  window.history[replace ? 'replaceState' : 'pushState']({}, '', next);
+  renderLocationRoute();
+}
+
+window.navigateToPage = navigateToPage;
+
 function showPage(pageId) {
   if (pageId !== 'scan' && cameraStream) stopCamera();
   // Hide all pages
@@ -118,7 +160,11 @@ function showPage(pageId) {
   // Update nav links
   document.querySelectorAll('.nav-link').forEach(link => {
     link.classList.remove('active');
-    if (link.dataset.page === pageId) link.classList.add('active');
+    link.removeAttribute('aria-current');
+    if (link.dataset.page === pageId) {
+      link.classList.add('active');
+      link.setAttribute('aria-current', 'page');
+    }
   });
   // Close mobile menu
   document.getElementById('navLinks').classList.remove('open');
@@ -126,6 +172,7 @@ function showPage(pageId) {
   // Page-specific init
   if (pageId === 'resep') renderRecipesGrid();
   if (pageId === 'jelajahi') renderJelajahiGrid();
+  if (pageId === 'tersimpan') renderSavedRecipes();
   if (pageId === 'chef') updateChefBahanBadge();
   requestAnimationFrame(() => window.refreshMotionReveals?.());
 }
@@ -645,6 +692,17 @@ function renderFeaturedRecipes() {
   bindRecipeImageFallbacks(list);
 }
 
+function renderSavedRecipes() {
+  const grid = document.getElementById('savedRecipesGrid');
+  if (!grid) return;
+  const savedIds = new Set(readFavoriteRecipeIds());
+  const recipes = RECIPES_DB.filter(recipe => savedIds.has(recipe.id));
+  grid.innerHTML = recipes.length
+    ? recipes.map(recipe => createRecipeCardHTML(recipe)).join('')
+    : `<div class="recipe-empty-state"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-book"/></svg><p>Belum ada resep tersimpan.</p><a class="btn-primary saved-empty-action" href="#/jelajahi" onclick="event.preventDefault();navigateToPage('jelajahi')">Jelajahi koleksi resep</a></div>`;
+  bindRecipeImageFallbacks(grid);
+}
+
 function filterRecipes() {
   const url = new URL(window.location.href);
   if (url.searchParams.has('bahan')) {
@@ -752,10 +810,16 @@ const EMOJI_GRADIENTS = {
   '🍗': 'linear-gradient(135deg,#f39c12,#d68910)',
 };
 
-function openRecipeModal(title, time, servings, ingredients, steps) {
+function openRecipeModal(title, time, servings, ingredients, steps, { updateRoute = true } = {}) {
   const modal = document.getElementById('recipeModal');
-  document.getElementById('modalTitle').textContent = title;
   const recipe = RECIPES_DB.find(r => r.title === title);
+  if (updateRoute && recipe) {
+    const nextHash = `#/resep/${recipeSlug(recipe)}`;
+    if (window.location.hash !== nextHash) {
+      window.history.pushState({ recipeModal: true }, '', `${window.location.pathname}${window.location.search}${nextHash}`);
+    }
+  }
+  document.getElementById('modalTitle').textContent = title;
   document.getElementById('modalMeta').innerHTML = `
     <span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>${time}</span>
     <span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-users"/></svg>${servings}</span>
@@ -810,9 +874,13 @@ function findAITip(ingredientName) {
   return AI_RESPONSES.keywords.default.tip;
 }
 
-function closeRecipeModal() {
+function closeRecipeModal({ preserveRoute = false } = {}) {
   document.getElementById('recipeModal').classList.remove('open');
   document.body.style.overflow = '';
+  if (!preserveRoute && /^#\/resep\//.test(window.location.hash)) {
+    if (window.history.state?.recipeModal) window.history.back();
+    else window.history.replaceState({}, '', `${window.location.pathname}${window.location.search}#/resep`);
+  }
 }
 
 function closeModal(event) {
@@ -832,6 +900,7 @@ function saveRecipe() {
   if (button) button.textContent = saved ? 'Simpan Resep' : 'Hapus dari Favorit';
   showToast(saved ? 'Resep dihapus dari Favorit.' : 'Resep disimpan ke Favorit!', 'success');
   if (document.getElementById('page-jelajahi')?.classList.contains('active')) renderJelajahiGrid();
+  if (document.getElementById('page-tersimpan')?.classList.contains('active')) renderSavedRecipes();
 }
 
 // ============================================================
@@ -862,6 +931,8 @@ document.addEventListener('keydown', (e) => {
 // INIT
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
+  window.addEventListener('popstate', renderLocationRoute);
+  window.addEventListener('hashchange', renderLocationRoute);
   initTheme();
   initQuickPromptDragging();
   initParticles();
@@ -871,8 +942,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (requestedIngredients.length) {
     const search = document.getElementById('recipeSearch');
     if (search) search.value = requestedIngredients.join(', ');
-    showPage('resep');
-  } else showPage('home');
+  }
+  if (window.location.hash || requestedIngredients.length) renderLocationRoute();
+  else navigateToPage('home', { replace: true });
   window.refreshMotionReveals?.();
   bindRecipeImageFallbacks();
 

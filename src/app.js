@@ -25,28 +25,14 @@ createApp({
     }
   },
   mounted() {
-    const initialIngredients = new URLSearchParams(window.location.search).getAll('bahan').map(value => value.trim()).filter(Boolean);
-    if (initialIngredients.length) {
-      this.heroIngredientText = initialIngredients.join(', ');
-      this.activePage = 'resep';
-      window.showPage('resep');
-      const recipeSearch = document.getElementById('recipeSearch');
-      if (recipeSearch) recipeSearch.value = initialIngredients.join(', ');
-      const restoreRecipeRoute = () => {
-        this.activePage = 'resep';
-        window.showPage('resep');
-        this.$nextTick(() => window.refreshMotionReveals?.());
-      };
-      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', restoreRecipeRoute, { once: true });
-    }
+    window.resepinApp = this;
     this.$nextTick(() => window.refreshMotionReveals?.());
   },
   methods: {
     go(page) {
       this.floatingChefChatOpen = false;
-      this.activePage = page;
       this.menuOpen = false;
-      window.showPage(page);
+      window.navigateToPage(page);
       this.$nextTick(() => window.refreshMotionReveals?.());
     },
     toggleMenu() {
