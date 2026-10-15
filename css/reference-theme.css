@@ -2901,3 +2901,47 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
   .hero-copy-spotlight { animation: none; opacity: .3; transform: none; }
   .hero-scene-photo { animation: none; transform: scale(1.035); filter: brightness(.88); }
 }
+
+/* Keep the spotlight attached to the lamp as the hero image crops at different widths. */
+.hero-light-glow { top: 36%; left: 25%; }
+.hero-copy-spotlight {
+  background:
+    radial-gradient(ellipse 26% 15% at 25% 36%, rgba(255,235,190,.25), transparent 78%),
+    linear-gradient(180deg, rgba(255,226,168,.09), rgba(255,226,168,.035) 52%, transparent 92%);
+  clip-path: polygon(19% 34%, 31% 34%, 72% 100%, 0% 100%);
+  filter: blur(72px);
+  transform-origin: 25% 36%;
+  animation-duration: 2s;
+}
+.hero-enter-2 { animation-delay: 1.35s !important; }
+.hero-enter-3 { animation-delay: 1.52s !important; }
+.hero-enter-4 { animation-delay: 1.69s !important; }
+.hero-enter-5 { animation-delay: 1.86s !important; }
+.hero-enter-6 { animation-delay: 2.15s !important; }
+.hero-enter-7 { animation-delay: 2.4s !important; }
+@media (max-width: 1100px) and (min-width: 901px) {
+  .hero-light-glow { top: 21%; left: 47%; }
+  .hero-copy-spotlight {
+    background:
+      radial-gradient(ellipse 24% 13% at 47% 21%, rgba(255,235,190,.25), transparent 78%),
+      linear-gradient(180deg, rgba(255,226,168,.09), rgba(255,226,168,.035) 52%, transparent 92%);
+    clip-path: polygon(39% 19%, 55% 19%, 94% 100%, 7% 100%);
+    transform-origin: 47% 21%;
+  }
+}
+@media (max-width: 900px) {
+  .hero-light-glow { top: 40%; left: 28%; }
+  .hero-copy-spotlight {
+    background:
+      radial-gradient(ellipse 28% 12% at 28% 40%, rgba(255,235,190,.23), transparent 78%),
+      linear-gradient(180deg, rgba(255,226,168,.08), rgba(255,226,168,.03) 52%, transparent 92%);
+    clip-path: polygon(15% 39%, 41% 39%, 92% 100%, 0% 100%);
+    transform-origin: 28% 40%;
+  }
+  .hero-enter-2 { animation-delay: 1.05s !important; }
+  .hero-enter-3 { animation-delay: 1.2s !important; }
+  .hero-enter-4 { animation-delay: 1.35s !important; }
+  .hero-enter-5 { animation-delay: 1.5s !important; }
+  .hero-enter-6 { animation-delay: 1.75s !important; }
+  .hero-enter-7 { animation-delay: 2s !important; }
+}
