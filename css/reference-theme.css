@@ -4439,3 +4439,16 @@ body[data-theme="dark"] .section .gradient-text { background: linear-gradient(11
   .hero-demo-ingredient, .hero-demo-mix-zone, .hero-demo-result-open, .hero-token-enter-active, .hero-token-leave-active, .hero-token-move { transition: none; }
   .hero-demo-mix-empty span { animation: none; }
 }
+
+/* Keep the floating Chef action clear of the recipe canvas on desktop. */
+@media (min-width: 901px) {
+  .hero-demo-card {
+    transform: translateY(clamp(-58px, -5vh, -28px));
+    padding-top: clamp(16px, 2vh, 22px);
+    padding-bottom: clamp(14px, 1.7vh, 19px);
+  }
+  .hero-demo-instruction { margin-top: 8px; margin-bottom: 11px; }
+  .hero-demo-mix-zone { margin-top: 11px; }
+  .hero-demo-recommendation { min-height: 92px; margin-top: 10px; }
+  .hero-demo-footer { margin-top: 10px; }
+}
