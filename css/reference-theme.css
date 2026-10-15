@@ -1555,7 +1555,30 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
 .floating-chef-button:hover,
 .floating-chef-button:active,
 .floating-chef-button:focus-visible { background: transparent !important; border-color: transparent !important; box-shadow: none !important; }
-.floating-chef-button .floating-chef-tooltip { color: #e1dcc9; background: rgba(31,21,12,.9); border-color: rgba(225,220,201,.2); }
+.floating-chef-button .floating-chef-tooltip {
+  z-index: 1;
+  border-color: rgba(225,220,201,.34);
+  color: #e1dcc9;
+  background: rgba(31,21,12,.5);
+  box-shadow: 0 8px 24px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.12);
+  -webkit-backdrop-filter: blur(10px) saturate(125%);
+  backdrop-filter: blur(10px) saturate(125%);
+}
+.floating-chef-button .floating-chef-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -6px;
+  width: 11px;
+  height: 11px;
+  border-top: 1px solid rgba(225,220,201,.34);
+  border-right: 1px solid rgba(225,220,201,.34);
+  border-radius: 0 3px 0 0;
+  background: rgba(31,21,12,.5);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transform: translateY(-50%) rotate(45deg);
+}
 
 /* Compact Chef chat opens directly above the floating mascot. */
 .floating-chef-chat {
