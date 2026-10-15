@@ -3514,6 +3514,15 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
   .nav-hint { transition: none; animation: none; }
 }
 
+/* The cue is enabled for each page load and dismissed at first nav interaction. */
+#navbar:not(.nav-hint-visible) .nav-hint,
+#navbar.nav-hint-dismissed .nav-hint {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transform: translate(-50%, -5px) !important;
+  animation: none !important;
+}
+
 /* Keep the desktop menu expanded while the pointer moves into the search card. */
 @media (min-width: 901px) {
   #navbar .nav-container { padding-bottom: 10px; }

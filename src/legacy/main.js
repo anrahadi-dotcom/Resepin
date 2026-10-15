@@ -333,6 +333,25 @@ function initScrollEffects() {
 
 }
 
+function initNavHint() {
+  const navbar = document.getElementById('navbar');
+  const trigger = navbar?.querySelector('.nav-container');
+  if (!navbar || !trigger) return;
+  navbar.classList.add('nav-hint-visible');
+  const dismiss = () => {
+    if (navbar.classList.contains('nav-hint-dismissed')) return;
+    navbar.classList.add('nav-hint-dismissed');
+    trigger.removeEventListener('pointerenter', dismiss);
+    trigger.removeEventListener('focusin', dismiss);
+    trigger.removeEventListener('touchstart', dismiss);
+    trigger.removeEventListener('click', dismiss);
+  };
+  trigger.addEventListener('pointerenter', dismiss, { once: true });
+  trigger.addEventListener('focusin', dismiss, { once: true });
+  trigger.addEventListener('touchstart', dismiss, { once: true, passive: true });
+  trigger.addEventListener('click', dismiss, { once: true });
+}
+
 // ============================================================
 // CAMERA / SCAN FUNCTIONALITY
 // ============================================================
@@ -1271,6 +1290,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initQuickPromptDragging();
   initParticles();
   initScrollEffects();
+  initNavHint();
   renderPersonalStats();
   const requestedIngredients = new URLSearchParams(window.location.search).getAll('bahan').map(value => value.trim()).filter(Boolean);
   if (requestedIngredients.length) {
