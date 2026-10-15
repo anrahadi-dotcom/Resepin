@@ -4440,15 +4440,101 @@ body[data-theme="dark"] .section .gradient-text { background: linear-gradient(11
   .hero-demo-mix-empty span { animation: none; }
 }
 
-/* Keep the floating Chef action clear of the recipe canvas on desktop. */
-@media (min-width: 901px) {
-  .hero-demo-card {
-    transform: translateY(clamp(-58px, -5vh, -28px));
-    padding-top: clamp(16px, 2vh, 22px);
-    padding-bottom: clamp(14px, 1.7vh, 19px);
-  }
-  .hero-demo-instruction { margin-top: 8px; margin-bottom: 11px; }
-  .hero-demo-mix-zone { margin-top: 11px; }
-  .hero-demo-recommendation { min-height: 92px; margin-top: 10px; }
-  .hero-demo-footer { margin-top: 10px; }
+/* A floating recipe console: remove the nested boxes and let the food photo lead. */
+.hero-demo-card {
+  isolation: isolate;
+  width: min(100%,548px);
+  padding: 27px 28px 22px;
+  transform: translateY(-24px);
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #f8f2e4;
+  text-shadow: 0 2px 18px rgba(0,0,0,.32);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
+.hero-demo-card::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0 -8px;
+  border-radius: 43% 18% 39% 24% / 13% 25% 16% 29%;
+  background: radial-gradient(ellipse at 52% 48%,rgba(24,17,10,.8) 0%,rgba(24,17,10,.62) 58%,rgba(24,17,10,0) 100%);
+  content: "";
+  filter: blur(7px);
+  pointer-events: none;
+}
+.hero-demo-kicker, .hero-demo-mix-label > span, .hero-demo-result-label { color: rgba(248,242,228,.66); }
+.hero-demo-kicker i, .hero-demo-mix-label i, .hero-demo-result-label i { background: #d8c4a2; }
+.hero-demo-heading h2 { color: #fffaf0; font-size: clamp(1.55rem,2.15vw,1.9rem); }
+.hero-demo-count { border-color: rgba(248,242,228,.28); color: rgba(248,242,228,.82); background: rgba(248,242,228,.08); }
+.hero-demo-count strong { color: #fffaf0; }
+.hero-demo-instruction { margin: 8px 0 13px; color: rgba(248,242,228,.72); }
+.hero-demo-ingredient { border-color: rgba(248,242,228,.25); background: rgba(248,242,228,.1); color: #fffaf0; backdrop-filter: blur(8px); }
+.hero-demo-ingredient:hover { border-color: rgba(248,242,228,.68); background: rgba(248,242,228,.2); }
+.hero-demo-ingredient.active { border-color: #d8c8f2; background: #d8c8f2; color: #302442; }
+.hero-demo-ingredient-mark { background: rgba(248,242,228,.14); }
+.hero-demo-ingredient.active .hero-demo-ingredient-mark { background: rgba(48,36,66,.1); }
+.hero-demo-mix-zone {
+  min-height: 64px;
+  margin-top: 13px;
+  padding: 10px 1px 9px;
+  border: 0;
+  border-top: 1px solid rgba(248,242,228,.32);
+  border-bottom: 1px solid rgba(248,242,228,.32);
+  border-radius: 0;
+  background: transparent;
+}
+.hero-demo-mix-zone.is-drop-active { transform: translateY(-1px); border-color: #d8c8f2; background: rgba(216,200,242,.13); box-shadow: none; }
+.hero-demo-mix-label { margin-bottom: 7px; }
+.hero-demo-mix-label > small, .hero-demo-mix-empty { color: rgba(248,242,228,.7); }
+.hero-demo-mix-token { border-color: rgba(248,242,228,.22); background: rgba(248,242,228,.14); color: #fffaf0; }
+.hero-demo-mix-token span, .hero-demo-mix-empty span { color: #e0cffd; }
+.hero-demo-recommendation {
+  min-height: 94px;
+  margin-top: 13px;
+  padding: 8px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  text-shadow: 0 1px 8px rgba(0,0,0,.3);
+}
+.hero-demo-dish-photo {
+  flex-basis: 84px;
+  width: 84px;
+  height: 84px;
+  border: 3px solid rgba(248,242,228,.9);
+  border-radius: 50%;
+  box-shadow: 0 5px 18px rgba(0,0,0,.3),0 0 0 5px rgba(248,242,228,.12);
+}
+.hero-demo-result-label { color: rgba(248,242,228,.67); }
+.hero-demo-result strong { color: #fffaf0; }
+.hero-demo-result small { color: rgba(248,242,228,.78); }
+.hero-demo-result small i { color: rgba(248,242,228,.56); }
+.hero-demo-result.is-empty strong, .hero-demo-recommendation.is-empty .hero-demo-result strong { color: #fffaf0; }
+.hero-demo-result.is-empty small, .hero-demo-recommendation.is-empty .hero-demo-result small { color: rgba(248,242,228,.72); }
+.hero-demo-result-open { border-color: rgba(248,242,228,.36); background: rgba(248,242,228,.13); color: #fffaf0; backdrop-filter: blur(8px); }
+.hero-demo-result-open:hover { background: rgba(216,200,242,.34); }
+.hero-demo-footer { margin-top: 9px; }
+.hero-demo-submit { border-color: #e1dcc9; background: #e1dcc9; color: #251a10; box-shadow: 0 6px 20px rgba(0,0,0,.18); }
+.hero-demo-submit:hover:not(:disabled) { background: #fffaf0; }
+.hero-demo-submit:disabled { color: #4e402e; opacity: .74; }
+.hero-video-toggle { color: rgba(248,242,228,.84); text-shadow: 0 1px 8px rgba(0,0,0,.4); }
+.hero-video-toggle:hover { background: rgba(248,242,228,.12); color: #fffaf0; }
+.hero-demo-submit:focus-visible, .hero-video-toggle:focus-visible, .hero-demo-result-open:focus-visible, .hero-demo-mix-token:focus-visible { outline-color: #e0cffd; }
+@media (max-width: 1100px) and (min-width: 901px) {
+  .hero-demo-card { padding: 21px 19px 18px; transform: translateY(-17px); }
+}
+@media (max-width: 900px) {
+  .hero-demo-card { padding: 22px 24px 18px; transform: none; }
+  .hero-demo-card::before { inset: -3px -9px; background: radial-gradient(ellipse at center,rgba(24,17,10,.74),rgba(24,17,10,.54) 68%,transparent 100%); }
+}
+@media (max-width: 600px) {
+  .hero-demo-card { padding: 18px 15px 15px; }
+  .hero-demo-recommendation { min-height: 82px; gap: 12px; }
+  .hero-demo-dish-photo { flex-basis: 68px; width: 68px; height: 68px; }
+  .hero-demo-result strong { color: #fffaf0; }
+}
+@media (prefers-reduced-motion: reduce) { .hero-demo-card::before { filter: none; } }
