@@ -1,0 +1,10 @@
+{
+  "name": "Resepin",
+  "short_name": "Resepin",
+  "description": "Ide masak dari bahan yang tersedia di dapurmu.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#e1dcc9",
+  "theme_color": "#e1dcc9",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

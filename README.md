@@ -78,23 +78,40 @@ Frontend statis dibangun ke `dist/` dengan `npm run build` dan diunggah mengguna
 - `src/app.js`: entry point Vue 3 untuk shell aplikasi dan interaksi hero.
 - `src/legacy/`: modul JavaScript lama yang masih menangani perilaku katalog, kamera, dan chat sambil dipindahkan ke komponen Vue.
 - `api/detect.py`: endpoint scan untuk Vercel Functions; mengambil bobot model dari Git LFS privat.
-- `css/reference-theme.css`: tema lavender dan aturan layout yang mengikuti referensi visual.
+- `css/reference-theme.css`: token warna krem/cokelat, komponen, dan breakpoint tambahan.
 - `css/style.css`: komponen, warna, dan gaya dasar.
 - `css/responsive.css`: breakpoint layar dan preferensi aksesibilitas.
 
-Video hero memakai klip tumis tahu sayur lokal 1080p (1920×1080) dari `assets/video/hero-tumis-tahu.mp4`.
+Hero memakai foto koki lokal dari `assets/img/chef-hero.jpg`; gambar resep menggunakan foto lokal di `assets/img/`.
 
 ## Alur pengguna
 
 Beranda → Scan Bahan → izinkan kamera → arahkan ke bahan → Ambil Foto → periksa/ubah bahan terdeteksi → Cari Resep atau Tanya Chef Resepin.
 
+## Pengembangan, build, dan pemeriksaan
+
+Frontend tetap memakai Vue 3 dari CDN, HTML, dan CSS; skrip build hanya menyalin file statis ke `dist/` untuk Cloudflare Pages. Untuk menyiapkan deploy dan menjalankan cek lokal:
+
+```powershell
+npm test
+npm run build
+```
+
+`npm test` menjalankan pemeriksaan utilitas pencocokan bahan, kalkulasi resep, serta kelengkapan katalog/foto menggunakan Node.js bawaan. Cek sintaks browser JavaScript dapat dijalankan dengan `node --check src/app.js` dan `node --check src/legacy/main.js`.
+
 ## Implementasi dan batasan
 
-Antarmuka menggunakan Vue 3 dari CDN, HTML, dan CSS responsif tanpa proses build. Server Python bawaan memuat `models/best.pt` menggunakan Ultralytics/PyTorch saat server mulai; checkpoint ini berisi 30 kelas bahan berbahasa Indonesia, yang juga dicatat di `data_classes.yaml`. Foto kamera dikirim ke endpoint lokal `/api/detect`, diproses di komputer yang menjalankan server, lalu dibuang setelah inferensi. File gambar tidak disimpan. Model mendeteksi objek sesuai kelas yang dipelajari; periksa hasilnya dan tambahkan bahan lain secara manual bila perlu. Mode Demo selalu menghasilkan bahan contoh dan bukan deteksi model.
+Antarmuka memakai Vue 3 dari CDN, HTML, dan CSS responsif. Server Python bawaan memuat `models/best.pt` menggunakan Ultralytics/PyTorch saat server mulai; checkpoint ini berisi 30 kelas bahan berbahasa Indonesia, yang juga dicatat di `data_classes.yaml`. Foto kamera dikirim ke endpoint lokal `/api/detect`, diproses di komputer yang menjalankan server, lalu dibuang setelah inferensi. File gambar tidak disimpan. Model mendeteksi objek sesuai kelas yang dipelajari; periksa hasilnya dan tambahkan bahan lain secara manual bila perlu. Mode Demo selalu menghasilkan bahan contoh dan bukan deteksi model.
 
 Server deteksi hanya bind ke `127.0.0.1`, memeriksa origin permintaan, membatasi foto ke JPG/PNG/WebP hingga 10 MB, dan hanya menyajikan file frontend yang diperlukan. Checkpoint tidak bisa diunduh melalui web. Chef memakai aturan JavaScript lokal terlebih dulu dan meneruskan pertanyaan yang belum dikenali ke Cloudflare Workers AI. Binding `AI` dikonfigurasi di `wrangler.jsonc`; tidak ada kunci API di browser. Workers AI memiliki alokasi gratis harian yang terbatas, sehingga jawaban AI bisa tidak tersedia saat kuota habis. Saat lokal, jalankan `npm run build` lalu `npx wrangler pages dev dist --ai=AI`; penggunaan binding AI lokal tetap memanggil layanan Cloudflare. Jika layanan gagal, Chef menampilkan jawaban fallback lokal. Maksimal enam pesan percakapan terakhir dikirim untuk konteks; jangan masukkan data pribadi/sensitif. Font masih dimuat dari Google Fonts.
 
-Katalog awal mencakup masakan rumahan, beberapa menu Bali (babi guling versi rumahan, ayam betutu, ayam sere lemo, ayam bakar, lawar sayur, sate lilit), serta hidangan populer seperti fried chicken, pizza, burger, pasta, ramen, sushi roll isi matang, taco, pancake, dan teriyaki. Katalog ini bukan ensiklopedia semua masakan; resep baru dapat ditambahkan ke `RECIPES_DB`.
+Pencarian bahan membandingkan bahan resep yang dinormalisasi, menerima sinonim dan toleransi typo kecil, lalu mengurutkan hasil berdasarkan kecocokan. Harga adalah perkiraan lokal, bukan harga real-time. Data katalog saat ini tidak punya takaran tepercaya untuk tiap bahan; karena itu penskalaan porsi disembunyikan alih-alih menampilkan jumlah karangan. Mode timer hanya muncul jika langkah resep punya durasi terstruktur. Penyimpanan resep memakai localStorage pada browser pengguna.
+
+Halaman memakai hash route (`#/resep`, `#/chef`, `#/jelajahi`, dan lainnya) agar refresh/deep link tetap bekerja di hosting statis. Metadata dan JSON-LD resep diubah di sisi client; crawler yang tidak menjalankan JavaScript mungkin hanya melihat metadata beranda. `sitemap.xml` saat ini hanya mencantumkan beranda.
+
+Tema mengikuti preferensi sistem pada kunjungan pertama dan pilihan manual disimpan di localStorage. Kontras token teks utama, sekunder, dan muted diperiksa terhadap latar tema terang/gelap; animasi menghormati preferensi reduced motion. Form kamera tetap memerlukan izin kamera pada secure context. Scan di Cloudflare Pages tidak tersedia tanpa backend scan; gunakan server lokal atau Vercel. Tidak ada API key yang disimpan di browser.
+
+Katalog awal berisi 40 resep: masakan rumahan dan Bali serta hidangan populer. Katalog ini bukan ensiklopedia; resep baru dapat ditambahkan ke `RECIPES_DB`.
 
 ## Prompt Chef Resepin
 

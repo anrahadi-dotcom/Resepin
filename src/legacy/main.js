@@ -25,6 +25,7 @@ let activeModalServings = 1;
 let activeCookingStep = 0;
 let cookingWakeLock = null;
 let cookingTimerInterval = null;
+let previousRecipeFocus = null;
 const PERSONAL_STATS_KEY = 'resepin-personal-stats-v1';
 const FAVORITE_RECIPE_IDS_KEY = 'resep-favorite-ids-v1';
 let personalStatsMemory = { ingredientsUsed: 0, recipesOpened: 0 };
@@ -141,23 +142,66 @@ function routeFromLocation() {
   return routePages[parts[0]] ? { page: routePages[parts[0]] } : { page: 'not-found' };
 }
 
+function updateRouteMetadata(page, recipe) {
+  const pageCopy = {
+    home: ['Resepin — Masak dari Sisa, Praktis & Lezat', 'Temukan ide masakan rumahan dari bahan yang tersedia di dapurmu.'],
+    resep: ['Semua Resep — Resepin', 'Cari dan saring resep rumahan berdasarkan bahan yang kamu punya.'],
+    chef: ['Chef Resepin — Asisten Dapur', 'Tanya Chef Resepin tentang resep, substitusi, dan teknik memasak.'],
+    jelajahi: ['Jelajahi Resep — Resepin', 'Jelajahi koleksi resep rumahan dari berbagai kategori.'],
+    scan: ['Scan Bahan — Resepin', 'Pindai atau masukkan bahan dapur untuk menemukan ide resep.'],
+    profil: ['Pengaturan — Resepin', 'Atur tampilan Resepin sesuai kenyamananmu.'],
+    tersimpan: ['Resep Tersimpan — Resepin', 'Buka kembali resep pilihan yang tersimpan di browser ini.'],
+    'not-found': ['Halaman Tidak Ditemukan — Resepin', 'Tautan ini belum memiliki halaman Resepin.']
+  };
+  const [title, description] = recipe
+    ? [`${recipe.title} — Resepin`, `Resep ${recipe.title}: ${recipe.steps.length} langkah, sekitar ${recipe.time}.`]
+    : pageCopy[page] || pageCopy['not-found'];
+  document.title = title;
+  const setMeta = (selector, value, attribute = 'content') => {
+    const element = document.querySelector(selector);
+    if (element) element.setAttribute(attribute, value);
+  };
+  setMeta('meta[name="description"]', description);
+  setMeta('meta[property="og:title"]', title);
+  setMeta('meta[property="og:description"]', description);
+  setMeta('meta[property="og:url"]', window.location.href);
+  setMeta('meta[name="twitter:title"]', title);
+  setMeta('meta[name="twitter:description"]', description);
+  const structuredData = document.getElementById('recipeJsonLd');
+  if (!structuredData) return;
+  structuredData.textContent = recipe ? JSON.stringify({
+    '@context': 'https://schema.org', '@type': 'Recipe', name: recipe.title,
+    image: new URL(getRecipeImage(recipe), window.location.href).href,
+    recipeCategory: recipe.category, recipeCuisine: 'Indonesia', recipeYield: recipe.servings,
+    totalTime: `PT${Number.parseInt(recipe.time, 10) || 0}M`,
+    recipeIngredient: recipe.ingredientDetails.map(item => item.name),
+    recipeInstructions: recipe.steps.map((step, index) => ({ '@type': 'HowToStep', position: index + 1, text: typeof step === 'string' ? step : step.text })),
+    suitableForDiet: recipe.dietary.vegetarian ? 'https://schema.org/VegetarianDiet' : undefined
+  }) : '{}';
+}
+
 function renderLocationRoute() {
   const route = routeFromLocation();
   const recipe = route.recipeSlug && RECIPES_DB.find(item => recipeSlug(item) === route.recipeSlug);
   const page = route.recipeSlug && !recipe ? 'not-found' : route.page;
+  updateRouteMetadata(page, recipe);
   if (window.resepinApp) {
     window.resepinApp.activePage = page;
     window.resepinApp.floatingChefChatOpen = false;
   }
   showPage(page);
   if (recipe) openRecipeModal(recipe.title, recipe.time, recipe.servings, recipe.ingredients, recipe.steps, { updateRoute: false });
-  else closeRecipeModal({ preserveRoute: true });
+  else {
+    closeRecipeModal({ preserveRoute: true });
+    restoreRecipeFocus();
+  }
 }
 
 function navigateToPage(page, { replace = false } = {}) {
   const route = PAGE_HASHES[page];
   if (!route) return;
   closeRecipeModal({ preserveRoute: true });
+  previousRecipeFocus = null;
   const next = `${window.location.pathname}${window.location.search}${route}`;
   window.history[replace ? 'replaceState' : 'pushState']({}, '', next);
   renderLocationRoute();
@@ -224,6 +268,8 @@ function toggleMenu() {
 function applyTheme(theme) {
   const selected = theme === 'dark' ? 'dark' : 'light';
   document.body.dataset.theme = selected;
+  const themeColor = document.querySelector('meta[name="theme-color"]');
+  if (themeColor) themeColor.content = selected === 'dark' ? '#1f150c' : '#e1dcc9';
   const button = document.getElementById('themeToggle');
   const label = document.getElementById('themeLabel');
   const icon = document.getElementById('themeIcon');
@@ -246,8 +292,8 @@ function toggleTheme() {
 }
 
 function initTheme() {
-  let savedTheme = 'light';
-  try { savedTheme = localStorage.getItem('resep-theme') || 'light'; } catch (_) { /* Use the warm light theme by default. */ }
+  let savedTheme = window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  try { savedTheme = localStorage.getItem('resep-theme') || savedTheme; } catch (_) { /* Use the system theme when storage is unavailable. */ }
   applyTheme(savedTheme);
 }
 
@@ -554,11 +600,10 @@ function addIngredientItem(emoji, name, conf) {
 }
 
 function addIngredient(label) {
-  const parts = label.split(' ');
-  const emoji = parts[0];
-  const name = parts.slice(1).join(' ');
-  addIngredientItem(emoji, name, null);
-  showToast(`${emoji} ${name} ditambahkan!`, 'success');
+  const name = String(label || '').trim().replace(/\s+/g, ' ');
+  if (!name) return;
+  addIngredientItem('', name, null);
+  showToast(`${name} ditambahkan!`, 'success');
 }
 
 function addManualIngredient() {
@@ -592,7 +637,7 @@ function renderIngredientList() {
     row.className = 'ingredient-item';
     const emoji = document.createElement('span');
     emoji.className = 'ing-icon';
-    emoji.textContent = item.emoji;
+    emoji.innerHTML = ingredientIconHTML(item.name);
     const info = document.createElement('div');
     info.className = 'ing-info';
     const name = document.createElement('span');
@@ -733,14 +778,23 @@ function getRecipeImage(recipe) {
   return slug ? `assets/img/${slug}.jpg` : '';
 }
 
-// Elemen foto hidangan yang sudah matang, dengan fallback ke emoji bila foto gagal dimuat
+function ingredientDisplayName(value) {
+  return window.ResepinRecipeUtils?.getIngredientName(value)?.replace(/^\p{Extended_Pictographic}+(?:\uFE0F)?\s*/u, '').trim() || String(value || '').trim();
+}
+
+function ingredientIconHTML(name) {
+  const normalized = window.ResepinRecipeUtils?.normalizeIngredient(name) || String(name).toLocaleLowerCase('id');
+  const icon = /telur/.test(normalized) ? 'egg' : /ikan|udang|teri|terasi/.test(normalized) ? 'fish' : /ayam|daging|sapi|babi/.test(normalized) ? 'chef' : /sayur|daun|cabai|bawang|wortel|jagung|bayam|kangkung|kol|brokoli|tomat|tauge|buncis/.test(normalized) ? 'sprout' : 'food';
+  return `<svg class="ui-icon ingredient-icon" aria-hidden="true"><use href="#ui-icon-${icon}"/></svg>`;
+}
+
+// Use one calm illustration when a food photograph is unavailable or fails.
 function recipeImageHTML(recipe, className, altText) {
   const src = getRecipeImage(recipe);
   const alt = altText || (recipe ? `Foto hidangan ${recipe.title}` : 'Foto hidangan');
-  if (!src) return `<span class="${className}">${recipe ? recipe.emoji : '\uD83C\uDF7F'}</span>`;
-  const fallback = (recipe ? recipe.emoji : '\uD83C\uDF7F').replace(/"/g, '&quot;');
+  if (!src) return `<span class="${className} recipe-img-fallback" role="img" aria-label="${escapeHtml(alt)}"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-food"/></svg></span>`;
   const objectPosition = recipe?.imagePosition || 'center';
-  const image = `<img class="${className}" src="${src}" alt="${escapeHtml(alt)}" style="object-position:${objectPosition}" loading="lazy" decoding="async" data-fallback="${fallback}" />`;
+  const image = `<img class="${className}" src="${src}" alt="${escapeHtml(alt)}" width="800" height="600" style="object-position:${objectPosition}" loading="lazy" decoding="async" data-fallback="dish" />`;
   if (recipe && RECIPE_WEBP_IDS.has(recipe.id)) {
     return `<picture class="recipe-picture ${className}-picture"><source srcset="${src.replace(/\.jpe?g$/i, '.webp')}" type="image/webp" />${image}</picture>`;
   }
@@ -750,11 +804,17 @@ function recipeImageHTML(recipe, className, altText) {
 // Pasang fallback emoji untuk foto yang gagal dimuat (dipasang sekali per render)
 function bindRecipeImageFallbacks(root = document) {
   root.querySelectorAll('img[data-fallback]').forEach(img => {
+    const markLoaded = () => img.closest('.recipe-img')?.classList.add('image-loaded');
+    img.addEventListener('load', markLoaded, { once: true });
+    if (img.complete && img.naturalWidth > 0) markLoaded();
     img.addEventListener('error', function handleError() {
       const span = document.createElement('span');
-      span.className = img.className;
-      span.textContent = img.dataset.fallback || '\uD83C\uDF7F';
+      span.className = `${img.className} recipe-img-fallback`;
+      span.setAttribute('role', 'img');
+      span.setAttribute('aria-label', img.alt || 'Foto hidangan tidak tersedia');
+      span.innerHTML = '<svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-food"/></svg>';
       img.replaceWith(span);
+      span.closest('.recipe-img')?.classList.add('image-loaded');
     }, { once: true });
   });
 }
@@ -933,6 +993,7 @@ const EMOJI_GRADIENTS = {
 
 function openRecipeModal(title, time, servings, ingredients, steps, { updateRoute = true } = {}) {
   const modal = document.getElementById('recipeModal');
+  if (!modal.classList.contains('open')) previousRecipeFocus = document.activeElement;
   const recipe = RECIPES_DB.find(r => r.title === title);
   if (updateRoute && recipe) {
     if (!document.getElementById('page-resep')?.classList.contains('active')) {
@@ -943,6 +1004,7 @@ function openRecipeModal(title, time, servings, ingredients, steps, { updateRout
     if (window.location.hash !== nextHash) {
       window.history.pushState({ recipeModal: true }, '', `${window.location.pathname}${window.location.search}${nextHash}`);
     }
+    updateRouteMetadata('resep', recipe);
   }
   document.getElementById('modalTitle').textContent = title;
   activeModalRecipe = recipe;
@@ -986,7 +1048,8 @@ function openRecipeModal(title, time, servings, ingredients, steps, { updateRout
     const detected = currentIngredientNames().some(value => recipeIngredientMatches(ing, value)) || assumedStapleNames().some(value => recipeIngredientMatches(ing, value));
     const details = recipe?.ingredientDetails?.[index];
     const amount = details && Number.isFinite(details.amount) ? `${window.ResepinRecipeUtils.scaleQuantity(details.amount, recipe.servingsCount, activeModalServings)} ${details.unit} ` : '';
-    return `<li class="checklist-item${detected ? ' is-available' : ''}"><label><input type="checkbox" aria-label="Tandai ${escapeHtml(details?.name || ing)} sudah disiapkan" onchange="updateIngredientChecklist()" /><span>${amount}${escapeHtml(ing)}${detected ? ' <small>(tersedia)</small>' : ''}</span></label></li>`;
+    const displayName = details?.name || ingredientDisplayName(ing);
+    return `<li class="checklist-item${detected ? ' is-available' : ''}"><label><input type="checkbox" aria-label="Tandai ${escapeHtml(displayName)} sudah disiapkan" onchange="updateIngredientChecklist()" /><span>${ingredientIconHTML(displayName)}${amount}${escapeHtml(displayName)}${detected ? ' <small>(tersedia)</small>' : ''}</span></label></li>`;
   }).join('');
   updateIngredientChecklist();
 
@@ -1000,6 +1063,15 @@ function openRecipeModal(title, time, servings, ingredients, steps, { updateRout
 
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
+  modal.querySelector('.modal-close')?.focus();
+}
+
+function restoreRecipeFocus() {
+  if (!previousRecipeFocus?.isConnected) return;
+  const activePage = previousRecipeFocus.closest('.page');
+  if (activePage && !activePage.classList.contains('active')) return;
+  previousRecipeFocus.focus();
+  previousRecipeFocus = null;
 }
 
 function updateIngredientChecklist() {
@@ -1108,12 +1180,30 @@ function findAITip(ingredientName) {
 }
 
 function closeRecipeModal({ preserveRoute = false } = {}) {
+  if (!document.getElementById('cookingMode')?.hidden) closeCookingMode();
   document.getElementById('recipeModal').classList.remove('open');
   document.body.style.overflow = '';
   if (!preserveRoute && /^#\/resep\//.test(window.location.hash)) {
     if (window.history.state?.recipeModal) window.history.back();
-    else window.history.replaceState({}, '', `${window.location.pathname}${window.location.search}#/resep`);
-  }
+    else {
+      window.history.replaceState({}, '', `${window.location.pathname}${window.location.search}#/resep`);
+      updateRouteMetadata('resep', null);
+      restoreRecipeFocus();
+    }
+  } else if (!preserveRoute) restoreRecipeFocus();
+}
+
+function trapRecipeModalFocus(event) {
+  const cooking = document.getElementById('cookingMode');
+  const scope = cooking && !cooking.hidden ? cooking : document.querySelector('#recipeModal .modal-content');
+  if (!scope || event.key !== 'Tab') return;
+  const focusable = [...scope.querySelectorAll('button:not([disabled]), input:not([disabled]), textarea:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])')];
+  if (!focusable.length) { event.preventDefault(); scope.focus(); return; }
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+  else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  else if (!scope.contains(document.activeElement)) { event.preventDefault(); first.focus(); }
 }
 
 function closeModal(event) {
@@ -1158,7 +1248,9 @@ document.addEventListener('keydown', (e) => {
     if (!document.getElementById('cookingMode')?.hidden) { closeCookingMode(); return; }
     closeRecipeModal();
     document.getElementById('navLinks').classList.remove('open');
+    return;
   }
+  if (document.getElementById('recipeModal')?.classList.contains('open')) trapRecipeModalFocus(e);
 });
 
 // ============================================================
