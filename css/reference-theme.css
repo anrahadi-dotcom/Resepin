@@ -3868,7 +3868,7 @@ body[data-theme="dark"] .section .gradient-text { background: linear-gradient(11
   #navbar .nav-link {
     align-self: center;
     margin-block: auto;
-    top: 5px;
+    top: 0;
   }
   #navbar .nav-ingredient-search,
   #navbar .nav-container:hover .nav-ingredient-search,
