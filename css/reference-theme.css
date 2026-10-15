@@ -1562,12 +1562,12 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
   position: fixed;
   z-index: 1200;
   right: max(24px,env(safe-area-inset-right));
-  bottom: calc(max(18px,env(safe-area-inset-bottom)) + 142px);
+  bottom: calc(max(18px,env(safe-area-inset-bottom)) + 176px);
   display: flex;
   flex-direction: column;
-  width: min(336px,calc(100vw - 28px));
-  max-height: min(440px,calc(100dvh - 190px));
-  min-height: 230px;
+  width: min(310px,calc(100vw - 28px));
+  max-height: min(390px,calc(100dvh - 220px));
+  min-height: 210px;
   overflow: hidden;
   color: var(--text-primary);
   border: 1px solid var(--border);
@@ -1620,7 +1620,7 @@ body[data-theme="dark"] .nav-links { background: rgba(0,0,0,.56); }
 .floating-chef-button[aria-expanded="true"] { animation-play-state: paused; }
 .floating-chef-button[aria-expanded="true"] .chef-mascot { filter: drop-shadow(0 8px 12px rgba(0,0,0,.28)); }
 @media (max-width: 600px) {
-  .floating-chef-chat { right: max(12px,env(safe-area-inset-right)); bottom: calc(max(10px,env(safe-area-inset-bottom)) + 118px); width: min(336px,calc(100vw - 24px)); max-height: min(420px,calc(100dvh - 156px)); min-height: 220px; border-radius: 19px; }
+  .floating-chef-chat { right: max(12px,env(safe-area-inset-right)); bottom: calc(max(10px,env(safe-area-inset-bottom)) + 146px); width: min(300px,calc(100vw - 24px)); max-height: min(340px,calc(100dvh - 178px)); min-height: 210px; border-radius: 19px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .floating-chef-chat { animation: none; }
