@@ -5995,7 +5995,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 .hero.is-scroll-story .hero-cta:focus-within,
 .hero.is-scroll-story .hero-favorites:focus-within { opacity: 1; transform: none; }
 .hero.is-scroll-story .hero-favorite-card:focus-visible { opacity: 1; translate: var(--scroll-card-x, 0px) var(--scroll-card-y, 0px) var(--scroll-card-depth, 0px); }
-#page-home .how-it-works, #page-home .featured-recipes, #page-home .waste-stats { position: relative; isolation: isolate; perspective: 950px; transform-origin: 50% 0; translate: 0 var(--page-rise-y,0px); rotate: x var(--page-rise-tilt,0deg); scale: var(--page-rise-scale,1); opacity: var(--page-rise-opacity,1); transform-style: preserve-3d; transition: none; }
+#page-home .how-it-works, #page-home .featured-recipes, #page-home .waste-stats { position: relative; isolation: isolate; perspective: 950px; transform-origin: 50% 0; translate: var(--page-rise-x,0px) var(--page-rise-y,0px); rotate: x var(--page-rise-tilt,0deg); scale: var(--page-rise-scale,1); opacity: var(--page-rise-opacity,1); transform-style: preserve-3d; transition: none; }
 #page-home .how-it-works > .container, #page-home .featured-recipes > .container, #page-home .waste-stats > .container { position: relative; z-index: 2; }
 #page-home .how-it-works > .container { padding-top: 48px; }
 #page-home .how-it-works::before { position: absolute; z-index: 0; top: 0; bottom: -160px; left: 50%; right: auto; width: calc(100vw + 48px); border: 1px solid color-mix(in srgb,var(--border) 34%,transparent); border-radius: clamp(24px,3vw,36px); background: linear-gradient(160deg,color-mix(in srgb,var(--bg-card) 96%,white),var(--bg-card) 76%,color-mix(in srgb,var(--bg-card) 88%,var(--border))); box-shadow: 0 30px 42px rgba(31,21,12,.12); content: ""; opacity: .95; transform: translateX(-50%); transform-origin: 50% 0; transition: none; pointer-events: none; }
@@ -6003,6 +6003,8 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 #page-home .featured-recipes::before { position: absolute; z-index: 0; top: max(-300px,-45vh); right: 0; bottom: 0; left: 0; background: var(--bg); content: ""; pointer-events: none; }
 #page-home .featured-recipes .recipe-card.motion-ready { transform: translateZ(var(--recipe-story-z,0px)) rotateX(var(--recipe-story-rotate,0deg)) rotateY(var(--recipe-story-tilt-y,0deg)); }
 #page-home .featured-recipes .recipe-card.motion-ready.motion-visible:hover { transform: translateY(-5px) translateZ(var(--recipe-story-z,0px)) rotateX(var(--recipe-story-rotate,0deg)) rotateY(var(--recipe-story-tilt-y,0deg)); }
+#page-home .featured-recipes .recipe-card.motion-ready { transform: none; translate: none; rotate: none; scale: 1; opacity: 1; transition: none; }
+#page-home .featured-recipes .recipe-card.motion-ready.motion-visible:hover { transform: translateY(-5px); }
 .collage-card::after { position: absolute; z-index: 2; inset: 0; background: radial-gradient(circle at var(--shine-x,50%) var(--shine-y,50%),rgba(255,248,222,.24),transparent 43%); content: ""; opacity: 0; pointer-events: none; transition: opacity .25s ease; }
 .collage-card.is-pointer-tracking::after { opacity: 1; }
 .collage-card.is-dragging { transition: none; }

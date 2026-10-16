@@ -431,41 +431,27 @@ function updateHomeScrollStory() {
       line.style.setProperty('--copy-line-opacity', (0.24 + lineProgress * 0.76).toFixed(3));
     });
   }
-
-
-  home.querySelectorAll('.featured-recipes .recipe-card').forEach((card, index) => {
-    const cardProgress = progressAt(card, 0.96 - (index % 3) * 0.04, 0.46 - (index % 3) * 0.04);
-    const entryProgress = Math.min(1, Math.max(0, (cardProgress - (index % 3) * 0.12) / (1 - (index % 3) * 0.12)));
-    const lane = index % 3 - 1;
-    const cardPulse = Math.sin(entryProgress * Math.PI);
-    const spread = Math.min(126, viewport * 0.12);
-    card.style.setProperty('--recipe-story-x', `${((1 - entryProgress) * lane * spread + cardPulse * lane * spread * 0.32).toFixed(1)}px`);
-    card.style.setProperty('--recipe-story-y', `${((1 - entryProgress) * (index % 2 ? 104 : 58) - cardPulse * 30).toFixed(1)}px`);
-    card.style.setProperty('--recipe-story-z', `${((entryProgress - 1) * 180 + cardPulse * 100).toFixed(1)}px`);
-    card.style.setProperty('--recipe-story-rotate', `${((1 - entryProgress) * (index % 2 ? 10 : -10) - cardPulse * lane * 4).toFixed(2)}deg`);
-    card.style.setProperty('--recipe-story-tilt-y', `${((1 - entryProgress) * lane * -13).toFixed(2)}deg`);
-    card.style.setProperty('--recipe-story-scale', (0.72 + entryProgress * 0.28 + cardPulse * 0.06).toFixed(3));
-    card.style.setProperty('--recipe-story-opacity', (0.7 + entryProgress * 0.3).toFixed(3));
-    const photo = card.querySelector('.recipe-img-photo');
-    photo?.style.setProperty('--recipe-photo-y', `${(-cardPulse * 12).toFixed(1)}px`);
-    photo?.style.setProperty('--recipe-photo-scale', (1.045 + cardPulse * 0.075).toFixed(3));
-  });
-
   home.querySelectorAll('.how-it-works, .featured-recipes, .waste-stats').forEach((section, index) => {
     const isPaperSection = section.matches('.how-it-works');
+    const isFeatured = section.matches('.featured-recipes');
+    const isStats = section.matches('.waste-stats');
     const pageProgress = isPaperSection ? progressAt(section, 0.76, -0.16) : progressAt(section, 0.99 - index * 0.025, 0.56 - index * 0.025);
     const risePulse = Math.sin(pageProgress * Math.PI);
-    section.style.setProperty('--page-rise-y', `${(isPaperSection ? -pageProgress * viewport * 0.32 : (1 - pageProgress) * 92 - risePulse * 10).toFixed(1)}px`);
-    const sectionScale = isPaperSection || section.matches('.featured-recipes') ? '1' : (0.955 + pageProgress * 0.045 + risePulse * 0.012).toFixed(3);
+    const enterFromRight = isStats && window.matchMedia?.('(min-width: 901px)').matches
+      ? (1 - pageProgress) * Math.min(viewport * 0.58, 620)
+      : 0;
+    section.style.setProperty('--page-rise-x', `${enterFromRight.toFixed(1)}px`);
+    section.style.setProperty('--page-rise-y', `${(isPaperSection ? -pageProgress * viewport * 0.32 : 0).toFixed(1)}px`);
+    const sectionScale = isPaperSection || isFeatured || isStats ? '1' : (0.955 + pageProgress * 0.045 + risePulse * 0.012).toFixed(3);
     section.style.setProperty('--page-rise-scale', sectionScale);
-    const sectionOpacity = isPaperSection || section.matches('.featured-recipes') ? 1 : 0.42 + pageProgress * 0.58;
+    const sectionOpacity = isPaperSection || isFeatured ? 1 : (isStats ? 0.82 + pageProgress * 0.18 : 0.42 + pageProgress * 0.58);
     section.style.setProperty('--page-rise-opacity', sectionOpacity.toFixed(3));
-    section.style.setProperty('--page-rise-tilt', isPaperSection ? '0deg' : `${((1 - pageProgress) * 1.2).toFixed(2)}deg`);
+    section.style.setProperty('--page-rise-tilt', isPaperSection || isFeatured || isStats ? '0deg' : `${((1 - pageProgress) * 1.2).toFixed(2)}deg`);
     const heading = section.querySelector('.section-header h2, .stats-content h2');
     if (heading && !isPaperSection) {
-      heading.style.setProperty('--heading-story-y', `${((1 - pageProgress) * 34 - risePulse * 12).toFixed(1)}px`);
-      heading.style.setProperty('--heading-story-scale', (0.94 + pageProgress * 0.06 + risePulse * 0.025).toFixed(3));
-      heading.style.setProperty('--heading-story-opacity', (0.48 + pageProgress * 0.52).toFixed(3));
+      heading.style.setProperty('--heading-story-y', isStats ? '0px' : `${((1 - pageProgress) * 34 - risePulse * 12).toFixed(1)}px`);
+      heading.style.setProperty('--heading-story-scale', isStats ? '1' : (0.94 + pageProgress * 0.06 + risePulse * 0.025).toFixed(3));
+      heading.style.setProperty('--heading-story-opacity', isStats ? '1' : (0.48 + pageProgress * 0.52).toFixed(3));
     }
   });
 }
