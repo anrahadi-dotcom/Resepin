@@ -415,9 +415,9 @@ function updateHomeScrollStory() {
   });
 
   home.querySelectorAll('.how-it-works, .featured-recipes, .waste-stats').forEach((section, index) => {
-    const pageProgress = progressAt(section, 0.99 - index * 0.025, 0.56 - index * 0.025);
-    const risePulse = Math.sin(pageProgress * Math.PI);
     const isPaperSection = section.matches('.how-it-works');
+    const pageProgress = isPaperSection ? progressAt(section, 0.76, 0.30) : progressAt(section, 0.99 - index * 0.025, 0.56 - index * 0.025);
+    const risePulse = Math.sin(pageProgress * Math.PI);
     section.style.setProperty('--page-rise-y', `${(isPaperSection ? -pageProgress * 100 - risePulse * 130 : (1 - pageProgress) * 92 - risePulse * 10).toFixed(1)}px`);
     section.style.setProperty('--page-rise-scale', isPaperSection ? '1' : (0.955 + pageProgress * 0.045 + risePulse * 0.012).toFixed(3));
     section.style.setProperty('--page-rise-opacity', isPaperSection ? '1' : (0.42 + pageProgress * 0.58).toFixed(3));
