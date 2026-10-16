@@ -33,6 +33,7 @@ let previousRecipeFocus = null;
 const PERSONAL_STATS_KEY = 'resepin-personal-stats-v1';
 const FAVORITE_RECIPE_IDS_KEY = 'resep-favorite-ids-v1';
 const TAKEOVER_SEGMENT_VIEWPORTS = 2;
+const TAKEOVER_DELAY_VIEWPORTS = 0.35;
 let personalStatsMemory = { ingredientsUsed: 0, recipesOpened: 0 };
 let homeCountersStarted = false;
 let scrollStoryObserver;
@@ -446,7 +447,9 @@ function updateHomeScrollStory() {
     const risePulse = Math.sin(pageProgress * Math.PI);
     const statsTakeoverProgress = isStats && takeoverStage && window.matchMedia?.('(min-width: 901px) and (min-height: 680px)').matches
       ? (() => {
-        const rawProgress = Math.min(1, Math.max(0, (window.scrollY - (window.scrollY + takeoverStage.getBoundingClientRect().top)) / (viewport * TAKEOVER_SEGMENT_VIEWPORTS)));
+        const stageScroll = window.scrollY - (window.scrollY + takeoverStage.getBoundingClientRect().top);
+        const takeoverDistance = TAKEOVER_SEGMENT_VIEWPORTS - TAKEOVER_DELAY_VIEWPORTS;
+        const rawProgress = Math.min(1, Math.max(0, (stageScroll / viewport - TAKEOVER_DELAY_VIEWPORTS) / takeoverDistance));
         return rawProgress * (2 - rawProgress);
       })()
       : pageProgress;
