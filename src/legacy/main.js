@@ -327,7 +327,8 @@ function updateHomeScrollStory() {
     const scrollSequenceEnabled = window.matchMedia?.('(min-width: 901px) and (min-height: 680px)').matches;
     hero.classList.toggle('is-scroll-story', Boolean(scrollSequenceEnabled));
     if (scrollSequenceEnabled) {
-      const sequenceProgress = Math.min(1, Math.max(0, (window.scrollY - hero.offsetTop) / (viewport * 0.9)));
+      const storyStart = window.scrollY + home.getBoundingClientRect().top;
+      const sequenceProgress = Math.min(1, Math.max(0, (window.scrollY - storyStart) / (viewport * 0.9)));
       const revealOnScroll = (element, start, finish) => {
         if (!element) return;
         const linear = Math.min(1, Math.max(0, (sequenceProgress - start) / (finish - start)));
