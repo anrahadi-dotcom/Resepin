@@ -423,7 +423,6 @@ function initNavHint() {
 function initRecipeIntro() {
   const intro = document.getElementById('recipeIntro');
   if (!intro) return;
-  document.body.classList.add('intro-playing');
   const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   const duration = reduceMotion ? 350 : 3900;
   const startedAt = performance.now();
@@ -434,7 +433,6 @@ function initRecipeIntro() {
     if (dismissed) return;
     dismissed = true;
     window.clearTimeout(timer);
-    document.body.classList.remove('intro-playing');
     intro.classList.add('is-leaving');
     window.setTimeout(() => intro.remove(), reduceMotion ? 0 : 700);
   };

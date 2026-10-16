@@ -5953,18 +5953,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 @keyframes intro-pot-set { 0% { opacity: 0; transform: translate(-50%,-35px) scale(.84); } 75% { opacity: 1; transform: translate(-50%,4px) scale(1.02); } 100% { opacity: 1; transform: translate(-50%,0) scale(1); } }
 @keyframes intro-ingredient-drop { 0% { opacity: 0; transform: translate(var(--ingredient-start)) rotate(-12deg) scale(.7); } 28% { opacity: 1; } 74% { opacity: 1; transform: translate(0,-21px) rotate(4deg) scale(1); } 100% { opacity: 0; transform: translate(0,-34px) rotate(0) scale(.72); } }
 @keyframes intro-status { 0%,100% { opacity: 0; transform: translateY(5px); } 18%,78% { opacity: 1; transform: translateY(0); } }
-body.intro-playing .hero-enter,body.intro-playing .hero-title-line { animation: none !important; opacity: 0; transform: translateY(24px); }
-body.intro-playing #page-home .hero-title-swap { opacity: 0; transform: translateY(24px); }
-body:not(.intro-playing) #page-home .hero-enter { animation-duration: .88s!important; animation-delay: var(--hero-entry-delay,0s)!important; }
-body:not(.intro-playing) #page-home .hero-enter-2 { --hero-entry-delay: .06s; }
-body:not(.intro-playing) #page-home .hero-enter-3 { --hero-entry-delay: .18s; }
-body:not(.intro-playing) #page-home .hero-enter-6 { --hero-entry-delay: .42s; }
-body:not(.intro-playing) #page-home .hero-enter-7 { --hero-entry-delay: .55s; }
-body:not(.intro-playing) #page-home .hero-enter-8 { --hero-entry-delay: .28s; }
-body:not(.intro-playing) #page-home .hero-title-line { animation-duration: .9s!important; animation-delay: .16s!important; }
-body:not(.intro-playing) #page-home .hero-title-swap { animation: hero-text-rise .9s cubic-bezier(.2,.7,.2,1) .27s both; }
-body:not(.intro-playing) #page-home .hero-light-veil { animation-delay: .08s; }
-body:not(.intro-playing) #page-home .hero-copy-spotlight { animation-delay: .12s; }
 .hero-collage-stage { perspective: 1200px; }
 .collage-card { transform: translate(var(--drag-x,0px),var(--drag-y,0px)) rotate(var(--card-angle,0deg)) rotateX(var(--tilt-y,0deg)) rotateY(var(--tilt-x,0deg)); transform-style: preserve-3d; transition: transform .24s cubic-bezier(.2,.75,.25,1), box-shadow .3s ease, scale .4s cubic-bezier(.2,.75,.25,1); }
 .collage-card::after { position: absolute; z-index: 2; inset: 0; background: radial-gradient(circle at var(--shine-x,50%) var(--shine-y,50%),rgba(255,248,222,.24),transparent 43%); content: ""; opacity: 0; pointer-events: none; transition: opacity .25s ease; }
@@ -6005,7 +5993,6 @@ body:not(.intro-playing) #page-home .hero-copy-spotlight { animation-delay: .12s
   .recipe-intro *, .recipe-intro::before, .recipe-intro::after { animation: none!important; transition: none!important; }
   .recipe-intro-lamp span,.recipe-intro-lamp i,.recipe-intro-beam,.recipe-intro-board,.recipe-intro-pot { opacity: 1; }
   .recipe-intro-status span:first-child { opacity: 1; }
-  body.intro-playing .hero-enter,body.intro-playing .hero-title-line { opacity: 1; transform: none; }
   .collage-card { transform: translate(var(--drag-x,0px),var(--drag-y,0px)) rotate(var(--card-angle,0deg))!important; transition: none!important; }
   .collage-card::after { display: none; }
   .step-card.motion-visible .step-visual img { animation: none; }
