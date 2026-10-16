@@ -1262,6 +1262,7 @@ function createRecipeCardHTML(r, { keepCurrentPage = false } = {}) {
   const featuredKicker = keepCurrentPage
     ? `<div class="recipe-card-kicker"><span class="recipe-card-category">${escapeHtml(category)}</span><span class="recipe-card-ingredient-count">${ingredientCount ? `${ingredientCount} bahan` : 'Bahan sederhana'}</span></div>`
     : '';
+  const recipeAction = '<span class="recipe-card-action" aria-hidden="true"><span class="recipe-card-action-label">Intip resep</span><span class="recipe-card-action-arrow">↗</span></span>';
   const matchLabel = available.length
     ? ` Kecocokan bahan: ${match.matched} dari ${match.total}.`
     : ' Tambahkan bahan untuk melihat kecocokan.';
@@ -1275,7 +1276,7 @@ function createRecipeCardHTML(r, { keepCurrentPage = false } = {}) {
     <a class="recipe-card" href="#/resep/${recipeSlug(r)}" aria-label="Lihat resep ${escapeHtml(r.title)}.${matchLabel}" onclick="event.preventDefault();${keepCurrentPage ? 'openFeaturedRecipeByIndex' : 'openRecipeByIndex'}(${recipeIndex})">
       <div class="recipe-img" style="background:${r.gradient}">
         ${recipeImageHTML(r, 'recipe-img-photo')}
-        <span class="recipe-card-action" aria-hidden="true"><span class="recipe-card-action-label">Intip resep</span><span class="recipe-card-action-arrow">↗</span></span>
+        ${keepCurrentPage ? '' : recipeAction}
       </div>
       <div class="recipe-badge-diff ${r.difficulty === 'Mudah' ? 'easy' : 'medium'}">${r.difficulty}</div>
       <div class="recipe-info">
@@ -1283,6 +1284,7 @@ function createRecipeCardHTML(r, { keepCurrentPage = false } = {}) {
         <h3>${escapeHtml(r.title)}</h3>
         <p class="recipe-meta"><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>${escapeHtml(r.time)}</span><span class="recipe-cost-estimate">Est. ${cost}/porsi</span></p>
         ${matchMarkup}
+        ${keepCurrentPage ? recipeAction : ''}
       </div>
     </a>
   `;

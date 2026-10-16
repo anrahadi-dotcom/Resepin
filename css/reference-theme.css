@@ -6731,3 +6731,76 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   #page-home .featured-recipes .recipe-card,
   #page-home .featured-recipes .recipe-card::after { transition: none !important; }
 }
+
+/* Make the dish photo more prominent and keep its recipe action in the copy panel. */
+#page-home .featured-recipes .recipe-card { grid-template-columns: 48% minmax(0, 1fr); }
+#page-home .featured-recipes .recipe-img { border-radius: 19px 0 0 19px; }
+#page-home .featured-recipes .recipe-card:nth-child(3n + 2) { grid-template-columns: minmax(0, 1fr) 48%; }
+#page-home .featured-recipes .recipe-card:nth-child(3n + 2) .recipe-img { border-radius: 0 19px 19px 0; }
+#page-home .featured-recipes .recipe-info { padding-block: 34px 17px; }
+#page-home .featured-recipes .recipe-card-action {
+  position: relative;
+  inset: auto;
+  display: flex;
+  width: 100%;
+  min-height: 34px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 9px 0 0;
+  border: 0;
+  border-top: 1px solid rgba(82,65,39,.17);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #684b30;
+  opacity: 1;
+  transform: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transition: color .2s ease;
+}
+#page-home .featured-recipes .recipe-card-action-label {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip: auto;
+  color: inherit;
+  font-size: .72rem;
+  font-weight: 740;
+  letter-spacing: .01em;
+}
+#page-home .featured-recipes .recipe-card-action-arrow {
+  display: grid;
+  width: 25px;
+  height: 25px;
+  place-items: center;
+  border: 1px solid rgba(104,75,48,.17);
+  border-radius: 50%;
+  background: rgba(104,75,48,.06);
+  color: inherit;
+  transition: transform .25s ease, color .25s ease, background .25s ease;
+}
+#page-home .featured-recipes .recipe-card:hover .recipe-card-action,
+#page-home .featured-recipes .recipe-card:focus-visible .recipe-card-action { color: #8a5738; }
+#page-home .featured-recipes .recipe-card:hover .recipe-card-action-arrow,
+#page-home .featured-recipes .recipe-card:focus-visible .recipe-card-action-arrow {
+  border-color: #8a5738;
+  background: #8a5738;
+  color: #fff9ed;
+  transform: translate(2px,-1px);
+}
+@media (max-width: 600px) {
+  #page-home .featured-recipes .recipe-card,
+  #page-home .featured-recipes .recipe-card:nth-child(3n + 2) { grid-template-columns: 46% minmax(0, 1fr); }
+  #page-home .featured-recipes .recipe-card:nth-child(3n + 2) .recipe-img { grid-column: 1; border-radius: 17px 0 0 17px; }
+  #page-home .featured-recipes .recipe-card:nth-child(3n + 2) .recipe-info { grid-column: 2; }
+  #page-home .featured-recipes .recipe-info { padding-block: 30px 13px; }
+  #page-home .featured-recipes .recipe-card-action { min-height: 29px; margin-top: 8px; padding-top: 6px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #page-home .featured-recipes .recipe-card-action,
+  #page-home .featured-recipes .recipe-card-action-arrow { transition: none !important; }
+}
