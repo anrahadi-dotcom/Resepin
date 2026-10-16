@@ -453,17 +453,32 @@
   <!-- ===== PAGE: RESEP ===== -->
   <div class="page" id="page-resep" role="main" tabindex="-1">
     <div class="resep-page">
-      <div class="resep-header">
-        <button class="back-btn" @click="go('home')">← Kembali</button>
-        <h1><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-book"/></svg> Semua Resep</h1>
-        <p>Temukan resep terbaik dari bahan yang kamu punya</p>
-      </div>
+      <div class="container resep-content">
+        <div class="resep-header">
+          <button class="back-btn" @click="go('home')">← Kembali</button>
+          <h1><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-book"/></svg> Semua Resep</h1>
+          <p>Temukan resep terbaik dari bahan yang kamu punya</p>
+        </div>
 
       <!-- Search & Filter -->
       <div class="resep-filters">
-        <div class="search-box">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          <input type="search" id="recipeSearch" aria-label="Cari nama resep atau bahan" placeholder="Cari resep atau bahan..." oninput="filterRecipes()" />
+        <div class="recipe-toolbar">
+          <label class="search-box" for="recipeSearch">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="search" id="recipeSearch" aria-label="Cari nama resep atau bahan" placeholder="Cari nama resep atau bahan..." oninput="filterRecipes()" />
+          </label>
+          <div class="recipe-sort-group" role="group" aria-label="Urutkan resep">
+            <label for="recipeSort">Urutkan</label>
+            <select id="recipeSort" onchange="setRecipeSort(this.value)">
+              <option value="match">Paling cocok</option>
+              <option value="fastest">Tercepat</option>
+              <option value="cheapest">Termurah</option>
+            </select>
+          </div>
+          <button class="clear-recipe-filters" id="clearRecipeFilters" type="button" onclick="clearRecipeFilters()" hidden>Hapus filter</button>
+        </div>
+        <div class="recipe-filter-heading">
+          <span>Kategori resep</span>
         </div>
         <div class="filter-chips" id="basicRecipeFilters" role="group" aria-label="Filter kategori resep">
           <button type="button" class="filter-chip active" aria-pressed="true" onclick="setFilter('all', this)">Semua</button>
@@ -474,33 +489,35 @@
           <button type="button" class="filter-chip" aria-pressed="false" onclick="setFilter('berkuah', this)">Berkuah</button>
           <button type="button" class="filter-chip" aria-pressed="false" onclick="setFilter('5bahan', this)">≤ 5 Bahan</button>
         </div>
-        <div class="filter-chips" role="group" aria-label="Filter kebutuhan makan">
-          <button type="button" class="filter-chip" aria-pressed="false" onclick="setDietFilter('vegetarian', this)">Vegetarian</button>
-          <button type="button" class="filter-chip" aria-pressed="false" onclick="setDietFilter('no-egg', this)">Tanpa telur</button>
-          <button type="button" class="filter-chip" aria-pressed="false" onclick="setDietFilter('no-seafood', this)">Tanpa seafood</button>
-          <button type="button" class="filter-chip" aria-pressed="false" onclick="setDietFilter('no-peanut', this)">Tanpa kacang</button>
-        </div>
-        <div class="filter-chips" role="group" aria-label="Filter perkiraan biaya per porsi">
-          <button type="button" class="filter-chip" aria-pressed="false" onclick="setBudgetFilter(10000, this)">≤ Rp10.000</button>
-          <button type="button" class="filter-chip" aria-pressed="false" onclick="setBudgetFilter(20000, this)">≤ Rp20.000</button>
-        </div>
-        <div class="pantry-filter-group" role="group" aria-label="Preferensi bahan dasar dapur">
-          <label class="pantry-toggle"><input id="assumePantryBasics" type="checkbox" checked onchange="setAssumePantryBasics(this.checked)" /> <span>Anggap bahan dasar dapur selalu ada</span></label>
-        </div>
-        <div class="recipe-sort-group" role="group" aria-label="Urutkan resep">
-          <label for="recipeSort">Urutkan</label>
-          <select id="recipeSort" onchange="setRecipeSort(this.value)">
-            <option value="match">Paling cocok</option>
-            <option value="fastest">Tercepat</option>
-            <option value="cheapest">Termurah</option>
-          </select>
-        </div>
-        <button class="clear-recipe-filters" id="clearRecipeFilters" type="button" onclick="clearRecipeFilters()" hidden>Hapus filter</button>
+        <details class="recipe-advanced-filters">
+          <summary>Filter kebutuhan makan &amp; biaya <span id="advancedRecipeFilterCount" hidden></span></summary>
+          <div class="recipe-advanced-panel">
+            <div class="recipe-advanced-group">
+              <span class="recipe-filter-label">Kebutuhan makan</span>
+              <div class="filter-chips" role="group" aria-label="Filter kebutuhan makan">
+                <button type="button" class="filter-chip" aria-pressed="false" onclick="setDietFilter('vegetarian', this)">Vegetarian</button>
+                <button type="button" class="filter-chip" aria-pressed="false" onclick="setDietFilter('no-egg', this)">Tanpa telur</button>
+                <button type="button" class="filter-chip" aria-pressed="false" onclick="setDietFilter('no-seafood', this)">Tanpa seafood</button>
+                <button type="button" class="filter-chip" aria-pressed="false" onclick="setDietFilter('no-peanut', this)">Tanpa kacang</button>
+              </div>
+            </div>
+            <div class="recipe-advanced-group">
+              <span class="recipe-filter-label">Perkiraan biaya per porsi</span>
+              <div class="filter-chips" role="group" aria-label="Filter perkiraan biaya per porsi">
+                <button type="button" class="filter-chip" aria-pressed="false" onclick="setBudgetFilter(10000, this)">≤ Rp10.000</button>
+                <button type="button" class="filter-chip" aria-pressed="false" onclick="setBudgetFilter(20000, this)">≤ Rp20.000</button>
+              </div>
+            </div>
+            <div class="recipe-advanced-group recipe-pantry-group" role="group" aria-label="Preferensi bahan dasar dapur">
+              <span class="recipe-filter-label">Bahan dasar</span>
+              <label class="pantry-toggle"><input id="assumePantryBasics" type="checkbox" onchange="setAssumePantryBasics(this.checked)" /> <span>Anggap bahan dasar dapur seperti garam dan minyak tersedia</span></label>
+            </div>
+          </div>
+        </details>
         <p class="recipe-results-status" id="recipeResultsStatus" aria-live="polite"></p>
       </div>
 
       <!-- Recipes Grid -->
-      <div class="container">
         <div class="recipes-grid" id="recipesGrid">
           <!-- populated by JS -->
         </div>
@@ -707,7 +724,7 @@
   <!-- ===== TOAST ===== -->
   <div class="toast" id="toast"></div>
 
-  <section v-show="activePage !== 'chef' && floatingChefChatOpen" class="floating-chef-chat" role="dialog" aria-modal="false" aria-labelledby="miniChatTitle" @keydown.esc.prevent="floatingChefChatOpen = false">
+  <section v-show="activePage !== 'chef' && floatingChefChatOpen" id="floatingChefChat" class="floating-chef-chat" role="dialog" aria-modal="false" aria-labelledby="miniChatTitle" @keydown.esc.prevent="floatingChefChatOpen = false">
     <header class="floating-chef-chat-header">
       <span class="floating-chef-chat-avatar" aria-hidden="true"><svg class="ui-icon"><use href="#ui-icon-chef"/></svg></span>
       <span class="floating-chef-chat-title"><strong id="miniChatTitle">Chef Resepin</strong><small><i></i> Siap bantu di dapur</small></span>
@@ -730,7 +747,7 @@
     </form>
   </section>
 
-  <button v-if="activePage !== 'chef'" class="floating-chef-button" type="button" :aria-label="floatingChefChatOpen ? 'Tutup chat Chef Resepin' : 'Ceritakan apa saja yang ada di rumahmu. Buka chat Chef Resepin'" :aria-expanded="floatingChefChatOpen" @click="toggleFloatingChefChat()">
+  <button v-if="activePage !== 'chef'" class="floating-chef-button" type="button" :aria-label="floatingChefChatOpen ? 'Tutup chat Chef Resepin' : 'Buka chat Chef Resepin'" aria-controls="floatingChefChat" :aria-expanded="floatingChefChatOpen" @click="toggleFloatingChefChat()">
     <svg class="chef-mascot" viewBox="0 0 104 132" fill="none" aria-hidden="true">
       <ellipse cx="53" cy="124" rx="28" ry="5" fill="#1f150c" opacity=".2"/>
       <g class="chef-character">

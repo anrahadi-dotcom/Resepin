@@ -5012,3 +5012,98 @@ body:has(#navbar .nav-search-wrap.is-open)::before {
   body:has(#navbar .nav-search-wrap.is-open)::before { @apply [animation:none]; }
 }
 
+/* Recipe browse refinement: one aligned content rail, concise controls, calm cards. */
+.resep-page { @apply [padding-top:84px]; @apply [padding-bottom:76px]; }
+.resep-content { @apply [width:100%]; @apply [max-width:1240px]; }
+.resep-header { @apply [max-width:none]; @apply [margin:0]; @apply [padding:22px_0_12px]; @apply [text-align:left]; }
+.resep-header h1 { @apply [display:flex]; @apply [align-items:center]; @apply [gap:10px]; @apply [margin:0_0_5px]; @apply [color:var(--text-primary)]; @apply [font-family:var(--font-display)]; @apply [font-size:clamp(2rem,_3.4vw,_2.7rem)]; @apply [line-height:1.12]; }
+.resep-header h1 .ui-icon { @apply [width:24px]; @apply [height:24px]; @apply [color:var(--primary)]; }
+.resep-header p { @apply [margin:0]; @apply [color:var(--text-secondary)]; @apply [font-size:.95rem]; }
+.resep-filters { @apply [max-width:none]; @apply [margin:0_0_8px]; @apply [padding:12px_0_0]; @apply [gap:13px]; @apply [align-items:stretch]; }
+.recipe-toolbar { @apply [display:grid]; @apply [width:100%]; @apply [grid-template-columns:minmax(0,_1fr)_auto_auto]; @apply [align-items:center]; @apply [gap:12px]; }
+.recipe-toolbar .search-box { @apply [min-width:0]; @apply [min-height:48px]; @apply [padding:10px_15px]; @apply [border-radius:13px]; @apply [background:var(--bg-card)]; }
+.recipe-toolbar .search-box:focus-within { @apply [border-color:var(--border-hover)]; @apply [box-shadow:0_0_0_3px_color-mix(in_srgb,var(--primary)_10%,transparent)]; }
+.recipe-toolbar .search-box input { @apply [min-width:0]; @apply [font-size:.94rem]; }
+.recipe-toolbar .recipe-sort-group { @apply [min-height:48px]; @apply [padding:0_0_0_3px]; @apply [white-space:nowrap]; }
+.recipe-toolbar .recipe-sort-group select { @apply [min-height:42px]; @apply [min-width:150px]; @apply [border-radius:12px]; }
+.recipe-toolbar .clear-recipe-filters { @apply [min-height:42px]; @apply [border-radius:12px]; }
+.recipe-filter-heading { @apply [width:100%]; @apply [margin:2px_0_-5px]; @apply [color:var(--text-secondary)]; @apply [font-size:.79rem]; @apply [font-weight:700]; @apply [letter-spacing:.025em]; }
+#basicRecipeFilters { @apply [width:100%]; @apply [gap:8px]; }
+.filter-chip { @apply [min-height:40px]; @apply [padding:7px_14px]; @apply [border-radius:999px]; @apply [font-size:.84rem]; @apply [font-weight:550]; }
+.recipe-advanced-filters { @apply [width:100%]; @apply [border-top:1px_solid_color-mix(in_srgb,var(--border)_72%,transparent)]; @apply [border-bottom:1px_solid_color-mix(in_srgb,var(--border)_72%,transparent)]; }
+.recipe-advanced-filters summary { @apply [display:flex]; @apply [width:fit-content]; @apply [min-height:42px]; @apply [align-items:center]; @apply [gap:9px]; @apply [color:var(--text-secondary)]; @apply [font-size:.84rem]; @apply [font-weight:650]; @apply [cursor:pointer]; @apply [list-style:none]; }
+.recipe-advanced-filters summary::-webkit-details-marker { @apply [display:none]; }
+.recipe-advanced-filters summary::after { content:"＋"; @apply [color:var(--primary)]; @apply [font-size:.9rem]; }
+.recipe-advanced-filters[open] summary::after { content:"−"; }
+.recipe-advanced-filters summary:focus-visible { @apply [outline:2px_solid_var(--primary)]; @apply [outline-offset:3px]; @apply [border-radius:4px]; }
+.recipe-advanced-filters summary span { @apply [padding:3px_8px]; @apply [border-radius:999px]; @apply [color:var(--primary-dark)]; @apply [background:var(--bg-surface)]; @apply [font-size:.72rem]; }
+body[data-theme="dark"] .recipe-advanced-filters summary span { @apply [color:var(--text-primary)]; }
+.recipe-advanced-panel { @apply [display:grid]; @apply [grid-template-columns:minmax(0,_1.2fr)_minmax(190px,_1fr)]; @apply [gap:16px_24px]; @apply [padding:0_0_15px]; }
+.recipe-advanced-group { @apply [display:grid]; @apply [align-content:start]; @apply [gap:8px]; @apply [min-width:0]; }
+.recipe-filter-label { @apply [color:var(--text-muted)]; @apply [font-size:.74rem]; @apply [font-weight:700]; @apply [letter-spacing:.035em]; }
+.recipe-advanced-group .filter-chips { @apply [gap:7px]; }
+.recipe-advanced-group .filter-chip { @apply [min-height:38px]; @apply [padding:6px_12px]; @apply [font-size:.8rem]; }
+.recipe-pantry-group { @apply [grid-column:1_/_-1]; @apply [display:flex]; @apply [align-items:center]; @apply [flex-wrap:wrap]; @apply [gap:8px_14px]; }
+.recipe-pantry-group .pantry-toggle { @apply [min-height:38px]; @apply [padding:4px_10px]; @apply [font-size:.8rem]; }
+.recipe-results-status { @apply [min-height:1.25em]; @apply [margin:0]; @apply [color:var(--text-muted)]; @apply [font-size:.8rem]; }
+.recipes-grid { @apply [align-items:stretch]; @apply [gap:20px]; @apply [padding:8px_0_20px]; }
+.recipes-grid .recipe-card { @apply [display:flex]; @apply [flex-direction:column]; @apply [height:100%]; @apply [border-radius:18px]; }
+.recipes-grid .recipe-img { @apply [flex:0_0_auto]; @apply [aspect-ratio:4_/_3]; @apply [border-radius:17px_17px_0_0]; }
+.recipes-grid .recipe-info { @apply [display:flex]; @apply [flex:1_1_auto]; @apply [flex-direction:column]; @apply [gap:10px]; @apply [padding:16px_17px_17px]; }
+.recipes-grid .recipe-info h3 { @apply [display:-webkit-box]; @apply [min-height:2.45em]; @apply [margin:0]; @apply [overflow:hidden]; @apply [font-size:1.08rem]; @apply [line-height:1.23]; @apply [overflow-wrap:anywhere]; @apply [text-overflow:ellipsis]; @apply [-webkit-box-orient:vertical]; @apply [-webkit-line-clamp:2]; }
+.recipes-grid .recipe-meta { @apply [display:flex]; @apply [align-items:center]; @apply [justify-content:space-between]; @apply [flex-wrap:wrap]; @apply [gap:6px_12px]; @apply [min-width:0]; @apply [margin:0]; @apply [font-size:.82rem]; }
+.recipes-grid .recipe-meta > span { @apply [display:inline-flex]; @apply [align-items:center]; @apply [gap:5px]; }
+.recipes-grid .recipe-cost-estimate { @apply [font-size:.78rem]; @apply [overflow-wrap:anywhere]; }
+.recipes-grid .recipe-match { @apply [gap:7px]; @apply [margin-top:auto]; @apply [padding-top:10px]; @apply [border-top:1px_solid_color-mix(in_srgb,var(--border)_72%,transparent)]; }
+.recipes-grid .recipe-match-label { @apply [font-size:.78rem]; }
+.recipes-grid .recipe-match p { @apply [line-height:1.45]; @apply [overflow-wrap:anywhere]; }
+.recipe-card-action { @apply [right:12px]; @apply [bottom:12px]; }
+.recipe-card-action-label { @apply [font-size:.76rem]; }
+.floating-chef-button { @apply [right:max(18px,env(safe-area-inset-right))]; @apply [bottom:max(14px,env(safe-area-inset-bottom))]; @apply [width:82px]; @apply [height:106px]; }
+.floating-chef-button .floating-chef-tooltip { @apply [right:calc(100%_+_7px)]; @apply [width:min(196px,_calc(100vw_-_112px))]; @apply [padding:8px_10px]; @apply [border-radius:14px]; @apply [font-size:.76rem]; @apply [opacity:0]; @apply [visibility:hidden]; @apply [transform:translate(5px,-50%)]; @apply [transition:opacity_.18s_ease,_transform_.18s_ease,_visibility_.18s]; @apply [animation:none]; }
+.floating-chef-button:hover .floating-chef-tooltip,
+.floating-chef-button:focus-visible .floating-chef-tooltip { @apply [opacity:1]; @apply [visibility:visible]; @apply [transform:translate(0,-50%)]; }
+.floating-chef-button .floating-chef-tooltip::after { @apply [right:-8px]; @apply [width:8px]; @apply [height:13px]; }
+.floating-chef-chat { @apply [right:max(18px,env(safe-area-inset-right))]; @apply [bottom:calc(max(14px,env(safe-area-inset-bottom))_+_116px)]; @apply [max-height:min(400px,_calc(100dvh_-_150px))]; @apply [border-radius:20px]; }
+.floating-chef-chat-header { @apply [padding:9px_11px]; }
+.floating-chef-chat-messages { @apply [min-height:64px]; }
+.navbar.nav-hint-visible .nav-hint { @apply [animation:none]; }
+@media (max-width: 900px) {
+  .resep-page { @apply [padding-top:78px]; }
+  .resep-header { @apply [padding-top:17px]; }
+  .recipe-toolbar { @apply [grid-template-columns:minmax(0,_1fr)_auto]; }
+  .recipe-toolbar .clear-recipe-filters { @apply [grid-column:2]; }
+  .recipe-results-status { @apply [grid-column:1_/_-1]; }
+  .floating-chef-button { @apply [width:72px]; @apply [height:92px]; }
+  .floating-chef-chat { @apply [bottom:calc(max(14px,env(safe-area-inset-bottom))_+_102px)]; }
+}
+@media (max-width: 700px) {
+  .recipe-toolbar { @apply [grid-template-columns:minmax(0,_1fr)]; }
+  .recipe-toolbar .recipe-sort-group { @apply [justify-content:space-between]; @apply [padding:0]; }
+  .recipe-toolbar .recipe-sort-group select { @apply [flex:0_1_210px]; @apply [width:min(210px,_58vw)]; }
+  .recipe-toolbar .clear-recipe-filters,
+  .recipe-results-status { @apply [grid-column:1]; }
+  .recipe-advanced-panel { @apply [grid-template-columns:minmax(0,_1fr)]; @apply [gap:13px]; }
+  .recipe-pantry-group { @apply [grid-column:1]; @apply [align-items:flex-start]; @apply [flex-direction:column]; }
+  .recipes-grid { @apply [gap:15px]; }
+  .floating-chef-button { @apply [right:max(12px,env(safe-area-inset-right))]; @apply [bottom:max(10px,env(safe-area-inset-bottom))]; @apply [width:64px]; @apply [height:82px]; }
+  .floating-chef-button .floating-chef-tooltip { @apply [width:min(184px,_calc(100vw_-_86px))]; @apply [font-size:.73rem]; }
+  .floating-chef-chat { @apply [right:max(12px,env(safe-area-inset-right))]; @apply [bottom:calc(max(10px,env(safe-area-inset-bottom))_+_94px)]; @apply [width:min(320px,_calc(100vw_-_24px))]; @apply [max-height:min(360px,_calc(100dvh_-_118px))]; }
+}
+@media (max-width: 520px) {
+  .resep-content { @apply [padding-inline:16px]; }
+  .resep-header { @apply [padding-top:14px]; }
+  .resep-header h1 { @apply [font-size:1.95rem]; }
+  .resep-header p { @apply [font-size:.88rem]; }
+  .resep-filters { @apply [gap:11px]; }
+  .recipe-filter-heading { @apply [margin-top:3px]; }
+  .filter-chip { @apply [min-height:42px]; @apply [padding-inline:12px]; }
+  .recipes-grid { @apply [grid-template-columns:minmax(0,_1fr)]; @apply [gap:13px]; }
+  .recipes-grid .recipe-img { @apply [aspect-ratio:16_/_10]; }
+  .recipes-grid .recipe-info { @apply [padding:15px]; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .floating-chef-button { @apply [animation:none]!; }
+  .floating-chef-button .floating-chef-tooltip { @apply [transition:none]; }
+}
+

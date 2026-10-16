@@ -15,7 +15,7 @@ let currentFilter = 'all';
 let currentDietFilter = 'all';
 let currentBudgetFilter = null;
 let currentRecipeSort = 'match';
-let assumePantryBasics = true;
+let assumePantryBasics = false;
 let scanBackendAvailable = null;
 let cameraStream = null;
 let demoRunning = false;
@@ -394,8 +394,10 @@ function initNavHint() {
   const trigger = navbar?.querySelector('.nav-container');
   if (!navbar || !trigger) return;
   navbar.classList.add('nav-hint-visible');
+  let dismissTimer;
   const dismiss = () => {
     if (navbar.classList.contains('nav-hint-dismissed')) return;
+    window.clearTimeout(dismissTimer);
     navbar.classList.add('nav-hint-dismissed');
     trigger.removeEventListener('pointerenter', dismiss);
     trigger.removeEventListener('focusin', dismiss);
@@ -406,6 +408,7 @@ function initNavHint() {
   trigger.addEventListener('focusin', dismiss, { once: true });
   trigger.addEventListener('touchstart', dismiss, { once: true, passive: true });
   trigger.addEventListener('click', dismiss, { once: true });
+  dismissTimer = window.setTimeout(dismiss, 4200);
 }
 
 // ============================================================
@@ -833,8 +836,8 @@ function clearRecipeFilters() {
   currentDietFilter = 'all';
   currentBudgetFilter = null;
   currentRecipeSort = 'match';
-  assumePantryBasics = true;
-  try { localStorage.setItem('resep-assume-pantry-basics', 'true'); } catch (_) { /* Keep the reset for this page view. */ }
+  assumePantryBasics = false;
+  try { localStorage.setItem('resep-assume-pantry-basics', 'false'); } catch (_) { /* Keep the reset for this page view. */ }
   const search = document.getElementById('recipeSearch');
   const pantry = document.getElementById('assumePantryBasics');
   const sort = document.getElementById('recipeSort');
@@ -903,11 +906,17 @@ function renderRecipesGrid() {
 
   const status = document.getElementById('recipeResultsStatus');
   const sortDescriptions = { match: 'kecocokan tertinggi', fastest: 'waktu tercepat', cheapest: 'biaya terendah' };
-  if (status) status.textContent = `${filtered.length} resep ditemukan, diurutkan berdasarkan ${sortDescriptions[currentRecipeSort] || sortDescriptions.match}${ingredientQuery.length ? ' dengan bahan yang tersedia' : ''}.`;
+  if (status) status.textContent = `${filtered.length} resep ditemukan, diurutkan berdasarkan ${sortDescriptions[currentRecipeSort] || sortDescriptions.match}${ingredientQuery.length ? ' dengan bahan yang tersedia.' : '. Tambahkan bahan untuk melihat kecocokan resep.'}`;
+  const advancedCount = Number(currentDietFilter !== 'all') + Number(currentBudgetFilter !== null) + Number(assumePantryBasics);
+  const advancedCountLabel = document.getElementById('advancedRecipeFilterCount');
+  if (advancedCountLabel) {
+    advancedCountLabel.textContent = `${advancedCount} aktif`;
+    advancedCountLabel.hidden = advancedCount === 0;
+  }
   const clearButton = document.getElementById('clearRecipeFilters');
   const activeQuery = Boolean(document.getElementById('recipeSearch')?.value?.trim());
   const hasIngredientParams = new URLSearchParams(window.location.search).has('bahan');
-  if (clearButton) clearButton.hidden = !(activeQuery || hasIngredientParams || currentFilter !== 'all' || currentDietFilter !== 'all' || currentBudgetFilter !== null || currentRecipeSort !== 'match' || !assumePantryBasics);
+  if (clearButton) clearButton.hidden = !(activeQuery || hasIngredientParams || currentFilter !== 'all' || currentDietFilter !== 'all' || currentBudgetFilter !== null || currentRecipeSort !== 'match' || assumePantryBasics);
   grid.innerHTML = filtered.length === 0
     ? `<div class="recipe-empty-state"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-book"/></svg><p>Tidak ada resep yang cocok.<br/>Coba kata kunci lain!</p></div>`
     : filtered.map(r => createRecipeCardHTML(r)).join('');
@@ -986,8 +995,17 @@ function createRecipeCardHTML(r, { keepCurrentPage = false } = {}) {
   const match = recipeMatch(r, available);
   const missing = match.missing.slice(0, 3).join(', ');
   const cost = window.ResepinRecipeUtils?.formatIDR(r.estimatedCostPerServingIDR) || '';
+  const matchLabel = available.length
+    ? ` Kecocokan bahan: ${match.matched} dari ${match.total}.`
+    : ' Tambahkan bahan untuk melihat kecocokan.';
+  const matchMarkup = available.length ? `
+        <div class="recipe-match" aria-label="Kecocokan bahan: ${match.matched} dari ${match.total}">
+          <div class="recipe-match-label"><strong>Cocok ${match.matched} dari ${match.total} bahan</strong><span>${Math.round(match.percentage * 100)}%</span></div>
+          <div class="recipe-match-track" role="progressbar" aria-valuemin="0" aria-valuemax="${match.total}" aria-valuenow="${match.matched}" aria-label="Kecocokan bahan"><span style="width:${Math.round(match.percentage * 100)}%"></span></div>
+          ${missing ? `<p>Kurang: ${escapeHtml(missing)}${match.missing.length > 3 ? ' +' + (match.missing.length - 3) : ''}</p>` : '<p>Semua bahan tersedia.</p>'}
+        </div>` : '';
   return `
-    <a class="recipe-card" href="#/resep/${recipeSlug(r)}" aria-label="Lihat resep ${escapeHtml(r.title)}. Kamu punya ${match.matched} dari ${match.total} bahan." onclick="event.preventDefault();${keepCurrentPage ? 'openFeaturedRecipeByIndex' : 'openRecipeByIndex'}(${recipeIndex})">
+    <a class="recipe-card" href="#/resep/${recipeSlug(r)}" aria-label="Lihat resep ${escapeHtml(r.title)}.${matchLabel}" onclick="event.preventDefault();${keepCurrentPage ? 'openFeaturedRecipeByIndex' : 'openRecipeByIndex'}(${recipeIndex})">
       <div class="recipe-img" style="background:${r.gradient}">
         ${recipeImageHTML(r, 'recipe-img-photo')}
         <span class="recipe-card-action" aria-hidden="true"><span class="recipe-card-action-label">Intip resep</span><span class="recipe-card-action-arrow">↗</span></span>
@@ -996,12 +1014,7 @@ function createRecipeCardHTML(r, { keepCurrentPage = false } = {}) {
       <div class="recipe-info">
         <h3>${escapeHtml(r.title)}</h3>
         <p class="recipe-meta"><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>${escapeHtml(r.time)}</span><span class="recipe-cost-estimate">Est. ${cost}/porsi</span></p>
-        <div class="recipe-match" aria-label="Kecocokan bahan: ${match.matched} dari ${match.total}">
-          <div class="recipe-match-label"><strong>Kamu punya ${match.matched}/${match.total} bahan</strong><span>${Math.round(match.percentage * 100)}%</span></div>
-          <div class="recipe-match-track" role="progressbar" aria-valuemin="0" aria-valuemax="${match.total}" aria-valuenow="${match.matched}" aria-label="Kecocokan bahan"><span style="width:${Math.round(match.percentage * 100)}%"></span></div>
-          ${available.length && missing ? `<p>Kurang: ${escapeHtml(missing)}${match.missing.length > 3 ? ' +' + (match.missing.length - 3) : ''}</p>` : ''}
-          ${!available.length ? '<p>Tambahkan bahan untuk melihat kecocokan.</p>' : ''}
-        </div>
+        ${matchMarkup}
       </div>
     </a>
   `;
@@ -1417,7 +1430,7 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('popstate', renderLocationRoute);
   window.addEventListener('hashchange', renderLocationRoute);
   initTheme();
-  try { assumePantryBasics = localStorage.getItem('resep-assume-pantry-basics') !== 'false'; } catch (_) { /* Keep the default pantry assumption for this session. */ }
+  try { assumePantryBasics = localStorage.getItem('resep-assume-pantry-basics') === 'true'; } catch (_) { /* Keep the conservative default for this session. */ }
   const pantryToggle = document.getElementById('assumePantryBasics');
   if (pantryToggle) pantryToggle.checked = assumePantryBasics;
   initQuickPromptDragging();
