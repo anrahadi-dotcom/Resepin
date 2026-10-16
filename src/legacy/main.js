@@ -33,6 +33,24 @@ let previousRecipeFocus = null;
 const PERSONAL_STATS_KEY = 'resepin-personal-stats-v1';
 const FAVORITE_RECIPE_IDS_KEY = 'resep-favorite-ids-v1';
 let personalStatsMemory = { ingredientsUsed: 0, recipesOpened: 0 };
+let homeCountersStarted = false;
+let scrollStoryObserver;
+const countAnimationFrames = new WeakMap();
+
+function animateNumber(element, target, start = 0, duration = 1100, formatter = value => Math.round(value).toLocaleString('id-ID')) {
+  if (!element || !Number.isFinite(target)) return;
+  const previousFrame = countAnimationFrames.get(element);
+  if (previousFrame) cancelAnimationFrame(previousFrame);
+  const startedAt = performance.now();
+  const tick = now => {
+    const progress = Math.min(1, (now - startedAt) / duration);
+    const eased = 1 - Math.pow(1 - progress, 4);
+    element.textContent = formatter(start + (target - start) * eased);
+    if (progress < 1) countAnimationFrames.set(element, requestAnimationFrame(tick));
+    else countAnimationFrames.delete(element);
+  };
+  countAnimationFrames.set(element, requestAnimationFrame(tick));
+}
 
 function readFavoriteRecipeIds() {
   try {
@@ -57,8 +75,15 @@ function renderPersonalStats(stats = readPersonalStats()) {
   const recipes = document.getElementById('personalRecipesOpened');
   const numbers = document.getElementById('personalStatsNumbers');
   const empty = document.getElementById('personalStatsEmpty');
-  if (ingredients) ingredients.textContent = stats.ingredientsUsed.toLocaleString('id-ID');
-  if (recipes) recipes.textContent = stats.recipesOpened.toLocaleString('id-ID');
+  const updateCounter = (element, value) => {
+    if (!element) return;
+    if (homeCountersStarted && !numbers?.hidden) {
+      const current = Number(element.textContent.replace(/\D/g, '')) || 0;
+      animateNumber(element, value, current);
+    } else element.textContent = value.toLocaleString('id-ID');
+  };
+  updateCounter(ingredients, stats.ingredientsUsed);
+  updateCounter(recipes, stats.recipesOpened);
   const hasActivity = stats.ingredientsUsed > 0 || stats.recipesOpened > 0;
   if (numbers) numbers.hidden = !hasActivity;
   if (empty) empty.hidden = hasActivity;
@@ -306,6 +331,15 @@ function updateHomeScrollStory() {
     favorites?.style.setProperty('--hero-favorites-scroll-y', `${Math.round(heroProgress * 34)}px`);
     favorites?.style.setProperty('--hero-favorites-scroll-opacity', (1 - heroProgress * 0.72).toFixed(3));
     scene?.style.setProperty('--hero-scene-scroll-y', `${Math.round(heroProgress * 48)}px`);
+    favorites?.querySelectorAll('.hero-favorite-card').forEach((card, index) => {
+      const outer = index === 0 ? -1 : index === 2 ? 1 : 0;
+      const lift = heroProgress * (outer === 0 ? -124 : 40);
+      card.style.setProperty('--scroll-card-x', `${(heroProgress * outer * Math.min(118, viewport * 0.12)).toFixed(1)}px`);
+      card.style.setProperty('--scroll-card-y', `${lift.toFixed(1)}px`);
+      card.style.setProperty('--scroll-card-scale', (outer === 0 ? 1 + heroProgress * 0.28 : 1 - heroProgress * 0.46).toFixed(3));
+      card.style.setProperty('--scroll-card-rotation', `${(heroProgress * outer * 9).toFixed(2)}deg`);
+      card.style.setProperty('--scroll-card-depth', `${(heroProgress * (outer === 0 ? 110 : -100)).toFixed(1)}px`);
+    });
   }
 
   const stage = home.querySelector('.hero-collage-stage');
@@ -317,14 +351,15 @@ function updateHomeScrollStory() {
     stage.style.setProperty('--collage-story-scale', (0.94 + storyProgress * 0.06).toFixed(3));
     stage.querySelectorAll('.collage-card').forEach((card, index) => {
       const direction = index === 1 ? 0 : index === 0 ? -1 : 1;
-      const distance = (1 - storyProgress) * (index === 1 ? 0 : cardSpread) * direction;
-      const rotation = (1 - storyProgress) * (index === 0 ? -13 : index === 2 ? 13 : -3);
+      const middlePulse = Math.sin(storyProgress * Math.PI);
+      const distance = direction * ((1 - storyProgress) * cardSpread + middlePulse * 36);
+      const rotation = (1 - storyProgress) * (index === 0 ? -14 : index === 2 ? 14 : -5);
       card.style.setProperty('--story-x', `${distance.toFixed(1)}px`);
-      card.style.setProperty('--story-y', `${((1 - storyProgress) * (index === 1 ? 66 : 46)).toFixed(1)}px`);
+      card.style.setProperty('--story-y', `${((1 - storyProgress) * (index === 1 ? 78 : 48) - middlePulse * (index === 1 ? 34 : 12)).toFixed(1)}px`);
       card.style.setProperty('--story-rotate', `${rotation.toFixed(2)}deg`);
-      card.style.setProperty('--story-z', `${((storyProgress - 1) * 150).toFixed(1)}px`);
-      card.style.setProperty('--story-scale', (0.88 + storyProgress * 0.12).toFixed(3));
-      card.style.setProperty('--story-opacity', (0.18 + storyProgress * 0.82).toFixed(3));
+      card.style.setProperty('--story-z', `${((storyProgress - 1) * 190 + middlePulse * (index === 1 ? 100 : 30)).toFixed(1)}px`);
+      card.style.setProperty('--story-scale', (index === 1 ? 0.82 + storyProgress * 0.18 + middlePulse * 0.14 : 0.78 + storyProgress * 0.22 + middlePulse * 0.035).toFixed(3));
+      card.style.setProperty('--story-opacity', (0.12 + storyProgress * 0.88).toFixed(3));
     });
     stage.querySelectorAll('.collage-ingredient-strip button').forEach((chip, index) => {
       const chipProgress = Math.min(1, Math.max(0, (storyProgress - index * 0.055) / 0.72));
@@ -348,19 +383,59 @@ function updateHomeScrollStory() {
 
   home.querySelectorAll('.how-it-works .step-card').forEach((card, index) => {
     const cardProgress = progressAt(card, 0.92 - index * 0.035, 0.42 - index * 0.035);
-    card.style.setProperty('--step-story-y', `${((1 - cardProgress) * (index % 2 ? 64 : 46)).toFixed(1)}px`);
-    card.style.setProperty('--step-story-rotate', `${((1 - cardProgress) * (index - 1) * 3).toFixed(2)}deg`);
-    card.style.setProperty('--step-story-scale', (0.92 + cardProgress * 0.08).toFixed(3));
-    card.style.setProperty('--step-story-opacity', (0.2 + cardProgress * 0.8).toFixed(3));
+    const lane = index - 1;
+    const stackPulse = Math.sin(cardProgress * Math.PI);
+    const spread = Math.min(94, viewport * 0.12);
+    card.style.setProperty('--step-story-x', `${((1 - cardProgress) * lane * spread + stackPulse * lane * spread * 0.23).toFixed(1)}px`);
+    card.style.setProperty('--step-story-y', `${((1 - cardProgress) * 86 - stackPulse * 28).toFixed(1)}px`);
+    card.style.setProperty('--step-story-z', `${((cardProgress - 1) * 120 + stackPulse * 48).toFixed(1)}px`);
+    card.style.setProperty('--step-story-rotate', `${((1 - cardProgress) * (index - 1) * 7).toFixed(2)}deg`);
+    card.style.setProperty('--step-story-scale', (0.86 + cardProgress * 0.14 + stackPulse * 0.025).toFixed(3));
+    card.style.setProperty('--step-story-opacity', (0.12 + cardProgress * 0.88).toFixed(3));
   });
 
   home.querySelectorAll('.featured-recipes .recipe-card').forEach((card, index) => {
     const cardProgress = progressAt(card, 0.96 - (index % 3) * 0.04, 0.46 - (index % 3) * 0.04);
-    card.style.setProperty('--recipe-story-y', `${((1 - cardProgress) * (index % 2 ? 56 : 38)).toFixed(1)}px`);
-    card.style.setProperty('--recipe-story-rotate', `${((1 - cardProgress) * (index % 2 ? 2.4 : -2.4)).toFixed(2)}deg`);
-    card.style.setProperty('--recipe-story-scale', (0.93 + cardProgress * 0.07).toFixed(3));
-    card.style.setProperty('--recipe-story-opacity', (0.2 + cardProgress * 0.8).toFixed(3));
+    const lane = index % 3 - 1;
+    const cardPulse = Math.sin(cardProgress * Math.PI);
+    const spread = Math.min(126, viewport * 0.12);
+    card.style.setProperty('--recipe-story-x', `${((1 - cardProgress) * lane * spread + cardPulse * lane * spread * 0.2).toFixed(1)}px`);
+    card.style.setProperty('--recipe-story-y', `${((1 - cardProgress) * (index % 2 ? 74 : 44) - cardPulse * 18).toFixed(1)}px`);
+    card.style.setProperty('--recipe-story-z', `${((cardProgress - 1) * 115 + cardPulse * 52).toFixed(1)}px`);
+    card.style.setProperty('--recipe-story-rotate', `${((1 - cardProgress) * (index % 2 ? 7 : -7)).toFixed(2)}deg`);
+    card.style.setProperty('--recipe-story-tilt-y', `${((1 - cardProgress) * lane * -10).toFixed(2)}deg`);
+    card.style.setProperty('--recipe-story-scale', (0.78 + cardProgress * 0.22 + cardPulse * 0.035).toFixed(3));
+    card.style.setProperty('--recipe-story-opacity', (0.12 + cardProgress * 0.88).toFixed(3));
   });
+
+  home.querySelectorAll('.how-it-works, .featured-recipes, .waste-stats').forEach((section, index) => {
+    const pageProgress = progressAt(section, 0.99 - index * 0.025, 0.56 - index * 0.025);
+    const risePulse = Math.sin(pageProgress * Math.PI);
+    section.style.setProperty('--page-rise-y', `${((1 - pageProgress) * 92 - risePulse * 10).toFixed(1)}px`);
+    section.style.setProperty('--page-rise-scale', (0.955 + pageProgress * 0.045 + risePulse * 0.012).toFixed(3));
+    section.style.setProperty('--page-rise-opacity', (0.22 + pageProgress * 0.78).toFixed(3));
+    section.style.setProperty('--page-rise-tilt', `${((1 - pageProgress) * 2.2).toFixed(2)}deg`);
+  });
+}
+
+function startHomeCounters() {
+  if (homeCountersStarted || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+  homeCountersStarted = true;
+  const impact = document.querySelector('.impact-number');
+  const match = impact?.textContent.trim().match(/^(\D*)([\d,.]+)(.*)$/);
+  if (impact && match) {
+    const liveMode = impact.getAttribute('aria-live');
+    impact.setAttribute('aria-live', 'off');
+    animateNumber(impact, Number(match[2].replace(/,/g, '')), 0, 1450, value => `${match[1]}${Math.round(value).toLocaleString('id-ID')}${match[3]}`);
+    window.setTimeout(() => { if (liveMode) impact.setAttribute('aria-live', liveMode); }, 1550);
+  }
+  const numbers = document.getElementById('personalStatsNumbers');
+  if (!numbers?.hidden) {
+    numbers.querySelectorAll('.ws-num').forEach(element => {
+      const target = Number(element.textContent.replace(/\D/g, '')) || 0;
+      animateNumber(element, target, 0, 1250);
+    });
+  }
 }
 
 function ensureScrollProgress() {
@@ -369,6 +444,13 @@ function ensureScrollProgress() {
     progress.className = 'scroll-progress';
     progress.setAttribute('aria-hidden', 'true');
     document.body.append(progress);
+  }
+  if (!scrollStoryObserver && 'IntersectionObserver' in window) {
+    scrollStoryObserver = new IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting)) startHomeCounters();
+    }, { threshold: 0.28 });
+    const stats = document.querySelector('#page-home .waste-stats');
+    if (stats) scrollStoryObserver.observe(stats);
   }
   if (!scrollProgressListenerReady) {
     window.addEventListener('scroll', updateScrollProgress, { passive: true });
