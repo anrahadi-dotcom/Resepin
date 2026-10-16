@@ -288,6 +288,11 @@ function updateScrollProgress() {
 function updateHomeScrollStory() {
   const home = document.getElementById('page-home');
   if (!home?.classList.contains('active') || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+  const viewport = Math.max(1, window.innerHeight);
+  const progressAt = (element, start = 0.94, finish = 0.34) => {
+    const top = element.getBoundingClientRect().top;
+    return Math.min(1, Math.max(0, (viewport * start - top) / (viewport * (start - finish))));
+  };
 
   const hero = home.querySelector('.hero');
   const scene = home.querySelector('.hero-scene');
@@ -304,18 +309,57 @@ function updateHomeScrollStory() {
   }
 
   const stage = home.querySelector('.hero-collage-stage');
-  if (!stage) return;
-  const stageTop = stage.getBoundingClientRect().top;
-  const storyProgress = Math.min(1, Math.max(0, (window.innerHeight * 0.88 - stageTop) / (window.innerHeight * 0.58)));
-  stage.style.setProperty('--collage-story-progress', storyProgress.toFixed(3));
-  stage.querySelectorAll('.collage-card').forEach((card, index) => {
-    const direction = index === 1 ? 0 : index === 0 ? -1 : 1;
-    const distance = (1 - storyProgress) * 44 * direction;
-    const rotation = (1 - storyProgress) * (index === 0 ? -5 : index === 2 ? 5 : 0);
-    card.style.setProperty('--story-x', `${distance.toFixed(1)}px`);
-    card.style.setProperty('--story-y', `${((1 - storyProgress) * 24).toFixed(1)}px`);
-    card.style.setProperty('--story-rotate', `${rotation.toFixed(2)}deg`);
-    card.style.setProperty('--story-opacity', (0.38 + storyProgress * 0.62).toFixed(3));
+  if (stage) {
+    const storyProgress = progressAt(stage, 0.92, 0.3);
+    const cardSpread = Math.min(96, viewport * 0.075);
+    stage.style.setProperty('--collage-story-progress', storyProgress.toFixed(3));
+    stage.style.setProperty('--collage-story-y', `${((1 - storyProgress) * 74).toFixed(1)}px`);
+    stage.style.setProperty('--collage-story-scale', (0.94 + storyProgress * 0.06).toFixed(3));
+    stage.querySelectorAll('.collage-card').forEach((card, index) => {
+      const direction = index === 1 ? 0 : index === 0 ? -1 : 1;
+      const distance = (1 - storyProgress) * (index === 1 ? 0 : cardSpread) * direction;
+      const rotation = (1 - storyProgress) * (index === 0 ? -13 : index === 2 ? 13 : -3);
+      card.style.setProperty('--story-x', `${distance.toFixed(1)}px`);
+      card.style.setProperty('--story-y', `${((1 - storyProgress) * (index === 1 ? 66 : 46)).toFixed(1)}px`);
+      card.style.setProperty('--story-rotate', `${rotation.toFixed(2)}deg`);
+      card.style.setProperty('--story-z', `${((storyProgress - 1) * 150).toFixed(1)}px`);
+      card.style.setProperty('--story-scale', (0.88 + storyProgress * 0.12).toFixed(3));
+      card.style.setProperty('--story-opacity', (0.18 + storyProgress * 0.82).toFixed(3));
+    });
+    stage.querySelectorAll('.collage-ingredient-strip button').forEach((chip, index) => {
+      const chipProgress = Math.min(1, Math.max(0, (storyProgress - index * 0.055) / 0.72));
+      chip.style.setProperty('--chip-story-y', `${((1 - chipProgress) * 22).toFixed(1)}px`);
+      chip.style.setProperty('--chip-story-opacity', (0.25 + chipProgress * 0.75).toFixed(3));
+      chip.style.setProperty('--chip-story-scale', (0.94 + chipProgress * 0.06).toFixed(3));
+    });
+  }
+
+  const followthroughCopy = home.querySelector('.hero-followthrough-copy');
+  if (followthroughCopy) {
+    const copyProgress = progressAt(followthroughCopy, 0.9, 0.42);
+    followthroughCopy.style.setProperty('--copy-story-y', `${((1 - copyProgress) * 52).toFixed(1)}px`);
+    followthroughCopy.style.setProperty('--copy-story-opacity', (0.35 + copyProgress * 0.65).toFixed(3));
+    followthroughCopy.querySelectorAll('.hero-followthrough-eyebrow, h2, p').forEach((line, index) => {
+      const lineProgress = Math.min(1, Math.max(0, (copyProgress - index * 0.14) / 0.7));
+      line.style.setProperty('--copy-line-y', `${((1 - lineProgress) * (index === 1 ? 28 : 16)).toFixed(1)}px`);
+      line.style.setProperty('--copy-line-opacity', (0.24 + lineProgress * 0.76).toFixed(3));
+    });
+  }
+
+  home.querySelectorAll('.how-it-works .step-card').forEach((card, index) => {
+    const cardProgress = progressAt(card, 0.92 - index * 0.035, 0.42 - index * 0.035);
+    card.style.setProperty('--step-story-y', `${((1 - cardProgress) * (index % 2 ? 64 : 46)).toFixed(1)}px`);
+    card.style.setProperty('--step-story-rotate', `${((1 - cardProgress) * (index - 1) * 3).toFixed(2)}deg`);
+    card.style.setProperty('--step-story-scale', (0.92 + cardProgress * 0.08).toFixed(3));
+    card.style.setProperty('--step-story-opacity', (0.2 + cardProgress * 0.8).toFixed(3));
+  });
+
+  home.querySelectorAll('.featured-recipes .recipe-card').forEach((card, index) => {
+    const cardProgress = progressAt(card, 0.96 - (index % 3) * 0.04, 0.46 - (index % 3) * 0.04);
+    card.style.setProperty('--recipe-story-y', `${((1 - cardProgress) * (index % 2 ? 56 : 38)).toFixed(1)}px`);
+    card.style.setProperty('--recipe-story-rotate', `${((1 - cardProgress) * (index % 2 ? 2.4 : -2.4)).toFixed(2)}deg`);
+    card.style.setProperty('--recipe-story-scale', (0.93 + cardProgress * 0.07).toFixed(3));
+    card.style.setProperty('--recipe-story-opacity', (0.2 + cardProgress * 0.8).toFixed(3));
   });
 }
 
