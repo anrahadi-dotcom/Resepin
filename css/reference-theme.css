@@ -5973,6 +5973,16 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   #page-home > .hero { position: sticky; top: 0; z-index: 0; }
   #page-home > section:not(.hero) { position: relative; z-index: 1; }
 }
+.hero.is-scroll-story .hero-enter,
+.hero.is-scroll-story .hero-title-line { animation: none !important; clip-path: none !important; }
+.hero.is-scroll-story .hero-desc,
+.hero.is-scroll-story .hero-cta { opacity: var(--hero-seq-opacity, 1); transform: translate3d(0, var(--hero-seq-y, 0px), 0); transition: none; }
+.hero.is-scroll-story .hero-favorites { opacity: var(--hero-seq-opacity, 1); transition: none; }
+.hero.is-scroll-story .hero-favorite-card { opacity: var(--hero-seq-opacity, 1); translate: var(--scroll-card-x, 0px) calc(var(--scroll-card-y, 0px) + var(--hero-seq-y, 0px)) var(--scroll-card-depth, 0px); }
+.hero.is-scroll-story .hero-desc:focus-within,
+.hero.is-scroll-story .hero-cta:focus-within,
+.hero.is-scroll-story .hero-favorites:focus-within { opacity: 1; transform: none; }
+.hero.is-scroll-story .hero-favorite-card:focus-visible { opacity: 1; translate: var(--scroll-card-x, 0px) var(--scroll-card-y, 0px) var(--scroll-card-depth, 0px); }
 #page-home .how-it-works, #page-home .featured-recipes, #page-home .waste-stats { position: relative; isolation: isolate; perspective: 950px; transform-origin: 50% 0; translate: 0 var(--page-rise-y,0px); rotate: x var(--page-rise-tilt,0deg); scale: var(--page-rise-scale,1); opacity: var(--page-rise-opacity,1); transform-style: preserve-3d; transition: translate .14s linear, rotate .14s linear, scale .14s linear, opacity .14s linear; }
 #page-home .how-it-works > .container, #page-home .featured-recipes > .container, #page-home .waste-stats > .container { position: relative; z-index: 2; }
 #page-home .how-it-works > .container { padding-top: 48px; }
@@ -6012,6 +6022,8 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   .featured-recipes .recipe-card.motion-ready { transform: translate3d(0,26px,0) scale(.985); }
 }
 @media (prefers-reduced-motion: reduce) {
+  #page-home > .hero { position: relative !important; top: auto !important; }
+  .hero.is-scroll-story .hero-desc, .hero.is-scroll-story .hero-cta, .hero.is-scroll-story .hero-favorites, .hero.is-scroll-story .hero-favorite-card { opacity: 1 !important; transform: none !important; translate: none !important; }
   .hero-scene, .hero-copy, .hero-favorites, .hero-favorite-card, .hero-followthrough-copy, .hero-followthrough-copy .hero-followthrough-eyebrow, .hero-followthrough-copy h2, .hero-followthrough-copy p, .hero-collage-stage, .collage-card, .collage-ingredient-strip button, .how-it-works, .featured-recipes, .waste-stats, .how-it-works .section-header h2, .featured-recipes .section-header h2, .waste-stats .stats-content h2, .featured-recipes .recipe-img-photo, .how-it-works .step-card, .featured-recipes .recipe-card { translate: none !important; opacity: 1 !important; scale: 1 !important; rotate: none !important; }
   #page-home .how-it-works::before { transform: none !important; opacity: .9 !important; }
   .collage-card { transform: translate(var(--drag-x,0px),var(--drag-y,0px)) rotate(var(--card-angle,0deg)) rotateX(var(--tilt-y,0deg)) rotateY(var(--tilt-x,0deg)); }

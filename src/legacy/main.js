@@ -324,6 +324,31 @@ function updateHomeScrollStory() {
   const heroCopy = home.querySelector('.hero-copy');
   const favorites = home.querySelector('.hero-favorites');
   if (hero) {
+    const scrollSequenceEnabled = window.matchMedia?.('(min-width: 901px) and (min-height: 680px)').matches;
+    hero.classList.toggle('is-scroll-story', Boolean(scrollSequenceEnabled));
+    if (scrollSequenceEnabled) {
+      const sequenceProgress = Math.min(1, Math.max(0, (window.scrollY - hero.offsetTop) / (viewport * 0.9)));
+      const revealOnScroll = (element, start, finish) => {
+        if (!element) return;
+        const linear = Math.min(1, Math.max(0, (sequenceProgress - start) / (finish - start)));
+        const eased = 1 - Math.pow(1 - linear, 3);
+        element.style.setProperty('--hero-seq-opacity', eased.toFixed(3));
+        element.style.setProperty('--hero-seq-y', `${((1 - eased) * 22).toFixed(1)}px`);
+        element.style.pointerEvents = eased > 0.98 ? '' : 'none';
+      };
+      revealOnScroll(hero.querySelector('.hero-desc'), 0.04, 0.3);
+      revealOnScroll(hero.querySelector('.hero-cta'), 0.29, 0.55);
+      revealOnScroll(favorites, 0.52, 0.78);
+      favorites?.querySelectorAll('.hero-favorite-card').forEach((card, index) => {
+        revealOnScroll(card, 0.62 + index * 0.08, 0.8 + index * 0.08);
+      });
+    } else {
+      hero.querySelectorAll('.hero-desc, .hero-cta, .hero-favorites, .hero-favorite-card').forEach(element => {
+        element.style.removeProperty('--hero-seq-opacity');
+        element.style.removeProperty('--hero-seq-y');
+        element.style.removeProperty('pointer-events');
+      });
+    }
     const heroProgress = Math.min(1, Math.max(0, (window.innerHeight - hero.getBoundingClientRect().bottom) / Math.max(1, hero.offsetHeight)));
     hero.style.setProperty('--hero-scroll-progress', heroProgress.toFixed(3));
     heroCopy?.style.setProperty('--hero-copy-scroll-y', `${Math.round(heroProgress * -22)}px`);
