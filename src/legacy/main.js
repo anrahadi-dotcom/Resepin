@@ -417,17 +417,17 @@ function updateHomeScrollStory() {
   home.querySelectorAll('.how-it-works, .featured-recipes, .waste-stats').forEach((section, index) => {
     const pageProgress = progressAt(section, 0.99 - index * 0.025, 0.56 - index * 0.025);
     const risePulse = Math.sin(pageProgress * Math.PI);
-    section.style.setProperty('--page-rise-y', `${((1 - pageProgress) * 92 - risePulse * 10).toFixed(1)}px`);
-    section.style.setProperty('--page-rise-scale', (0.955 + pageProgress * 0.045 + risePulse * 0.012).toFixed(3));
-    section.style.setProperty('--page-rise-opacity', (0.42 + pageProgress * 0.58).toFixed(3));
     const isPaperSection = section.matches('.how-it-works');
+    section.style.setProperty('--page-rise-y', `${((1 - pageProgress) * 92 - risePulse * 10).toFixed(1)}px`);
+    section.style.setProperty('--page-rise-scale', isPaperSection ? '1' : (0.955 + pageProgress * 0.045 + risePulse * 0.012).toFixed(3));
+    section.style.setProperty('--page-rise-opacity', isPaperSection ? '1' : (0.42 + pageProgress * 0.58).toFixed(3));
     section.style.setProperty('--page-rise-tilt', `${((1 - pageProgress) * (isPaperSection ? 5.5 : 1.2)).toFixed(2)}deg`);
     if (isPaperSection) {
       section.style.setProperty('--paper-lift', `${((1 - pageProgress) * 76 - risePulse * 26).toFixed(1)}px`);
       section.style.setProperty('--paper-curl', `${((1 - pageProgress) * -13 + risePulse * 4).toFixed(2)}deg`);
-      section.style.setProperty('--paper-scale', (0.955 + pageProgress * 0.045 + risePulse * 0.01).toFixed(3));
+      section.style.setProperty('--paper-scale', (1 + risePulse * 0.008).toFixed(3));
       section.style.setProperty('--paper-shadow', (0.04 + (1 - pageProgress) * 0.16 + risePulse * 0.1).toFixed(3));
-      section.style.setProperty('--paper-opacity', (0.48 + pageProgress * 0.52).toFixed(3));
+      section.style.setProperty('--paper-opacity', '1');
     }
     const heading = section.querySelector('.section-header h2, .stats-content h2');
     if (heading) {
