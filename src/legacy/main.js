@@ -337,11 +337,14 @@ function updateHomeScrollStory() {
         element.style.setProperty('--hero-seq-y', `${((1 - eased) * 22).toFixed(1)}px`);
         element.style.pointerEvents = eased > 0.98 ? '' : 'none';
       };
-      revealOnScroll(hero.querySelector('.hero-desc'), 0.04, 0.3);
-      revealOnScroll(hero.querySelector('.hero-cta'), 0.29, 0.55);
-      revealOnScroll(favorites, 0.52, 0.78);
+      // Keep the complete reveal inside the hero's visible scroll window. The
+      // hero is shorter than a full viewport on some laptop sizes, so late
+      // thresholds let the next section cover the cards before they appeared.
+      revealOnScroll(hero.querySelector('.hero-desc'), 0.02, 0.14);
+      revealOnScroll(hero.querySelector('.hero-cta'), 0.13, 0.27);
+      revealOnScroll(favorites, 0.24, 0.42);
       favorites?.querySelectorAll('.hero-favorite-card').forEach((card, index) => {
-        revealOnScroll(card, 0.62 + index * 0.08, 0.8 + index * 0.08);
+        revealOnScroll(card, 0.31 + index * 0.06, 0.48 + index * 0.06);
       });
     } else {
       hero.querySelectorAll('.hero-desc, .hero-cta, .hero-favorites, .hero-favorite-card').forEach(element => {
