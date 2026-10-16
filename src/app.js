@@ -249,6 +249,7 @@ createApp({
         minY: stageRect.top - (rect.top - originY),
         maxY: stageRect.bottom - (rect.bottom - originY)
       };
+      stage.classList.add('has-active-drag');
       element.classList.add('is-dragging');
       element.setPointerCapture(event.pointerId);
     },
@@ -265,6 +266,7 @@ createApp({
       const drag = this.heroCardDrag;
       if (!drag || drag.element !== event.currentTarget || drag.pointerId !== event.pointerId) return;
       drag.element.classList.remove('is-dragging');
+      drag.element.closest('.hero-followthrough-orbit')?.classList.remove('has-active-drag');
       if (drag.element.hasPointerCapture(event.pointerId)) drag.element.releasePointerCapture(event.pointerId);
       this.heroCardDrag = null;
     },
@@ -285,6 +287,7 @@ createApp({
       element.style.setProperty('--drag-y', `${y + delta[1]}px`);
     },
     resetHeroGallery() {
+      document.querySelectorAll('.hero-followthrough-orbit').forEach(stage => stage.classList.remove('has-active-drag'));
       document.querySelectorAll('.hero-followthrough-orbit .orbit-photo-card').forEach(card => {
         card.style.setProperty('--drag-x', '0px');
         card.style.setProperty('--drag-y', '0px');

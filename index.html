@@ -230,15 +230,11 @@
         </div>
         <div class="hero-followthrough-orbit" aria-label="Kolase ide masak interaktif">
           <div class="orbit-line" aria-hidden="true"></div>
-          <div class="soup-saturn-rings" aria-hidden="true">
-            <div class="soup-satellite-loop soup-satellite-loop--corn"><span class="soup-moon soup-moon--corn"></span></div>
-            <div class="soup-satellite-loop soup-satellite-loop--carrot"><span class="soup-moon soup-moon--carrot"></span></div>
-            <div class="soup-satellite-loop soup-satellite-loop--shallot"><span class="soup-moon soup-moon--shallot"></span></div>
-          </div>
           <span class="orbit-note orbit-note--one"><i aria-hidden="true">✳</i> Jagung</span>
           <span class="orbit-note orbit-note--two"><i aria-hidden="true">✳</i> Wortel</span>
           <span class="orbit-note orbit-note--three"><i aria-hidden="true">✳</i> Bawang merah</span>
           <span class="orbit-count"><b>05</b><span>bahan dapur</span></span>
+          <div class="orbit-gallery-track" aria-label="Kartu menu yang bergerak mengitari sup">
           <button class="orbit-photo-card orbit-photo-card--left" type="button" @pointerdown="startHeroCardDrag" @pointermove="moveHeroCardDrag" @pointerup="endHeroCardDrag" @pointercancel="endHeroCardDrag" @keydown="nudgeHeroCard" aria-label="Seret foto Nasi Goreng Sederhana; gunakan tombol panah untuk memindahkan">
             <img src="/assets/img/nasi-goreng.jpg" alt="" loading="lazy" draggable="false" />
             <span><small>MENU RUMAHAN</small><strong>Nasi Goreng Sederhana</strong></span>
@@ -254,6 +250,7 @@
             <span><small>RASA NUSANTARA</small><strong>Sate Lilit Bali</strong></span>
             <i aria-hidden="true">↗</i>
           </button>
+          </div>
           <figure class="orbit-plate">
             <span class="plate-rim" aria-hidden="true"></span>
             <img src="/assets/img/sup-jagung.jpg" alt="Sup Jagung Wortel" loading="lazy" />
