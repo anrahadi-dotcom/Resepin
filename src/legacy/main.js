@@ -437,8 +437,11 @@ function updateHomeScrollStory() {
     const isStats = section.matches('.waste-stats');
     const pageProgress = isPaperSection ? progressAt(section, 0.76, -0.16) : progressAt(section, 0.99 - index * 0.025, 0.56 - index * 0.025);
     const risePulse = Math.sin(pageProgress * Math.PI);
-    const enterFromRight = isStats && window.matchMedia?.('(min-width: 901px)').matches
-      ? (1 - pageProgress) * Math.min(viewport * 0.58, 620)
+    const statsTakeoverProgress = isStats && window.matchMedia?.('(min-width: 901px) and (min-height: 680px)').matches
+      ? Math.min(1, Math.max(0, (window.scrollY - section.offsetTop) / (viewport * 0.62)))
+      : pageProgress;
+    const enterFromRight = isStats && window.matchMedia?.('(min-width: 901px) and (min-height: 680px)').matches
+      ? (1 - statsTakeoverProgress) * window.innerWidth
       : 0;
     section.style.setProperty('--page-rise-x', `${enterFromRight.toFixed(1)}px`);
     section.style.setProperty('--page-rise-y', `${(isPaperSection ? -pageProgress * viewport * 0.32 : 0).toFixed(1)}px`);
