@@ -5361,6 +5361,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 .hero-scroll-hint:hover, .hero-scroll-hint:focus-visible { opacity: .68; transform: translate(-50%, 0); }
 .hero-scroll-hint .scroll-dot { position: relative; width: 1px; height: 28px; border: 0; border-radius: 0; background: rgba(255,255,255,.55); }
 .hero-scroll-hint .scroll-dot::after { top: auto; bottom: 0; left: 50%; width: 5px; height: 5px; border-radius: 50%; background: white; animation: story-scroll-cue 1.6s ease-in-out infinite; }
+.hero-bottom-wave { position: absolute; z-index: 3; right: 0; bottom: -1px; left: 0; display: block; width: 100%; height: clamp(96px, 13vw, 176px); overflow: visible; pointer-events: none; }
 .hero-followthrough {
   position: relative; z-index: 1; overflow-x: clip; overflow-y: visible; padding: 88px 24px 62px; background: var(--bg); isolation: isolate;
 }
