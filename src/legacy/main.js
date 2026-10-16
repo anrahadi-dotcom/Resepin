@@ -323,6 +323,7 @@ function updateHomeScrollStory() {
   const scene = home.querySelector('.hero-scene');
   const heroCopy = home.querySelector('.hero-copy');
   const favorites = home.querySelector('.hero-favorites');
+  const scrollHint = home.querySelector('.hero-scroll-hint');
   if (hero) {
     const scrollSequenceEnabled = window.matchMedia?.('(min-width: 901px) and (min-height: 680px)').matches;
     let sequenceProgress = 0;
@@ -332,6 +333,11 @@ function updateHomeScrollStory() {
       // Keep the first hero pinned while each card gets its own longer scroll beat.
       // The next hero enters from below after the last card has finished.
       sequenceProgress = Math.min(1, Math.max(0, (window.scrollY - storyStart) / (viewport * 1.8)));
+      const hintFade = Math.min(1, Math.max(0, (sequenceProgress - 0.8) / 0.18));
+      if (scrollHint) {
+        scrollHint.style.opacity = (1 - hintFade).toFixed(3);
+        scrollHint.style.pointerEvents = hintFade > 0.98 ? 'none' : '';
+      }
       const revealOnScroll = (element, start, finish) => {
         if (!element) return;
         const linear = Math.min(1, Math.max(0, (sequenceProgress - start) / (finish - start)));
@@ -351,6 +357,8 @@ function updateHomeScrollStory() {
         revealOnScroll(card, 0.03 + index * 0.29, 0.17 + index * 0.29);
       });
     } else {
+      scrollHint?.style.removeProperty('opacity');
+      scrollHint?.style.removeProperty('pointer-events');
       hero.querySelectorAll('.hero-desc, .hero-cta, .hero-favorites, .hero-favorite-card').forEach(element => {
         element.style.removeProperty('--hero-seq-opacity');
         element.style.removeProperty('--hero-seq-y');
