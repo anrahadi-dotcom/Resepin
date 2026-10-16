@@ -333,7 +333,7 @@ function updateHomeScrollStory() {
       const storyStart = window.scrollY + home.getBoundingClientRect().top;
       // Keep the first hero pinned while each card gets its own longer scroll beat.
       // The next hero enters from below after the last card has finished.
-      sequenceProgress = Math.min(1, Math.max(0, (window.scrollY - storyStart) / (viewport * 2.6)));
+      sequenceProgress = Math.min(1, Math.max(0, (window.scrollY - storyStart) / (viewport * 2.5)));
       const hintFade = Math.min(1, Math.max(0, (sequenceProgress - 0.94) / 0.06));
       if (scrollHint) {
         scrollHint.style.opacity = (1 - hintFade).toFixed(3);
