@@ -5803,3 +5803,85 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   .hero-followthrough { padding-top: 68px; }
   .hero-followthrough-wave { top: -94px; height: 110px; }
 }
+
+/* A short recipe-prep interlude makes the first frame feel intentional. */
+.recipe-intro {
+  position: fixed;
+  z-index: 10000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: #e1dcc9;
+  background: #1f150c;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity .68s cubic-bezier(.22,.72,.22,1), visibility .68s;
+}
+.recipe-intro::before,
+.recipe-intro::after {
+  position: absolute;
+  width: min(68vw, 720px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(225,220,201,.055);
+  border-radius: 50%;
+  content: "";
+  transform: scale(.7);
+  opacity: 0;
+}
+.recipe-intro::after { width: min(48vw, 500px); }
+.recipe-intro.is-ready::before,
+.recipe-intro.is-ready::after { animation: intro-ring-in 1.3s cubic-bezier(.18,.75,.2,1) both; }
+.recipe-intro.is-ready::after { animation-delay: .12s; }
+.recipe-intro.is-leaving { opacity: 0; visibility: hidden; pointer-events: none; }
+.recipe-intro-content { position: relative; z-index: 1; display: grid; justify-items: center; text-align: center; }
+.recipe-intro-mark { position: relative; display: grid; width: 96px; height: 96px; place-items: center; margin-bottom: 26px; border: 1px solid rgba(225,220,201,.2); border-radius: 50%; background: radial-gradient(circle at 35% 25%,rgba(225,220,201,.14),rgba(65,45,21,.24) 65%); box-shadow: 0 20px 70px rgba(0,0,0,.26), inset 0 1px rgba(255,255,255,.12); }
+.recipe-intro-mark svg { width: 50px; height: 50px; stroke: #e1dcc9; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.recipe-intro-steam { position: absolute; top: 13px; width: 7px; height: 20px; border-left: 1.5px solid rgba(225,220,201,.72); border-radius: 50%; opacity: 0; }
+.recipe-intro-steam--one { left: 39px; }
+.recipe-intro-steam--two { left: 52px; height: 15px; }
+.recipe-intro.is-ready .recipe-intro-steam { animation: intro-steam .9s ease-in-out .3s infinite; }
+.recipe-intro.is-ready .recipe-intro-steam--two { animation-delay: .58s; }
+.recipe-intro-spark { position: absolute; width: 5px; height: 5px; border-radius: 50%; background: #e1dcc9; box-shadow: 0 0 13px rgba(225,220,201,.7); opacity: 0; }
+.recipe-intro-spark--one { top: 20px; right: 12px; }
+.recipe-intro-spark--two { bottom: 20px; left: 12px; width: 4px; height: 4px; }
+.recipe-intro.is-ready .recipe-intro-spark { animation: intro-spark 1.5s ease-in-out .25s infinite; }
+.recipe-intro.is-ready .recipe-intro-spark--two { animation-delay: .82s; }
+.recipe-intro-content > p { margin: 0 0 11px; color: rgba(225,220,201,.64); font-size: .62rem; font-weight: 750; letter-spacing: .16em; }
+.recipe-intro-content > p span { padding-inline: 4px; color: #a84728; }
+.recipe-intro-content h2 { margin: 0; color: #f4eedf; font: 500 clamp(1.45rem,3vw,2rem)/1.15 var(--font-display); letter-spacing: -.025em; }
+.recipe-intro-progress { width: 148px; height: 2px; margin-top: 25px; overflow: hidden; border-radius: 99px; background: rgba(225,220,201,.16); }
+.recipe-intro-progress span { display: block; width: 100%; height: 100%; background: linear-gradient(90deg,#a84728,#e1dcc9); transform: scaleX(0); transform-origin: left; }
+.recipe-intro.is-ready .recipe-intro-progress span { animation: intro-progress 1.55s cubic-bezier(.22,.72,.22,1) .15s both; }
+.recipe-intro.is-ready .recipe-intro-mark { animation: intro-mark-in .8s cubic-bezier(.18,.9,.25,1.15) both; }
+.recipe-intro.is-ready .recipe-intro-content > p,
+.recipe-intro.is-ready .recipe-intro-content h2 { animation: intro-copy-in .65s cubic-bezier(.18,.75,.2,1) .18s both; }
+.recipe-intro.is-ready .recipe-intro-content h2 { animation-delay: .28s; }
+@keyframes intro-ring-in { 0% { opacity: 0; transform: scale(.72); } 28% { opacity: 1; } 100% { opacity: .45; transform: scale(1); } }
+@keyframes intro-mark-in { from { opacity: 0; transform: translateY(12px) scale(.78) rotate(-9deg); } to { opacity: 1; transform: translateY(0) scale(1) rotate(0); } }
+@keyframes intro-copy-in { from { opacity: 0; transform: translateY(11px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes intro-steam { 0% { opacity: 0; transform: translateY(5px) scaleY(.65); } 45% { opacity: .8; } 100% { opacity: 0; transform: translateY(-8px) scaleY(1.15); } }
+@keyframes intro-spark { 0%,100% { opacity: .25; transform: scale(.7); } 50% { opacity: .9; transform: scale(1.25); } }
+@keyframes intro-progress { to { transform: scaleX(1); } }
+
+/* Give scroll reveals and the layered recipe panels one shared, softer rhythm. */
+.motion-ready {
+  filter: blur(4px);
+  transform: translate3d(0,28px,0) scale(.985);
+  transition: opacity .88s cubic-bezier(.22,.72,.22,1) var(--motion-delay,0ms),
+    transform 1s cubic-bezier(.18,.78,.2,1) var(--motion-delay,0ms),
+    filter .84s cubic-bezier(.22,.72,.22,1) var(--motion-delay,0ms);
+}
+.motion-ready.motion-visible { filter: blur(0); transform: translate3d(0,0,0) scale(1); }
+.hero-title-swap-enter-active,
+.hero-title-swap-leave-active { transition: opacity .46s cubic-bezier(.22,.72,.22,1), transform .58s cubic-bezier(.18,.78,.2,1), filter .48s ease; }
+.hero-title-swap-enter-from,
+.hero-title-swap-leave-to { opacity: 0; filter: blur(4px); transform: translateY(13px); }
+.hero-favorite-card { transition: left .92s cubic-bezier(.18,.78,.2,1), transform .92s cubic-bezier(.18,.78,.2,1), filter .78s ease, box-shadow .28s ease; }
+@media (prefers-reduced-motion: reduce) {
+  .recipe-intro { transition: none; }
+  .recipe-intro::before, .recipe-intro::after,
+  .recipe-intro *, .recipe-intro.is-ready .recipe-intro-progress span { animation: none !important; }
+  .motion-ready, .motion-ready.motion-visible { opacity: 1; filter: none; transform: none; transition: none; }
+  .hero-title-swap-enter-active, .hero-title-swap-leave-active { transition: none; }
+}

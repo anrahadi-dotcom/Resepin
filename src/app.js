@@ -16,6 +16,8 @@ createApp({
       ],
       heroVideoPlaying: false,
       heroVideoUserChoice: null,
+      heroInView: true,
+      heroVisibilityObserver: null,
       heroIngredientOptions: ['Nasi', 'Telur', 'Cabai', 'Tahu', 'Ayam', 'Tempe', 'Jagung', 'Wortel'],
       heroDropActive: false,
       heroCardDrag: null,
@@ -86,13 +88,22 @@ createApp({
     document.addEventListener('visibilitychange', this.syncHeroVideo);
     this.$nextTick(() => {
       window.refreshMotionReveals?.();
+      const hero = document.querySelector('#page-home .hero');
+      if (hero && 'IntersectionObserver' in window) {
+        this.heroVisibilityObserver = new IntersectionObserver(([entry]) => {
+          this.heroInView = entry.isIntersecting;
+          this.syncHeroVideo();
+        }, { threshold: 0.05 });
+        this.heroVisibilityObserver.observe(hero);
+      }
       this.syncHeroVideo();
-        this.heroHeadlineTimer = window.setInterval(() => {
-          if (this.activePage !== 'home' || document.hidden) return;
-          this.heroHeadlineIndex = (this.heroHeadlineIndex + 1) % this.heroHeadlines.length;
-        }, 4800);
+      this.heroHeadlineTimer = window.setInterval(() => {
+        if (this.activePage !== 'home' || !this.heroInView || document.hidden
+          || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+        this.heroHeadlineIndex = (this.heroHeadlineIndex + 1) % this.heroHeadlines.length;
+      }, 4800);
       this.heroFavoriteTimer = window.setInterval(() => {
-        if (this.activePage !== 'home' || document.hidden || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+        if (this.activePage !== 'home' || !this.heroInView || document.hidden || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
         this.shuffleHeroFavorites();
       }, 5200);
     });
@@ -100,6 +111,7 @@ createApp({
   beforeUnmount() {
     if (this.heroHeadlineTimer) window.clearInterval(this.heroHeadlineTimer);
     if (this.heroFavoriteTimer) window.clearInterval(this.heroFavoriteTimer);
+    this.heroVisibilityObserver?.disconnect();
     document.removeEventListener('click', this.closeMenuOnOutside);
     document.removeEventListener('keydown', this.closeMenuOnEscape);
     document.removeEventListener('visibilitychange', this.syncHeroVideo);
@@ -111,6 +123,7 @@ createApp({
       const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
       const optedInToMotion = this.heroVideoUserChoice === 'playing';
       const shouldPlay = this.activePage === 'home'
+        && this.heroInView
         && !document.hidden
         && this.heroVideoUserChoice !== 'paused'
         && (!reducedMotion || optedInToMotion);

@@ -36,6 +36,19 @@
 </head>
 <body>
   <script>document.body.dataset.theme = document.documentElement.dataset.theme || 'light';</script>
+  <div class="recipe-intro" id="recipeIntro" role="status" aria-live="polite" aria-label="Menyiapkan resepmu">
+    <div class="recipe-intro-content">
+      <div class="recipe-intro-mark" aria-hidden="true">
+        <span class="recipe-intro-steam recipe-intro-steam--one"></span>
+        <span class="recipe-intro-steam recipe-intro-steam--two"></span>
+        <svg viewBox="0 0 64 64" fill="none"><path d="M13 28h38l-4 25H17l-4-25Z"/><path d="M9 28h46M21 21h22M28 14h8M7 35h6m38 0h6"/><path d="M25 35v11m14-11v11"/></svg>
+        <i class="recipe-intro-spark recipe-intro-spark--one"></i><i class="recipe-intro-spark recipe-intro-spark--two"></i>
+      </div>
+      <p>RESEPIN <span>·</span> DARI DAPUR, JADI CERITA</p>
+      <h2>Menyiapkan resepmu</h2>
+      <div class="recipe-intro-progress" aria-hidden="true"><span></span></div>
+    </div>
+  </div>
   <a class="skip-link" href="#page-home" onclick="focusActivePage(event)">Lewati ke konten</a>
   <div id="app" v-cloak>
 
@@ -228,7 +241,7 @@
           <h2 id="hero-followthrough-title">Yang tersisa bisa jadi <em>favorit berikutnya.</em></h2>
           <p>Mulai dari bahan sederhana yang sudah ada di rumah. Biarkan Resepin membantumu menemukan ide masak hari ini.</p>
         </div>
-        <div class="hero-collage-stage motion-visible" aria-label="Kolase resep interaktif">
+        <div class="hero-collage-stage" aria-label="Kolase resep interaktif">
           <span class="collage-edition" aria-hidden="true">RESEPIN <b>·</b> EDISI DAPUR HARI INI</span>
           <button class="collage-card collage-card--rice" type="button" @pointerdown="startHeroCardDrag" @pointermove="moveHeroCardDrag" @pointerup="endHeroCardDrag" @pointercancel="endHeroCardDrag" @keydown="nudgeHeroCard" @click="openCollageRecipe(2, $event)" aria-label="Lihat resep Nasi Goreng Sederhana; seret untuk menggeser">
             <img src="/assets/img/nasi-goreng.jpg" alt="" loading="lazy" draggable="false" />

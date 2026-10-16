@@ -301,7 +301,8 @@ function ensureScrollProgress() {
 
 window.refreshMotionReveals = function refreshMotionReveals() {
   ensureScrollProgress();
-  const targets = document.querySelectorAll('.section-header, .step-card, .recipe-card, .cat-card, .stats-banner, .footer-grid, .jelajahi-section, .scan-layout, .ingredients-panel, .camera-viewport, .ai-cta-card, .chat-container, .profile-card, .hero-followthrough-copy, .hero-followthrough-orbit');
+  const selector = '.section-header, .step-card, .recipe-card, .cat-card, .stats-banner, .footer-grid, .jelajahi-section, .scan-layout, .ingredients-panel, .camera-viewport, .ai-cta-card, .chat-container, .profile-card, .hero-followthrough-copy, .hero-followthrough-orbit, .hero-collage-stage';
+  const targets = document.querySelectorAll(selector);
   if (!motionRevealObserver) {
     motionRevealObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
@@ -312,10 +313,15 @@ window.refreshMotionReveals = function refreshMotionReveals() {
       });
     }, { threshold: 0.1, rootMargin: '0px 0px -36px 0px' });
   }
-  targets.forEach((element, index) => {
+  const siblingGroups = new Map();
+  targets.forEach(element => {
     if (element.classList.contains('motion-ready')) return;
     element.classList.add('motion-ready');
-    element.style.setProperty('--motion-delay', `${(index % 5) * 90}ms`);
+    const siblings = siblingGroups.get(element.parentElement) || [];
+    const itemIndex = siblings.length;
+    siblings.push(element);
+    siblingGroups.set(element.parentElement, siblings);
+    element.style.setProperty('--motion-delay', `${Math.min(itemIndex, 4) * 105}ms`);
     motionRevealObserver.observe(element);
   });
 };
@@ -412,6 +418,27 @@ function initNavHint() {
   trigger.addEventListener('touchstart', dismiss, { once: true, passive: true });
   trigger.addEventListener('click', dismiss, { once: true });
   dismissTimer = window.setTimeout(dismiss, 4200);
+}
+
+function initRecipeIntro() {
+  const intro = document.getElementById('recipeIntro');
+  if (!intro) return;
+  try {
+    if (sessionStorage.getItem('resepin-intro-seen') === 'true') {
+      intro.remove();
+      return;
+    }
+    sessionStorage.setItem('resepin-intro-seen', 'true');
+  } catch (_) { /* The intro still works when browser storage is unavailable. */ }
+  const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const duration = reduceMotion ? 300 : 1900;
+  const startedAt = performance.now();
+  requestAnimationFrame(() => intro.classList.add('is-ready'));
+  const dismiss = () => {
+    intro.classList.add('is-leaving');
+    window.setTimeout(() => intro.remove(), reduceMotion ? 0 : 700);
+  };
+  window.setTimeout(dismiss, Math.max(0, duration - (performance.now() - startedAt)));
 }
 
 // ============================================================
@@ -1450,6 +1477,7 @@ document.addEventListener('keydown', (e) => {
 // INIT
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
+  initRecipeIntro();
   window.addEventListener('popstate', renderLocationRoute);
   window.addEventListener('hashchange', renderLocationRoute);
   initTheme();
