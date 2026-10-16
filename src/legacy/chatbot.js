@@ -146,7 +146,7 @@ function generateAIResponse(message) {
 
   // Handle conversation before looking for ingredients, so a greeting never
   // falls through to an unrelated recipe or generic zero-waste tip.
-  if (/^(hai|halo|hello|hi|hei|pagi|siang|sore|malam)(?:\s+(?:chef|bro|kak|bang|sis|guys))?[!?.\s]*$/i.test(normalized.trim())) {
+  if (/^(?:selamat\s+)?(hai|halo|hello|hi|hei|pagi|siang|sore|malam)(?:\s+(?:chef|bro|kak|bang|sis|guys))?[!?.\s]*$/i.test(normalized.trim())) {
     return { type: 'text', text: CHEF_PROMPTS.greeting };
   }
   if (/\b(terima kasih|makasih|thanks|thank you)\b/.test(normalized)) {

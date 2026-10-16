@@ -1,5 +1,5 @@
 const MAX_MESSAGE_LENGTH = 1000;
-const MODEL = '@cf/meta/llama-3.1-8b-instruct-fp8';
+const MODEL = '@cf/qwen/qwen3-30b-a3b-fp8';
 const requestWindows = new Map();
 
 const SYSTEM_PROMPT = `Kamu adalah Chef Resepin, asisten memasak rumah tangga berbahasa Indonesia yang ramah, jelas, dan praktis.
@@ -58,7 +58,8 @@ export async function onRequestPost({ request, env }) {
         { role: 'user', content: message }
       ],
       max_tokens: 420,
-      temperature: 0.3
+      temperature: 0.3,
+      chat_template_kwargs: { enable_thinking: false }
     });
     const answer = typeof result?.response === 'string' ? result.response.trim().slice(0, 3000) : '';
     if (!answer) throw new Error('Empty AI response');
