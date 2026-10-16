@@ -456,7 +456,8 @@ function updateHomeScrollStory() {
     const pageProgress = isPaperSection ? progressAt(section, 0.76, -0.16) : progressAt(section, 0.99 - index * 0.025, 0.56 - index * 0.025);
     const risePulse = Math.sin(pageProgress * Math.PI);
     section.style.setProperty('--page-rise-y', `${(isPaperSection ? -pageProgress * viewport * 0.32 : (1 - pageProgress) * 92 - risePulse * 10).toFixed(1)}px`);
-    section.style.setProperty('--page-rise-scale', isPaperSection ? '1' : (0.955 + pageProgress * 0.045 + risePulse * 0.012).toFixed(3));
+    const sectionScale = isPaperSection || section.matches('.featured-recipes') ? '1' : (0.955 + pageProgress * 0.045 + risePulse * 0.012).toFixed(3);
+    section.style.setProperty('--page-rise-scale', sectionScale);
     const sectionOpacity = isPaperSection || section.matches('.featured-recipes') ? 1 : 0.42 + pageProgress * 0.58;
     section.style.setProperty('--page-rise-opacity', sectionOpacity.toFixed(3));
     section.style.setProperty('--page-rise-tilt', isPaperSection ? '0deg' : `${((1 - pageProgress) * 1.2).toFixed(2)}deg`);
