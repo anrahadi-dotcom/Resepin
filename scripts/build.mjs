@@ -26,17 +26,28 @@ for (const source of ['style.css', 'responsive.css', 'reference-theme.css', 'tai
 }
 
 const stylesheets = ['css/app.css'];
+const scripts = [
+  'src/legacy/recipes.js',
+  'src/legacy/chef-prompts.js',
+  'src/legacy/main.js',
+  'src/legacy/chatbot.js',
+  'src/app.js',
+  'src/recipe-utils.mjs'
+];
 const cacheKey = createHash('sha256');
 let html = await readFile(new URL('../dist/index.html', import.meta.url), 'utf8');
 cacheKey.update(html);
 
-for (const stylesheet of stylesheets) {
-  cacheKey.update(await readFile(new URL(`../dist/${stylesheet}`, import.meta.url)));
+for (const asset of [...stylesheets, ...scripts]) {
+  cacheKey.update(await readFile(new URL(`../dist/${asset}`, import.meta.url)));
 }
 
 const assetVersion = cacheKey.digest('hex').slice(0, 10);
 for (const stylesheet of stylesheets) {
   html = html.replace(`href="/${stylesheet}"`, `href="/${stylesheet}?v=${assetVersion}"`);
+}
+for (const script of scripts) {
+  html = html.replace(`src="/${script}"`, `src="/${script}?v=${assetVersion}"`);
 }
 
 await writeFile(new URL('../dist/index.html', import.meta.url), html);
