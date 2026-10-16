@@ -4072,6 +4072,7 @@ body[data-theme="dark"] .section .gradient-text { @apply [background:linear-grad
   .how-it-works .step-card { @apply [min-height:0]; @apply [padding:21px_22px]; }
   .how-it-works .step-card-heading { @apply [margin-bottom:17px]; }
   .how-it-works .step-icon-wrap { @apply [margin-bottom:16px]; }
+}
 
 /* Illustrated workflow cards: local food photography with tactile, subtle motion. */
 .how-it-works .step-card {
@@ -4206,7 +4207,6 @@ body[data-theme="dark"] .section .gradient-text { @apply [background:linear-grad
   .how-it-works .step-card:focus-within .step-icon,
   .how-it-works .step-card:hover .step-tag { transform: none; }
   .how-it-works .step-ring { animation: none; }
-}
 }
 
 /* Featured recipes: editorial cards with a small reveal on hover/focus. */
