@@ -52,17 +52,11 @@ git -C models push
 
 Teman yang sudah menerima akses repo privat cukup menjalankan `git -C models pull`.
 
-### Deploy ke Vercel (frontend dan API scan)
+### Deploy ke Cloudflare Pages
 
-Repo ini dapat diimpor sebagai project Vercel dengan root directory default. Vercel menyajikan file frontend sebagai static site dan menjalankan `api/detect.py` sebagai Python Function. Setelah menghubungkan repo GitHub, tambahkan environment variables berikut di **Project Settings → Environment Variables**, lalu deploy ulang:
+Frontend statis dibangun ke `dist/` dengan `npm run build` dan diunggah menggunakan Wrangler. Jalankan `npx wrangler pages deploy dist --project-name=resepin` setelah menghubungkan Wrangler ke akun Cloudflare.
 
-- `RESEPIN_GITHUB_TOKEN`: fine-grained personal access token yang dibatasi ke repo privat `resepin-models` dengan izin **Contents: Read-only**. Function memakai token ini untuk mengambil pointer dan bobot Git LFS; token tidak dikirim ke browser atau disimpan di repo.
-
-Atur variable tersebut untuk Production dan Preview. Project Vercel baru memenuhi syarat large functions secara default. Model diunduh dan diverifikasi saat function pertama kali menerima foto, lalu disimpan pada cache sementara instance tersebut. Endpoint menerima foto hingga 4 MB karena batas request Vercel Functions adalah 4,5 MB; browser mengecilkan foto kamera sebelum mengirimnya. Server `server.py` tetap dipakai saat development lokal.
-
-### Deploy frontend ke Cloudflare Pages
-
-Frontend statis dibangun ke `dist/` dengan `npm run build` dan diunggah menggunakan Wrangler. Jalankan `npx wrangler pages deploy dist --project-name=resepin` setelah menghubungkan Wrangler ke akun Cloudflare. Endpoint Pages memberi respons yang jelas bahwa scan kamera belum tersedia di Cloudflare; fitur ini tetap tersedia lewat server lokal atau deployment Vercel.
+Pages saat ini hanya menjalankan frontend. Scan publik memakai checkpoint PyTorch custom `models/best.pt`, jadi endpoint scan belum aktif di Cloudflare. Menjalankan checkpoint privat di platform Cloudflare memerlukan Container yang diprovisikan lewat Workers Paid; model dapat dibundel di image privat Container agar tidak disajikan sebagai aset publik. Server scan lokal tetap tersedia lewat `server.py`.
 
 ## Bagian aplikasi
 
@@ -77,7 +71,7 @@ Frontend statis dibangun ke `dist/` dengan `npm run build` dan diunggah mengguna
 - `index.html`: kerangka seluruh halaman aplikasi.
 - `src/app.js`: entry point Vue 3 untuk shell aplikasi dan interaksi hero.
 - `src/legacy/`: modul JavaScript lama yang masih menangani perilaku katalog, kamera, dan chat sambil dipindahkan ke komponen Vue.
-- `api/detect.py`: endpoint scan untuk Vercel Functions; mengambil bobot model dari Git LFS privat.
+- `functions/api/detect.js`: respons fallback Pages ketika endpoint scan belum dipasang.
 - `css/reference-theme.css`: token warna krem/cokelat, komponen, dan breakpoint tambahan.
 - `css/style.css`: komponen, warna, dan gaya dasar.
 - `css/responsive.css`: breakpoint layar dan preferensi aksesibilitas.
@@ -111,13 +105,13 @@ npm run build
 
 Antarmuka memakai Vue 3 yang disimpan di repo, HTML, dan CSS responsif. Server Python bawaan memuat `models/best.pt` menggunakan Ultralytics/PyTorch saat server mulai; checkpoint ini berisi 30 kelas bahan berbahasa Indonesia, yang juga dicatat di `data_classes.yaml`. Foto kamera dikirim ke endpoint lokal `/api/detect`, diproses di komputer yang menjalankan server, lalu dibuang setelah inferensi. File gambar tidak disimpan. Model mendeteksi objek sesuai kelas yang dipelajari; periksa hasilnya dan tambahkan bahan lain secara manual bila perlu. Mode Demo selalu menghasilkan bahan contoh dan bukan deteksi model.
 
-Server deteksi hanya bind ke `127.0.0.1`, memeriksa origin permintaan, membatasi foto ke JPG/PNG/WebP hingga 10 MB, dan hanya menyajikan file frontend yang diperlukan. Checkpoint tidak bisa diunduh melalui web. Chef memakai aturan JavaScript lokal terlebih dulu dan meneruskan pertanyaan yang belum dikenali ke Cloudflare Workers AI. Binding `AI` dikonfigurasi di `wrangler.jsonc`; tidak ada kunci API di browser. Workers AI memiliki alokasi gratis harian yang terbatas, sehingga jawaban AI bisa tidak tersedia saat kuota habis. Saat lokal, jalankan `npm run build` lalu `npx wrangler pages dev dist --ai=AI`; penggunaan binding AI lokal tetap memanggil layanan Cloudflare. Jika layanan gagal, Chef menampilkan jawaban fallback lokal. Maksimal enam pesan percakapan terakhir dikirim untuk konteks; jangan masukkan data pribadi/sensitif. Font masih dimuat dari Google Fonts.
+Server deteksi lokal hanya bind ke `127.0.0.1`, memeriksa origin permintaan, membatasi foto ke JPG/PNG/WebP hingga 10 MB, dan tidak menyajikan checkpoint lewat web. Di deployment Pages, endpoint scan masih mengembalikan status belum tersedia sampai backend Container Cloudflare dipasang. Chef memakai aturan JavaScript lokal terlebih dulu dan meneruskan pertanyaan yang belum dikenali ke Cloudflare Workers AI. Binding `AI` dikonfigurasi di `wrangler.jsonc`; tidak ada kunci API di browser. Workers AI memiliki alokasi gratis harian yang terbatas, sehingga jawaban AI bisa tidak tersedia saat kuota habis. Saat lokal, jalankan `npm run build` lalu `npx wrangler pages dev dist --ai=AI`; penggunaan binding AI lokal tetap memanggil layanan Cloudflare. Jika layanan gagal, Chef menampilkan jawaban fallback lokal. Maksimal enam pesan percakapan terakhir dikirim untuk konteks; jangan masukkan data pribadi/sensitif. Font masih dimuat dari Google Fonts.
 
 Pencarian bahan membandingkan bahan resep yang dinormalisasi, menerima sinonim dan toleransi typo kecil, lalu mengurutkan hasil berdasarkan kecocokan. Harga adalah perkiraan lokal, bukan harga real-time. Data katalog saat ini tidak punya takaran tepercaya untuk tiap bahan; karena itu penskalaan porsi disembunyikan alih-alih menampilkan jumlah karangan. Mode timer hanya muncul jika langkah resep punya durasi terstruktur. Penyimpanan resep memakai localStorage pada browser pengguna.
 
 Halaman memakai hash route (`#/resep`, `#/chef`, `#/jelajahi`, dan lainnya) agar refresh/deep link tetap bekerja di hosting statis. Metadata dan JSON-LD resep diubah di sisi client; crawler yang tidak menjalankan JavaScript mungkin hanya melihat metadata beranda. `sitemap.xml` saat ini hanya mencantumkan beranda.
 
-Tema mengikuti preferensi sistem pada kunjungan pertama dan pilihan manual disimpan di localStorage. Kontras token teks utama, sekunder, dan muted diperiksa terhadap latar tema terang/gelap; animasi menghormati preferensi reduced motion. Form kamera tetap memerlukan izin kamera pada secure context. Scan di Cloudflare Pages tidak tersedia tanpa backend scan; gunakan server lokal atau Vercel. Tidak ada API key yang disimpan di browser.
+Tema mengikuti preferensi sistem pada kunjungan pertama dan pilihan manual disimpan di localStorage. Kontras token teks utama, sekunder, dan muted diperiksa terhadap latar tema terang/gelap; animasi menghormati preferensi reduced motion. Form kamera tetap memerlukan izin kamera pada secure context. Scan publik memerlukan backend Container Cloudflare; server lokal tetap menggunakan checkpoint privat di folder `models/`. Tidak ada API key yang disimpan di browser.
 
 Katalog awal berisi 40 resep: masakan rumahan dan Bali serta hidangan populer. Katalog ini bukan ensiklopedia; resep baru dapat ditambahkan ke `RECIPES_DB`.
 
