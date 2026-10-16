@@ -5375,7 +5375,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 .hero-followthrough-copy h2 { margin: 17px 0 11px; color: var(--text-primary); font-family: var(--font-display); font-size: clamp(2.35rem, 5vw, 4.15rem); font-weight: 600; line-height: 1.03; letter-spacing: -.045em; }
 .hero-followthrough-copy h2 em { color: #79845e; font-weight: 500; }
 .hero-followthrough-copy p { max-width: 535px; margin: 0 auto; color: var(--text-secondary); font-size: .97rem; line-height: 1.75; }
-.hero-followthrough-orbit { position: relative; width: min(1120px, 100%); aspect-ratio: 1.95; margin: clamp(88px, 7.7vw, 118px) auto 0; transform-origin: 50% 55%; }
+.hero-followthrough-orbit { position: relative; width: min(1120px, 100%); aspect-ratio: 1.95; margin: 8px auto 0; transform-origin: 50% 55%; }
 .hero-followthrough-orbit.motion-ready { opacity: 0; transform: translateY(26px) scale(.92) rotate(-7deg); transition: opacity .8s ease, transform 1s cubic-bezier(.18,.75,.22,1); }
 .hero-followthrough-orbit.motion-ready.motion-visible { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
 .orbit-line { position: absolute; top: 8%; left: 16%; width: 68%; height: 82%; border: 1px dashed rgba(113,121,83,.28); border-radius: 50%; transform: rotate(-13deg); transition: transform .8s cubic-bezier(.2,.7,.2,1); }
@@ -5392,8 +5392,8 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 .orbit-photo-card small { color: #7b8260; font-size: .5rem; font-weight: 800; letter-spacing: .12em; }
 .orbit-photo-card strong { overflow: hidden; font-family: var(--font-display); font-size: .95rem; line-height: 1.15; text-overflow: ellipsis; white-space: nowrap; }
 .orbit-photo-card > i { position: absolute; right: 13px; bottom: 15px; display: grid; width: 25px; height: 25px; place-items: center; border-radius: 50%; color: #f9f5e9; background: #747f5a; font-size: .8rem; font-style: normal; pointer-events: none; }
-.orbit-photo-card--left { top: -30%; left: 10%; --card-rotation: -8deg; }
-.orbit-photo-card--right { top: -30%; right: 10%; --card-rotation: 7deg; }
+.orbit-photo-card--left { top: -15%; left: 10%; --card-rotation: -8deg; }
+.orbit-photo-card--right { top: -15%; right: 10%; --card-rotation: 7deg; }
 .orbit-photo-card--small { top: 82%; left: 10%; width: 190px; --card-rotation: 5deg; }
 .orbit-photo-card:hover, .orbit-photo-card:focus-visible { z-index: 5; outline: 2px solid rgba(116,127,90,.55); outline-offset: 3px; box-shadow: 0 24px 44px rgba(54,42,25,.22); transform: scaleY(var(--orbit-card-y-correction,1.923)) translate(var(--drag-x,0px),var(--drag-y,0px)) rotate(var(--card-rotation,-8deg)) scale(1.035); }
 .orbit-photo-card.is-dragging { z-index: 6; cursor: grabbing; transition: none; transform: scaleY(var(--orbit-card-y-correction,1.923)) translate(var(--drag-x,0px),var(--drag-y,0px)) rotate(var(--card-rotation,-8deg)) scale(1.055); box-shadow: 0 28px 54px rgba(54,42,25,.26); }
@@ -5411,7 +5411,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 .orbit-plate figcaption strong { margin-top: 3px; font-family: var(--font-display); font-size: 1rem; }
 .orbit-plate figcaption span { margin-top: 3px; color: #817967; font-size: .65rem; }
 .orbit-plate figcaption i { padding-inline: 3px; font-style: normal; }
-.orbit-note { position: absolute; z-index: 4; display: inline-flex; align-items: center; gap: 8px; padding: 8px 11px; border: 1px solid rgba(72,54,33,.12); border-radius: 999px; color: #4d4937; background: rgba(255,251,239,.96); box-shadow: 0 8px 22px rgba(54,42,25,.08); cursor: pointer; font-family: inherit; font-size: .72rem; font-weight: 700; transition: transform .3s ease, box-shadow .3s ease, color .3s ease, background .3s ease; }
+.orbit-note { position: absolute; z-index: 3; display: inline-flex; align-items: center; gap: 8px; padding: 8px 11px; border: 1px solid rgba(72,54,33,.12); border-radius: 999px; color: #4d4937; background: rgba(255,251,239,.96); box-shadow: 0 8px 22px rgba(54,42,25,.08); cursor: pointer; font-family: inherit; font-size: .72rem; font-weight: 700; transition: transform .3s ease, box-shadow .3s ease, color .3s ease, background .3s ease; }
 .orbit-note i { color: #829068; font-size: .9rem; font-style: normal; }
 .orbit-note b { display: grid; width: 18px; height: 18px; place-items: center; border: 1px solid rgba(113,121,83,.22); border-radius: 50%; color: #75815a; font-size: .7rem; font-weight: 700; transition: color .25s ease, background .25s ease, border-color .25s ease, transform .25s ease; }
 .orbit-note--one { top: 15%; left: 12%; transform: rotate(-8deg); }
