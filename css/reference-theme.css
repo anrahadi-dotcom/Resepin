@@ -5362,9 +5362,9 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 .hero-scroll-hint .scroll-dot { position: relative; width: 1px; height: 28px; border: 0; border-radius: 0; background: rgba(255,255,255,.55); }
 .hero-scroll-hint .scroll-dot::after { top: auto; bottom: 0; left: 50%; width: 5px; height: 5px; border-radius: 50%; background: white; animation: story-scroll-cue 1.6s ease-in-out infinite; }
 .hero-followthrough {
-  position: relative; overflow: hidden; padding: 88px 24px 62px; background: var(--bg); isolation: isolate;
+  position: relative; overflow-x: clip; overflow-y: visible; padding: 88px 24px 62px; background: var(--bg); isolation: isolate;
 }
-.hero-followthrough-wave { position: absolute; z-index: 1; top: clamp(-132px, -9vw, -62px); left: 0; display: block; width: 100%; height: clamp(62px, 9vw, 132px); pointer-events: none; }
+.hero-followthrough-wave { position: absolute; z-index: 1; top: clamp(-154px, -11vw, -82px); left: 0; display: block; width: 100%; height: clamp(96px, 13vw, 176px); overflow: visible; pointer-events: none; }
 .hero-followthrough::before, .hero-followthrough::after { position: absolute; z-index: -1; content: ""; pointer-events: none; border-radius: 50%; }
 .hero-followthrough::before { top: 22%; left: 50%; width: min(62vw, 760px); aspect-ratio: 1; background: radial-gradient(circle, rgba(126,139,94,.12), transparent 68%); transform: translateX(-50%); }
 .hero-followthrough::after { right: -140px; bottom: -260px; width: 460px; aspect-ratio: 1; background: radial-gradient(circle, rgba(164,119,78,.10), transparent 69%); }
@@ -5789,4 +5789,17 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 @media (prefers-reduced-motion: reduce) {
   .hero-collage-stage.motion-visible .collage-card { animation: none !important; }
   .collage-card, .collage-card img, .collage-ingredient-strip button { transition-duration: .01ms !important; }
+}
+
+/* Keep the rotating headline inside narrow viewports and reveal its italic side bearings. */
+@media (max-width: 900px) {
+  .hero-copy { min-width: 0; }
+  .hero-copy .hero-title { box-sizing: border-box; width: 100%; max-width: 100%; overflow: visible; font-size: clamp(2.3rem, 10.7vw, 4rem); letter-spacing: -.055em; }
+  .hero-copy .hero-title .hero-title-swap-line { box-sizing: border-box; width: 100%; padding-right: .28em; }
+  .hero-copy .hero-title .hero-title-swap-line.title-gradient { margin-right: -.12em; }
+}
+@media (max-width: 600px) {
+  .hero-copy .hero-title { font-size: clamp(2.25rem, 10.7vw, 3.7rem); }
+  .hero-followthrough { padding-top: 68px; }
+  .hero-followthrough-wave { top: -94px; height: 110px; }
 }
