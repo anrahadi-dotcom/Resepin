@@ -332,11 +332,14 @@ function updateHomeScrollStory() {
       const storyStart = window.scrollY + home.getBoundingClientRect().top;
       // Keep the first hero pinned while each card gets its own longer scroll beat.
       // The next hero enters from below after the last card has finished.
-      sequenceProgress = Math.min(1, Math.max(0, (window.scrollY - storyStart) / (viewport * 1.8)));
-      const hintFade = Math.min(1, Math.max(0, (sequenceProgress - 0.8) / 0.18));
+      sequenceProgress = Math.min(1, Math.max(0, (window.scrollY - storyStart) / (viewport * 2.6)));
+      const hintFade = Math.min(1, Math.max(0, (sequenceProgress - 0.94) / 0.06));
       if (scrollHint) {
         scrollHint.style.opacity = (1 - hintFade).toFixed(3);
         scrollHint.style.pointerEvents = hintFade > 0.98 ? 'none' : '';
+        const colorProgress = Math.min(1, Math.max(0, (sequenceProgress - 0.64) / 0.2));
+        const cueColor = [246, 238, 219].map((channel, index) => Math.round(channel + ([65, 40, 20][index] - channel) * colorProgress));
+        scrollHint.style.setProperty('--scroll-hint-color', `rgb(${cueColor.join(',')})`);
       }
       const revealOnScroll = (element, start, finish) => {
         if (!element) return;
@@ -354,11 +357,12 @@ function updateHomeScrollStory() {
         element.style.removeProperty('pointer-events');
       });
       favorites?.querySelectorAll('.hero-favorite-card').forEach((card, index) => {
-        revealOnScroll(card, 0.03 + index * 0.29, 0.17 + index * 0.29);
+        revealOnScroll(card, 0.03 + index * 0.27, 0.17 + index * 0.27);
       });
     } else {
       scrollHint?.style.removeProperty('opacity');
       scrollHint?.style.removeProperty('pointer-events');
+      scrollHint?.style.removeProperty('--scroll-hint-color');
       hero.querySelectorAll('.hero-desc, .hero-cta, .hero-favorites, .hero-favorite-card').forEach(element => {
         element.style.removeProperty('--hero-seq-opacity');
         element.style.removeProperty('--hero-seq-y');
