@@ -418,7 +418,7 @@ function updateHomeScrollStory() {
     const pageProgress = progressAt(section, 0.99 - index * 0.025, 0.56 - index * 0.025);
     const risePulse = Math.sin(pageProgress * Math.PI);
     const isPaperSection = section.matches('.how-it-works');
-    section.style.setProperty('--page-rise-y', `${(isPaperSection ? (1 - pageProgress) * 40 - risePulse * 120 : (1 - pageProgress) * 92 - risePulse * 10).toFixed(1)}px`);
+    section.style.setProperty('--page-rise-y', `${(isPaperSection ? -risePulse * 120 : (1 - pageProgress) * 92 - risePulse * 10).toFixed(1)}px`);
     section.style.setProperty('--page-rise-scale', isPaperSection ? '1' : (0.955 + pageProgress * 0.045 + risePulse * 0.012).toFixed(3));
     section.style.setProperty('--page-rise-opacity', isPaperSection ? '1' : (0.42 + pageProgress * 0.58).toFixed(3));
     section.style.setProperty('--page-rise-tilt', `${((1 - pageProgress) * (isPaperSection ? 5.5 : 1.2)).toFixed(2)}deg`);
