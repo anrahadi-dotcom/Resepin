@@ -276,11 +276,46 @@ function updateScrollProgress() {
   if (scrollProgressFrame) return;
   scrollProgressFrame = requestAnimationFrame(() => {
     scrollProgressFrame = 0;
+    updateHomeScrollStory();
     const progress = document.querySelector('.scroll-progress');
     if (!progress) return;
     const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
     const amount = scrollableHeight > 0 ? Math.min(1, Math.max(0, window.scrollY / scrollableHeight)) : 0;
     progress.style.transform = `scaleX(${amount})`;
+  });
+}
+
+function updateHomeScrollStory() {
+  const home = document.getElementById('page-home');
+  if (!home?.classList.contains('active') || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+
+  const hero = home.querySelector('.hero');
+  const scene = home.querySelector('.hero-scene');
+  const heroCopy = home.querySelector('.hero-copy');
+  const favorites = home.querySelector('.hero-favorites');
+  if (hero) {
+    const heroProgress = Math.min(1, Math.max(0, (window.innerHeight - hero.getBoundingClientRect().bottom) / Math.max(1, hero.offsetHeight)));
+    hero.style.setProperty('--hero-scroll-progress', heroProgress.toFixed(3));
+    heroCopy?.style.setProperty('--hero-copy-scroll-y', `${Math.round(heroProgress * -22)}px`);
+    heroCopy?.style.setProperty('--hero-copy-scroll-opacity', (1 - heroProgress * 0.58).toFixed(3));
+    favorites?.style.setProperty('--hero-favorites-scroll-y', `${Math.round(heroProgress * 34)}px`);
+    favorites?.style.setProperty('--hero-favorites-scroll-opacity', (1 - heroProgress * 0.72).toFixed(3));
+    scene?.style.setProperty('--hero-scene-scroll-y', `${Math.round(heroProgress * 48)}px`);
+  }
+
+  const stage = home.querySelector('.hero-collage-stage');
+  if (!stage) return;
+  const stageTop = stage.getBoundingClientRect().top;
+  const storyProgress = Math.min(1, Math.max(0, (window.innerHeight * 0.88 - stageTop) / (window.innerHeight * 0.58)));
+  stage.style.setProperty('--collage-story-progress', storyProgress.toFixed(3));
+  stage.querySelectorAll('.collage-card').forEach((card, index) => {
+    const direction = index === 1 ? 0 : index === 0 ? -1 : 1;
+    const distance = (1 - storyProgress) * 44 * direction;
+    const rotation = (1 - storyProgress) * (index === 0 ? -5 : index === 2 ? 5 : 0);
+    card.style.setProperty('--story-x', `${distance.toFixed(1)}px`);
+    card.style.setProperty('--story-y', `${((1 - storyProgress) * 24).toFixed(1)}px`);
+    card.style.setProperty('--story-rotate', `${rotation.toFixed(2)}deg`);
+    card.style.setProperty('--story-opacity', (0.38 + storyProgress * 0.62).toFixed(3));
   });
 }
 
@@ -436,7 +471,6 @@ function initRecipeIntro() {
     intro.classList.add('is-leaving');
     window.setTimeout(() => intro.remove(), reduceMotion ? 0 : 700);
   };
-  intro.querySelector('.recipe-intro-skip')?.addEventListener('click', dismiss, { once: true });
   timer = window.setTimeout(dismiss, Math.max(0, duration - (performance.now() - startedAt)));
 }
 

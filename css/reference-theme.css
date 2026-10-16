@@ -5940,8 +5940,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 .recipe-intro-status span { position: absolute; inset: 0; white-space: nowrap; opacity: 0; }
 .recipe-intro-progress { width: min(220px,45vw); height: 3px; margin-top: 19px; overflow: hidden; border-radius: 99px; background: rgba(225,220,201,.15); }
 .recipe-intro-progress span { display: block; width: 100%; height: 100%; background: linear-gradient(90deg,#a84728,#c99b5f,#e1dcc9); transform: scaleX(0); transform-origin: left; }
-.recipe-intro-skip { position: absolute; right: max(20px,calc((100vw - 1180px)/2)); bottom: 26px; display: inline-flex; align-items: center; gap: 7px; padding: 8px 12px; border: 1px solid rgba(225,220,201,.16); border-radius: 999px; color: rgba(225,220,201,.63); background: rgba(31,21,12,.26); font: inherit; font-size: .7rem; cursor: pointer; transition: color .2s ease,background .2s ease,border-color .2s ease; }
-.recipe-intro-skip:hover,.recipe-intro-skip:focus-visible { border-color: rgba(225,220,201,.44); color: #f4eedf; background: rgba(65,45,21,.58); outline: none; }
 .recipe-intro.is-ready .recipe-intro-content > p,.recipe-intro.is-ready .recipe-intro-content h2 { animation: intro-copy-in .72s cubic-bezier(.18,.75,.2,1) 1.2s both; }
 .recipe-intro.is-ready .recipe-intro-progress span { animation: intro-progress 3.2s cubic-bezier(.22,.72,.22,1) .35s both; }
 .recipe-intro.is-ready .recipe-intro-status span { animation: intro-status 1.15s ease 1.1s both; }
@@ -5954,7 +5952,10 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 @keyframes intro-ingredient-drop { 0% { opacity: 0; transform: translate(var(--ingredient-start)) rotate(-12deg) scale(.7); } 28% { opacity: 1; } 74% { opacity: 1; transform: translate(0,-21px) rotate(4deg) scale(1); } 100% { opacity: 0; transform: translate(0,-34px) rotate(0) scale(.72); } }
 @keyframes intro-status { 0%,100% { opacity: 0; transform: translateY(5px); } 18%,78% { opacity: 1; transform: translateY(0); } }
 .hero-collage-stage { perspective: 1200px; }
-.collage-card { transform: translate(var(--drag-x,0px),var(--drag-y,0px)) rotate(var(--card-angle,0deg)) rotateX(var(--tilt-y,0deg)) rotateY(var(--tilt-x,0deg)); transform-style: preserve-3d; transition: transform .24s cubic-bezier(.2,.75,.25,1), box-shadow .3s ease, scale .4s cubic-bezier(.2,.75,.25,1); }
+.hero-scene { translate: 0 var(--hero-scene-scroll-y,0px); }
+.hero-copy { translate: 0 var(--hero-copy-scroll-y,0px); opacity: var(--hero-copy-scroll-opacity,1); }
+.hero-favorites { translate: 0 var(--hero-favorites-scroll-y,0px); opacity: var(--hero-favorites-scroll-opacity,1); }
+.collage-card { transform: translate(calc(var(--drag-x,0px) + var(--story-x,0px)),calc(var(--drag-y,0px) + var(--story-y,0px))) rotate(calc(var(--card-angle,0deg) + var(--story-rotate,0deg))) rotateX(var(--tilt-y,0deg)) rotateY(var(--tilt-x,0deg)); transform-style: preserve-3d; opacity: var(--story-opacity,1); transition: transform .24s cubic-bezier(.2,.75,.25,1), box-shadow .3s ease, scale .4s cubic-bezier(.2,.75,.25,1), opacity .18s linear; }
 .collage-card::after { position: absolute; z-index: 2; inset: 0; background: radial-gradient(circle at var(--shine-x,50%) var(--shine-y,50%),rgba(255,248,222,.24),transparent 43%); content: ""; opacity: 0; pointer-events: none; transition: opacity .25s ease; }
 .collage-card.is-pointer-tracking::after { opacity: 1; }
 .collage-card.is-dragging { transition: none; }
@@ -5982,12 +5983,13 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   .recipe-intro-ingredient { bottom: calc(21% + 18px); font-size: .64rem; }
   .recipe-intro-steam { bottom: calc(21% + 80px); }
   .recipe-intro-content { bottom: 8vh; }
-  .recipe-intro-skip { right: 15px; bottom: 16px; }
   .hero-followthrough-copy.motion-ready { transform: translate3d(0,24px,0); }
   .hero-collage-stage.motion-ready { transform: translate3d(0,26px,0); }
   .featured-recipes .recipe-card.motion-ready { transform: translate3d(0,26px,0) scale(.985); }
 }
 @media (prefers-reduced-motion: reduce) {
+  .hero-scene, .hero-copy, .hero-favorites, .collage-card { translate: none !important; opacity: 1 !important; }
+  .collage-card { transform: translate(var(--drag-x,0px),var(--drag-y,0px)) rotate(var(--card-angle,0deg)) rotateX(var(--tilt-y,0deg)) rotateY(var(--tilt-x,0deg)); }
   .recipe-intro { clip-path: none; }
   .recipe-intro.is-leaving { opacity: 0; }
   .recipe-intro *, .recipe-intro::before, .recipe-intro::after { animation: none!important; transition: none!important; }
