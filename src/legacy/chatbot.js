@@ -143,6 +143,8 @@ function generateAIResponse(message) {
     RECIPES_DB.some(recipe => textHasPhrase(normalized, recipe.title)) ||
     /\b(ayam\s+betutu|ayam\s+sere\s+lemo|ayam\s+sisit\s+sere\s+lemo|ayam\s+bakar\s+(?:khas\s+)?bali|coto|babi\s+guling|lawar|fried\s+chicken|pizza|burger|spaghetti|ramen|sushi|taco|pancake|teriyaki|sate\s+lilit)\b/.test(normalized);
   const explicitRecipeRequest = asksForRecipe;
+  const asksForMultipleRecipes = /\b(?:2|3|4|5|6|7|8|9|10|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan|sepuluh)\b(?:(?!\b(?:orang|porsi|hari|langkah)\b).){0,40}\b(?:resep|menu|ide|hidangan|pilihan)\b/.test(normalized) ||
+    /\b(?:resep|menu|ide|hidangan|pilihan)\b(?:(?!\b(?:orang|porsi|hari|langkah)\b).){0,30}\b(?:2|3|4|5|6|7|8|9|10|dua|tiga|empat|lima|enam|tujuh|delapan|sembilan|sepuluh)\b/.test(normalized);
 
   // Handle conversation before looking for ingredients, so a greeting never
   // falls through to an unrelated recipe or generic zero-waste tip.
@@ -154,6 +156,25 @@ function generateAIResponse(message) {
   }
   if (/\b(kamu siapa|siapa kamu|bisa apa|bant[u]? apa|help|tolong|apa yang bisa kamu bantu|bisa bantu apa|tanya apa|menu apa saja)\b/.test(normalized)) {
     return { type: 'text', text: CHEF_PROMPTS.help };
+  }
+
+  const asksAboutHazardousCookingSubstitute = /\bbensin\b/.test(normalized) &&
+    /\b(minyak|masak|masakan|makanan|resep|bahan|tumis|goreng|bisa|ganti|pengganti)\b/.test(normalized);
+  if (asksAboutHazardousCookingSubstitute) {
+    return { type: 'text', text: 'Jangan pakai bensin untuk memasak atau sebagai pengganti minyak goreng. Bensin bukan bahan pangan, beracun, dan sangat mudah terbakar. Kalau bensin mengenai makanan, jangan dimakan atau dicicipi; jauhkan dari api dan buang dengan aman. Untuk menumis, gunakan minyak goreng atau sedikit air/kaldu bila cocok dengan resep.' };
+  }
+
+  const asksAboutPoisonExposure = /\b(?:makanan|minuman|masakan|bahan pangan|sup|sayur|lauk)\b.{0,35}\b(?:racun|pestisida|bahan kimia|tercemar|terkontaminasi|kena)\b/.test(normalized) ||
+    /\b(?:racun|pestisida|bahan kimia)\b.{0,35}\b(?:makanan|minuman|masakan|tertelan|termakan|dimakan|menelan|makan|terpapar|terkena)\b/.test(normalized) ||
+    /\b(?:menelan|tertelan|termakan|terpapar|terkena)\b.{0,25}\b(?:racun|pestisida|bahan kimia)\b/.test(normalized);
+  const asksToCreateHarmfulSubstance = /\b(?:bensin|racun|bom|bahan peledak|senjata|pembakar|melukai|membunuh)\b/.test(normalized) &&
+    /\b(?:buat|bikin|membuat|meracik|campur|mencampur|meramu|pakai|gunakan)\b/.test(normalized);
+  if (asksAboutPoisonExposure && !asksToCreateHarmfulSubstance) {
+    return { type: 'text', text: 'Jangan dimakan atau dicicipi. Pisahkan makanan itu agar tidak dikonsumsi orang lain. Kalau sudah tertelan, jangan paksa muntah atau beri penawar rumahan—segera hubungi IGD/layanan darurat medis setempat, terutama bila muncul gejala. Simpan kemasan atau catat nama zatnya jika diketahui untuk ditunjukkan ke tenaga medis.' };
+  }
+
+  if (asksToCreateHarmfulSubstance) {
+    return { type: 'text', text: 'Maaf, aku tidak bisa membantu membuat atau menggunakan bensin, racun, bom, pembakar, atau senjata. Aku hanya bisa membantu soal masakan dan keamanan pangan yang aman.' };
   }
 
   if (/\b(belum punya bahan|belum ada bahan|tidak punya bahan|tidak ada bahan|ga punya bahan|gak punya bahan|nggak punya bahan|gak ada bahan|nggak ada bahan|kehabisan bahan)\b/.test(normalized)) {
@@ -178,7 +199,7 @@ function generateAIResponse(message) {
     }
     if ((/\b(semalaman|semalam|di meja|suhu ruang|dibiarkan|tertinggal)\b/.test(normalized) || roomTemperatureHours > 2) &&
       !/\b(cairkan|mencairkan|dicairkan|thawing|defrost)\b/.test(normalized) &&
-      /\b(ayam|daging|ikan|udang|nasi|tahu|makanan|masakan|sisa)\b/.test(normalized)) {
+      /\b(ayam|daging|ikan|udang|nasi|tahu|tempe|sayur|sayuran|sup|kuah|soto|makanan|masakan|lauk|sisa)\b/.test(normalized)) {
       const leftOutDuration = roomTemperatureHours > 2 ? `${roomTemperatureHours} jam` : 'semalaman';
       return { type: 'text', text: `Makanan matang atau bahan mudah rusak yang sudah berada di suhu ruang ${leftOutDuration} sebaiknya dibuang. Batas umum makanan mudah rusak adalah 2 jam di suhu ruang (1 jam jika suhu di atas 32°C); memanaskan ulang tidak selalu menghilangkan risiko. Jangan dicicipi untuk mengetes.` };
     }
@@ -189,7 +210,9 @@ function generateAIResponse(message) {
       return { type: 'text', text: 'Panaskan sisa makanan sampai benar-benar panas merata; untuk acuan keamanan USDA, suhu tengahnya 74°C/165°F. Aduk makanan yang dipanaskan di microwave lalu cek beberapa bagian. Panaskan hanya porsi yang akan dimakan dan jangan memanaskan berulang kali. Kalau sisa makanan sudah terlalu lama di suhu ruang atau kamu tidak yakin cara simpannya, jangan dicicipi untuk mengetes—lebih aman dibuang.' };
     }
     const asksAboutCookedProtein = /\b(?:ayam|daging|ikan|udang|seafood|telur)\b.{0,18}\b(?:matang|dimasak|masak|sudah matang|sudah dimasak|udah matang|udah dimasak)\b/.test(normalized);
-    const asksAboutLeftovers = /\b(sisa|nasi matang|makanan matang|masakan matang|sudah dimasak|makanan jadi|leftover)\b/.test(normalized) || asksAboutCookedProtein;
+    const asksAboutCookedFood = /\b(?:tahu|tempe|sayur(?:an)?|sup|kuah|soto|makanan|masakan|lauk)\b.{0,25}\b(?:matang|dimasak|sudah dimasak|udah dimasak)\b/.test(normalized) ||
+      /\b(?:matang|dimasak|sudah dimasak|udah dimasak)\b.{0,25}\b(?:tahu|tempe|sayur(?:an)?|sup|kuah|soto|makanan|masakan|lauk)\b/.test(normalized);
+    const asksAboutLeftovers = /\b(sisa|nasi matang|makanan matang|masakan matang|sudah dimasak|makanan jadi|leftover)\b/.test(normalized) || asksAboutCookedProtein || asksAboutCookedFood;
     if (/\b(nasi|rice)\b/.test(normalized) && !/\b(beras|nasi mentah)\b/.test(normalized) && /\b(berapa lama|berapa hari|tahan|simpan|awet)\b/.test(normalized)) {
       return { type: 'text', text: 'Untuk nasi yang sudah matang, masukkan ke kulkas segera setelah uap panas berkurang dan habiskan dalam 3–4 hari; bagi ke wadah dangkal agar cepat dingin. Jika dibiarkan di suhu ruang semalaman, buang. Panduan umum penyimpanan sisa makanan: USDA FSIS.' };
     }
@@ -229,6 +252,12 @@ function generateAIResponse(message) {
 
   if (/\b(tempe.*bintik hitam|bintik hitam.*tempe)\b/.test(normalized)) {
     return { type: 'text', text: 'Bintik abu-abu/kehitaman kecil bisa muncul sebagai spora pada tempe yang fermentasinya lanjut, tetapi dari teks saja aku tidak bisa memastikan kondisinya. Kalau tempe berlendir, berubah warna mencolok, berbau menyengat/amonia, atau penyimpanannya meragukan, buang. Ikuti petunjuk kemasan dan masak sampai matang.' };
+  }
+
+  // Keep explicit multi-recipe requests intact; a single catalog card cannot
+  // satisfy a request for several distinct options, so let the AI handle it.
+  if (asksForMultipleRecipes && asksForRecipe) {
+    return { type: 'fallback', text: CHEF_PROMPTS.fallback(message) };
   }
 
   if (/\b(kulit wortel|batang kangkung|kulit sayur|batang sayur|tulang ayam|sisa nasi kering)\b/.test(normalized)) {
