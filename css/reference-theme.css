@@ -4072,6 +4072,141 @@ body[data-theme="dark"] .section .gradient-text { @apply [background:linear-grad
   .how-it-works .step-card { @apply [min-height:0]; @apply [padding:21px_22px]; }
   .how-it-works .step-card-heading { @apply [margin-bottom:17px]; }
   .how-it-works .step-icon-wrap { @apply [margin-bottom:16px]; }
+
+/* Illustrated workflow cards: local food photography with tactile, subtle motion. */
+.how-it-works .step-card {
+  min-height: 0;
+  padding: 18px;
+  border-radius: 22px;
+  background: linear-gradient(150deg, rgba(255, 253, 246, .96), rgba(231, 225, 208, .94));
+  box-shadow: 0 14px 34px rgba(31, 21, 12, .07), inset 0 1px rgba(255, 255, 255, .72);
+  transition: transform .42s cubic-bezier(.2, .75, .25, 1), border-color .3s ease, box-shadow .35s ease;
+}
+.how-it-works .step-card::before {
+  z-index: 3;
+  height: 3px;
+  transform: scaleX(.18);
+  transition: transform .45s cubic-bezier(.2, .75, .25, 1);
+}
+.how-it-works .step-card:hover,
+.how-it-works .step-card:focus-within {
+  border-color: color-mix(in srgb, var(--step-accent) 52%, transparent);
+  box-shadow: 0 24px 48px rgba(31, 21, 12, .14), 0 5px 18px color-mix(in srgb, var(--step-accent) 13%, transparent), inset 0 1px rgba(255, 255, 255, .8);
+}
+.how-it-works .step-card:hover::before,
+.how-it-works .step-card:focus-within::before { transform: scaleX(1); }
+.how-it-works .step-card-heading { margin: 1px 3px 14px; }
+.how-it-works .step-number {
+  display: inline-grid;
+  min-width: 38px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--step-accent) 26%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--step-accent) 9%, white);
+  font-family: var(--font-body);
+  font-size: .78rem;
+  letter-spacing: .04em;
+}
+.how-it-works .step-kicker { letter-spacing: .085em; }
+.how-it-works .step-icon-wrap.step-visual {
+  isolation: isolate;
+  width: 100%;
+  height: 154px;
+  margin: 0 0 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .62);
+  border-radius: 16px;
+  background-color: #78674f;
+  background-position: center 48%;
+  background-size: cover;
+  box-shadow: inset 0 0 0 1px rgba(31, 21, 12, .07);
+  transition: background-size .7s cubic-bezier(.2, .75, .25, 1), border-radius .3s ease;
+}
+.how-it-works .step-visual--ingredients { background-image: linear-gradient(90deg, rgba(29, 31, 20, .16), rgba(29, 31, 20, .02) 70%), url('/assets/img/pecel.webp'); }
+.how-it-works .step-visual--checklist { background-image: linear-gradient(90deg, rgba(29, 31, 20, .28), rgba(29, 31, 20, .02) 85%), url('/assets/img/capcay.jpg'); }
+.how-it-works .step-visual--recipe { background-image: linear-gradient(90deg, rgba(29, 31, 20, .24), rgba(29, 31, 20, .02) 85%), url('/assets/img/nasi-goreng.webp'); }
+.how-it-works .step-visual::before,
+.how-it-works .step-visual::after {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+}
+.how-it-works .step-visual::before { background: linear-gradient(180deg, rgba(24, 20, 14, .08), transparent 42%, rgba(24, 20, 14, .28)); }
+.how-it-works .step-visual::after {
+  z-index: 2;
+  background: linear-gradient(110deg, transparent 28%, rgba(255, 255, 255, .28) 48%, transparent 64%);
+  transform: translateX(-125%);
+  transition: transform .8s cubic-bezier(.2, .75, .25, 1);
+}
+.how-it-works .step-card:hover .step-visual::after,
+.how-it-works .step-card:focus-within .step-visual::after { transform: translateX(125%); }
+.how-it-works .step-icon {
+  z-index: 2;
+  display: grid;
+  width: 64px;
+  height: 64px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, .72);
+  border-radius: 20px;
+  color: var(--step-accent);
+  background: rgba(255, 252, 241, .88);
+  box-shadow: 0 10px 24px rgba(20, 16, 10, .22);
+  backdrop-filter: blur(10px);
+  transition: transform .4s cubic-bezier(.2, .75, .25, 1), box-shadow .4s ease;
+}
+.how-it-works .step-card:hover .step-icon,
+.how-it-works .step-card:focus-within .step-icon { transform: translateY(-3px) rotate(-5deg) scale(1.05); box-shadow: 0 14px 30px rgba(20, 16, 10, .25); }
+.how-it-works .step-icon .ui-icon { width: 31px; height: 31px; }
+.how-it-works .step-ring {
+  z-index: 1;
+  inset: auto;
+  width: 76px;
+  height: 76px;
+  margin: 0;
+  border-color: rgba(255, 252, 241, .72);
+  box-shadow: 0 0 0 7px rgba(255, 252, 241, .14);
+}
+.how-it-works .step-art-label {
+  position: absolute;
+  z-index: 3;
+  right: 10px;
+  bottom: 10px;
+  padding: 6px 9px;
+  border: 1px solid rgba(255, 255, 255, .38);
+  border-radius: 999px;
+  color: #fffdf5;
+  background: rgba(34, 28, 20, .42);
+  font-size: .58rem;
+  font-weight: 750;
+  letter-spacing: .1em;
+  backdrop-filter: blur(8px);
+}
+.how-it-works .step-card h3 { margin-bottom: 8px; font-size: 1.24rem; letter-spacing: -.015em; }
+.how-it-works .step-card p { margin-bottom: 18px; }
+.how-it-works .step-tag { padding: 8px 11px; transition: background .25s ease, border-color .25s ease, transform .25s ease; }
+.how-it-works .step-card:hover .step-tag { transform: translateX(2px); border-color: color-mix(in srgb, var(--step-accent) 32%, transparent); background: color-mix(in srgb, var(--step-accent) 9%, white); }
+@media (max-width: 900px) {
+  .how-it-works .step-icon-wrap.step-visual { height: 142px; }
+}
+@media (max-width: 600px) {
+  .how-it-works .step-card { padding: 15px; border-radius: 19px; }
+  .how-it-works .step-card-heading { margin: 0 2px 12px; }
+  .how-it-works .step-icon-wrap.step-visual { height: 156px; margin-bottom: 17px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .how-it-works .step-card,
+  .how-it-works .step-card::before,
+  .how-it-works .step-visual::after,
+  .how-it-works .step-icon,
+  .how-it-works .step-tag { transition: none !important; }
+  .how-it-works .step-card:hover .step-icon,
+  .how-it-works .step-card:focus-within .step-icon,
+  .how-it-works .step-card:hover .step-tag { transform: none; }
+  .how-it-works .step-ring { animation: none; }
+}
 }
 
 /* Featured recipes: editorial cards with a small reveal on hover/focus. */
