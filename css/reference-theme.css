@@ -4263,8 +4263,10 @@ body[data-theme="dark"] .section .gradient-text { @apply [background:linear-grad
 .how-it-works .step-visual .step-number {
   position: absolute;
   z-index: 3;
+  inset: 14px auto auto 15px;
   top: 14px;
   left: 15px;
+  width: max-content;
   display: grid;
   min-width: 38px;
   height: 32px;
