@@ -4209,6 +4209,110 @@ body[data-theme="dark"] .section .gradient-text { @apply [background:linear-grad
   .how-it-works .step-ring { animation: none; }
 }
 
+/* Photo-led workflow cards: image first, clear editorial copy underneath. */
+.how-it-works .steps-grid { gap: 18px; }
+.how-it-works .step-card {
+  position: relative;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 22px;
+  background: #f5f0e3;
+  box-shadow: 0 12px 30px rgba(45, 34, 21, .08), 0 1px 2px rgba(45, 34, 21, .06);
+  transition: transform .35s cubic-bezier(.2,.75,.25,1), box-shadow .35s ease, border-color .3s ease;
+}
+.how-it-works .step-card::before { z-index: 2; height: 3px; transform: scaleX(.35); }
+.how-it-works .step-card:hover,
+.how-it-works .step-card:focus-within {
+  transform: translateY(-5px);
+  background: #f8f4e9;
+  box-shadow: 0 22px 42px rgba(45, 34, 21, .14);
+}
+.how-it-works .step-visual {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1.7 / 1;
+  flex: none;
+  margin: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: #d8cfb8;
+  box-shadow: none;
+}
+.how-it-works .step-visual img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .7s cubic-bezier(.2,.75,.25,1), filter .4s ease;
+}
+.how-it-works .step-visual--ingredients img { object-position: center 54%; }
+.how-it-works .step-visual--checklist img { object-position: center 53%; }
+.how-it-works .step-visual--recipe img { object-position: center 54%; }
+.how-it-works .step-visual::before {
+  background: linear-gradient(180deg, rgba(24,20,14,.20), transparent 48%, rgba(24,20,14,.08));
+}
+.how-it-works .step-visual::after {
+  background: linear-gradient(110deg, transparent 28%, rgba(255,255,255,.28) 48%, transparent 64%);
+}
+.how-it-works .step-card:hover .step-visual img,
+.how-it-works .step-card:focus-within .step-visual img { transform: scale(1.055); }
+.how-it-works .step-visual .step-number {
+  position: absolute;
+  z-index: 3;
+  top: 14px;
+  left: 15px;
+  display: grid;
+  min-width: 38px;
+  height: 32px;
+  padding: 0 9px;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.48);
+  border-radius: 999px;
+  color: #fffdf5;
+  background: rgba(32, 28, 21, .52);
+  font-family: var(--font-display);
+  font-size: .85rem;
+  letter-spacing: .08em;
+  backdrop-filter: blur(8px);
+}
+.how-it-works .step-card-body {
+  display: flex;
+  min-height: 207px;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 19px 21px 20px;
+}
+.how-it-works .step-card-heading { margin: 0 0 9px; }
+.how-it-works .step-kicker { color: rgba(65,45,21,.64); font-size: .66rem; }
+.how-it-works .step-card h3 { margin: 0 0 8px; font-size: 1.2rem; line-height: 1.3; }
+.how-it-works .step-card p { margin: 0 0 16px; font-size: .88rem; line-height: 1.62; }
+.how-it-works .step-tag { margin-top: auto; }
+@media (max-width: 900px) {
+  .how-it-works .steps-grid { gap: 15px; }
+  .how-it-works .step-visual { aspect-ratio: 1.45 / 1; }
+  .how-it-works .step-card-body { min-height: 220px; padding: 17px 17px 18px; }
+}
+@media (max-width: 600px) {
+  .how-it-works .step-card { padding: 0; border-radius: 19px; }
+  .how-it-works .steps-grid { max-width: 460px; }
+  .how-it-works .step-visual { aspect-ratio: 1.9 / 1; }
+  .how-it-works .step-card-body { min-height: 0; padding: 17px 18px 18px; }
+  .how-it-works .step-card p { margin-bottom: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .how-it-works .step-card,
+  .how-it-works .step-visual img { transition: none !important; }
+  .how-it-works .step-card:hover,
+  .how-it-works .step-card:focus-within { transform: none; }
+  .how-it-works .step-card:hover .step-visual img,
+  .how-it-works .step-card:focus-within .step-visual img { transform: none; }
+}
+
 /* Featured recipes: editorial cards with a small reveal on hover/focus. */
 .featured-recipes .section-header {
   @apply [display:grid];
