@@ -134,6 +134,12 @@ createApp({
       this.heroSearchMessage = '';
       this.$nextTick(() => this.submitHeroSearch());
     },
+    scrollToHomeSection(sectionId) {
+      const section = document.getElementById(sectionId);
+      if (!section) return;
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      section.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    },
     go(page) {
       this.floatingChefChatOpen = false;
       this.menuOpen = false;

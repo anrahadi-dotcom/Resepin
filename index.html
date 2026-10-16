@@ -214,7 +214,7 @@
           </section>
         </div>
       </div>
-      <a class="hero-scroll-hint" href="#hero-followthrough" aria-label="Gulir untuk melihat bagaimana Resepin mengubah bahan menjadi ide masak">
+      <a class="hero-scroll-hint" href="#hero-followthrough" @click.prevent.stop="scrollToHomeSection('hero-followthrough')" aria-label="Gulir untuk melihat bagaimana Resepin mengubah bahan menjadi ide masak">
         <div class="scroll-dot"></div>
         <span>Gulir untuk menjelajah</span>
       </a>
@@ -226,7 +226,7 @@
           <span class="hero-followthrough-eyebrow"><i aria-hidden="true"></i> IDE BAIK DIMULAI DARI YANG ADA</span>
           <h2 id="hero-followthrough-title">Isi kulkasmu punya <em>cerita berikutnya.</em></h2>
           <p>Nggak harus belanja dulu. Pilih bahan yang tersedia, lalu temukan ide masak yang bisa kamu mulai hari ini.</p>
-          <a class="hero-followthrough-link" href="#how-it-works">Lihat cara kerjanya <span aria-hidden="true">↓</span></a>
+          <a class="hero-followthrough-link" href="#how-it-works" @click.prevent.stop="scrollToHomeSection('how-it-works')">Lihat cara kerjanya <span aria-hidden="true">↓</span></a>
         </div>
         <div class="hero-followthrough-scene" aria-label="Contoh bahan yang tersedia menjadi ide resep">
           <div class="story-pantry motion-ready">
