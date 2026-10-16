@@ -301,7 +301,7 @@ function ensureScrollProgress() {
 
 window.refreshMotionReveals = function refreshMotionReveals() {
   ensureScrollProgress();
-  const targets = document.querySelectorAll('.section-header, .step-card, .recipe-card, .cat-card, .stats-banner, .footer-grid, .jelajahi-section, .scan-layout, .ingredients-panel, .camera-viewport, .ai-cta-card, .chat-container, .profile-card');
+  const targets = document.querySelectorAll('.section-header, .step-card, .recipe-card, .cat-card, .stats-banner, .footer-grid, .jelajahi-section, .scan-layout, .ingredients-panel, .camera-viewport, .ai-cta-card, .chat-container, .profile-card, .hero-followthrough-copy, .hero-followthrough-scene, .story-pantry, .story-recipe');
   if (!motionRevealObserver) {
     motionRevealObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
