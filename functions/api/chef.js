@@ -65,7 +65,22 @@ export async function onRequestPost({ request, env }) {
       ?? result?.choices?.[0]?.message?.content
       ?? result?.choices?.[0]?.text;
     const answer = typeof modelAnswer === 'string' ? modelAnswer.trim().slice(0, 3000) : '';
-    if (!answer) throw new Error('Empty AI response');
+    if (!answer) {
+      const choice = result?.choices?.[0];
+      const message = choice?.message;
+      console.error('Chef AI returned no final text:', {
+        resultKeys: result && typeof result === 'object' ? Object.keys(result) : [],
+        choiceCount: Array.isArray(result?.choices) ? result.choices.length : null,
+        choiceKeys: choice && typeof choice === 'object' ? Object.keys(choice) : [],
+        messageKeys: message && typeof message === 'object' ? Object.keys(message) : [],
+        contentType: typeof message?.content,
+        contentLength: typeof message?.content === 'string' ? message.content.length : null,
+        reasoningContentLength: typeof message?.reasoning_content === 'string' ? message.reasoning_content.length : null,
+        finishReason: choice?.finish_reason ?? null,
+        usage: result?.usage ?? null
+      });
+      throw new Error('Empty AI response');
+    }
     return Response.json({ answer }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
     console.error('Chef AI request failed:', error);
