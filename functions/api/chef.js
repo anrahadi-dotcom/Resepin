@@ -65,10 +65,16 @@ export async function onRequestPost({ request, env }) {
     : [];
 
   const requestedRecipeCount = getRequestedRecipeCount(message);
+  const asksSafeFoodHazardQuestion = /\b(?:bensin|racun|pestisida|bahan kimia)\b/i.test(message) &&
+    /\b(?:masak|makanan|minyak|resep|tumis|dimakan|dicicipi|tertelan|menelan|tercemar|terpapar|pengganti|diganti)\b/i.test(message) &&
+    !/\b(?:membuat racun|meracik racun|mencampur racun|membuat bom|membuat senjata|melukai orang)\b/i.test(message);
+  const hazardGuidance = asksSafeFoodHazardQuestion
+    ? '\n\nInstruksi keselamatan wajib: ini pertanyaan keamanan makanan, bukan permintaan mencelakai. Jangan membuka dengan "maaf, saya tidak bisa membantu" atau frasa penolakan. Jawab langsung: jangan gunakan/dimakan, jelaskan bahayanya secara singkat, lalu beri alternatif bahan pangan atau langkah aman yang relevan.'
+    : '';
   const countGuidance = requestedRecipeCount
     ? `\n\nInstruksi format wajib: berikan tepat ${requestedRecipeCount} resep berbeda dalam daftar bernomor 1 sampai ${requestedRecipeCount}. Setiap pilihan harus memakai sekurangnya dua bahan yang disebut pengguna bila tersedia, dan sebutkan bahan pengguna yang dipakai; jangan mengklaim memakai semua bahan jika tidak. Jika pengguna hanya meminta daftar/ide, beri judul dan ringkasan pendek tiap pilihan. Jika meminta resepnya/langkah, beri bahan dan langkah singkat untuk semua ${requestedRecipeCount} pilihan, jangan berhenti setelah satu.`
     : '';
-  const promptMessage = `${message}${countGuidance}`;
+  const promptMessage = `${message}${countGuidance}${hazardGuidance}`;
 
   try {
     const messages = [
