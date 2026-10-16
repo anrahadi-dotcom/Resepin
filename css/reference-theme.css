@@ -5983,6 +5983,8 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 }
 .hero.is-scroll-story .hero-enter,
 .hero.is-scroll-story .hero-title-line { animation: none !important; clip-path: none !important; }
+.hero.is-scroll-story .hero-scene { translate: 0 0; }
+.hero.is-scroll-story .hero-scene-video { translate: 0 var(--hero-video-scroll-y,0px); transform: scale(var(--hero-video-scroll-scale,1.035)); }
 .hero.is-scroll-story .hero-desc,
 .hero.is-scroll-story .hero-cta { opacity: var(--hero-seq-opacity, 1); transform: translate3d(0, var(--hero-seq-y, 0px), 0); transition: none; }
 .hero.is-scroll-story .hero-favorites { opacity: var(--hero-seq-opacity, 1); transition: none; }

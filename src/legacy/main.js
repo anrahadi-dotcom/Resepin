@@ -325,12 +325,13 @@ function updateHomeScrollStory() {
   const favorites = home.querySelector('.hero-favorites');
   if (hero) {
     const scrollSequenceEnabled = window.matchMedia?.('(min-width: 901px) and (min-height: 680px)').matches;
+    let sequenceProgress = 0;
     hero.classList.toggle('is-scroll-story', Boolean(scrollSequenceEnabled));
     if (scrollSequenceEnabled) {
       const storyStart = window.scrollY + home.getBoundingClientRect().top;
       // Keep the first hero pinned while each card gets its own longer scroll beat.
       // The next hero enters from below after the last card has finished.
-      const sequenceProgress = Math.min(1, Math.max(0, (window.scrollY - storyStart) / (viewport * 1.8)));
+      sequenceProgress = Math.min(1, Math.max(0, (window.scrollY - storyStart) / (viewport * 1.8)));
       const revealOnScroll = (element, start, finish) => {
         if (!element) return;
         const linear = Math.min(1, Math.max(0, (sequenceProgress - start) / (finish - start)));
@@ -357,20 +358,24 @@ function updateHomeScrollStory() {
       });
     }
     const heroProgress = Math.min(1, Math.max(0, (window.innerHeight - hero.getBoundingClientRect().bottom) / Math.max(1, hero.offsetHeight)));
-    hero.style.setProperty('--hero-scroll-progress', heroProgress.toFixed(3));
-    heroCopy?.style.setProperty('--hero-copy-scroll-y', `${Math.round(heroProgress * -22)}px`);
-    heroCopy?.style.setProperty('--hero-copy-scroll-opacity', (1 - heroProgress * 0.58).toFixed(3));
-    favorites?.style.setProperty('--hero-favorites-scroll-y', `${Math.round(heroProgress * 34)}px`);
-    favorites?.style.setProperty('--hero-favorites-scroll-opacity', (1 - heroProgress * 0.72).toFixed(3));
-    scene?.style.setProperty('--hero-scene-scroll-y', `${Math.round(heroProgress * 48)}px`);
+    const foregroundProgress = scrollSequenceEnabled ? 0 : heroProgress;
+    hero.style.setProperty('--hero-scroll-progress', foregroundProgress.toFixed(3));
+    heroCopy?.style.setProperty('--hero-copy-scroll-y', `${Math.round(foregroundProgress * -22)}px`);
+    heroCopy?.style.setProperty('--hero-copy-scroll-opacity', (1 - foregroundProgress * 0.58).toFixed(3));
+    favorites?.style.setProperty('--hero-favorites-scroll-y', `${Math.round(foregroundProgress * 34)}px`);
+    favorites?.style.setProperty('--hero-favorites-scroll-opacity', (1 - foregroundProgress * 0.72).toFixed(3));
+    scene?.style.setProperty('--hero-scene-scroll-y', `${Math.round(foregroundProgress * 48)}px`);
+    const heroVideo = scene?.querySelector('.hero-scene-video');
+    heroVideo?.style.setProperty('--hero-video-scroll-y', `${(scrollSequenceEnabled ? sequenceProgress * 40 : 0).toFixed(1)}px`);
+    heroVideo?.style.setProperty('--hero-video-scroll-scale', (1.035 + (scrollSequenceEnabled ? sequenceProgress * 0.08 : 0)).toFixed(3));
     favorites?.querySelectorAll('.hero-favorite-card').forEach((card, index) => {
       const outer = index === 0 ? -1 : index === 2 ? 1 : 0;
-      const lift = heroProgress * (outer === 0 ? -124 : 40);
-      card.style.setProperty('--scroll-card-x', `${(heroProgress * outer * Math.min(118, viewport * 0.12)).toFixed(1)}px`);
+      const lift = foregroundProgress * (outer === 0 ? -124 : 40);
+      card.style.setProperty('--scroll-card-x', `${(foregroundProgress * outer * Math.min(118, viewport * 0.12)).toFixed(1)}px`);
       card.style.setProperty('--scroll-card-y', `${lift.toFixed(1)}px`);
-      card.style.setProperty('--scroll-card-scale', (outer === 0 ? 1 + heroProgress * 0.28 : 1 - heroProgress * 0.46).toFixed(3));
-      card.style.setProperty('--scroll-card-rotation', `${(heroProgress * outer * 9).toFixed(2)}deg`);
-      card.style.setProperty('--scroll-card-depth', `${(heroProgress * (outer === 0 ? 110 : -100)).toFixed(1)}px`);
+      card.style.setProperty('--scroll-card-scale', (outer === 0 ? 1 + foregroundProgress * 0.28 : 1 - foregroundProgress * 0.46).toFixed(3));
+      card.style.setProperty('--scroll-card-rotation', `${(foregroundProgress * outer * 9).toFixed(2)}deg`);
+      card.style.setProperty('--scroll-card-depth', `${(foregroundProgress * (outer === 0 ? 110 : -100)).toFixed(1)}px`);
     });
   }
 
