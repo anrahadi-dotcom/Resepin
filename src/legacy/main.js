@@ -391,7 +391,7 @@ function updateHomeScrollStory() {
     card.style.setProperty('--step-story-z', `${((cardProgress - 1) * 120 + stackPulse * 48).toFixed(1)}px`);
     card.style.setProperty('--step-story-rotate', `${((1 - cardProgress) * (index - 1) * 7).toFixed(2)}deg`);
     card.style.setProperty('--step-story-scale', (0.86 + cardProgress * 0.14 + stackPulse * 0.025).toFixed(3));
-    card.style.setProperty('--step-story-opacity', (0.12 + cardProgress * 0.88).toFixed(3));
+    card.style.setProperty('--step-story-opacity', (0.34 + cardProgress * 0.66).toFixed(3));
   });
 
   home.querySelectorAll('.featured-recipes .recipe-card').forEach((card, index) => {
@@ -405,7 +405,10 @@ function updateHomeScrollStory() {
     card.style.setProperty('--recipe-story-rotate', `${((1 - cardProgress) * (index % 2 ? 7 : -7)).toFixed(2)}deg`);
     card.style.setProperty('--recipe-story-tilt-y', `${((1 - cardProgress) * lane * -10).toFixed(2)}deg`);
     card.style.setProperty('--recipe-story-scale', (0.78 + cardProgress * 0.22 + cardPulse * 0.035).toFixed(3));
-    card.style.setProperty('--recipe-story-opacity', (0.12 + cardProgress * 0.88).toFixed(3));
+    card.style.setProperty('--recipe-story-opacity', (0.34 + cardProgress * 0.66).toFixed(3));
+    const photo = card.querySelector('.recipe-img-photo');
+    photo?.style.setProperty('--recipe-photo-y', `${(-cardPulse * 12).toFixed(1)}px`);
+    photo?.style.setProperty('--recipe-photo-scale', (1.045 + cardPulse * 0.075).toFixed(3));
   });
 
   home.querySelectorAll('.how-it-works, .featured-recipes, .waste-stats').forEach((section, index) => {
@@ -413,8 +416,14 @@ function updateHomeScrollStory() {
     const risePulse = Math.sin(pageProgress * Math.PI);
     section.style.setProperty('--page-rise-y', `${((1 - pageProgress) * 92 - risePulse * 10).toFixed(1)}px`);
     section.style.setProperty('--page-rise-scale', (0.955 + pageProgress * 0.045 + risePulse * 0.012).toFixed(3));
-    section.style.setProperty('--page-rise-opacity', (0.22 + pageProgress * 0.78).toFixed(3));
+    section.style.setProperty('--page-rise-opacity', (0.42 + pageProgress * 0.58).toFixed(3));
     section.style.setProperty('--page-rise-tilt', `${((1 - pageProgress) * 2.2).toFixed(2)}deg`);
+    const heading = section.querySelector('.section-header h2, .stats-content h2');
+    if (heading) {
+      heading.style.setProperty('--heading-story-y', `${((1 - pageProgress) * 34 - risePulse * 12).toFixed(1)}px`);
+      heading.style.setProperty('--heading-story-scale', (0.94 + pageProgress * 0.06 + risePulse * 0.025).toFixed(3));
+      heading.style.setProperty('--heading-story-opacity', (0.48 + pageProgress * 0.52).toFixed(3));
+    }
   });
 }
 
