@@ -1,5 +1,6 @@
 const MAX_MESSAGE_LENGTH = 1000;
 const MODEL = '@cf/qwen/qwen3-30b-a3b-fp8';
+const FALLBACK_MODEL = '@cf/meta/llama-3.1-8b-instruct-fp8';
 const requestWindows = new Map();
 
 const SYSTEM_PROMPT = `Kamu adalah Chef Resepin, asisten memasak rumah tangga berbahasa Indonesia yang ramah, jelas, dan praktis.
@@ -51,36 +52,32 @@ export async function onRequestPost({ request, env }) {
     : [];
 
   try {
-    const result = await env.AI.run(MODEL, {
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        ...history,
-        { role: 'user', content: `${message}\n/no_think` }
-      ],
+    const messages = [
+      { role: 'system', content: SYSTEM_PROMPT },
+      ...history,
+      { role: 'user', content: message }
+    ];
+    const options = {
       max_tokens: 800,
       temperature: 0.7,
       chat_template_kwargs: { enable_thinking: false }
-    });
-    const modelAnswer = result?.response
-      ?? result?.choices?.[0]?.message?.content
-      ?? result?.choices?.[0]?.text;
-    const answer = typeof modelAnswer === 'string' ? modelAnswer.trim().slice(0, 3000) : '';
+    };
+    const extractAnswer = result => {
+      const candidate = result?.response
+        ?? result?.choices?.[0]?.message?.content
+        ?? result?.choices?.[0]?.text;
+      return typeof candidate === 'string' ? candidate.trim().slice(0, 3000) : '';
+    };
+
+    let answer = extractAnswer(await env.AI.run(MODEL, {
+      ...options,
+      messages: [...messages.slice(0, -1), { role: 'user', content: `${message}\n/no_think` }]
+    }));
     if (!answer) {
-      const choice = result?.choices?.[0];
-      const message = choice?.message;
-      console.error('Chef AI returned no final text:', {
-        resultKeys: result && typeof result === 'object' ? Object.keys(result) : [],
-        choiceCount: Array.isArray(result?.choices) ? result.choices.length : null,
-        choiceKeys: choice && typeof choice === 'object' ? Object.keys(choice) : [],
-        messageKeys: message && typeof message === 'object' ? Object.keys(message) : [],
-        contentType: typeof message?.content,
-        contentLength: typeof message?.content === 'string' ? message.content.length : null,
-        reasoningContentLength: typeof message?.reasoning_content === 'string' ? message.reasoning_content.length : null,
-        finishReason: choice?.finish_reason ?? null,
-        usage: result?.usage ?? null
-      });
-      throw new Error('Empty AI response');
+      console.warn('Chef primary model returned no final text; trying fallback model.');
+      answer = extractAnswer(await env.AI.run(FALLBACK_MODEL, { messages, max_tokens: 420, temperature: 0.3 }));
     }
+    if (!answer) throw new Error('AI models returned no final text');
     return Response.json({ answer }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
     console.error('Chef AI request failed:', error);
