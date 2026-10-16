@@ -34,19 +34,28 @@
   <link rel="stylesheet" href="/css/app.css" />
   <script src="/assets/vendor/vue-3.5.22.global.prod.js" defer></script>
 </head>
-<body>
+<body class="intro-playing">
   <script>document.body.dataset.theme = document.documentElement.dataset.theme || 'light';</script>
   <div class="recipe-intro" id="recipeIntro" role="status" aria-live="polite" aria-label="Menyiapkan resepmu">
+    <div class="recipe-intro-scene" aria-hidden="true">
+      <div class="recipe-intro-lamp"><span></span><i></i></div>
+      <div class="recipe-intro-beam"></div>
+      <div class="recipe-intro-counter"></div>
+      <div class="recipe-intro-board"></div>
+      <div class="recipe-intro-ingredient recipe-intro-ingredient--one">Wortel</div>
+      <div class="recipe-intro-ingredient recipe-intro-ingredient--two">Telur</div>
+      <div class="recipe-intro-ingredient recipe-intro-ingredient--three">Bawang</div>
+      <div class="recipe-intro-pot"><span></span><i></i><b></b></div>
+      <div class="recipe-intro-steam recipe-intro-steam--one"></div>
+      <div class="recipe-intro-steam recipe-intro-steam--two"></div>
+      <div class="recipe-intro-steam recipe-intro-steam--three"></div>
+    </div>
     <div class="recipe-intro-content">
-      <div class="recipe-intro-mark" aria-hidden="true">
-        <span class="recipe-intro-steam recipe-intro-steam--one"></span>
-        <span class="recipe-intro-steam recipe-intro-steam--two"></span>
-        <svg viewBox="0 0 64 64" fill="none"><path d="M13 28h38l-4 25H17l-4-25Z"/><path d="M9 28h46M21 21h22M28 14h8M7 35h6m38 0h6"/><path d="M25 35v11m14-11v11"/></svg>
-        <i class="recipe-intro-spark recipe-intro-spark--one"></i><i class="recipe-intro-spark recipe-intro-spark--two"></i>
-      </div>
       <p>RESEPIN <span>·</span> DARI DAPUR, JADI CERITA</p>
       <h2>Menyiapkan resepmu</h2>
+      <div class="recipe-intro-status" aria-hidden="true"><span>Meracik bahan yang ada di rumah</span><span>Menata ide masakanmu</span><span>Siap disajikan</span></div>
       <div class="recipe-intro-progress" aria-hidden="true"><span></span></div>
+      <button class="recipe-intro-skip" type="button">Lewati intro <span aria-hidden="true">↗</span></button>
     </div>
   </div>
   <a class="skip-link" href="#page-home" onclick="focusActivePage(event)">Lewati ke konten</a>
@@ -243,15 +252,15 @@
         </div>
         <div class="hero-collage-stage" aria-label="Kolase resep interaktif">
           <span class="collage-edition" aria-hidden="true">RESEPIN <b>·</b> EDISI DAPUR HARI INI</span>
-          <button class="collage-card collage-card--rice" type="button" @pointerdown="startHeroCardDrag" @pointermove="moveHeroCardDrag" @pointerup="endHeroCardDrag" @pointercancel="endHeroCardDrag" @keydown="nudgeHeroCard" @click="openCollageRecipe(2, $event)" aria-label="Lihat resep Nasi Goreng Sederhana; seret untuk menggeser">
+          <button class="collage-card collage-card--rice" type="button" @pointerdown="startHeroCardDrag" @pointermove="moveHeroCardDrag" @pointerup="endHeroCardDrag" @pointercancel="endHeroCardDrag" @pointerleave="resetHeroCardTilt" @keydown="nudgeHeroCard" @click="openCollageRecipe(2, $event)" aria-label="Lihat resep Nasi Goreng Sederhana; seret untuk menggeser">
             <img src="/assets/img/nasi-goreng.jpg" alt="" loading="lazy" draggable="false" />
             <span class="collage-card-copy"><small>01 / MENU RUMAHAN</small><strong>Nasi Goreng<br/>Sederhana</strong><i aria-hidden="true">↗</i></span>
           </button>
-          <button class="collage-card collage-card--capcay" type="button" @pointerdown="startHeroCardDrag" @pointermove="moveHeroCardDrag" @pointerup="endHeroCardDrag" @pointercancel="endHeroCardDrag" @keydown="nudgeHeroCard" @click="openCollageRecipe(5, $event)" aria-label="Lihat resep Capcay Kuah Segar; seret untuk menggeser">
+          <button class="collage-card collage-card--capcay" type="button" @pointerdown="startHeroCardDrag" @pointermove="moveHeroCardDrag" @pointerup="endHeroCardDrag" @pointercancel="endHeroCardDrag" @pointerleave="resetHeroCardTilt" @keydown="nudgeHeroCard" @click="openCollageRecipe(5, $event)" aria-label="Lihat resep Capcay Kuah Segar; seret untuk menggeser">
             <img src="/assets/img/capcay.jpg" alt="" loading="lazy" draggable="false" />
             <span class="collage-card-copy"><small>02 / WARNA DARI KEBUN</small><strong>Capcay Kuah<br/>Segar</strong><i aria-hidden="true">↗</i></span>
           </button>
-          <button class="collage-card collage-card--sate" type="button" @pointerdown="startHeroCardDrag" @pointermove="moveHeroCardDrag" @pointerup="endHeroCardDrag" @pointercancel="endHeroCardDrag" @keydown="nudgeHeroCard" @click="openCollageRecipe(29, $event)" aria-label="Lihat resep Sate Lilit Bali; seret untuk menggeser">
+          <button class="collage-card collage-card--sate" type="button" @pointerdown="startHeroCardDrag" @pointermove="moveHeroCardDrag" @pointerup="endHeroCardDrag" @pointercancel="endHeroCardDrag" @pointerleave="resetHeroCardTilt" @keydown="nudgeHeroCard" @click="openCollageRecipe(29, $event)" aria-label="Lihat resep Sate Lilit Bali; seret untuk menggeser">
             <img src="/assets/img/sate-lilit.jpg" alt="" loading="lazy" draggable="false" />
             <span class="collage-card-copy"><small>03 / RASA NUSANTARA</small><strong>Sate Lilit<br/>Bali</strong><i aria-hidden="true">↗</i></span>
           </button>

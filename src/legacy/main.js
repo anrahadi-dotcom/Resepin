@@ -423,22 +423,23 @@ function initNavHint() {
 function initRecipeIntro() {
   const intro = document.getElementById('recipeIntro');
   if (!intro) return;
-  try {
-    if (sessionStorage.getItem('resepin-intro-seen') === 'true') {
-      intro.remove();
-      return;
-    }
-    sessionStorage.setItem('resepin-intro-seen', 'true');
-  } catch (_) { /* The intro still works when browser storage is unavailable. */ }
+  document.body.classList.add('intro-playing');
   const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-  const duration = reduceMotion ? 300 : 1900;
+  const duration = reduceMotion ? 350 : 3900;
   const startedAt = performance.now();
   requestAnimationFrame(() => intro.classList.add('is-ready'));
+  let dismissed = false;
+  let timer;
   const dismiss = () => {
+    if (dismissed) return;
+    dismissed = true;
+    window.clearTimeout(timer);
+    document.body.classList.remove('intro-playing');
     intro.classList.add('is-leaving');
     window.setTimeout(() => intro.remove(), reduceMotion ? 0 : 700);
   };
-  window.setTimeout(dismiss, Math.max(0, duration - (performance.now() - startedAt)));
+  intro.querySelector('.recipe-intro-skip')?.addEventListener('click', dismiss, { once: true });
+  timer = window.setTimeout(dismiss, Math.max(0, duration - (performance.now() - startedAt)));
 }
 
 // ============================================================

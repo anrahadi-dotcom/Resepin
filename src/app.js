@@ -275,13 +275,31 @@ createApp({
     },
     moveHeroCardDrag(event) {
       const drag = this.heroCardDrag;
-      if (!drag || drag.element !== event.currentTarget || drag.pointerId !== event.pointerId) return;
+      if (!drag || drag.element !== event.currentTarget || drag.pointerId !== event.pointerId) {
+        if (event.pointerType === 'mouse' && !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+          const rect = event.currentTarget.getBoundingClientRect();
+          const x = (event.clientX - rect.left) / rect.width - 0.5;
+          const y = (event.clientY - rect.top) / rect.height - 0.5;
+          event.currentTarget.style.setProperty('--tilt-x', `${(x * 7).toFixed(2)}deg`);
+          event.currentTarget.style.setProperty('--tilt-y', `${(y * -7).toFixed(2)}deg`);
+          event.currentTarget.style.setProperty('--shine-x', `${((x + 0.5) * 100).toFixed(1)}%`);
+          event.currentTarget.style.setProperty('--shine-y', `${((y + 0.5) * 100).toFixed(1)}%`);
+          event.currentTarget.classList.add('is-pointer-tracking');
+        }
+        return;
+      }
       event.preventDefault();
       const x = Math.max(drag.minX, Math.min(drag.maxX, drag.originX + event.clientX - drag.startX));
       const y = Math.max(drag.minY, Math.min(drag.maxY, drag.originY + event.clientY - drag.startY));
       if (Math.abs(x - drag.originX) > 4 || Math.abs(y - drag.originY) > 4) drag.element.dataset.dragged = 'true';
       drag.element.style.setProperty('--drag-x', `${x}px`);
       drag.element.style.setProperty('--drag-y', `${y}px`);
+    },
+    resetHeroCardTilt(event) {
+      if (this.heroCardDrag?.element === event.currentTarget) return;
+      event.currentTarget.style.setProperty('--tilt-x', '0deg');
+      event.currentTarget.style.setProperty('--tilt-y', '0deg');
+      event.currentTarget.classList.remove('is-pointer-tracking');
     },
     endHeroCardDrag(event) {
       const drag = this.heroCardDrag;
