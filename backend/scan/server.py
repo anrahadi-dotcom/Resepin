@@ -19,6 +19,9 @@ from ultralytics import YOLO
 
 
 ROOT = Path(__file__).resolve().parent
+PROJECT_ROOT = ROOT
+if (ROOT.parent.parent / "index.html").is_file():
+    PROJECT_ROOT = ROOT.parent.parent
 MODEL = ROOT / "models" / "best.pt"
 MAX_UPLOAD = 10 * 1024 * 1024
 MAX_IMAGE_SIDE = 6000
@@ -76,20 +79,20 @@ class ResepinHandler(BaseHTTPRequestHandler):
             return
 
         pages = {
-            "/": ROOT / "index.html",
-            "/src/app.js": ROOT / "src" / "app.js",
-            "/src/legacy/main.js": ROOT / "src" / "legacy" / "main.js",
-            "/src/legacy/recipes.js": ROOT / "src" / "legacy" / "recipes.js",
-            "/src/legacy/chef-prompts.js": ROOT / "src" / "legacy" / "chef-prompts.js",
-            "/src/legacy/chatbot.js": ROOT / "src" / "legacy" / "chatbot.js",
-            "/css/style.css": ROOT / "css" / "style.css",
-            "/css/responsive.css": ROOT / "css" / "responsive.css",
+            "/": PROJECT_ROOT / "index.html",
+            "/src/app.js": PROJECT_ROOT / "src" / "app.js",
+            "/src/legacy/main.js": PROJECT_ROOT / "src" / "legacy" / "main.js",
+            "/src/legacy/recipes.js": PROJECT_ROOT / "src" / "legacy" / "recipes.js",
+            "/src/legacy/chef-prompts.js": PROJECT_ROOT / "src" / "legacy" / "chef-prompts.js",
+            "/src/legacy/chatbot.js": PROJECT_ROOT / "src" / "legacy" / "chatbot.js",
+            "/css/style.css": PROJECT_ROOT / "css" / "style.css",
+            "/css/responsive.css": PROJECT_ROOT / "css" / "responsive.css",
         }
         file_path = pages.get(path)
         if path.startswith("/assets/"):
-            file_path = ROOT / path.lstrip("/")
+            file_path = PROJECT_ROOT / path.lstrip("/")
             try:
-                file_path.resolve().relative_to((ROOT / "assets").resolve())
+                file_path.resolve().relative_to((PROJECT_ROOT / "assets").resolve())
             except ValueError:
                 file_path = None
 
@@ -183,7 +186,7 @@ class ResepinHandler(BaseHTTPRequestHandler):
 def main() -> None:
     global DETECTOR
     if not MODEL.is_file():
-        raise SystemExit(f"Model tidak ditemukan: {MODEL}\nClone repo privat resepin-models ke folder models terlebih dahulu.")
+        raise SystemExit(f"Model tidak ditemukan: {MODEL}\nClone repo privat resepin-models ke folder backend/scan/models terlebih dahulu.")
 
     print("Memuat model bahan...")
     DETECTOR = YOLO(str(MODEL))

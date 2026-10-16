@@ -4,7 +4,7 @@ Website resep zero food waste: masukkan bahan sisa secara manual atau pindai obj
 
 ## Menjalankan
 
-Backend scan memerlukan **CPython Windows 64-bit**. Python dari MSYS2/MinGW tidak cocok untuk memasang wheel PyTorch. Pasang Python 3.12 dari [python.org](https://www.python.org/downloads/windows/) dan pastikan perintah `py -3.12 --version` berhasil. `requirements.txt` memasang Torch CPU agar backend InstaCloud tidak mengunduh pustaka CUDA yang tidak dipakai.
+Backend scan memerlukan **CPython Windows 64-bit**. Python dari MSYS2/MinGW tidak cocok untuk memasang wheel PyTorch. Pasang Python 3.12 dari [python.org](https://www.python.org/downloads/windows/) dan pastikan perintah `py -3.12 --version` berhasil. `backend/scan/requirements.txt` memasang Torch CPU agar backend InstaCloud tidak mengunduh pustaka CUDA yang tidak dipakai.
 
 ### Setup baru di Windows
 
@@ -14,10 +14,11 @@ Buka PowerShell, lalu jalankan perintah berikut. Akun GitHub harus sudah menerim
 git clone https://github.com/anrahadi-dotcom/Resepin.git
 cd Resepin
 git lfs install
-git clone https://github.com/anrahadi-dotcom/resepin-models.git models
+New-Item -ItemType Directory -Force backend\scan | Out-Null
+git clone https://github.com/anrahadi-dotcom/resepin-models.git backend/scan/models
 py -3.12 -m venv .venv-win
-.\.venv-win\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv-win\Scripts\python.exe server.py
+.\.venv-win\Scripts\python.exe -m pip install -r backend\scan\requirements.txt
+.\.venv-win\Scripts\python.exe backend\scan\server.py
 ```
 
 Server menampilkan alamat `http://127.0.0.1:8000`. Buka alamat itu di browser. Kamera memerlukan izin pengguna dan secure context (`localhost` memenuhi syarat ini). Jangan membuka `index.html` langsung sebagai file atau memakai Live Server; frontend memanggil API lokal pada origin yang sama. Tekan `Ctrl+C` di terminal untuk menghentikan server.
@@ -29,34 +30,34 @@ Server menampilkan alamat `http://127.0.0.1:8000`. Buka alamat itu di browser. K
 3. Buka terminal PowerShell di folder project dan jalankan:
 
    ```powershell
-   .\.venv-win\Scripts\python.exe server.py
+   .\.venv-win\Scripts\python.exe backend\scan\server.py
    ```
 
 Jika model sudah pernah di-clone, jangan clone lagi. Ambil update model dengan:
 
 ```powershell
-git -C models pull
+git -C backend\scan\models pull
 ```
 
 Untuk mengambil update kode website, jalankan `git pull` dari folder `Resepin`.
 
 ### Memperbarui model
 
-Setelah mengganti `models/best.pt`, pemilik model dapat mengirim versinya ke repo privat:
+Setelah mengganti `backend/scan/models/best.pt`, pemilik model dapat mengirim versinya ke repo privat:
 
 ```powershell
-git -C models add best.pt
-git -C models commit -m "Update ingredient model"
-git -C models push
+git -C backend\scan\models add best.pt
+git -C backend\scan\models commit -m "Update ingredient model"
+git -C backend\scan\models push
 ```
 
-Teman yang sudah menerima akses repo privat cukup menjalankan `git -C models pull`.
+Teman yang sudah menerima akses repo privat cukup menjalankan `git -C backend\scan\models pull`.
 
 ### Deploy ke Cloudflare Pages
 
 Frontend statis dibangun ke `dist/` dengan `npm run build` dan diunggah menggunakan Wrangler. Jalankan `npx wrangler pages deploy dist --project-name=resepin` setelah menghubungkan Wrangler ke akun Cloudflare.
 
-Frontend tetap di Cloudflare Pages. Fungsi Pages untuk scan disiapkan menjadi proxy ke layanan Python InstaCloud Free, yang memuat `models/best.pt` di server agar checkpoint tidak disajikan sebagai aset web. Scan publik aktif setelah backend dan rahasia runtime selesai dikonfigurasi. `best.pt` hanya disertakan pada arsip deploy backend lewat `.dockerignore` dan tetap dikecualikan dari Git oleh `.gitignore`.
+Frontend tetap di Cloudflare Pages. Fungsi Pages untuk scan menjadi proxy ke layanan Python InstaCloud Free, yang memuat `backend/scan/models/best.pt` di server agar checkpoint tidak disajikan sebagai aset web. Deploy backend dari root repo dengan `npx -y insta@latest --agent deploy backend/scan --port 8080 --group scan-api --json`; `.dockerignore` di direktori itu membatasi arsip deploy ke file runtime dan model. `best.pt` tetap dikecualikan dari Git utama oleh `.gitignore`.
 
 ## Bagian aplikasi
 
@@ -72,7 +73,7 @@ Frontend tetap di Cloudflare Pages. Fungsi Pages untuk scan disiapkan menjadi pr
 - `src/app.js`: entry point Vue 3 untuk shell aplikasi dan interaksi hero.
 - `src/legacy/`: modul JavaScript lama yang masih menangani perilaku katalog, kamera, dan chat sambil dipindahkan ke komponen Vue.
 - `functions/api/detect.js` dan `functions/api/health.js`: proxy Pages ke API scan di InstaCloud.
-- `Dockerfile`: image Python untuk API scan InstaCloud.
+- `backend/scan/`: server Python, dependensi, konfigurasi Docker, daftar kelas, dan checkout model privat untuk API scan InstaCloud.
 - `css/reference-theme.css`: token warna krem/cokelat, komponen, dan breakpoint tambahan.
 - `css/style.css`: komponen, warna, dan gaya dasar.
 - `css/responsive.css`: breakpoint layar dan preferensi aksesibilitas.
@@ -104,7 +105,7 @@ npm run build
 - Foto katalog menetapkan dimensi intrinsik 800×600, sedangkan gambar modal mempertahankan rasio melalui kontainer dan CSS. Gambar hero bukan gambar konten dan memakai ukuran cover.
 - Petunjuk navbar tetap mengajarkan hover pada desktop dan klik pada perangkat sentuh; petunjuk menghilang setelah interaksi pertama.
 
-Antarmuka memakai Vue 3 yang disimpan di repo, HTML, dan CSS responsif. Server Python memuat `models/best.pt` menggunakan Ultralytics/PyTorch saat server mulai; checkpoint ini berisi 30 kelas bahan berbahasa Indonesia, yang juga dicatat di `data_classes.yaml`. Foto kamera dikirim ke `/api/detect` dan diproses oleh server lokal saat pengembangan atau server InstaCloud setelah deploy. Aplikasi tidak menulis foto ke disk. Model mendeteksi objek sesuai kelas yang dipelajari; periksa hasilnya dan tambahkan bahan lain secara manual bila perlu. Mode Demo selalu menghasilkan bahan contoh dan bukan deteksi model.
+Antarmuka memakai Vue 3 yang disimpan di repo, HTML, dan CSS responsif. Server Python memuat `backend/scan/models/best.pt` menggunakan Ultralytics/PyTorch saat server mulai; checkpoint ini berisi 30 kelas bahan berbahasa Indonesia, yang juga dicatat di `data_classes.yaml`. Foto kamera dikirim ke `/api/detect` dan diproses oleh server lokal saat pengembangan atau server InstaCloud setelah deploy. Aplikasi tidak menulis foto ke disk. Model mendeteksi objek sesuai kelas yang dipelajari; periksa hasilnya dan tambahkan bahan lain secara manual bila perlu. Mode Demo selalu menghasilkan bahan contoh dan bukan deteksi model.
 
 Server deteksi lokal hanya bind ke `127.0.0.1`; image InstaCloud mengatur `HOST=0.0.0.0` dan `PORT=8080`. API memeriksa origin yang diizinkan, mendukung shared token antarserver, membatasi foto ke JPG/PNG/WebP hingga 10 MB, dan tidak menulis foto ke disk. Konfigurasikan `RESEPIN_SCAN_TOKEN` sebagai secret di backend InstaCloud dan Cloudflare Pages; set `RESEPIN_ALLOWED_ORIGINS=https://resepin-3k1.pages.dev` pada backend. Konfigurasikan `RESEPIN_SCAN_API_URL` di Pages dengan URL HTTPS servis InstaCloud. Jangan masukkan nilai secret ke Git, source frontend, atau HTML. Paket Free InstaCloud memberi kredit pemakaian bulanan dan menjeda project jika kredit habis; servis scale-to-zero bisa memerlukan waktu untuk bangun saat permintaan pertama. Chef memakai aturan JavaScript lokal terlebih dulu dan meneruskan pertanyaan yang belum dikenali ke Cloudflare Workers AI. Binding `AI` dikonfigurasi di `wrangler.jsonc`; tidak ada kunci API di browser. Workers AI memiliki alokasi gratis harian yang terbatas, sehingga jawaban AI bisa tidak tersedia saat kuota habis. Saat lokal, jalankan `npm run build` lalu `npx wrangler pages dev dist --ai=AI`; penggunaan binding AI lokal tetap memanggil layanan Cloudflare. Jika layanan gagal, Chef menampilkan jawaban fallback lokal. Maksimal enam pesan percakapan terakhir dikirim untuk konteks; jangan masukkan data pribadi/sensitif. Font masih dimuat dari Google Fonts.
 

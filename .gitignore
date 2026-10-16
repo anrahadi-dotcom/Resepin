@@ -1,5 +1,5 @@
 # Keep local model weights out of the public repository.
-/models/
+/backend/scan/models/
 *.pt
 *.pth
 
