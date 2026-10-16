@@ -317,23 +317,25 @@
       </div>
     </section>
 
-    <!-- Featured Recipes -->
-    <section class="section featured-recipes">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">Resep Unggulan</span>
-          <h2>Resep Pilihan</h2>
-          <p class="featured-intro">Ide masakan rumahan yang enak, praktis, dan cocok untuk hari ini.</p>
-          <a class="see-all" href="#/resep" @click.prevent="go('resep')">Lihat Semua →</a>
-        </div>
-        <div class="recipes-scroll" aria-label="Resep unggulan"></div>
-      </div>
-    </section>
+    <!-- Featured Recipes / right-side takeover stage -->
+    <div class="recipe-takeover-stage">
+      <div class="recipe-takeover-viewport">
+        <section class="section featured-recipes">
+          <div class="container">
+            <div class="section-header">
+              <span class="section-tag">Resep Unggulan</span>
+              <h2>Resep Pilihan</h2>
+              <p class="featured-intro">Ide masakan rumahan yang enak, praktis, dan cocok untuk hari ini.</p>
+              <a class="see-all" href="#/resep" @click.prevent="go('resep')">Lihat Semua →</a>
+            </div>
+            <div class="recipes-scroll" aria-label="Resep unggulan"></div>
+          </div>
+        </section>
 
-    <!-- Zero Waste Stats -->
-    <section class="section waste-stats">
-      <div class="container">
-        <div class="stats-banner">
+        <!-- Zero Waste Stats -->
+        <section class="section waste-stats">
+          <div class="container">
+            <div class="stats-banner">
           <div class="stats-content">
             <span class="stats-kicker"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-sprout"/></svg> DAPUR LEBIH BIJAK</span>
             <h2>Setiap bahan punya <em>kesempatan kedua.</em></h2>
@@ -366,9 +368,11 @@
             </div>
             <p class="personal-stats-empty" id="personalStatsEmpty">Belum ada aktivitas. Mulai dengan mencatat bahan yang tersedia atau menemukan resep pertamamu.</p>
           </div>
-        </div>
+            </div>
+          </div>
+        </section>
       </div>
-    </section>
+    </div>
 
     <!-- Footer -->
     <footer class="footer">

@@ -435,10 +435,11 @@ function updateHomeScrollStory() {
     const isPaperSection = section.matches('.how-it-works');
     const isFeatured = section.matches('.featured-recipes');
     const isStats = section.matches('.waste-stats');
+    const takeoverStage = isStats ? home.querySelector('.recipe-takeover-stage') : null;
     const pageProgress = isPaperSection ? progressAt(section, 0.76, -0.16) : progressAt(section, 0.99 - index * 0.025, 0.56 - index * 0.025);
     const risePulse = Math.sin(pageProgress * Math.PI);
-    const statsTakeoverProgress = isStats && window.matchMedia?.('(min-width: 901px) and (min-height: 680px)').matches
-      ? Math.min(1, Math.max(0, (window.scrollY - section.offsetTop) / (viewport * 0.62)))
+    const statsTakeoverProgress = isStats && takeoverStage && window.matchMedia?.('(min-width: 901px) and (min-height: 680px)').matches
+      ? Math.min(1, Math.max(0, (window.scrollY - (window.scrollY + takeoverStage.getBoundingClientRect().top)) / viewport))
       : pageProgress;
     const enterFromRight = isStats && window.matchMedia?.('(min-width: 901px) and (min-height: 680px)').matches
       ? (1 - statsTakeoverProgress) * window.innerWidth
