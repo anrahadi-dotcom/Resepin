@@ -328,10 +328,9 @@ function updateHomeScrollStory() {
     hero.classList.toggle('is-scroll-story', Boolean(scrollSequenceEnabled));
     if (scrollSequenceEnabled) {
       const storyStart = window.scrollY + home.getBoundingClientRect().top;
-      // Give each card room to arrive over roughly two deliberate wheel steps.
-      // Keep the hero pinned just long enough for the three cards to finish.
-      const sequenceProgress = Math.min(1, Math.max(0, (window.scrollY - storyStart) / (viewport * 1.25)));
-      hero.classList.toggle('is-scroll-story-complete', sequenceProgress >= 1);
+      // Keep the first hero pinned while each card gets its own longer scroll beat.
+      // The next hero enters from below after the last card has finished.
+      const sequenceProgress = Math.min(1, Math.max(0, (window.scrollY - storyStart) / (viewport * 1.8)));
       const revealOnScroll = (element, start, finish) => {
         if (!element) return;
         const linear = Math.min(1, Math.max(0, (sequenceProgress - start) / (finish - start)));
@@ -348,10 +347,9 @@ function updateHomeScrollStory() {
         element.style.removeProperty('pointer-events');
       });
       favorites?.querySelectorAll('.hero-favorite-card').forEach((card, index) => {
-        revealOnScroll(card, 0.05 + index * 0.31, 0.18 + index * 0.31);
+        revealOnScroll(card, 0.03 + index * 0.29, 0.17 + index * 0.29);
       });
     } else {
-      hero.classList.remove('is-scroll-story-complete');
       hero.querySelectorAll('.hero-desc, .hero-cta, .hero-favorites, .hero-favorite-card').forEach(element => {
         element.style.removeProperty('--hero-seq-opacity');
         element.style.removeProperty('--hero-seq-y');
