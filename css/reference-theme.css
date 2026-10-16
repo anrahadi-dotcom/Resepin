@@ -5972,7 +5972,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 .hero-scroll-runway { display: none; }
 @media (min-width: 901px) and (min-height: 680px) {
   #page-home > .hero { position: sticky; top: 0; z-index: 2; }
-  #page-home > .hero-scroll-runway { display: block; position: relative; z-index: 0; height: 105svh; pointer-events: none; }
+  #page-home > .hero-scroll-runway { display: block; position: relative; z-index: 0; height: 130svh; pointer-events: none; }
   #page-home > .hero-scroll-hint { position: fixed; z-index: 20; bottom: 22px; left: 50%; padding: 0; border: 0; border-radius: 0; color: var(--scroll-hint-color,rgba(255,255,255,.82)); background: transparent; box-shadow: none; backdrop-filter: none; transform: translateX(-50%); transition: opacity .2s ease, color .18s ease; }
   #page-home > .hero-scroll-hint .scroll-dot { background: var(--scroll-hint-color,rgba(255,255,255,.55)); transition: background-color .18s ease; }
   #page-home > .hero-scroll-hint .scroll-dot::after { background: var(--scroll-hint-color,#fff); transition: background-color .18s ease; }
