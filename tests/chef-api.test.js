@@ -41,12 +41,18 @@ test('food safety questions about dangerous substances are framed as help, not r
     request: new Request('https://example.test/api/chef', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: 'Kalau minyak goreng habis, bisa diganti bensin buat menumis?' })
+      body: JSON.stringify({
+        message: 'Kalau bensin, bro?',
+        history: [
+          { role: 'assistant', content: 'Untuk menumis, minyak goreng bisa dipakai secukupnya.' },
+          { role: 'user', content: 'Kalau minyak gorengnya habis bagaimana?' }
+        ]
+      })
     }),
     env: {
       AI: {
         run: async (_model, options) => {
-          capturedUserPrompt = options.messages.find(message => message.role === 'user')?.content || '';
+          capturedUserPrompt = options.messages.filter(message => message.role === 'user').at(-1)?.content || '';
           return { response: 'Jangan pakai bensin untuk memasak.' };
         }
       }

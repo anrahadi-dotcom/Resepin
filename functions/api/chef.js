@@ -65,9 +65,11 @@ export async function onRequestPost({ request, env }) {
     : [];
 
   const requestedRecipeCount = getRequestedRecipeCount(message);
+  const conversationContext = [...history.map(item => item.content), message].join('\n');
+  const asksToCreateHarmfulSubstance = /\b(?:membuat|meracik|mencampur|campur|meramu|bikin|membuat)\s+(?:\w+\s+){0,2}(?:racun|bom|senjata|pembakar)\b/i.test(message);
   const asksSafeFoodHazardQuestion = /\b(?:bensin|racun|pestisida|bahan kimia)\b/i.test(message) &&
-    /\b(?:masak|makanan|minyak|resep|tumis|dimakan|dicicipi|tertelan|menelan|tercemar|terpapar|pengganti|diganti)\b/i.test(message) &&
-    !/\b(?:membuat racun|meracik racun|mencampur racun|membuat bom|membuat senjata|melukai orang)\b/i.test(message);
+    /\b(?:masak|makanan|minyak|resep|tumis|dimakan|dicicipi|tertelan|menelan|tercemar|terpapar|pengganti|diganti)\b/i.test(conversationContext) &&
+    !asksToCreateHarmfulSubstance;
   const hazardGuidance = asksSafeFoodHazardQuestion
     ? '\n\nInstruksi keselamatan wajib: ini pertanyaan keamanan makanan, bukan permintaan mencelakai. Jangan membuka dengan "maaf, saya tidak bisa membantu" atau frasa penolakan. Jawab langsung: jangan gunakan/dimakan, jelaskan bahayanya secara singkat, lalu beri alternatif bahan pangan atau langkah aman yang relevan.'
     : '';
