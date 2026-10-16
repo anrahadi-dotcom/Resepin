@@ -1258,6 +1258,10 @@ function createRecipeCardHTML(r, { keepCurrentPage = false } = {}) {
   const match = recipeMatch(r, available);
   const missing = match.missing.slice(0, 3).join(', ');
   const cost = window.ResepinRecipeUtils?.formatIDR(r.estimatedCostPerServingIDR) || '';
+  const category = Array.isArray(r.tags) && r.tags.length ? r.tags[0] : 'Menu rumahan';
+  const featuredKicker = keepCurrentPage
+    ? `<div class="recipe-card-kicker"><span class="recipe-card-category">${escapeHtml(category)}</span><span class="recipe-card-ingredient-count">${ingredientCount ? `${ingredientCount} bahan` : 'Bahan sederhana'}</span></div>`
+    : '';
   const matchLabel = available.length
     ? ` Kecocokan bahan: ${match.matched} dari ${match.total}.`
     : ' Tambahkan bahan untuk melihat kecocokan.';
@@ -1275,6 +1279,7 @@ function createRecipeCardHTML(r, { keepCurrentPage = false } = {}) {
       </div>
       <div class="recipe-badge-diff ${r.difficulty === 'Mudah' ? 'easy' : 'medium'}">${r.difficulty}</div>
       <div class="recipe-info">
+        ${featuredKicker}
         <h3>${escapeHtml(r.title)}</h3>
         <p class="recipe-meta"><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>${escapeHtml(r.time)}</span><span class="recipe-cost-estimate">Est. ${cost}/porsi</span></p>
         ${matchMarkup}
