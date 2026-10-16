@@ -5353,7 +5353,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 .hero { position: relative; }
 .hero::after { content: none; }
 .hero-scroll-hint {
-  display: flex; z-index: 5; bottom: 20px; gap: 10px; align-items: center;
+  display: flex; position: absolute; z-index: 10; bottom: 20px; gap: 10px; align-items: center;
   padding: 0; border: 0; border-radius: 0; color: rgba(255,255,255,.82);
   background: transparent; font-size: .68rem; letter-spacing: .07em;
   text-decoration: none; backdrop-filter: none; transition: opacity .2s ease;
