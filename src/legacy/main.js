@@ -32,7 +32,7 @@ let cookingTimerInterval = null;
 let previousRecipeFocus = null;
 const PERSONAL_STATS_KEY = 'resepin-personal-stats-v1';
 const FAVORITE_RECIPE_IDS_KEY = 'resep-favorite-ids-v1';
-const TAKEOVER_SEGMENT_VIEWPORTS = 3.5;
+const TAKEOVER_SEGMENT_VIEWPORTS = 2.5;
 let personalStatsMemory = { ingredientsUsed: 0, recipesOpened: 0 };
 let homeCountersStarted = false;
 let scrollStoryObserver;
