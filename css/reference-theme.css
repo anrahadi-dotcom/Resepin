@@ -5971,6 +5971,8 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 #page-home > .hero { position: relative; }
 .hero-scroll-runway { display: none; }
 @media (min-width: 901px) and (min-height: 680px) {
+  /* Keep the following section attached to the paper as it rises. */
+  #page-home .how-it-works { margin-bottom: var(--page-rise-y, 0px); }
   #page-home > .hero { position: sticky; top: 0; z-index: 2; }
   #page-home > .hero-scroll-runway { display: block; position: relative; z-index: 0; height: 180svh; pointer-events: none; }
   #page-home > .hero-scroll-hint { position: fixed; z-index: 20; bottom: 22px; left: 50%; padding: 0; border: 0; border-radius: 0; color: var(--scroll-hint-color,rgba(255,255,255,.82)); background: transparent; box-shadow: none; backdrop-filter: none; transform: translateX(-50%); transition: opacity .2s ease, color .18s ease; }
@@ -6015,6 +6017,13 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 #page-home .featured-recipes .recipe-card.motion-ready.motion-visible:hover { transform: translateY(-5px) translateZ(var(--recipe-story-z,0px)) rotateX(var(--recipe-story-rotate,0deg)) rotateY(var(--recipe-story-tilt-y,0deg)); }
 #page-home .featured-recipes .recipe-card.motion-ready { transform: none; translate: none; rotate: none; scale: 1; opacity: 1; transition: none; }
 #page-home .featured-recipes .recipe-card.motion-ready.motion-visible:hover { transform: translateY(-5px); }
+/* Recipe cards use a soft, staggered lift, distinct from the hero light reveal
+   and the horizontal stats takeover. */
+#page-home .featured-recipes .recipe-card.motion-ready { transform: translate3d(0,34px,0) rotateX(3deg) scale(.975); opacity: 0; filter: blur(5px); transition: transform .72s cubic-bezier(.2,.75,.22,1) var(--motion-delay,0ms), opacity .52s ease var(--motion-delay,0ms), filter .64s ease var(--motion-delay,0ms); }
+#page-home .featured-recipes .recipe-card.motion-ready.motion-visible { transform: translate3d(0,0,0) rotateX(0) scale(1); opacity: 1; filter: blur(0); }
+@media (prefers-reduced-motion: reduce) {
+  #page-home .featured-recipes .recipe-card.motion-ready { transform: none !important; opacity: 1 !important; filter: none !important; transition: none !important; }
+}
 .collage-card::after { position: absolute; z-index: 2; inset: 0; background: radial-gradient(circle at var(--shine-x,50%) var(--shine-y,50%),rgba(255,248,222,.24),transparent 43%); content: ""; opacity: 0; pointer-events: none; transition: opacity .25s ease; }
 .collage-card.is-pointer-tracking::after { opacity: 1; }
 .collage-card.is-dragging { transition: none; }
