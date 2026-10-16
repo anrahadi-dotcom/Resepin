@@ -6805,6 +6805,25 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   #page-home .featured-recipes .recipe-card-action-arrow { transition: none !important; }
 }
 
+/* Keep the inline "Intip resep" link from inheriting the old image-button hover. */
+#page-home .featured-recipes .recipe-card:hover .recipe-card-action,
+#page-home .featured-recipes .recipe-card:focus-visible .recipe-card-action {
+  width: auto;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #985c36;
+  transform: none;
+}
+#page-home .featured-recipes .recipe-card:hover .recipe-card-action-arrow,
+#page-home .featured-recipes .recipe-card:focus-visible .recipe-card-action-arrow {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  transform: translate(2px,-1px);
+}
+
 /* Let the food photography lead: wide image panel above a compact menu footer. */
 #page-home .featured-recipes .recipe-card,
 #page-home .featured-recipes .recipe-card:nth-child(3n + 2) {
