@@ -188,7 +188,8 @@ function generateAIResponse(message) {
     if (/\b(panasin|dipanasin|dipanaskan|panaskan ulang|hangatkan|dihangatkan)\b/.test(normalized)) {
       return { type: 'text', text: 'Panaskan sisa makanan sampai benar-benar panas merata; untuk acuan keamanan USDA, suhu tengahnya 74°C/165°F. Aduk makanan yang dipanaskan di microwave lalu cek beberapa bagian. Panaskan hanya porsi yang akan dimakan dan jangan memanaskan berulang kali. Kalau sisa makanan sudah terlalu lama di suhu ruang atau kamu tidak yakin cara simpannya, jangan dicicipi untuk mengetes—lebih aman dibuang.' };
     }
-    const asksAboutLeftovers = /\b(sisa|nasi matang|makanan matang|masakan matang|sudah dimasak|makanan jadi|leftover)\b/.test(normalized);
+    const asksAboutCookedProtein = /\b(?:ayam|daging|ikan|udang|seafood|telur)\b.{0,18}\b(?:matang|dimasak|masak|sudah matang|sudah dimasak|udah matang|udah dimasak)\b/.test(normalized);
+    const asksAboutLeftovers = /\b(sisa|nasi matang|makanan matang|masakan matang|sudah dimasak|makanan jadi|leftover)\b/.test(normalized) || asksAboutCookedProtein;
     if (/\b(nasi|rice)\b/.test(normalized) && !/\b(beras|nasi mentah)\b/.test(normalized) && /\b(berapa lama|berapa hari|tahan|simpan|awet)\b/.test(normalized)) {
       return { type: 'text', text: 'Untuk nasi yang sudah matang, masukkan ke kulkas segera setelah uap panas berkurang dan habiskan dalam 3–4 hari; bagi ke wadah dangkal agar cepat dingin. Jika dibiarkan di suhu ruang semalaman, buang. Panduan umum penyimpanan sisa makanan: USDA FSIS.' };
     }
@@ -592,7 +593,7 @@ function generateAIResponse(message) {
         (!asksQuick || parseInt(recipe.time, 10) <= 30);
       return { recipe, matched, score: matched.length, meetsIntent, hasMainIngredient };
     }).filter(item => item.score > 0 && item.meetsIntent &&
-      (availableIngredients.length > 1 || item.hasMainIngredient) &&
+      (availableIngredients.length > 1 ? item.score >= 2 : item.hasMainIngredient) &&
       (item.recipe.title !== 'Burger Ayam Rumahan' || /\b(burger|hamburger|bun|patty)\b/.test(normalized)) &&
       (item.recipe.title !== 'Fried Chicken Rumahan' || /\b(fried chicken|crispy|krispi|goreng)\b/.test(normalized))
     ).sort((a, b) => b.score - a.score || parseInt(a.recipe.time, 10) - parseInt(b.recipe.time, 10));
