@@ -442,7 +442,7 @@ function updateHomeScrollStory() {
     const statsTakeoverProgress = isStats && takeoverStage && window.matchMedia?.('(min-width: 901px) and (min-height: 680px)').matches
       ? (() => {
         const rawProgress = Math.min(1, Math.max(0, (window.scrollY - (window.scrollY + takeoverStage.getBoundingClientRect().top)) / (viewport * TAKEOVER_SEGMENT_VIEWPORTS)));
-        return 1 - Math.pow(1 - rawProgress, 3);
+        return rawProgress * (2 - rawProgress);
       })()
       : pageProgress;
     const enterFromRight = isStats && window.matchMedia?.('(min-width: 901px) and (min-height: 680px)').matches
