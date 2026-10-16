@@ -55,10 +55,10 @@ export async function onRequestPost({ request, env }) {
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
         ...history,
-        { role: 'user', content: message }
+        { role: 'user', content: `${message}\n/no_think` }
       ],
-      max_tokens: 420,
-      temperature: 0.3,
+      max_tokens: 800,
+      temperature: 0.7,
       chat_template_kwargs: { enable_thinking: false }
     });
     const modelAnswer = result?.response
