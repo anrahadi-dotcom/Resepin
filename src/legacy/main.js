@@ -329,6 +329,7 @@ function updateHomeScrollStory() {
     if (scrollSequenceEnabled) {
       const storyStart = window.scrollY + home.getBoundingClientRect().top;
       const sequenceProgress = Math.min(1, Math.max(0, (window.scrollY - storyStart) / (viewport * 0.9)));
+      hero.classList.toggle('is-scroll-story-complete', sequenceProgress >= 1);
       const revealOnScroll = (element, start, finish) => {
         if (!element) return;
         const linear = Math.min(1, Math.max(0, (sequenceProgress - start) / (finish - start)));
@@ -347,6 +348,7 @@ function updateHomeScrollStory() {
         revealOnScroll(card, 0.31 + index * 0.06, 0.48 + index * 0.06);
       });
     } else {
+      hero.classList.remove('is-scroll-story-complete');
       hero.querySelectorAll('.hero-desc, .hero-cta, .hero-favorites, .hero-favorite-card').forEach(element => {
         element.style.removeProperty('--hero-seq-opacity');
         element.style.removeProperty('--hero-seq-y');

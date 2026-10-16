@@ -5970,7 +5970,8 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 #page-home .how-it-works { z-index: 4; margin-top: 0; padding-bottom: 28px; transition: none; }
 #page-home > .hero { position: relative; }
 @media (min-width: 901px) and (min-height: 680px) {
-  #page-home > .hero { position: sticky; top: 0; z-index: 0; }
+  #page-home > .hero { position: sticky; top: 0; z-index: 2; }
+  #page-home > .hero.is-scroll-story-complete { z-index: 0; }
   #page-home > section:not(.hero) { position: relative; z-index: 1; }
 }
 .hero.is-scroll-story .hero-enter,
