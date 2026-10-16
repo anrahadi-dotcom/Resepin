@@ -228,12 +228,27 @@
           <h2 id="hero-followthrough-title">Yang tersisa bisa jadi <em>favorit berikutnya.</em></h2>
           <p>Mulai dari bahan sederhana yang sudah ada di rumah. Biarkan Resepin membantumu menemukan ide masak hari ini.</p>
         </div>
-        <div class="hero-followthrough-orbit" role="img" aria-label="Sup Jagung Wortel dikelilingi bahan jagung, wortel, dan bawang merah">
+        <div class="hero-followthrough-orbit" aria-label="Kolase ide masak interaktif">
           <div class="orbit-line" aria-hidden="true"></div>
           <span class="orbit-note orbit-note--one"><i aria-hidden="true">✳</i> Jagung</span>
           <span class="orbit-note orbit-note--two"><i aria-hidden="true">✳</i> Wortel</span>
           <span class="orbit-note orbit-note--three"><i aria-hidden="true">✳</i> Bawang merah</span>
           <span class="orbit-count"><b>05</b><span>bahan dapur</span></span>
+          <button class="orbit-photo-card orbit-photo-card--left" type="button" @pointerdown="startHeroCardDrag" @pointermove="moveHeroCardDrag" @pointerup="endHeroCardDrag" @pointercancel="endHeroCardDrag" @keydown="nudgeHeroCard" aria-label="Seret foto Nasi Goreng Sederhana; gunakan tombol panah untuk memindahkan">
+            <img src="/assets/img/nasi-goreng.jpg" alt="" loading="lazy" draggable="false" />
+            <span><small>MENU RUMAHAN</small><strong>Nasi Goreng Sederhana</strong></span>
+            <i aria-hidden="true">↗</i>
+          </button>
+          <button class="orbit-photo-card orbit-photo-card--right" type="button" @pointerdown="startHeroCardDrag" @pointermove="moveHeroCardDrag" @pointerup="endHeroCardDrag" @pointercancel="endHeroCardDrag" @keydown="nudgeHeroCard" aria-label="Seret foto Capcay Kuah Segar; gunakan tombol panah untuk memindahkan">
+            <img src="/assets/img/capcay.jpg" alt="" loading="lazy" draggable="false" />
+            <span><small>WARNA DARI KEBUN</small><strong>Capcay Kuah Segar</strong></span>
+            <i aria-hidden="true">↗</i>
+          </button>
+          <button class="orbit-photo-card orbit-photo-card--small" type="button" @pointerdown="startHeroCardDrag" @pointermove="moveHeroCardDrag" @pointerup="endHeroCardDrag" @pointercancel="endHeroCardDrag" @keydown="nudgeHeroCard" aria-label="Seret foto Sate Lilit Bali; gunakan tombol panah untuk memindahkan">
+            <img src="/assets/img/sate-lilit.jpg" alt="" loading="lazy" draggable="false" />
+            <span><small>RASA NUSANTARA</small><strong>Sate Lilit Bali</strong></span>
+            <i aria-hidden="true">↗</i>
+          </button>
           <figure class="orbit-plate">
             <span class="plate-rim" aria-hidden="true"></span>
             <img src="/assets/img/sup-jagung.jpg" alt="Sup Jagung Wortel" loading="lazy" />
@@ -243,6 +258,7 @@
           <span class="orbit-spark orbit-spark--one" aria-hidden="true">✦</span>
           <span class="orbit-spark orbit-spark--two" aria-hidden="true">✧</span>
         </div>
+        <div class="orbit-instructions"><span><i aria-hidden="true">✥</i> Seret foto, susun ide masakmu</span><button type="button" @click="resetHeroGallery">Atur ulang <b aria-hidden="true">↺</b></button></div>
         <a class="hero-followthrough-link" href="#how-it-works" @click.prevent.stop="scrollToHomeSection('how-it-works')">Lihat cara kerjanya <span aria-hidden="true">↓</span></a>
       </div>
     </section>

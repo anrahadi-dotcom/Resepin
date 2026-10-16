@@ -18,6 +18,7 @@ createApp({
       heroVideoUserChoice: null,
       heroIngredientOptions: ['Nasi', 'Telur', 'Cabai', 'Tahu', 'Ayam', 'Tempe', 'Jagung', 'Wortel'],
       heroDropActive: false,
+      heroCardDrag: null,
       heroFavoriteOrder: [19, 23, 28],
       heroFavoriteTimer: null,
       popularIngredients: ['Telur', 'Ayam', 'Tahu', 'Nasi', 'Tempe'],
@@ -230,6 +231,66 @@ createApp({
         this.heroSelectedIngredients = [...this.heroSelectedIngredients, ingredient];
       }
       this.heroDropActive = false;
+    },
+    startHeroCardDrag(event) {
+      if (event.button !== 0 || event.target.closest('a')) return;
+      const element = event.currentTarget;
+      const stage = element.closest('.hero-followthrough-orbit');
+      if (!stage) return;
+      const rect = element.getBoundingClientRect();
+      const stageRect = stage.getBoundingClientRect();
+      const originX = Number.parseFloat(element.style.getPropertyValue('--drag-x')) || 0;
+      const originY = Number.parseFloat(element.style.getPropertyValue('--drag-y')) || 0;
+      this.heroCardDrag = {
+        element, pointerId: event.pointerId, startX: event.clientX, startY: event.clientY,
+        originX, originY,
+        minX: stageRect.left - (rect.left - originX),
+        maxX: stageRect.right - (rect.right - originX),
+        minY: stageRect.top - (rect.top - originY),
+        maxY: stageRect.bottom - (rect.bottom - originY)
+      };
+      element.classList.add('is-dragging');
+      element.setPointerCapture(event.pointerId);
+    },
+    moveHeroCardDrag(event) {
+      const drag = this.heroCardDrag;
+      if (!drag || drag.element !== event.currentTarget || drag.pointerId !== event.pointerId) return;
+      event.preventDefault();
+      const x = Math.max(drag.minX, Math.min(drag.maxX, drag.originX + event.clientX - drag.startX));
+      const y = Math.max(drag.minY, Math.min(drag.maxY, drag.originY + event.clientY - drag.startY));
+      drag.element.style.setProperty('--drag-x', `${x}px`);
+      drag.element.style.setProperty('--drag-y', `${y}px`);
+    },
+    endHeroCardDrag(event) {
+      const drag = this.heroCardDrag;
+      if (!drag || drag.element !== event.currentTarget || drag.pointerId !== event.pointerId) return;
+      drag.element.classList.remove('is-dragging');
+      if (drag.element.hasPointerCapture(event.pointerId)) drag.element.releasePointerCapture(event.pointerId);
+      this.heroCardDrag = null;
+    },
+    nudgeHeroCard(event) {
+      const keys = { ArrowUp: [0, -22], ArrowDown: [0, 22], ArrowLeft: [-22, 0], ArrowRight: [22, 0] };
+      if (event.key === 'Home') {
+        event.currentTarget.style.setProperty('--drag-x', '0px');
+        event.currentTarget.style.setProperty('--drag-y', '0px');
+        return;
+      }
+      const delta = keys[event.key];
+      if (!delta) return;
+      event.preventDefault();
+      const element = event.currentTarget;
+      const x = Number.parseFloat(element.style.getPropertyValue('--drag-x')) || 0;
+      const y = Number.parseFloat(element.style.getPropertyValue('--drag-y')) || 0;
+      element.style.setProperty('--drag-x', `${x + delta[0]}px`);
+      element.style.setProperty('--drag-y', `${y + delta[1]}px`);
+    },
+    resetHeroGallery() {
+      document.querySelectorAll('.hero-followthrough-orbit .orbit-photo-card').forEach(card => {
+        card.style.setProperty('--drag-x', '0px');
+        card.style.setProperty('--drag-y', '0px');
+        card.classList.remove('is-dragging');
+      });
+      this.heroCardDrag = null;
     },
     submitHeroSearch() {
       const ingredients = this.heroSearchIngredients;
