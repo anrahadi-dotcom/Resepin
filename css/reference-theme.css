@@ -5368,7 +5368,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 .hero-followthrough::before, .hero-followthrough::after { position: absolute; z-index: -1; content: ""; pointer-events: none; border-radius: 50%; }
 .hero-followthrough::before { top: 22%; left: 50%; width: min(62vw, 760px); aspect-ratio: 1; background: radial-gradient(circle, rgba(126,139,94,.12), transparent 68%); transform: translateX(-50%); }
 .hero-followthrough::after { right: -140px; bottom: -260px; width: 460px; aspect-ratio: 1; background: radial-gradient(circle, rgba(164,119,78,.10), transparent 69%); }
-.hero-followthrough-inner { position: relative; z-index: 2; display: flex; width: min(920px, 100%); flex-direction: column; align-items: center; margin-inline: auto; text-align: center; }
+.hero-followthrough-inner { position: relative; z-index: 2; display: flex; width: min(1160px, 100%); flex-direction: column; align-items: center; margin-inline: auto; text-align: center; }
 .hero-followthrough-copy { max-width: 760px; }
 .hero-followthrough-eyebrow { display: inline-flex; align-items: center; gap: 9px; color: #6d7655; font-size: .67rem; font-weight: 800; letter-spacing: .15em; }
 .hero-followthrough-eyebrow i { width: 7px; height: 7px; border-radius: 50%; background: #85916c; box-shadow: 0 0 0 4px rgba(133,145,108,.12); }
@@ -5393,7 +5393,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 .orbit-photo-card > i { position: absolute; right: 13px; bottom: 15px; display: grid; width: 25px; height: 25px; place-items: center; border-radius: 50%; color: #f9f5e9; background: #747f5a; font-size: .8rem; font-style: normal; pointer-events: none; }
 .orbit-photo-card--left { top: 20%; left: 6%; --card-rotation: -8deg; }
 .orbit-photo-card--right { top: 31%; right: 6%; --card-rotation: 7deg; }
-.orbit-photo-card--small { right: 20%; bottom: 6%; width: 190px; --card-rotation: 5deg; }
+.orbit-photo-card--small { left: 3%; bottom: 4%; width: 190px; --card-rotation: 5deg; }
 .orbit-photo-card:hover, .orbit-photo-card:focus-visible { z-index: 5; outline: 2px solid rgba(116,127,90,.55); outline-offset: 3px; box-shadow: 0 24px 44px rgba(54,42,25,.22); scale: 1.035; }
 .orbit-photo-card.is-dragging { z-index: 6; cursor: grabbing; transition: none; scale: 1.055; box-shadow: 0 28px 54px rgba(54,42,25,.26); }
 .hero-followthrough-orbit.motion-visible .orbit-photo-card:not(.is-dragging) { animation: collage-drift 6.5s ease-in-out infinite; }
@@ -5418,7 +5418,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 .hero-followthrough-orbit.motion-visible .orbit-note--one { animation: ingredient-float 4.4s ease-in-out infinite; }
 .hero-followthrough-orbit.motion-visible .orbit-note--two { animation: ingredient-float 5.1s ease-in-out -1.7s infinite; }
 .hero-followthrough-orbit.motion-visible .orbit-note--three { animation: ingredient-float 4.8s ease-in-out -2.8s infinite; }
-.orbit-count { position: absolute; top: 47%; right: 8%; display: inline-flex; align-items: center; gap: 9px; color: #76745e; font-size: .62rem; letter-spacing: .05em; text-transform: uppercase; }
+.orbit-count { position: absolute; top: 4%; left: 50%; display: inline-flex; align-items: center; gap: 9px; color: #76745e; font-size: .62rem; letter-spacing: .05em; text-transform: uppercase; transform: translateX(-50%); }
 .orbit-count b { display: grid; width: 31px; height: 31px; place-items: center; border: 1px solid rgba(113,121,83,.3); border-radius: 50%; color: #697653; font-family: var(--font-display); font-size: .74rem; }
 .hero-followthrough-orbit:hover .orbit-note--one { transform: translate(-5px,-5px) rotate(-12deg); }
 .hero-followthrough-orbit:hover .orbit-note--two { transform: translate(5px,-6px) rotate(11deg); }
@@ -5468,9 +5468,9 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   .orbit-photo-card > i { right: 8px; bottom: 8px; width: 18px; height: 18px; font-size: .62rem; }
   .orbit-photo-card--left { top: 24%; left: 0; --card-rotation: -7deg; }
   .orbit-photo-card--right { top: 27%; right: 0; --card-rotation: 7deg; }
-  .orbit-photo-card--small { right: 7%; bottom: 1%; width: clamp(112px, 30vw, 145px); --card-rotation: 4deg; }
+  .orbit-photo-card--small { left: 8%; bottom: 1%; width: clamp(112px, 30vw, 145px); --card-rotation: 4deg; }
   .orbit-instructions { flex-wrap: wrap; gap: 8px; margin: -5px 0 5px; font-size: .59rem; }
-  .orbit-count { top: 55%; right: 2%; gap: 5px; font-size: .5rem; }
+  .orbit-count { top: 2%; left: 50%; gap: 5px; font-size: .5rem; }
   .orbit-count b { width: 26px; height: 26px; font-size: .64rem; }
   .orbit-steam { top: 22%; }
 }
