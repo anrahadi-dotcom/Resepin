@@ -401,7 +401,7 @@ function updateHomeScrollStory() {
     stage.style.setProperty('--collage-story-scale', (0.91 + storyProgress * 0.09 + Math.sin(storyProgress * Math.PI) * 0.035).toFixed(3));
     stage.querySelectorAll('.collage-card').forEach((card, index) => {
       const direction = index === 1 ? 0 : index === 0 ? -1 : 1;
-      const phase = Math.min(1, Math.max(0, (storyProgress - index * 0.08) / 0.84));
+      const phase = Math.min(1, Math.max(0, (storyProgress - index * 0.08) / (0.84 - index * 0.08)));
       const middlePulse = Math.sin(phase * Math.PI);
       const orbit = Math.sin(phase * Math.PI * 2);
       const distance = direction * ((1 - phase) * cardSpread + middlePulse * 76) + orbit * (index - 1) * 18;
@@ -437,7 +437,12 @@ function updateHomeScrollStory() {
     const isFeatured = section.matches('.featured-recipes');
     const isStats = section.matches('.waste-stats');
     const takeoverStage = isStats ? home.querySelector('.recipe-takeover-stage') : null;
-    const pageProgress = isPaperSection ? progressAt(section, 0.76, -0.16) : progressAt(section, 0.99 - index * 0.025, 0.56 - index * 0.025);
+    const collageStage = isPaperSection ? home.querySelector('.hero-collage-stage') : null;
+    const desktopStory = window.matchMedia?.('(min-width: 901px) and (min-height: 680px)').matches;
+    const rawPageProgress = isPaperSection ? progressAt(section, 0.76, -0.16) : progressAt(section, 0.99 - index * 0.025, 0.56 - index * 0.025);
+    const pageProgress = isPaperSection && collageStage && desktopStory
+      ? Math.min(1, Math.max(0, (window.scrollY - (window.scrollY + collageStage.getBoundingClientRect().top - viewport * 0.18)) / (viewport * 0.72)))
+      : rawPageProgress;
     const risePulse = Math.sin(pageProgress * Math.PI);
     const statsTakeoverProgress = isStats && takeoverStage && window.matchMedia?.('(min-width: 901px) and (min-height: 680px)').matches
       ? (() => {
