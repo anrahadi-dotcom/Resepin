@@ -416,7 +416,7 @@ function updateHomeScrollStory() {
 
   home.querySelectorAll('.how-it-works, .featured-recipes, .waste-stats').forEach((section, index) => {
     const isPaperSection = section.matches('.how-it-works');
-    const pageProgress = isPaperSection ? progressAt(section, 0.76, 0.30) : progressAt(section, 0.99 - index * 0.025, 0.56 - index * 0.025);
+    const pageProgress = isPaperSection ? progressAt(section, 0.76, -0.16) : progressAt(section, 0.99 - index * 0.025, 0.56 - index * 0.025);
     const risePulse = Math.sin(pageProgress * Math.PI);
     section.style.setProperty('--page-rise-y', `${(isPaperSection ? -pageProgress * 100 - risePulse * 130 : (1 - pageProgress) * 92 - risePulse * 10).toFixed(1)}px`);
     section.style.setProperty('--page-rise-scale', isPaperSection ? '1' : (0.955 + pageProgress * 0.045 + risePulse * 0.012).toFixed(3));
@@ -424,6 +424,8 @@ function updateHomeScrollStory() {
     section.style.setProperty('--page-rise-tilt', `${((1 - pageProgress) * (isPaperSection ? 5.5 : 1.2)).toFixed(2)}deg`);
     if (isPaperSection) {
       section.style.setProperty('--paper-lift', `${(-risePulse * 12).toFixed(1)}px`);
+      const paperReach = pageProgress * pageProgress * (3 - 2 * pageProgress);
+      section.style.setProperty('--paper-cover-up', `${(-viewport * 0.95 * paperReach).toFixed(1)}px`);
       section.style.setProperty('--paper-curl', `${(-risePulse * 11).toFixed(2)}deg`);
       section.style.setProperty('--paper-scale', (1 + risePulse * 0.008).toFixed(3));
       section.style.setProperty('--paper-shadow', (0.04 + (1 - pageProgress) * 0.16 + risePulse * 0.1).toFixed(3));
