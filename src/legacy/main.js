@@ -328,7 +328,9 @@ function updateHomeScrollStory() {
     hero.classList.toggle('is-scroll-story', Boolean(scrollSequenceEnabled));
     if (scrollSequenceEnabled) {
       const storyStart = window.scrollY + home.getBoundingClientRect().top;
-      const sequenceProgress = Math.min(1, Math.max(0, (window.scrollY - storyStart) / (viewport * 0.9)));
+      // Give each card room to arrive over roughly two deliberate wheel steps.
+      // Keep the hero pinned just long enough for the three cards to finish.
+      const sequenceProgress = Math.min(1, Math.max(0, (window.scrollY - storyStart) / (viewport * 1.25)));
       hero.classList.toggle('is-scroll-story-complete', sequenceProgress >= 1);
       const revealOnScroll = (element, start, finish) => {
         if (!element) return;
@@ -346,7 +348,7 @@ function updateHomeScrollStory() {
         element.style.removeProperty('pointer-events');
       });
       favorites?.querySelectorAll('.hero-favorite-card').forEach((card, index) => {
-        revealOnScroll(card, 0.08 + index * 0.17, 0.21 + index * 0.17);
+        revealOnScroll(card, 0.05 + index * 0.31, 0.18 + index * 0.31);
       });
     } else {
       hero.classList.remove('is-scroll-story-complete');
@@ -438,7 +440,7 @@ function updateHomeScrollStory() {
     const isPaperSection = section.matches('.how-it-works');
     const pageProgress = isPaperSection ? progressAt(section, 0.76, -0.16) : progressAt(section, 0.99 - index * 0.025, 0.56 - index * 0.025);
     const risePulse = Math.sin(pageProgress * Math.PI);
-    section.style.setProperty('--page-rise-y', `${(isPaperSection ? -pageProgress * viewport * 0.40 : (1 - pageProgress) * 92 - risePulse * 10).toFixed(1)}px`);
+    section.style.setProperty('--page-rise-y', `${(isPaperSection ? -pageProgress * viewport * 0.32 : (1 - pageProgress) * 92 - risePulse * 10).toFixed(1)}px`);
     section.style.setProperty('--page-rise-scale', isPaperSection ? '1' : (0.955 + pageProgress * 0.045 + risePulse * 0.012).toFixed(3));
     section.style.setProperty('--page-rise-opacity', isPaperSection ? '1' : (0.42 + pageProgress * 0.58).toFixed(3));
     section.style.setProperty('--page-rise-tilt', isPaperSection ? '0deg' : `${((1 - pageProgress) * 1.2).toFixed(2)}deg`);
