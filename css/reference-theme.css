@@ -5588,3 +5588,205 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   .orbit-photo-card small { font-size: .4rem; letter-spacing: .08em; }
   .orbit-photo-card strong { font-size: .68rem; }
 }
+
+/* A new editorial collage replaces the orbital recipe carousel entirely. */
+.hero-followthrough-inner { grid-template-areas: "copy" "collage" "instructions" "link"; }
+.hero-collage-stage {
+  position: relative;
+  isolation: isolate;
+  grid-area: collage;
+  width: min(1100px, 100%);
+  height: clamp(380px, 41vw, 510px);
+  margin: 58px auto 0;
+  overflow: visible;
+  border-radius: 0;
+  background:
+    linear-gradient(135deg, transparent 0 48.8%, rgba(157,67,35,.1) 49%, transparent 49.2%),
+    radial-gradient(ellipse at 50% 52%, rgba(142,119,76,.12), transparent 62%);
+}
+.hero-collage-stage::before {
+  position: absolute;
+  z-index: -1;
+  top: 12%;
+  left: 15%;
+  width: 70%;
+  height: 67%;
+  background: #a84728;
+  clip-path: polygon(14% 0,100% 0,86% 100%,0 100%);
+  content: "";
+  opacity: .95;
+  transform: rotate(-3deg);
+}
+.collage-edition {
+  position: absolute;
+  top: 1%;
+  left: 2%;
+  color: #77735e;
+  font-size: .62rem;
+  font-weight: 800;
+  letter-spacing: .15em;
+}
+.collage-edition b { padding-inline: 5px; color: #a84728; }
+.collage-card {
+  position: absolute;
+  z-index: 1;
+  display: block;
+  width: 29%;
+  height: 73%;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 3px 20px 3px 3px;
+  color: #fff9ed;
+  background: #a84728;
+  box-shadow: 0 22px 46px rgba(61,39,24,.2);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  text-align: left;
+  transform: translate(var(--drag-x,0px),var(--drag-y,0px)) rotate(var(--card-angle,0deg));
+  transition: box-shadow .3s ease, scale .4s cubic-bezier(.2,.75,.25,1);
+}
+.collage-card::before {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  border: 1px solid rgba(255,248,231,.28);
+  content: "";
+  pointer-events: none;
+}
+.collage-card img {
+  position: absolute;
+  inset: 0 0 26% 0;
+  width: 100%;
+  height: 78%;
+  clip-path: polygon(0 0,100% 0,100% 86%,0 100%);
+  object-fit: cover;
+  transition: transform .8s cubic-bezier(.2,.7,.2,1), filter .5s ease;
+  pointer-events: none;
+}
+.collage-card-copy {
+  position: absolute;
+  right: 17px;
+  bottom: 17px;
+  left: 17px;
+  display: grid;
+  gap: 8px;
+  pointer-events: none;
+}
+.collage-card-copy small { color: rgba(255,244,220,.76); font-size: .57rem; font-weight: 800; letter-spacing: .12em; }
+.collage-card-copy strong { max-width: 90%; font-family: var(--font-display); font-size: clamp(1.2rem, 2.05vw, 1.9rem); line-height: .99; }
+.collage-card-copy i {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 1px solid rgba(255,246,225,.58);
+  border-radius: 50%;
+  font-size: 1rem;
+  font-style: normal;
+}
+.collage-card--rice { top: 14%; left: 4%; --card-angle: -7deg; }
+.collage-card--capcay { top: 4%; left: 35%; z-index: 2; width: 31%; height: 82%; --card-angle: 2deg; }
+.collage-card--capcay img { height: 80%; }
+.collage-card--sate { top: 17%; right: 4%; --card-angle: 7deg; }
+.hero-collage-stage.motion-visible .collage-card { animation: collage-panel-float 6.4s ease-in-out infinite; }
+.hero-collage-stage.motion-visible .collage-card--capcay { animation-delay: -2.2s; }
+.hero-collage-stage.motion-visible .collage-card--sate { animation-delay: -4.1s; }
+.collage-card:hover, .collage-card:focus-visible { z-index: 4; outline: 3px solid #f4d8a6; outline-offset: 4px; box-shadow: 0 30px 60px rgba(54,34,20,.3); scale: 1.035; }
+.collage-card:hover img, .collage-card:focus-visible img { transform: scale(1.07); filter: saturate(1.08); }
+.collage-card.is-dragging { z-index: 5; cursor: grabbing; animation-play-state: paused !important; scale: 1.045; transition: none; }
+.collage-ingredient-strip {
+  position: absolute;
+  z-index: 6;
+  right: 3%;
+  bottom: 2%;
+  left: 3%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.collage-ingredient-strip > span { margin-right: 5px; color: #766e5d; font-size: .59rem; font-weight: 800; letter-spacing: .12em; }
+.collage-ingredient-strip button {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 36px;
+  padding: 6px 11px;
+  border: 1px solid rgba(76,57,34,.16);
+  border-radius: 2px 14px 2px 14px;
+  color: #4d4639;
+  background: rgba(255,251,241,.93);
+  box-shadow: 0 5px 14px rgba(51,39,25,.08);
+  cursor: pointer;
+  font: inherit;
+  font-size: .68rem;
+  font-weight: 700;
+  transition: transform .2s ease, color .2s ease, background .2s ease;
+}
+.collage-ingredient-strip button b { color: #a84728; font-size: .85rem; }
+.collage-ingredient-strip button:hover, .collage-ingredient-strip button:focus-visible { outline: 2px solid #a84728; outline-offset: 2px; transform: translateY(-3px); }
+.collage-ingredient-strip button.is-selected { border-color: #a84728; color: #fff8eb; background: #a84728; }
+.collage-ingredient-strip button.is-selected b { color: #fff8eb; }
+.collage-stamp {
+  position: absolute;
+  z-index: 6;
+  top: 9%;
+  right: 1%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #6c7255;
+  transform: rotate(7deg);
+}
+.collage-stamp b { font-family: var(--font-display); font-size: 2rem; font-weight: 500; }
+.collage-stamp small { font-size: .48rem; font-weight: 800; letter-spacing: .1em; line-height: 1.2; }
+.collage-instructions { grid-area: instructions; display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 8px; color: #827a67; font-size: .66rem; }
+.collage-instructions > span { display: inline-flex; align-items: center; gap: 7px; }
+.collage-instructions > span i { color: #818b62; font-size: .95rem; font-style: normal; }
+.collage-instructions button { display: inline-flex; align-items: center; gap: 5px; padding: 5px 8px; border: 0; border-radius: 2px 10px 2px 10px; color: #63704d; background: rgba(122,134,89,.1); cursor: pointer; font: inherit; font-weight: 700; }
+.collage-instructions button:hover, .collage-instructions button:focus-visible { outline: 2px solid rgba(116,127,90,.4); background: rgba(122,134,89,.19); }
+@keyframes collage-panel-float { 0%,100% { translate: 0 0; } 50% { translate: 0 -10px; } }
+@media (max-width: 900px) {
+  .hero-collage-stage { width: min(800px,100%); height: 410px; margin-top: 44px; }
+  .collage-card { width: 30%; height: 66%; }
+  .collage-card--rice { top: 15%; left: 2%; }
+  .collage-card--capcay { top: 7%; left: 34%; width: 32%; height: 74%; }
+  .collage-card--sate { top: 16%; right: 2%; }
+  .collage-card-copy { right: 12px; bottom: 12px; left: 12px; gap: 6px; }
+  .collage-card-copy small { font-size: .48rem; }
+  .collage-card-copy strong { font-size: clamp(1rem,2.8vw,1.45rem); }
+  .collage-card-copy i { width: 29px; height: 29px; }
+  .collage-ingredient-strip { right: 0; left: 0; gap: 6px; }
+  .collage-ingredient-strip button { min-height: 32px; padding: 5px 8px; font-size: .62rem; }
+}
+@media (max-width: 600px) {
+  .hero-collage-stage { height: 480px; margin-top: 32px; }
+  .hero-collage-stage::before { top: 12%; left: 3%; width: 93%; height: 62%; clip-path: polygon(10% 0,100% 0,90% 100%,0 100%); }
+  .collage-edition { top: 0; left: 0; font-size: .5rem; }
+  .collage-card { width: 46%; height: 51%; }
+  .collage-card--rice { top: 12%; left: 0; --card-angle: -5deg; }
+  .collage-card--capcay { top: 7%; left: auto; right: 0; width: 49%; height: 54%; --card-angle: 4deg; }
+  .collage-card--sate { top: 44%; left: 22%; width: 53%; height: 43%; --card-angle: -2deg; }
+  .collage-card img { bottom: 29%; height: 76%; }
+  .collage-card-copy { right: 9px; bottom: 10px; left: 9px; gap: 4px; }
+  .collage-card-copy small { font-size: .4rem; letter-spacing: .08em; }
+  .collage-card-copy strong { font-size: clamp(.95rem,4.4vw,1.25rem); }
+  .collage-card-copy i { right: -2px; bottom: -1px; width: 25px; height: 25px; font-size: .78rem; }
+  .collage-stamp { top: 0; right: 1%; }
+  .collage-stamp b { font-size: 1.4rem; }
+  .collage-stamp small { font-size: .4rem; }
+  .collage-ingredient-strip { bottom: 0; justify-content: center; gap: 5px; }
+  .collage-ingredient-strip > span { width: 100%; margin: 0 0 2px; text-align: center; font-size: .49rem; }
+  .collage-ingredient-strip button { min-height: 29px; gap: 5px; padding: 4px 7px; font-size: .57rem; }
+  .collage-instructions { flex-wrap: wrap; gap: 7px; font-size: .58rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-collage-stage.motion-visible .collage-card { animation: none !important; }
+  .collage-card, .collage-card img, .collage-ingredient-strip button { transition-duration: .01ms !important; }
+}

@@ -225,6 +225,13 @@ createApp({
       const recipeIndex = RECIPES_DB.findIndex(recipe => recipe.id === recipeId);
       if (recipeIndex >= 0) window.openRecipeByIndex(recipeIndex);
     },
+    openCollageRecipe(recipeId, event) {
+      if (event.currentTarget.dataset.dragged === 'true') {
+        delete event.currentTarget.dataset.dragged;
+        return;
+      }
+      this.openHeroFavorite(recipeId);
+    },
     dropHeroIngredient(event) {
       const ingredient = event.dataTransfer.getData('text/plain');
       if (this.heroIngredientOptions.includes(ingredient) && !this.heroSelectedIngredients.includes(ingredient)) {
@@ -235,7 +242,7 @@ createApp({
     startHeroCardDrag(event) {
       if (event.button !== 0 || event.target.closest('a')) return;
       const element = event.currentTarget;
-      const stage = element.closest('.hero-followthrough-orbit');
+      const stage = element.closest('.hero-collage-stage');
       if (!stage) return;
       const rect = element.getBoundingClientRect();
       const stageRect = stage.getBoundingClientRect();
@@ -259,6 +266,7 @@ createApp({
       event.preventDefault();
       const x = Math.max(drag.minX, Math.min(drag.maxX, drag.originX + event.clientX - drag.startX));
       const y = Math.max(drag.minY, Math.min(drag.maxY, drag.originY + event.clientY - drag.startY));
+      if (Math.abs(x - drag.originX) > 4 || Math.abs(y - drag.originY) > 4) drag.element.dataset.dragged = 'true';
       drag.element.style.setProperty('--drag-x', `${x}px`);
       drag.element.style.setProperty('--drag-y', `${y}px`);
     },
@@ -266,7 +274,7 @@ createApp({
       const drag = this.heroCardDrag;
       if (!drag || drag.element !== event.currentTarget || drag.pointerId !== event.pointerId) return;
       drag.element.classList.remove('is-dragging');
-      drag.element.closest('.hero-followthrough-orbit')?.classList.remove('has-active-drag');
+      drag.element.closest('.hero-collage-stage')?.classList.remove('has-active-drag');
       if (drag.element.hasPointerCapture(event.pointerId)) drag.element.releasePointerCapture(event.pointerId);
       this.heroCardDrag = null;
     },
@@ -287,8 +295,8 @@ createApp({
       element.style.setProperty('--drag-y', `${y + delta[1]}px`);
     },
     resetHeroGallery() {
-      document.querySelectorAll('.hero-followthrough-orbit').forEach(stage => stage.classList.remove('has-active-drag'));
-      document.querySelectorAll('.hero-followthrough-orbit .orbit-photo-card').forEach(card => {
+      document.querySelectorAll('.hero-collage-stage').forEach(stage => stage.classList.remove('has-active-drag'));
+      document.querySelectorAll('.hero-collage-stage .collage-card').forEach(card => {
         card.style.setProperty('--drag-x', '0px');
         card.style.setProperty('--drag-y', '0px');
         card.classList.remove('is-dragging');

@@ -228,41 +228,27 @@
           <h2 id="hero-followthrough-title">Yang tersisa bisa jadi <em>favorit berikutnya.</em></h2>
           <p>Mulai dari bahan sederhana yang sudah ada di rumah. Biarkan Resepin membantumu menemukan ide masak hari ini.</p>
         </div>
-        <div class="hero-followthrough-orbit" aria-label="Kolase ide masak interaktif">
-          <div class="orbit-line" aria-hidden="true"></div>
-          <button class="orbit-note orbit-note--one" type="button" :class="{ 'is-selected': heroSelectedIngredients.includes('Jagung') }" :aria-pressed="heroSelectedIngredients.includes('Jagung')" :aria-label="heroSelectedIngredients.includes('Jagung') ? 'Hapus Jagung dari bahan pilihan' : 'Tambahkan Jagung ke bahan pilihan'" @click="toggleHeroIngredient('Jagung')"><i aria-hidden="true">✳</i> Jagung <b aria-hidden="true">{{ heroSelectedIngredients.includes('Jagung') ? '✓' : '+' }}</b></button>
-          <button class="orbit-note orbit-note--two" type="button" :class="{ 'is-selected': heroSelectedIngredients.includes('Wortel') }" :aria-pressed="heroSelectedIngredients.includes('Wortel')" :aria-label="heroSelectedIngredients.includes('Wortel') ? 'Hapus Wortel dari bahan pilihan' : 'Tambahkan Wortel ke bahan pilihan'" @click="toggleHeroIngredient('Wortel')"><i aria-hidden="true">✳</i> Wortel <b aria-hidden="true">{{ heroSelectedIngredients.includes('Wortel') ? '✓' : '+' }}</b></button>
-          <button class="orbit-note orbit-note--three" type="button" :class="{ 'is-selected': heroSelectedIngredients.includes('Bawang Merah') }" :aria-pressed="heroSelectedIngredients.includes('Bawang Merah')" :aria-label="heroSelectedIngredients.includes('Bawang Merah') ? 'Hapus Bawang Merah dari bahan pilihan' : 'Tambahkan Bawang Merah ke bahan pilihan'" @click="toggleHeroIngredient('Bawang Merah')"><i aria-hidden="true">✳</i> Bawang merah <b aria-hidden="true">{{ heroSelectedIngredients.includes('Bawang Merah') ? '✓' : '+' }}</b></button>
-          <button class="orbit-note orbit-note--four" type="button" :class="{ 'is-selected': heroSelectedIngredients.includes('Bawang Putih') }" :aria-pressed="heroSelectedIngredients.includes('Bawang Putih')" :aria-label="heroSelectedIngredients.includes('Bawang Putih') ? 'Hapus Bawang Putih dari bahan pilihan' : 'Tambahkan Bawang Putih ke bahan pilihan'" @click="toggleHeroIngredient('Bawang Putih')"><i aria-hidden="true">✳</i> Bawang putih <b aria-hidden="true">{{ heroSelectedIngredients.includes('Bawang Putih') ? '✓' : '+' }}</b></button>
-          <button class="orbit-note orbit-note--five" type="button" :class="{ 'is-selected': heroSelectedIngredients.includes('Garam') }" :aria-pressed="heroSelectedIngredients.includes('Garam')" :aria-label="heroSelectedIngredients.includes('Garam') ? 'Hapus Garam dari bahan pilihan' : 'Tambahkan Garam ke bahan pilihan'" @click="toggleHeroIngredient('Garam')"><i aria-hidden="true">✦</i> Garam <b aria-hidden="true">{{ heroSelectedIngredients.includes('Garam') ? '✓' : '+' }}</b></button>
-          <span class="orbit-count"><b>05</b><span>bahan dapur</span></span>
-          <div class="orbit-gallery-track" aria-label="Kartu menu yang bergerak mengitari sup">
-          <button class="orbit-photo-card orbit-photo-card--left" type="button" @pointerdown="startHeroCardDrag" @pointermove="moveHeroCardDrag" @pointerup="endHeroCardDrag" @pointercancel="endHeroCardDrag" @keydown="nudgeHeroCard" aria-label="Seret foto Nasi Goreng Sederhana; gunakan tombol panah untuk memindahkan">
+        <div class="hero-collage-stage motion-visible" aria-label="Kolase resep interaktif">
+          <span class="collage-edition" aria-hidden="true">RESEPIN <b>·</b> EDISI DAPUR HARI INI</span>
+          <button class="collage-card collage-card--rice" type="button" @pointerdown="startHeroCardDrag" @pointermove="moveHeroCardDrag" @pointerup="endHeroCardDrag" @pointercancel="endHeroCardDrag" @keydown="nudgeHeroCard" @click="openCollageRecipe(2, $event)" aria-label="Lihat resep Nasi Goreng Sederhana; seret untuk menggeser">
             <img src="/assets/img/nasi-goreng.jpg" alt="" loading="lazy" draggable="false" />
-            <span><small>MENU RUMAHAN</small><strong>Nasi Goreng Sederhana</strong></span>
-            <i aria-hidden="true">↗</i>
+            <span class="collage-card-copy"><small>01 / MENU RUMAHAN</small><strong>Nasi Goreng<br/>Sederhana</strong><i aria-hidden="true">↗</i></span>
           </button>
-          <button class="orbit-photo-card orbit-photo-card--right" type="button" @pointerdown="startHeroCardDrag" @pointermove="moveHeroCardDrag" @pointerup="endHeroCardDrag" @pointercancel="endHeroCardDrag" @keydown="nudgeHeroCard" aria-label="Seret foto Capcay Kuah Segar; gunakan tombol panah untuk memindahkan">
+          <button class="collage-card collage-card--capcay" type="button" @pointerdown="startHeroCardDrag" @pointermove="moveHeroCardDrag" @pointerup="endHeroCardDrag" @pointercancel="endHeroCardDrag" @keydown="nudgeHeroCard" @click="openCollageRecipe(5, $event)" aria-label="Lihat resep Capcay Kuah Segar; seret untuk menggeser">
             <img src="/assets/img/capcay.jpg" alt="" loading="lazy" draggable="false" />
-            <span><small>WARNA DARI KEBUN</small><strong>Capcay Kuah Segar</strong></span>
-            <i aria-hidden="true">↗</i>
+            <span class="collage-card-copy"><small>02 / WARNA DARI KEBUN</small><strong>Capcay Kuah<br/>Segar</strong><i aria-hidden="true">↗</i></span>
           </button>
-          <button class="orbit-photo-card orbit-photo-card--small" type="button" @pointerdown="startHeroCardDrag" @pointermove="moveHeroCardDrag" @pointerup="endHeroCardDrag" @pointercancel="endHeroCardDrag" @keydown="nudgeHeroCard" aria-label="Seret foto Sate Lilit Bali; gunakan tombol panah untuk memindahkan">
+          <button class="collage-card collage-card--sate" type="button" @pointerdown="startHeroCardDrag" @pointermove="moveHeroCardDrag" @pointerup="endHeroCardDrag" @pointercancel="endHeroCardDrag" @keydown="nudgeHeroCard" @click="openCollageRecipe(29, $event)" aria-label="Lihat resep Sate Lilit Bali; seret untuk menggeser">
             <img src="/assets/img/sate-lilit.jpg" alt="" loading="lazy" draggable="false" />
-            <span><small>RASA NUSANTARA</small><strong>Sate Lilit Bali</strong></span>
-            <i aria-hidden="true">↗</i>
+            <span class="collage-card-copy"><small>03 / RASA NUSANTARA</small><strong>Sate Lilit<br/>Bali</strong><i aria-hidden="true">↗</i></span>
           </button>
+          <div class="collage-ingredient-strip" aria-label="Pilih bahan dapur">
+            <span>RACIK DARI BAHAN</span>
+            <button v-for="ingredient in ['Jagung', 'Wortel', 'Bawang Merah', 'Bawang Putih', 'Garam']" :key="ingredient" type="button" :class="{ 'is-selected': heroSelectedIngredients.includes(ingredient) }" :aria-pressed="heroSelectedIngredients.includes(ingredient)" @click="toggleHeroIngredient(ingredient)">{{ ingredient }} <b>{{ heroSelectedIngredients.includes(ingredient) ? '✓' : '+' }}</b></button>
           </div>
-          <figure class="orbit-plate">
-            <span class="plate-rim" aria-hidden="true"></span>
-            <img src="/assets/img/sup-jagung.jpg" alt="Sup Jagung Wortel" loading="lazy" />
-            <svg class="orbit-steam" viewBox="0 0 100 80" aria-hidden="true"><path d="M30 68c-13-12 10-20 0-34-5-7-5-14 1-21M51 70c-12-12 10-21 1-35-5-8-5-15 1-22M72 68c-12-11 9-20 0-34-5-7-5-14 1-21"/></svg>
-            <figcaption><small>IDE DARI DAPUR</small><strong>Sup Jagung Wortel</strong><span>20 menit <i>·</i> mudah</span></figcaption>
-          </figure>
-          <span class="orbit-spark orbit-spark--one" aria-hidden="true">✦</span>
-          <span class="orbit-spark orbit-spark--two" aria-hidden="true">✧</span>
+          <span class="collage-stamp" aria-hidden="true"><b>{{ String(heroSelectedIngredients.length).padStart(2, '0') }}</b><small>BAHAN<br/>DIPILIH</small></span>
         </div>
-        <div class="orbit-instructions"><span><i aria-hidden="true">✥</i> Seret foto, susun ide masakmu</span><button type="button" @click="resetHeroGallery">Atur ulang <b aria-hidden="true">↺</b></button></div>
+        <div class="collage-instructions"><span><i aria-hidden="true">✥</i> Seret panel untuk menyusun kolasemu</span><button type="button" @click="resetHeroGallery">Susun ulang <b aria-hidden="true">↺</b></button></div>
         <a class="hero-followthrough-link" href="#how-it-works" @click.prevent.stop="scrollToHomeSection('how-it-works')">Lihat cara kerjanya <span aria-hidden="true">↓</span></a>
       </div>
     </section>
