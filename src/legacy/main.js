@@ -383,18 +383,6 @@ function updateHomeScrollStory() {
     });
   }
 
-  home.querySelectorAll('.how-it-works .step-card').forEach((card, index) => {
-    const cardProgress = progressAt(card, 0.92 - index * 0.035, 0.42 - index * 0.035);
-    const lane = index - 1;
-    const stackPulse = Math.sin(cardProgress * Math.PI);
-    const spread = Math.min(94, viewport * 0.12);
-    card.style.setProperty('--step-story-x', `${((1 - cardProgress) * lane * spread + stackPulse * lane * spread * 0.23).toFixed(1)}px`);
-    card.style.setProperty('--step-story-y', `${((1 - cardProgress) * 86 - stackPulse * 28).toFixed(1)}px`);
-    card.style.setProperty('--step-story-z', `${((cardProgress - 1) * 120 + stackPulse * 48).toFixed(1)}px`);
-    card.style.setProperty('--step-story-rotate', `${((1 - cardProgress) * (index - 1) * 7).toFixed(2)}deg`);
-    card.style.setProperty('--step-story-scale', (0.86 + cardProgress * 0.14 + stackPulse * 0.025).toFixed(3));
-    card.style.setProperty('--step-story-opacity', (0.34 + cardProgress * 0.66).toFixed(3));
-  });
 
   home.querySelectorAll('.featured-recipes .recipe-card').forEach((card, index) => {
     const cardProgress = progressAt(card, 0.96 - (index % 3) * 0.04, 0.46 - (index % 3) * 0.04);
@@ -418,21 +406,12 @@ function updateHomeScrollStory() {
     const isPaperSection = section.matches('.how-it-works');
     const pageProgress = isPaperSection ? progressAt(section, 0.76, -0.16) : progressAt(section, 0.99 - index * 0.025, 0.56 - index * 0.025);
     const risePulse = Math.sin(pageProgress * Math.PI);
-    section.style.setProperty('--page-rise-y', `${(isPaperSection ? -pageProgress * 100 - risePulse * 130 : (1 - pageProgress) * 92 - risePulse * 10).toFixed(1)}px`);
+    section.style.setProperty('--page-rise-y', `${(isPaperSection ? -pageProgress * viewport * 0.32 : (1 - pageProgress) * 92 - risePulse * 10).toFixed(1)}px`);
     section.style.setProperty('--page-rise-scale', isPaperSection ? '1' : (0.955 + pageProgress * 0.045 + risePulse * 0.012).toFixed(3));
     section.style.setProperty('--page-rise-opacity', isPaperSection ? '1' : (0.42 + pageProgress * 0.58).toFixed(3));
-    section.style.setProperty('--page-rise-tilt', `${((1 - pageProgress) * (isPaperSection ? 5.5 : 1.2)).toFixed(2)}deg`);
-    if (isPaperSection) {
-      section.style.setProperty('--paper-lift', `${(-risePulse * 12).toFixed(1)}px`);
-      const paperReach = pageProgress * pageProgress * (3 - 2 * pageProgress);
-      section.style.setProperty('--paper-cover-up', `${(-viewport * 0.95 * paperReach).toFixed(1)}px`);
-      section.style.setProperty('--paper-curl', `${(-risePulse * 11).toFixed(2)}deg`);
-      section.style.setProperty('--paper-scale', (1 + risePulse * 0.008).toFixed(3));
-      section.style.setProperty('--paper-shadow', (0.04 + (1 - pageProgress) * 0.16 + risePulse * 0.1).toFixed(3));
-      section.style.setProperty('--paper-opacity', '1');
-    }
+    section.style.setProperty('--page-rise-tilt', isPaperSection ? '0deg' : `${((1 - pageProgress) * 1.2).toFixed(2)}deg`);
     const heading = section.querySelector('.section-header h2, .stats-content h2');
-    if (heading) {
+    if (heading && !isPaperSection) {
       heading.style.setProperty('--heading-story-y', `${((1 - pageProgress) * 34 - risePulse * 12).toFixed(1)}px`);
       heading.style.setProperty('--heading-story-scale', (0.94 + pageProgress * 0.06 + risePulse * 0.025).toFixed(3));
       heading.style.setProperty('--heading-story-opacity', (0.48 + pageProgress * 0.52).toFixed(3));
