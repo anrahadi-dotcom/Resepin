@@ -5375,7 +5375,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 .hero-followthrough-copy h2 { margin: 17px 0 11px; color: var(--text-primary); font-family: var(--font-display); font-size: clamp(2.35rem, 5vw, 4.15rem); font-weight: 600; line-height: 1.03; letter-spacing: -.045em; }
 .hero-followthrough-copy h2 em { color: #79845e; font-weight: 500; }
 .hero-followthrough-copy p { max-width: 535px; margin: 0 auto; color: var(--text-secondary); font-size: .97rem; line-height: 1.75; }
-.hero-followthrough-orbit { position: relative; width: min(1120px, 100%); aspect-ratio: 1.95; margin: 8px auto 0; transform-origin: 50% 55%; }
+.hero-followthrough-orbit { position: relative; width: min(1120px, 100%); aspect-ratio: 1.95; margin: clamp(88px, 7.7vw, 118px) auto 0; transform-origin: 50% 55%; }
 .hero-followthrough-orbit.motion-ready { opacity: 0; transform: translateY(26px) scale(.92) rotate(-7deg); transition: opacity .8s ease, transform 1s cubic-bezier(.18,.75,.22,1); }
 .hero-followthrough-orbit.motion-ready.motion-visible { opacity: 1; transform: translateY(0) scale(1) rotate(0); }
 .orbit-line { position: absolute; top: 8%; left: 16%; width: 68%; height: 82%; border: 1px dashed rgba(113,121,83,.28); border-radius: 50%; transform: rotate(-13deg); transition: transform .8s cubic-bezier(.2,.7,.2,1); }
