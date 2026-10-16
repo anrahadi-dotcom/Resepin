@@ -17,6 +17,8 @@ let currentBudgetFilter = null;
 let currentRecipeSort = 'match';
 let assumePantryBasics = false;
 let scanBackendAvailable = null;
+let scanBackendCheckPromise = null;
+let scanBackendWakeRetryUsed = false;
 let cameraStream = null;
 let demoRunning = false;
 let currentChatRecipeIdx = null;
@@ -262,6 +264,7 @@ function showPage(pageId) {
   if (pageId === 'jelajahi') renderJelajahiGrid();
   if (pageId === 'tersimpan') renderSavedRecipes();
   if (pageId === 'chef') updateChefBahanBadge();
+  if (pageId === 'scan') checkScanBackendAvailability().catch(() => {});
   requestAnimationFrame(() => window.refreshMotionReveals?.());
 }
 
@@ -426,7 +429,7 @@ async function startCamera() {
   }
 
   if (scanBackendAvailable === false) {
-    updateDetectionStatus('idle', 'Scan foto belum aktif di versi ini. Coba Mode Demo atau tambah bahan manual.');
+    updateDetectionStatus('idle', 'Server pemindai belum siap. Coba Mode Demo atau tambah bahan manual.');
     return;
   }
 
@@ -626,37 +629,57 @@ async function handleGalleryUpload(input) {
 }
 
 async function checkScanBackendAvailability() {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 3500);
-  let ready = false;
-  try {
-    for (const endpoint of ['/api/health', '/api/detect']) {
-      try {
-        const response = await fetch(endpoint, { method: 'GET', cache: 'no-store', signal: controller.signal });
-        if (!response.ok) continue;
-        const result = await response.json().catch(() => ({}));
-        if (result.ready === true) { ready = true; break; }
-      } catch (_) {
-        if (controller.signal.aborted) break;
+  if (scanBackendCheckPromise) return scanBackendCheckPromise;
+  scanBackendCheckPromise = (async () => {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 12000);
+    let ready = false;
+    try {
+      if (document.getElementById('page-scan')?.classList.contains('active')) {
+        updateDetectionStatus('active', 'Menghubungkan ke server pemindai…');
       }
+      for (const endpoint of ['/api/health', '/api/detect']) {
+        try {
+          const response = await fetch(endpoint, { method: 'GET', cache: 'no-store', signal: controller.signal });
+          if (!response.ok) continue;
+          const result = await response.json().catch(() => ({}));
+          if (result.ready === true) { ready = true; break; }
+        } catch (_) {
+          if (controller.signal.aborted) break;
+        }
+      }
+    } finally {
+      clearTimeout(timeout);
     }
+    scanBackendAvailable = ready;
+    const cameraButton = document.getElementById('startCamBtn');
+    const galleryLabel = document.getElementById('galleryUploadLabel');
+    const statusMessage = ready
+      ? 'Pemindai foto tersedia. Kamu bisa memakai kamera atau galeri, Mode Demo, maupun input manual.'
+      : 'Server pemindai belum siap. Coba Mode Demo atau tambah bahan manual.';
+    if (cameraButton) cameraButton.hidden = !ready;
+    if (galleryLabel) galleryLabel.hidden = !ready;
+    const description = document.getElementById('scanAvailabilityNote');
+    if (description) description.textContent = ready
+      ? 'Foto akan diperiksa oleh model bahan yang tersedia di server. Periksa hasilnya dan lengkapi daftar secara manual.'
+      : 'Server pemindai belum merespons. Mode Demo dan input manual tetap bisa digunakan.';
+    updateDetectionStatus(ready ? 'idle' : 'unavailable', statusMessage);
+    if (ready) scanBackendWakeRetryUsed = false;
+    else if (!scanBackendWakeRetryUsed && document.getElementById('page-scan')?.classList.contains('active')) {
+      scanBackendWakeRetryUsed = true;
+      window.setTimeout(() => {
+        if (document.getElementById('page-scan')?.classList.contains('active')) {
+          checkScanBackendAvailability().catch(() => {});
+        }
+      }, 10000);
+    }
+    return ready;
+  })();
+  try {
+    return await scanBackendCheckPromise;
   } finally {
-    clearTimeout(timeout);
+    scanBackendCheckPromise = null;
   }
-  scanBackendAvailable = ready;
-  const cameraButton = document.getElementById('startCamBtn');
-  const galleryLabel = document.getElementById('galleryUploadLabel');
-  const statusMessage = ready
-    ? 'Pemindai foto tersedia. Kamu bisa memakai kamera atau galeri, Mode Demo, maupun input manual.'
-    : 'Scan foto belum aktif di versi ini. Coba Mode Demo atau tambah bahan manual.';
-  if (cameraButton) cameraButton.hidden = !ready;
-  if (galleryLabel) galleryLabel.hidden = !ready;
-  const description = document.getElementById('scanAvailabilityNote');
-  if (description) description.textContent = ready
-    ? 'Foto akan diperiksa oleh model bahan yang tersedia di server. Periksa hasilnya dan lengkapi daftar secara manual.'
-    : 'Pemindai foto belum tersedia di server ini. Mode Demo dan input manual tetap bisa digunakan.';
-  updateDetectionStatus(ready ? 'idle' : 'unavailable', statusMessage);
-  return ready;
 }
 
 function loadGalleryImage(file) {
@@ -1437,16 +1460,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initParticles();
   initScrollEffects();
   initNavHint();
-  checkScanBackendAvailability().catch(() => {
-    scanBackendAvailable = false;
-    const cameraButton = document.getElementById('startCamBtn');
-    const galleryLabel = document.getElementById('galleryUploadLabel');
-    if (cameraButton) cameraButton.hidden = true;
-    if (galleryLabel) galleryLabel.hidden = true;
-    const description = document.getElementById('scanAvailabilityNote');
-    if (description) description.textContent = 'Scan foto belum aktif di versi ini. Coba Mode Demo atau tambah bahan manual.';
-    updateDetectionStatus('unavailable', 'Scan foto belum aktif di versi ini. Coba Mode Demo atau tambah bahan manual.');
-  });
   renderPersonalStats();
   const requestedIngredients = new URLSearchParams(window.location.search).getAll('bahan').map(value => value.trim()).filter(Boolean);
   if (requestedIngredients.length) {

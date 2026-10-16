@@ -1,0 +1,8 @@
+**
+!Dockerfile
+!requirements.txt
+!server.py
+!data_classes.yaml
+!models/
+models/**
+!models/best.pt

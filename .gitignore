@@ -16,3 +16,11 @@ venv/
 /dist/
 /.wrangler/
 /node_modules/
+
+# InstaCloud and agent setup state. These files can contain credentials or local hooks.
+.insta/
+.claude/
+.codex/
+.agents/skills/
+.github/skills/
+skills-lock.json

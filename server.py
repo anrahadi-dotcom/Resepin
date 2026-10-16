@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import mimetypes
+import hmac
+import os
 from email.parser import BytesParser
 from email.policy import default
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -20,6 +22,15 @@ ROOT = Path(__file__).resolve().parent
 MODEL = ROOT / "models" / "best.pt"
 MAX_UPLOAD = 10 * 1024 * 1024
 MAX_IMAGE_SIDE = 6000
+ALLOWED_ORIGINS = {
+    origin.strip().rstrip("/")
+    for origin in os.environ.get(
+        "RESEPIN_ALLOWED_ORIGINS",
+        "http://127.0.0.1:8000,http://localhost:8000",
+    ).split(",")
+    if origin.strip()
+}
+SCAN_SHARED_TOKEN = os.environ.get("RESEPIN_SCAN_TOKEN", "")
 PREDICTION_LOCK = Lock()
 DETECTOR = None
 
@@ -56,6 +67,11 @@ class ResepinHandler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:
         path = unquote(urlsplit(self.path).path)
         if path == "/api/health":
+            if SCAN_SHARED_TOKEN and not hmac.compare_digest(
+                self.headers.get("Authorization", ""), f"Bearer {SCAN_SHARED_TOKEN}"
+            ):
+                self.send_json(401, {"detail": "Permintaan pemindai tidak terautentikasi."})
+                return
             self.send_json(200, {"ready": DETECTOR is not None})
             return
 
@@ -95,8 +111,15 @@ class ResepinHandler(BaseHTTPRequestHandler):
             return
 
         origin = self.headers.get("Origin")
-        if origin and origin.rstrip("/") != f"http://{self.headers.get('Host', '')}":
-            self.send_json(403, {"detail": "Permintaan harus berasal dari server Resepin lokal."})
+        local_origin = f"http://{self.headers.get('Host', '')}".rstrip("/")
+        if origin and origin.rstrip("/") not in ALLOWED_ORIGINS | {local_origin}:
+            self.send_json(403, {"detail": "Permintaan harus berasal dari situs Resepin."})
+            return
+
+        if SCAN_SHARED_TOKEN and not hmac.compare_digest(
+            self.headers.get("Authorization", ""), f"Bearer {SCAN_SHARED_TOKEN}"
+        ):
+            self.send_json(401, {"detail": "Permintaan pemindai tidak terautentikasi."})
             return
 
         try:
@@ -164,8 +187,10 @@ def main() -> None:
 
     print("Memuat model bahan...")
     DETECTOR = YOLO(str(MODEL))
-    server = ThreadingHTTPServer(("127.0.0.1", 8000), ResepinHandler)
-    print("Resepin aktif: http://127.0.0.1:8000 (Ctrl+C untuk berhenti)")
+    host = os.environ.get("HOST", "127.0.0.1")
+    port = int(os.environ.get("PORT", "8000"))
+    server = ThreadingHTTPServer((host, port), ResepinHandler)
+    print(f"Resepin aktif di {host}:{port} (Ctrl+C untuk berhenti)")
     try:
         server.serve_forever()
     except KeyboardInterrupt:
