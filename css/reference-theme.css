@@ -5385,20 +5385,21 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 .orbit-plate:hover, .hero-followthrough-orbit:hover .orbit-plate { transform: translate(-50%,-50%) rotate(0) scale(1.035); filter: drop-shadow(0 22px 26px rgba(54,42,25,.16)); }
 .orbit-plate img { position: absolute; inset: 14px; width: calc(100% - 28px); height: calc(100% - 28px); border: 7px solid #f8f2e3; border-radius: 50%; object-fit: cover; box-shadow: 0 14px 36px rgba(54,42,25,.18); }
 .hero-followthrough-orbit.motion-visible .orbit-plate img { animation: soup-breathe 7s ease-in-out infinite; }
-.orbit-gallery-track { position: absolute; z-index: 3; inset: 0; pointer-events: none; }
-.orbit-photo-card { position: absolute; top: 50%; left: 50%; offset-path: ellipse(39% 37% at 50% 50%); offset-anchor: 50% 50%; offset-rotate: 0deg; offset-distance: var(--orbit-start, 0%); pointer-events: auto; display: grid; width: 224px; gap: 8px; padding: 8px 8px 11px; border: 1px solid rgba(71,53,31,.12); border-radius: 14px; color: #392d20; background: #fffaf0; box-shadow: 0 18px 38px rgba(54,42,25,.16); cursor: grab; touch-action: none; user-select: none; text-align: left; transform: translate(var(--drag-x,0px),var(--drag-y,0px)) rotate(var(--card-rotation,-8deg)); transition: box-shadow .25s ease, scale .25s ease; }
+.orbit-gallery-track { position: absolute; z-index: 3; inset: 0; transform: scaleY(var(--orbit-y-scale,.52)); transform-origin: 50% 50%; pointer-events: none; }
+.orbit-photo-card { position: absolute; pointer-events: auto; display: grid; width: 224px; gap: 8px; padding: 8px 8px 11px; border: 1px solid rgba(71,53,31,.12); border-radius: 14px; color: #392d20; background: #fffaf0; box-shadow: 0 18px 38px rgba(54,42,25,.16); cursor: grab; touch-action: none; user-select: none; text-align: left; transform: scaleY(var(--orbit-card-y-correction,1.923)) translate(var(--drag-x,0px),var(--drag-y,0px)) rotate(var(--card-rotation,-8deg)); transition: box-shadow .25s ease, scale .25s ease; }
 .orbit-photo-card img { display: block; width: 100%; aspect-ratio: 1.23; border-radius: 8px; object-fit: cover; pointer-events: none; }
 .orbit-photo-card span { display: grid; gap: 3px; padding-inline: 3px; pointer-events: none; }
 .orbit-photo-card small { color: #7b8260; font-size: .5rem; font-weight: 800; letter-spacing: .12em; }
 .orbit-photo-card strong { overflow: hidden; font-family: var(--font-display); font-size: .95rem; line-height: 1.15; text-overflow: ellipsis; white-space: nowrap; }
 .orbit-photo-card > i { position: absolute; right: 13px; bottom: 15px; display: grid; width: 25px; height: 25px; place-items: center; border-radius: 50%; color: #f9f5e9; background: #747f5a; font-size: .8rem; font-style: normal; pointer-events: none; }
-.orbit-photo-card--left { --card-rotation: -8deg; --orbit-start: 62%; --orbit-duration: 44s; --orbit-delay: -27.28s; }
-.orbit-photo-card--right { --card-rotation: 7deg; --orbit-start: 87%; --orbit-duration: 44s; --orbit-delay: -38.28s; }
-.orbit-photo-card--small { width: 190px; --card-rotation: 5deg; --orbit-start: 38%; --orbit-duration: 44s; --orbit-delay: -16.72s; }
-.orbit-photo-card:hover, .orbit-photo-card:focus-visible { z-index: 5; outline: 2px solid rgba(116,127,90,.55); outline-offset: 3px; box-shadow: 0 24px 44px rgba(54,42,25,.22); scale: 1.035; }
-.orbit-photo-card.is-dragging { z-index: 6; cursor: grabbing; transition: none; scale: 1.055; box-shadow: 0 28px 54px rgba(54,42,25,.26); }
-.hero-followthrough-orbit.motion-visible .orbit-photo-card { animation: menu-card-orbit var(--orbit-duration, 44s) linear var(--orbit-delay, 0s) infinite; }
-.hero-followthrough-orbit:hover .orbit-photo-card, .hero-followthrough-orbit:focus-within .orbit-photo-card, .hero-followthrough-orbit.has-active-drag .orbit-photo-card { animation-play-state: paused; }
+.orbit-photo-card--left { top: -30%; left: 10%; --card-rotation: -8deg; }
+.orbit-photo-card--right { top: -30%; right: 10%; --card-rotation: 7deg; }
+.orbit-photo-card--small { top: 82%; left: 10%; width: 190px; --card-rotation: 5deg; }
+.orbit-photo-card:hover, .orbit-photo-card:focus-visible { z-index: 5; outline: 2px solid rgba(116,127,90,.55); outline-offset: 3px; box-shadow: 0 24px 44px rgba(54,42,25,.22); transform: scaleY(var(--orbit-card-y-correction,1.923)) translate(var(--drag-x,0px),var(--drag-y,0px)) rotate(var(--card-rotation,-8deg)) scale(1.035); }
+.orbit-photo-card.is-dragging { z-index: 6; cursor: grabbing; transition: none; transform: scaleY(var(--orbit-card-y-correction,1.923)) translate(var(--drag-x,0px),var(--drag-y,0px)) rotate(var(--card-rotation,-8deg)) scale(1.055); box-shadow: 0 28px 54px rgba(54,42,25,.26); }
+.hero-followthrough-orbit.motion-visible .orbit-gallery-track { animation: gallery-revolve 44s linear infinite; }
+.hero-followthrough-orbit.motion-visible .orbit-photo-card { animation: gallery-upright 44s linear infinite; }
+.hero-followthrough-orbit:hover .orbit-gallery-track, .hero-followthrough-orbit:focus-within .orbit-gallery-track, .hero-followthrough-orbit.has-active-drag .orbit-gallery-track, .hero-followthrough-orbit:hover .orbit-photo-card, .hero-followthrough-orbit:focus-within .orbit-photo-card, .hero-followthrough-orbit.has-active-drag .orbit-photo-card { animation-play-state: paused; }
 .orbit-steam { position: absolute; z-index: 1; top: 21%; left: 50%; width: 30%; height: 24%; overflow: visible; fill: none; stroke: #fff7df; stroke-width: 3; stroke-linecap: round; filter: drop-shadow(0 1px 2px rgba(66,48,24,.28)); transform: translateX(-50%); }
 .orbit-steam path { stroke-dasharray: 22 120; stroke-dashoffset: 0; opacity: 0; }
 .hero-followthrough-orbit.motion-visible .orbit-steam path { animation: steam-rise 3.5s ease-in-out infinite; }
@@ -5439,7 +5440,8 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 .orbit-instructions button b { font-size: .95rem; }
 @keyframes story-scroll-cue { 0%,100% { transform: translate(-50%,0); opacity: 1; } 65% { transform: translate(-50%,6px); opacity: .15; } }
 @keyframes orbit-sway { from { transform: rotate(-13deg); } to { transform: rotate(-5deg); } }
-@keyframes menu-card-orbit { from { offset-distance: var(--orbit-start, 0%); } to { offset-distance: calc(var(--orbit-start, 0%) + 100%); } }
+@keyframes gallery-revolve { from { transform: scaleY(var(--orbit-y-scale,.52)) rotate(0deg); } to { transform: scaleY(var(--orbit-y-scale,.52)) rotate(360deg); } }
+@keyframes gallery-upright { from { rotate: 0deg; } to { rotate: -360deg; } }
 @keyframes ingredient-float { 0%,100% { translate: 0 0; } 50% { translate: 0 -8px; } }
 @keyframes soup-breathe { 0%,100% { scale: 1; } 50% { scale: 1.035; } }
 @keyframes steam-rise { 0% { stroke-dashoffset: 0; opacity: 0; translate: 0 7px; } 30% { opacity: .8; } 100% { stroke-dashoffset: -86; opacity: 0; translate: 0 -9px; } }
@@ -5462,15 +5464,16 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   .orbit-note--two { top: 14%; right: 1%; }
   .orbit-note--three { bottom: 8%; left: 1%; }
   .orbit-line { left: 8%; width: 84%; }
-  .orbit-photo-card { offset-path: ellipse(40% 39% at 50% 50%); }
+  .orbit-gallery-track { --orbit-y-scale: .95; }
+  .orbit-photo-card { --orbit-card-y-correction: 1.053; }
   .orbit-photo-card { width: clamp(112px, 30vw, 145px); gap: 5px; padding: 5px 5px 8px; border-radius: 10px; }
   .orbit-photo-card img { aspect-ratio: 1.12; border-radius: 6px; }
   .orbit-photo-card small { font-size: .4rem; }
   .orbit-photo-card strong { font-family: inherit; font-size: .63rem; }
   .orbit-photo-card > i { right: 8px; bottom: 8px; width: 18px; height: 18px; font-size: .62rem; }
-  .orbit-photo-card--left { width: clamp(112px, 30vw, 145px); --card-rotation: -7deg; }
-  .orbit-photo-card--right { width: clamp(112px, 30vw, 145px); --card-rotation: 7deg; }
-  .orbit-photo-card--small { width: clamp(112px, 30vw, 145px); --card-rotation: 4deg; }
+  .orbit-photo-card--left { top: -8%; left: 1%; width: clamp(112px, 30vw, 145px); --card-rotation: -7deg; }
+  .orbit-photo-card--right { top: -8%; right: 1%; width: clamp(112px, 30vw, 145px); --card-rotation: 7deg; }
+  .orbit-photo-card--small { top: 72%; left: 1%; width: clamp(112px, 30vw, 145px); --card-rotation: 4deg; }
   .orbit-instructions { flex-wrap: wrap; gap: 8px; margin: -5px 0 5px; font-size: .59rem; }
   .orbit-count { top: 2%; left: 50%; gap: 5px; font-size: .5rem; }
   .orbit-count b { width: 26px; height: 26px; font-size: .64rem; }
