@@ -66,6 +66,7 @@ export async function onRequestPost({ request, env }) {
 
   const requestedRecipeCount = getRequestedRecipeCount(message);
   const conversationContext = [...history.map(item => item.content), message].join('\n');
+  const requestedCasualTone = /\b(?:jawab(?:nya)?|respon(?:s)?(?:\s*(?:mu|nya))?|gaya(?: bicara)?|bahasa(?:nya)?|ngobrol)\b.{0,60}\b(?:asik|asyik|seru|santai|lucu|gaul|ramah)\b|\b(?:asik|asyik|seru|santai|lucu|gaul|ramah)\b.{0,45}\b(?:jawab|respon|ngobrol|dong|ya|aja)\b/i.test(conversationContext);
   const asksToCreateHarmfulSubstance = /\b(?:membuat|meracik|mencampur|campur|meramu|bikin|membuat)\s+(?:\w+\s+){0,2}(?:racun|bom|senjata|pembakar)\b/i.test(message);
   const asksSafeFoodHazardQuestion = /\b(?:bensin|racun|pestisida|bahan kimia)\b/i.test(message) &&
     /\b(?:masak|makanan|minyak|resep|tumis|dimakan|dicicipi|tertelan|menelan|tercemar|terpapar|pengganti|diganti)\b/i.test(conversationContext) &&
@@ -76,7 +77,10 @@ export async function onRequestPost({ request, env }) {
   const countGuidance = requestedRecipeCount
     ? `\n\nInstruksi format wajib: berikan tepat ${requestedRecipeCount} resep berbeda dalam daftar bernomor 1 sampai ${requestedRecipeCount}. Setiap pilihan harus memakai sekurangnya dua bahan yang disebut pengguna bila tersedia, dan sebutkan bahan pengguna yang dipakai; jangan mengklaim memakai semua bahan jika tidak. Jika pengguna hanya meminta daftar/ide, beri judul dan ringkasan pendek tiap pilihan. Jika meminta resepnya/langkah, beri bahan dan langkah singkat untuk semua ${requestedRecipeCount} pilihan, jangan berhenti setelah satu.`
     : '';
-  const promptMessage = `${message}${countGuidance}${hazardGuidance}`;
+  const toneGuidance = requestedCasualTone
+    ? '\n\nPreferensi gaya percakapan: pengguna meminta jawaban yang lebih asik dan santai. Pertahankan nada ramah, natural, dan sedikit playful tanpa berlebihan. Tanggapi isi pertanyaan secara langsung; jangan menganggap permintaan gaya ini sebagai permintaan resep, dan jangan mengulang perkenalan panjang kecuali diminta.'
+    : '';
+  const promptMessage = `${message}${countGuidance}${hazardGuidance}${toneGuidance}`;
 
   try {
     const messages = [

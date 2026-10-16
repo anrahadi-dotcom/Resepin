@@ -50,6 +50,28 @@ test('multi-recipe requests are routed to AI instead of becoming one catalog rec
   }
 });
 
+test('casual response-style requests are acknowledged directly, not misread as recipe requests', () => {
+  const context = createChatbotContext();
+  for (const prompt of [
+    'Tolong jawab dengan respon yang asik dong',
+    'Aku mau responmu yang asik',
+    'Jawab santai aja ya bro'
+  ]) {
+    const answer = context.testGenerate(prompt);
+    assert.equal(answer.type, 'text', prompt);
+    assert.match(answer.text, /lebih asik dan santai|lebih santai/i, prompt);
+    assert.doesNotMatch(answer.text, /resep|bahan yang tersedia|aku bisa bantu cari/i, prompt);
+  }
+});
+
+test('Chef identity questions get a short direct answer', () => {
+  const context = createChatbotContext();
+  const answer = context.testGenerate('Pertama nama respon mu bro?');
+  assert.equal(answer.type, 'text');
+  assert.match(answer.text, /Chef Resepin/);
+  assert.doesNotMatch(answer.text, /penyimpanan|kontaminasi silang|pertanyaan yang belum/i);
+});
+
 test('storage questions cover cooked tofu, vegetables, soup, and room-temperature risk', () => {
   const context = createChatbotContext();
   for (const prompt of [

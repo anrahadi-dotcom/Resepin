@@ -154,6 +154,15 @@ function generateAIResponse(message) {
   if (/\b(terima kasih|makasih|thanks|thank you)\b/.test(normalized)) {
     return { type: 'text', text: CHEF_PROMPTS.thanks };
   }
+  // Treat requests for a more playful/casual tone as conversation preferences,
+  // not as requests for a recipe or a generic explanation of the assistant.
+  if (/\b(?:jawab(?:nya)?|respon(?:s)?(?:\s*(?:mu|nya))?|gaya(?: bicara)?|bahasa(?:nya)?|ngobrol)\b.{0,60}\b(?:asik|asyik|seru|santai|lucu|gaul|ramah)\b/.test(normalized) ||
+      /\b(?:asik|asyik|seru|santai|lucu|gaul|ramah)\b.{0,45}\b(?:jawab|respon|ngobrol|dong|ya|aja)\b/.test(normalized)) {
+    return { type: 'text', text: 'Siap 😄 Aku jawab lebih asik dan santai, tapi tetap nyambung. Mau ngobrolin apa?' };
+  }
+  if (/\b(?:siapa nama(?:mu)?|nama.{0,20}(?:kamu|mu|chef|respon)|nama kamu siapa|nama chef(?:-nya)?|nama chef resepin|apa nama(?:mu)?|siapa namamu)\b/.test(normalized)) {
+    return { type: 'text', text: 'Aku Chef Resepin 😄 Teman ngobrol soal masak dan ide resep.' };
+  }
   if (/\b(kamu siapa|siapa kamu|bisa apa|bant[u]? apa|help|tolong|apa yang bisa kamu bantu|bisa bantu apa|tanya apa|menu apa saja)\b/.test(normalized)) {
     return { type: 'text', text: CHEF_PROMPTS.help };
   }
