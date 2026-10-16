@@ -338,14 +338,15 @@ function updateHomeScrollStory() {
         element.style.setProperty('--hero-seq-y', `${((1 - eased) * 22).toFixed(1)}px`);
         element.style.pointerEvents = eased > 0.98 ? '' : 'none';
       };
-      // Keep the complete reveal inside the hero's visible scroll window. The
-      // hero is shorter than a full viewport on some laptop sizes, so late
-      // thresholds let the next section cover the cards before they appeared.
-      revealOnScroll(hero.querySelector('.hero-desc'), 0.02, 0.14);
-      revealOnScroll(hero.querySelector('.hero-cta'), 0.13, 0.27);
-      revealOnScroll(favorites, 0.24, 0.42);
+      // Keep copy static; only the recipe cards reveal in sequence while the
+      // hero stays pinned, before the next section takes over.
+      hero.querySelectorAll('.hero-desc, .hero-cta, .hero-favorites').forEach(element => {
+        element.style.removeProperty('--hero-seq-opacity');
+        element.style.removeProperty('--hero-seq-y');
+        element.style.removeProperty('pointer-events');
+      });
       favorites?.querySelectorAll('.hero-favorite-card').forEach((card, index) => {
-        revealOnScroll(card, 0.31 + index * 0.06, 0.48 + index * 0.06);
+        revealOnScroll(card, 0.08 + index * 0.17, 0.21 + index * 0.17);
       });
     } else {
       hero.classList.remove('is-scroll-story-complete');
