@@ -457,7 +457,8 @@ function updateHomeScrollStory() {
     const risePulse = Math.sin(pageProgress * Math.PI);
     section.style.setProperty('--page-rise-y', `${(isPaperSection ? -pageProgress * viewport * 0.32 : (1 - pageProgress) * 92 - risePulse * 10).toFixed(1)}px`);
     section.style.setProperty('--page-rise-scale', isPaperSection ? '1' : (0.955 + pageProgress * 0.045 + risePulse * 0.012).toFixed(3));
-    section.style.setProperty('--page-rise-opacity', isPaperSection ? '1' : (0.42 + pageProgress * 0.58).toFixed(3));
+    const sectionOpacity = isPaperSection || section.matches('.featured-recipes') ? 1 : 0.42 + pageProgress * 0.58;
+    section.style.setProperty('--page-rise-opacity', sectionOpacity.toFixed(3));
     section.style.setProperty('--page-rise-tilt', isPaperSection ? '0deg' : `${((1 - pageProgress) * 1.2).toFixed(2)}deg`);
     const heading = section.querySelector('.section-header h2, .stats-content h2');
     if (heading && !isPaperSection) {
