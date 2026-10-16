@@ -348,18 +348,20 @@ function updateHomeScrollStory() {
     const cardSpread = Math.min(96, viewport * 0.075);
     stage.style.setProperty('--collage-story-progress', storyProgress.toFixed(3));
     stage.style.setProperty('--collage-story-y', `${((1 - storyProgress) * 74).toFixed(1)}px`);
-    stage.style.setProperty('--collage-story-scale', (0.94 + storyProgress * 0.06).toFixed(3));
+    stage.style.setProperty('--collage-story-scale', (0.91 + storyProgress * 0.09 + Math.sin(storyProgress * Math.PI) * 0.035).toFixed(3));
     stage.querySelectorAll('.collage-card').forEach((card, index) => {
       const direction = index === 1 ? 0 : index === 0 ? -1 : 1;
-      const middlePulse = Math.sin(storyProgress * Math.PI);
-      const distance = direction * ((1 - storyProgress) * cardSpread + middlePulse * 36);
-      const rotation = (1 - storyProgress) * (index === 0 ? -14 : index === 2 ? 14 : -5);
+      const phase = Math.min(1, Math.max(0, (storyProgress - index * 0.08) / 0.84));
+      const middlePulse = Math.sin(phase * Math.PI);
+      const orbit = Math.sin(phase * Math.PI * 2);
+      const distance = direction * ((1 - phase) * cardSpread + middlePulse * 76) + orbit * (index - 1) * 18;
+      const rotation = (1 - phase) * (index === 0 ? -18 : index === 2 ? 18 : -6) + orbit * (index - 1) * 4;
       card.style.setProperty('--story-x', `${distance.toFixed(1)}px`);
-      card.style.setProperty('--story-y', `${((1 - storyProgress) * (index === 1 ? 78 : 48) - middlePulse * (index === 1 ? 34 : 12)).toFixed(1)}px`);
+      card.style.setProperty('--story-y', `${((1 - phase) * (index === 1 ? 96 : 58) - middlePulse * (index === 1 ? 58 : 25) + orbit * 12).toFixed(1)}px`);
       card.style.setProperty('--story-rotate', `${rotation.toFixed(2)}deg`);
-      card.style.setProperty('--story-z', `${((storyProgress - 1) * 190 + middlePulse * (index === 1 ? 100 : 30)).toFixed(1)}px`);
-      card.style.setProperty('--story-scale', (index === 1 ? 0.82 + storyProgress * 0.18 + middlePulse * 0.14 : 0.78 + storyProgress * 0.22 + middlePulse * 0.035).toFixed(3));
-      card.style.setProperty('--story-opacity', (0.12 + storyProgress * 0.88).toFixed(3));
+      card.style.setProperty('--story-z', `${((phase - 1) * 250 + middlePulse * (index === 1 ? 180 : 70)).toFixed(1)}px`);
+      card.style.setProperty('--story-scale', (index === 1 ? 0.78 + phase * 0.22 + middlePulse * 0.2 : 0.72 + phase * 0.28 + middlePulse * 0.07).toFixed(3));
+      card.style.setProperty('--story-opacity', (0.7 + phase * 0.3).toFixed(3));
     });
     stage.querySelectorAll('.collage-ingredient-strip button').forEach((chip, index) => {
       const chipProgress = Math.min(1, Math.max(0, (storyProgress - index * 0.055) / 0.72));
@@ -396,16 +398,17 @@ function updateHomeScrollStory() {
 
   home.querySelectorAll('.featured-recipes .recipe-card').forEach((card, index) => {
     const cardProgress = progressAt(card, 0.96 - (index % 3) * 0.04, 0.46 - (index % 3) * 0.04);
+    const entryProgress = Math.min(1, Math.max(0, (cardProgress - (index % 3) * 0.12) / (1 - (index % 3) * 0.12)));
     const lane = index % 3 - 1;
-    const cardPulse = Math.sin(cardProgress * Math.PI);
+    const cardPulse = Math.sin(entryProgress * Math.PI);
     const spread = Math.min(126, viewport * 0.12);
-    card.style.setProperty('--recipe-story-x', `${((1 - cardProgress) * lane * spread + cardPulse * lane * spread * 0.2).toFixed(1)}px`);
-    card.style.setProperty('--recipe-story-y', `${((1 - cardProgress) * (index % 2 ? 74 : 44) - cardPulse * 18).toFixed(1)}px`);
-    card.style.setProperty('--recipe-story-z', `${((cardProgress - 1) * 115 + cardPulse * 52).toFixed(1)}px`);
-    card.style.setProperty('--recipe-story-rotate', `${((1 - cardProgress) * (index % 2 ? 7 : -7)).toFixed(2)}deg`);
-    card.style.setProperty('--recipe-story-tilt-y', `${((1 - cardProgress) * lane * -10).toFixed(2)}deg`);
-    card.style.setProperty('--recipe-story-scale', (0.78 + cardProgress * 0.22 + cardPulse * 0.035).toFixed(3));
-    card.style.setProperty('--recipe-story-opacity', (0.34 + cardProgress * 0.66).toFixed(3));
+    card.style.setProperty('--recipe-story-x', `${((1 - entryProgress) * lane * spread + cardPulse * lane * spread * 0.32).toFixed(1)}px`);
+    card.style.setProperty('--recipe-story-y', `${((1 - entryProgress) * (index % 2 ? 104 : 58) - cardPulse * 30).toFixed(1)}px`);
+    card.style.setProperty('--recipe-story-z', `${((entryProgress - 1) * 180 + cardPulse * 100).toFixed(1)}px`);
+    card.style.setProperty('--recipe-story-rotate', `${((1 - entryProgress) * (index % 2 ? 10 : -10) - cardPulse * lane * 4).toFixed(2)}deg`);
+    card.style.setProperty('--recipe-story-tilt-y', `${((1 - entryProgress) * lane * -13).toFixed(2)}deg`);
+    card.style.setProperty('--recipe-story-scale', (0.72 + entryProgress * 0.28 + cardPulse * 0.06).toFixed(3));
+    card.style.setProperty('--recipe-story-opacity', (0.7 + entryProgress * 0.3).toFixed(3));
     const photo = card.querySelector('.recipe-img-photo');
     photo?.style.setProperty('--recipe-photo-y', `${(-cardPulse * 12).toFixed(1)}px`);
     photo?.style.setProperty('--recipe-photo-scale', (1.045 + cardPulse * 0.075).toFixed(3));
@@ -418,6 +421,11 @@ function updateHomeScrollStory() {
     section.style.setProperty('--page-rise-scale', (0.955 + pageProgress * 0.045 + risePulse * 0.012).toFixed(3));
     section.style.setProperty('--page-rise-opacity', (0.42 + pageProgress * 0.58).toFixed(3));
     section.style.setProperty('--page-rise-tilt', `${((1 - pageProgress) * 2.2).toFixed(2)}deg`);
+    section.style.setProperty('--paper-lift', `${((1 - pageProgress) * 38 - risePulse * 16).toFixed(1)}px`);
+    section.style.setProperty('--paper-curl', `${((1 - pageProgress) * -5.5 + risePulse * 2).toFixed(2)}deg`);
+    section.style.setProperty('--paper-scale', (0.972 + pageProgress * 0.028 + risePulse * 0.008).toFixed(3));
+    section.style.setProperty('--paper-shadow', (0.06 + (1 - pageProgress) * 0.12 + risePulse * 0.07).toFixed(3));
+    section.style.setProperty('--paper-opacity', (0.58 + pageProgress * 0.42).toFixed(3));
     const heading = section.querySelector('.section-header h2, .stats-content h2');
     if (heading) {
       heading.style.setProperty('--heading-story-y', `${((1 - pageProgress) * 34 - risePulse * 12).toFixed(1)}px`);
