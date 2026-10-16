@@ -61,7 +61,10 @@ export async function onRequestPost({ request, env }) {
       temperature: 0.3,
       chat_template_kwargs: { enable_thinking: false }
     });
-    const answer = typeof result?.response === 'string' ? result.response.trim().slice(0, 3000) : '';
+    const modelAnswer = result?.response
+      ?? result?.choices?.[0]?.message?.content
+      ?? result?.choices?.[0]?.text;
+    const answer = typeof modelAnswer === 'string' ? modelAnswer.trim().slice(0, 3000) : '';
     if (!answer) throw new Error('Empty AI response');
     return Response.json({ answer }, { headers: { 'Cache-Control': 'no-store' } });
   } catch (error) {
