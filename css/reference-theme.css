@@ -5976,6 +5976,10 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   #page-home > .hero-scroll-runway { display: block; position: relative; z-index: 0; height: 160svh; pointer-events: none; }
   #page-home > section:not(.hero) { position: relative; z-index: 1; }
   #page-home > section.hero-followthrough { z-index: 3; }
+  #page-home > section.how-it-works { z-index: 4; }
+  #page-home > section.featured-recipes { z-index: 5; }
+  #page-home > section.waste-stats { z-index: 6; }
+  #page-home > footer.footer { position: relative; z-index: 7; }
 }
 .hero.is-scroll-story .hero-enter,
 .hero.is-scroll-story .hero-title-line { animation: none !important; clip-path: none !important; }
