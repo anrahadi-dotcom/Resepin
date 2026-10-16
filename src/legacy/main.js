@@ -1282,9 +1282,8 @@ function createRecipeCardHTML(r, { keepCurrentPage = false } = {}) {
       <div class="recipe-info">
         ${featuredKicker}
         <h3>${escapeHtml(r.title)}</h3>
-        <p class="recipe-meta"><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>${escapeHtml(r.time)}</span><span class="recipe-cost-estimate">Est. ${cost}/porsi</span></p>
+        <p class="recipe-meta"><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>${escapeHtml(r.time)}</span><span class="recipe-cost-estimate">Est. ${cost}/porsi</span>${keepCurrentPage ? recipeAction : ''}</p>
         ${matchMarkup}
-        ${keepCurrentPage ? recipeAction : ''}
       </div>
     </a>
   `;

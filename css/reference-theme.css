@@ -6804,3 +6804,124 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   #page-home .featured-recipes .recipe-card-action,
   #page-home .featured-recipes .recipe-card-action-arrow { transition: none !important; }
 }
+
+/* Let the food photography lead: wide image panel above a compact menu footer. */
+#page-home .featured-recipes .recipe-card,
+#page-home .featured-recipes .recipe-card:nth-child(3n + 2) {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 58% 42%;
+  aspect-ratio: 1.38 / 1;
+}
+#page-home .featured-recipes .recipe-img,
+#page-home .featured-recipes .recipe-card:nth-child(3n + 2) .recipe-img {
+  grid-column: 1;
+  grid-row: 1;
+  border-radius: 19px 19px 0 0;
+}
+#page-home .featured-recipes .recipe-img::after {
+  background: linear-gradient(180deg, rgba(19,16,12,.2), transparent 48%, rgba(19,16,12,.18));
+}
+#page-home .featured-recipes .recipe-info,
+#page-home .featured-recipes .recipe-card:nth-child(3n + 2) .recipe-info {
+  grid-column: 1;
+  grid-row: 2;
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  padding: 10px 15px 12px;
+  background: linear-gradient(145deg, #f8f2e4, #e9dec7);
+}
+#page-home .featured-recipes .recipe-card-kicker {
+  gap: 4px 7px;
+  margin-bottom: 4px;
+  font-size: .56rem;
+}
+#page-home .featured-recipes .recipe-card-category { min-height: 19px; }
+#page-home .featured-recipes .recipe-info h3 {
+  margin: 0 0 7px;
+  font-size: clamp(1rem, 1.35vw, 1.24rem);
+  line-height: 1.1;
+}
+#page-home .featured-recipes .recipe-meta {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  min-height: 25px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(82,65,39,.15);
+}
+#page-home .featured-recipes .recipe-cost-estimate {
+  overflow: hidden;
+  font-size: .66rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#page-home .featured-recipes .recipe-card-action {
+  position: static;
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: auto;
+  min-height: 0;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  margin: 0 0 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: #684b30;
+  opacity: 1;
+  transform: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+#page-home .featured-recipes .recipe-card-action-label {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip: auto;
+  font-size: .66rem;
+  font-weight: 730;
+}
+#page-home .featured-recipes .recipe-card-action-arrow {
+  display: inline;
+  width: auto;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font-size: .85rem;
+}
+#page-home .featured-recipes .recipe-card:hover .recipe-card-action,
+#page-home .featured-recipes .recipe-card:focus-visible .recipe-card-action { color: #985c36; }
+#page-home .featured-recipes .recipe-card:hover .recipe-card-action-arrow,
+#page-home .featured-recipes .recipe-card:focus-visible .recipe-card-action-arrow { background: transparent; color: inherit; transform: translate(2px,-1px); }
+#page-home .featured-recipes .recipe-match { margin-top: 5px; padding-top: 5px; }
+#page-home .featured-recipes .recipe-match-label { font-size: .62rem; }
+#page-home .featured-recipes .recipe-match-track { height: 3px; }
+#page-home .featured-recipes .recipe-match p { margin-top: 3px; font-size: .6rem; }
+@media (max-width: 850px) {
+  #page-home .featured-recipes .recipe-card,
+  #page-home .featured-recipes .recipe-card:nth-child(3n + 2) { aspect-ratio: 1.42 / 1; }
+}
+@media (max-width: 600px) {
+  #page-home .featured-recipes .recipe-card,
+  #page-home .featured-recipes .recipe-card:nth-child(3n + 2) {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 60% 40%;
+    aspect-ratio: 1.42 / 1;
+  }
+  #page-home .featured-recipes .recipe-img,
+  #page-home .featured-recipes .recipe-card:nth-child(3n + 2) .recipe-img { grid-column: 1; grid-row: 1; }
+  #page-home .featured-recipes .recipe-info,
+  #page-home .featured-recipes .recipe-card:nth-child(3n + 2) .recipe-info { grid-column: 1; grid-row: 2; padding: 9px 13px 10px; }
+  #page-home .featured-recipes .recipe-info h3 { margin-bottom: 5px; font-size: 1.05rem; }
+  #page-home .featured-recipes .recipe-meta { gap: 6px; }
+  #page-home .featured-recipes .recipe-cost-estimate { font-size: .62rem; }
+  #page-home .featured-recipes .recipe-card-action-label { font-size: .62rem; }
+}
