@@ -108,6 +108,8 @@ test('AI recipe grounding uses the actual inventory and checks title/step consis
   assert.match(capturedUserPrompt, /bedakan kata "tidak punya\/tidak ada" dari stok tersedia/);
   assert.match(capturedUserPrompt, /minyak hanya boleh masuk bagian opsional/);
   assert.match(capturedUserPrompt, /masak mi lebih dulu sesuai petunjuk kemasan/);
+  assert.match(capturedUserPrompt, /sebutkan bumbu paket di bahan dan langkah/);
+  assert.match(capturedUserPrompt, /jangan menamai teknik atau hidangan sebagai "goreng"/);
   assert.match(capturedUserPrompt, /waktu dan porsi/);
   assert.match(capturedUserPrompt, /judul, daftar bahan, dan setiap langkah cocok/);
   assert.match(capturedUserPrompt, /kalau judul menyebut telur rebus, langkah harus merebus telur/);
