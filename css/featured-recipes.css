@@ -1,0 +1,431 @@
+/* Home recipe chapter: an editorial bento, built with Tailwind utilities and
+   kept isolated from the shared recipe cards used on the other pages. */
+#page-home .recipe-takeover-viewport > section.featured-recipes {
+  @apply [position:relative] [isolation:isolate] [overflow:hidden] [background:var(--bg)] [color:var(--text-primary)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 8% 12%, color-mix(in srgb, var(--primary-light) 22%, transparent), transparent 36%),
+    radial-gradient(ellipse at 94% 82%, color-mix(in srgb, var(--secondary) 10%, transparent), transparent 34%),
+    var(--bg);
+  content: "";
+  pointer-events: none;
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes > .container {
+  @apply [position:relative] [z-index:1] [width:100%];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .section-header {
+  @apply [grid-template-columns:minmax(0,_1fr)_auto] [align-items:end] [gap:24px] [margin:0_0_clamp(20px,_3vh,_30px)] [text-align:left];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .section-header::after {
+  @apply [display:none];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-heading-meta {
+  @apply [margin-bottom:12px];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-eyebrow {
+  @apply [border-color:color-mix(in_srgb,var(--primary)_22%,transparent)] [background:color-mix(in_srgb,var(--bg-card)_74%,transparent)] [color:var(--text-secondary)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-heading-note {
+  @apply [color:var(--text-muted)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .section-header h2 {
+  @apply [margin:0] [color:var(--text-primary)] [font-size:clamp(2.25rem,_5vw,_4rem)] [letter-spacing:-.055em] [line-height:.98];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-heading-accent {
+  @apply [color:var(--primary)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-intro {
+  @apply [max-width:42rem] [margin:12px_0_0] [color:var(--text-secondary)] [font-size:clamp(.93rem,_1.2vw,_1.08rem)] [line-height:1.6];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .see-all {
+  @apply [grid-column:2] [grid-row:1_/_4] [margin:0] [text-decoration:none];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .see-all-arrow {
+  @apply [color:var(--primary)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipes-scroll {
+  @apply [display:grid] [grid-template-columns:repeat(12,_minmax(0,_1fr))] [grid-auto-rows:clamp(9.5rem,_17vh,_11.5rem)] [grid-auto-flow:dense] [gap:14px] [margin:0] [overflow:visible] [padding:4px_2px_12px];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card {
+  @apply [position:relative] [display:grid] [min-width:0] [min-height:0] [grid-template-columns:minmax(0,_1fr)] [grid-template-rows:minmax(0,_1fr)_auto] [grid-column:span_4] [grid-row:span_1] [overflow:hidden] [border:1px_solid_var(--border)] [border-radius:24px] [background:var(--bg-card)] [color:var(--text-primary)] [text-decoration:none] [box-shadow:0_12px_32px_rgba(31,21,12,.08)] [transition:transform_.5s_cubic-bezier(.2,.75,.22,1),_border-color_.35s_ease,_box-shadow_.45s_ease];
+  transform-style: preserve-3d;
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card::after {
+  @apply [display:none];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card:hover,
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card:focus-visible {
+  @apply [border-color:var(--border-hover)] [box-shadow:0_22px_48px_rgba(31,21,12,.15)] [transform:translate3d(0,-5px,0)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card.motion-ready {
+  @apply [opacity:0] [filter:blur(4px)] [transform:translate3d(0,24px,0)_scale(.99)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card.motion-ready.motion-visible {
+  @apply [opacity:1] [filter:none] [transform:translate3d(0,0,0)_scale(1)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card.motion-ready.motion-visible:hover {
+  @apply [transform:translate3d(0,-5px,0)_scale(1)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-img {
+  @apply [position:relative] [grid-column:1] [grid-row:1] [width:100%] [height:100%] [min-height:0] [aspect-ratio:auto] [overflow:hidden] [background:var(--bg-surface)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-img::after {
+  @apply [z-index:1] [background:linear-gradient(180deg,_rgba(20,15,10,.03)_35%,_rgba(20,15,10,.16)_100%)] [opacity:1];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-img-photo {
+  @apply [transition:transform_.85s_cubic-bezier(.2,.75,.22,1)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card:hover .recipe-img-photo,
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card:focus-visible .recipe-img-photo {
+  @apply [transform:scale(1.055)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-badge-diff {
+  @apply [top:12px] [right:12px] [left:auto] [z-index:3] [padding:6px_10px] [border:1px_solid_rgba(255,253,245,.64)] [border-radius:999px] [background:rgba(31,21,12,.76)] [color:#fffdf5] [box-shadow:0_4px_14px_rgba(23,17,10,.12)] [font-size:.7rem] [backdrop-filter:blur(10px)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-index {
+  @apply [position:absolute] [top:13px] [left:14px] [z-index:3] [color:rgba(255,253,245,.82)] [font-size:.68rem] [font-weight:800] [letter-spacing:.13em] [text-shadow:0_2px_8px_rgba(0,0,0,.28)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-info {
+  @apply [position:relative] [z-index:2] [grid-column:1] [grid-row:2] [display:flex] [min-width:0] [flex-direction:column] [justify-content:center] [gap:0] [padding:11px_14px_12px] [background:linear-gradient(145deg,_color-mix(in_srgb,var(--bg-card)_98%,white),_var(--bg-card))] [color:var(--text-primary)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-kicker {
+  @apply [display:flex] [min-width:0] [align-items:center] [justify-content:space-between] [gap:8px] [margin:0_0_6px] [color:var(--text-muted)] [font-size:.58rem] [font-weight:750] [letter-spacing:.055em] [line-height:1.2] [text-transform:uppercase];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-category {
+  @apply [overflow:hidden] [text-overflow:ellipsis] [white-space:nowrap];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-kicker > span:last-child {
+  @apply [flex:0_0_auto];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-info h3 {
+  @apply [display:-webkit-box] [overflow:hidden] [-webkit-box-orient:vertical] [-webkit-line-clamp:2] [margin:0_0_7px] [color:var(--text-primary)] [font-size:clamp(.98rem,_1.15vw,_1.18rem)] [font-weight:650] [letter-spacing:-.035em] [line-height:1.12] [text-shadow:none];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-meta {
+  @apply [display:flex] [min-height:0] [flex-wrap:nowrap] [align-items:center] [justify-content:space-between] [gap:8px] [margin:0] [padding:6px_0_0] [border-top:1px_solid_var(--border)] [color:var(--text-secondary)] [font-size:.69rem] [line-height:1.3];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-meta > span:first-child {
+  @apply [display:inline-flex] [flex:0_0_auto] [align-items:center] [gap:6px] [color:var(--text-primary)] [font-weight:700];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-meta .ui-icon {
+  @apply [width:15px] [height:15px] [color:var(--primary)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-cost-estimate {
+  @apply [overflow:hidden] [color:var(--text-secondary)] [font-size:.66rem] [font-variant-numeric:tabular-nums] [text-overflow:ellipsis] [white-space:nowrap];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card-action {
+  @apply [position:static] [display:flex] [min-height:26px] [align-items:center] [justify-content:space-between] [gap:8px] [margin:7px_0_0] [padding:0] [border:0] [border-radius:0] [background:transparent] [box-shadow:none] [color:var(--primary)] [opacity:1] [transform:none] [backdrop-filter:none] [transition:color_.2s_ease];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card-action-label {
+  @apply [position:static] [width:auto] [height:auto] [overflow:visible] [clip:auto] [color:inherit] [font-size:.72rem] [font-weight:750] [letter-spacing:.01em];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card-action-arrow {
+  @apply [display:grid] [width:25px] [height:25px] [place-items:center] [border:1px_solid_var(--border)] [border-radius:999px] [background:var(--bg-surface)] [color:inherit] [font-size:.82rem] [transition:transform_.25s_ease,_background_.25s_ease,_color_.25s_ease];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card:hover .recipe-card-action-arrow,
+#page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card:focus-visible .recipe-card-action-arrow {
+  @apply [transform:translate(2px,-1px)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead {
+  @apply [grid-column:span_8] [grid-row:span_2] [grid-template-rows:minmax(0,_1fr)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-img {
+  @apply [position:absolute] [inset:0] [grid-row:1] [height:100%] [border-radius:inherit];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-img::after {
+  @apply [background:linear-gradient(180deg,_rgba(20,15,10,.02)_25%,_rgba(20,15,10,.06)_48%,_rgba(20,15,10,.82)_100%)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-info {
+  @apply [align-self:end] [grid-row:1] [padding:clamp(20px,_3vw,_34px)] [background:linear-gradient(180deg,_transparent,_rgba(20,15,10,.74))] [color:#fffdf5];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .featured-recipe-kicker,
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-info h3,
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-meta,
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-meta > span:first-child,
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-cost-estimate,
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-card-action {
+  @apply [color:#fffdf5];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .featured-recipe-category {
+  @apply [padding:5px_9px] [border:1px_solid_rgba(255,253,245,.28)] [border-radius:999px] [background:rgba(255,253,245,.14)] [backdrop-filter:blur(8px)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-info h3 {
+  @apply [max-width:13ch] [margin-bottom:10px] [font-size:clamp(1.8rem,_3.6vw,_3.35rem)] [line-height:1.02];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-meta {
+  @apply [max-width:23rem] [border-color:rgba(255,253,245,.28)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-card-action-arrow {
+  @apply [border-color:rgba(255,253,245,.3)] [background:rgba(255,253,245,.14)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--side {
+  @apply [grid-column:span_4] [grid-template-columns:minmax(0,.88fr)_minmax(0,1.12fr)] [grid-template-rows:minmax(0,_1fr)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--side .recipe-img {
+  @apply [grid-column:1] [grid-row:1] [height:100%] [aspect-ratio:auto];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--side .recipe-info {
+  @apply [grid-column:2] [grid-row:1] [padding:12px_13px];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--side .featured-recipe-kicker {
+  @apply [align-items:flex-start] [flex-direction:column] [gap:4px] [font-size:.54rem];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--side .recipe-info h3 {
+  @apply [font-size:clamp(.94rem,_1.1vw,_1.12rem)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--side .recipe-meta {
+  @apply [align-items:flex-start] [flex-direction:column] [gap:4px] [font-size:.66rem];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--side .recipe-card-action {
+  @apply [min-height:22px] [margin-top:4px];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-match {
+  @apply [gap:4px] [margin-top:7px] [padding-top:6px] [border-color:var(--border)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-match .recipe-match-label {
+  @apply [font-size:.62rem];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-match .recipe-match-track {
+  @apply [height:4px] [background:var(--bg-surface)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-match .recipe-match-track span {
+  @apply [background:var(--secondary)];
+}
+
+#page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-match p {
+  @apply [margin:0] [font-size:.6rem];
+}
+
+@media (max-width: 1120px) {
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipes-scroll {
+    @apply [grid-template-columns:repeat(3,_minmax(0,_1fr))] [grid-auto-rows:auto];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--side {
+    @apply [grid-column:span_1] [grid-row:span_1] [display:flex] [min-height:clamp(17rem,_28vw,_21rem)] [flex-direction:column] [aspect-ratio:auto];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-img {
+    @apply [position:relative] [inset:auto] [height:auto] [min-height:0] [aspect-ratio:1.4_/_1];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-img::after {
+    @apply [background:linear-gradient(180deg,_rgba(20,15,10,.02)_30%,_rgba(20,15,10,.42)_100%)];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card .recipe-info,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-info,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--side .recipe-info {
+    @apply [position:relative] [inset:auto] [align-self:auto] [grid-column:auto] [grid-row:auto] [padding:12px_14px] [background:var(--bg-card)] [color:var(--text-primary)];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .featured-recipe-kicker,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-info h3,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-meta,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-meta > span:first-child,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-cost-estimate,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-card-action {
+    @apply [color:var(--text-primary)];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .featured-recipe-category {
+    @apply [padding:0] [border:0] [border-radius:0] [background:transparent] [backdrop-filter:none];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-info h3 {
+    @apply [max-width:none] [margin-bottom:7px] [font-size:clamp(.98rem,_1.15vw,_1.18rem)] [line-height:1.12];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-meta {
+    @apply [max-width:none] [border-color:var(--border)];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-card-action-arrow {
+    @apply [border-color:var(--border)] [background:var(--bg-surface)];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--side .featured-recipe-kicker,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--side .recipe-meta {
+    @apply [align-items:center] [flex-direction:row] [gap:8px];
+  }
+}
+
+@media (max-width: 700px) {
+  #page-home .recipe-takeover-viewport > section.featured-recipes .section-header {
+    @apply [grid-template-columns:minmax(0,_1fr)] [gap:18px] [text-align:left];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .section-header h2 {
+    @apply [font-size:clamp(2.2rem,_10vw,_3.1rem)];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .see-all {
+    @apply [grid-column:1] [grid-row:auto] [justify-self:start];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipes-scroll {
+    @apply [grid-template-columns:repeat(2,_minmax(0,_1fr))] [gap:12px];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--side {
+    @apply [min-height:17.5rem] [border-radius:20px];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card .recipe-img {
+    @apply [aspect-ratio:1.18_/_1];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card .recipe-info {
+    @apply [padding:10px_11px_11px];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-info h3,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-info h3 {
+    @apply [font-size:1rem];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-kicker {
+    @apply [gap:5px] [font-size:.52rem];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-cost-estimate {
+    @apply [font-size:.6rem];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card-action {
+    @apply [min-height:22px] [margin-top:5px];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card-action-label {
+    @apply [font-size:.66rem];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--side .featured-recipe-kicker,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--side .recipe-meta {
+    @apply [align-items:flex-start] [flex-direction:column] [gap:4px];
+  }
+}
+
+@media (max-width: 480px) {
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipes-scroll {
+    @apply [grid-template-columns:minmax(0,_1fr)] [gap:14px];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--side {
+    @apply [min-height:0] [grid-template-rows:minmax(0,_1fr)_auto] [aspect-ratio:auto];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card .recipe-img {
+    @apply [aspect-ratio:1.48_/_1];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-info {
+    @apply [padding:14px_16px_15px];
+  }
+}
+
+@media (min-width: 901px) and (max-height: 760px) {
+  #page-home .recipe-takeover-viewport > section.featured-recipes .section-header {
+    @apply [margin-bottom:14px];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipes-scroll {
+    @apply [grid-template-columns:repeat(3,_minmax(0,_1fr))] [grid-auto-rows:clamp(12rem,_30svh,_14rem)] [gap:10px];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--side {
+    @apply [grid-column:span_1] [grid-row:span_1] [display:grid] [grid-template-columns:minmax(0,_1fr)] [grid-template-rows:minmax(0,_1fr)_auto] [min-height:0] [aspect-ratio:auto];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card .recipe-img,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-img,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--side .recipe-img {
+    @apply [position:relative] [inset:auto] [grid-column:1] [grid-row:1] [height:100%] [min-height:0] [aspect-ratio:auto];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card .recipe-info,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-info,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--side .recipe-info {
+    @apply [position:relative] [grid-column:1] [grid-row:2] [align-self:auto] [padding:8px_11px_9px] [background:var(--bg-card)] [color:var(--text-primary)];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .featured-recipe-kicker,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-info h3,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-meta,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-meta > span:first-child,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-cost-estimate,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .recipe-card-action {
+    @apply [color:var(--text-primary)];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-card--lead .featured-recipe-category {
+    @apply [padding:0] [border:0] [border-radius:0] [background:transparent] [backdrop-filter:none];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-info h3 {
+    @apply [margin-bottom:4px] [font-size:.96rem];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .featured-recipe-kicker {
+    @apply [margin-bottom:3px] [font-size:.48rem];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-meta {
+    @apply [padding-top:4px] [font-size:.61rem];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card-action {
+    @apply [min-height:18px] [margin-top:3px];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card-action-arrow {
+    @apply [width:20px] [height:20px];
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-img-photo,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card-action-arrow,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .see-all,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .see-all-arrow {
+    @apply [transition:none];
+  }
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card.motion-ready,
+  #page-home .recipe-takeover-viewport > section.featured-recipes .recipe-card.motion-ready.motion-visible {
+    @apply [opacity:1] [filter:none] [transform:none];
+  }
+}

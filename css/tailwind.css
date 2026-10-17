@@ -6,6 +6,7 @@
 @import "./style.css" layer(components);
 @import "./responsive.css" layer(components);
 @import "./reference-theme.css" layer(components);
+@import "./featured-recipes.css" layer(components);
 
 [v-cloak] {
   @apply [display:none];

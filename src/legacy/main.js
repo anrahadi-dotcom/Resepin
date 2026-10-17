@@ -1289,10 +1289,47 @@ function createRecipeCardHTML(r, { keepCurrentPage = false } = {}) {
   `;
 }
 
+function createFeaturedRecipeCardHTML(r, index) {
+  const recipeIndex = RECIPES_DB.indexOf(r);
+  const ingredientCount = Array.isArray(r.ingredients) ? r.ingredients.length : null;
+  const available = currentIngredientNames();
+  const match = recipeMatch(r, available);
+  const missing = match.missing.slice(0, 3).join(', ');
+  const cost = window.ResepinRecipeUtils?.formatIDR(r.estimatedCostPerServingIDR) || '';
+  const category = Array.isArray(r.tags) && r.tags.length ? r.tags[0] : 'Menu rumahan';
+  const variant = index === 0 ? 'featured-recipe-card--lead' : 'featured-recipe-card--side';
+  const matchLabel = available.length
+    ? ` Kecocokan bahan: ${match.matched} dari ${match.total}.`
+    : ' Tambahkan bahan untuk melihat kecocokan.';
+  const matchMarkup = available.length ? `
+      <div class="recipe-match featured-recipe-match" aria-label="Kecocokan bahan: ${match.matched} dari ${match.total}">
+        <div class="recipe-match-label"><strong>Cocok ${match.matched} dari ${match.total} bahan</strong><span>${Math.round(match.percentage * 100)}%</span></div>
+        <div class="recipe-match-track" role="progressbar" aria-valuemin="0" aria-valuemax="${match.total}" aria-valuenow="${match.matched}" aria-label="Kecocokan bahan"><span style="width:${Math.round(match.percentage * 100)}%"></span></div>
+        ${missing ? `<p>Kurang: ${escapeHtml(missing)}${match.missing.length > 3 ? ' +' + (match.missing.length - 3) : ''}</p>` : '<p>Semua bahan tersedia.</p>'}
+      </div>` : '';
+
+  return `
+    <a class="recipe-card featured-recipe-card ${variant} group relative isolate min-h-0 min-w-0 overflow-hidden rounded-[1.75rem] border border-[var(--border)] bg-[var(--bg-card)] text-[var(--text-primary)] no-underline shadow-[0_14px_34px_rgba(31,21,12,.08)] transition-[transform,border-color,box-shadow] duration-500 ease-[cubic-bezier(.2,.75,.22,1)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--primary)]" href="#/resep/${recipeSlug(r)}" aria-label="Lihat resep ${escapeHtml(r.title)}.${matchLabel}" onclick="event.preventDefault();openFeaturedRecipeByIndex(${recipeIndex})">
+      <div class="recipe-img featured-recipe-media relative isolate overflow-hidden" style="background:${r.gradient}">
+        ${recipeImageHTML(r, 'recipe-img-photo featured-recipe-photo', `Foto hidangan ${r.title}`)}
+        <span class="featured-recipe-index" aria-hidden="true">${String(index + 1).padStart(2, '0')}</span>
+        <span class="recipe-badge-diff ${r.difficulty === 'Mudah' ? 'easy' : 'medium'}">${escapeHtml(r.difficulty)}</span>
+      </div>
+      <div class="recipe-info featured-recipe-body">
+        <div class="featured-recipe-kicker"><span class="featured-recipe-category">${escapeHtml(category)}</span><span>${ingredientCount ? `${ingredientCount} bahan` : 'Bahan sederhana'}</span></div>
+        <h3>${escapeHtml(r.title)}</h3>
+        <div class="recipe-meta featured-recipe-meta"><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>${escapeHtml(r.time)}</span>${cost ? `<span class="recipe-cost-estimate">Est. ${cost}/porsi</span>` : ''}</div>
+        ${matchMarkup}
+        <span class="recipe-card-action featured-recipe-action" aria-hidden="true"><span class="recipe-card-action-label">Intip resep</span><span class="recipe-card-action-arrow">↗</span></span>
+      </div>
+    </a>
+  `;
+}
+
 function renderFeaturedRecipes() {
   const list = document.querySelector('.featured-recipes .recipes-scroll');
   if (!list) return;
-  list.innerHTML = RECIPES_DB.slice(0, 6).map(recipe => createRecipeCardHTML(recipe, { keepCurrentPage: true })).join('');
+  list.innerHTML = RECIPES_DB.slice(0, 6).map(createFeaturedRecipeCardHTML).join('');
   bindRecipeImageFallbacks(list);
 }
 

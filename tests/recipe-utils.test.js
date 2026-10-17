@@ -87,7 +87,8 @@ test('critical static UI controls stay accessible and independent of external Vu
   assert.doesNotMatch(html, /href="#resep"/);
   assert.doesNotMatch(html, /id="recipeJsonLd"/);
   assert.match(html, /class="[^"]*\brecipes-scroll\b[^"]*" aria-label="Resep unggulan"><\/div>/);
-  assert.match(main, /RECIPES_DB\.slice\(0, 6\)\.map\(recipe => createRecipeCardHTML\(recipe, \{ keepCurrentPage: true \}\)\)/);
+  assert.match(main, /function createFeaturedRecipeCardHTML\(r, index\)/);
+  assert.match(main, /RECIPES_DB\.slice\(0, 6\)\.map\(createFeaturedRecipeCardHTML\)/);
   assert.match(main, /href="#\/resep\/\$\{recipeSlug\(r\)\}"/);
   assert.match(main, /checkScanBackendAvailability/);
   assert.match(html, /id="navIngredientSearch"/);

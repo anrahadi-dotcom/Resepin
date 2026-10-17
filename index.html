@@ -320,15 +320,20 @@
     <!-- Featured Recipes / right-side takeover stage -->
     <div class="recipe-takeover-stage">
       <div class="recipe-takeover-viewport">
-        <section class="section featured-recipes [padding:80px_0] [padding-top:64px] [padding-bottom:64px]">
-          <div class="container [margin:0_auto]">
-            <div class="section-header [text-align:center] [margin-bottom:36px]">
-              <span class="section-tag [display:inline-block] [padding:4px_14px] [background:rgba(182,92,58,0.1)] [border:1px_solid_rgba(182,92,58,0.2)] [border-radius:6px] [font-size:0.8rem] [font-weight:600] [color:var(--primary)] [text-transform:uppercase] [letter-spacing:.04em] [margin-bottom:12px]">Resep Unggulan</span>
-              <h2>Resep Pilihan</h2>
-              <p class="featured-intro">Ide masakan rumahan yang enak, praktis, dan cocok untuk hari ini.</p>
-              <a class="see-all [color:var(--primary)] [font-size:0.9rem] [font-weight:600] [transition:var(--transition)] hover:[text-decoration:underline]" href="#/resep" @click.prevent="go('resep')">Lihat Semua →</a>
+        <section class="section featured-recipes relative isolate overflow-hidden bg-[var(--bg)] py-[clamp(3.75rem,7vw,6.5rem)] text-[var(--text-primary)]">
+          <div class="container mx-auto">
+            <div class="section-header featured-heading relative z-[1] mb-8 grid grid-cols-1 items-end gap-6 text-left md:grid-cols-[minmax(0,1fr)_auto]">
+              <div class="featured-heading-copy min-w-0">
+                <div class="featured-heading-meta mb-3 flex flex-wrap items-center gap-x-3 gap-y-2">
+                  <span class="featured-eyebrow inline-flex items-center rounded-full border border-[color-mix(in_srgb,var(--primary)_18%,transparent)] bg-[color-mix(in_srgb,var(--bg-card)_72%,transparent)] px-3 py-1.5 text-[.65rem] font-extrabold uppercase tracking-[.12em] text-[var(--text-secondary)]">Resep unggulan</span>
+                  <span class="featured-heading-note text-[.68rem] font-semibold uppercase tracking-[.1em] text-[var(--text-muted)]">Pilihan hari ini <span aria-hidden="true">·</span> 06 menu</span>
+                </div>
+                <h2 class="m-0 text-[clamp(2.35rem,5vw,4.25rem)] leading-[.98] tracking-[-.055em]">Resep Pilihan <em class="featured-heading-accent">hari ini.</em></h2>
+                <p class="featured-intro mt-3 max-w-[42rem] text-[clamp(.95rem,1.35vw,1.1rem)] leading-[1.65] text-[var(--text-secondary)]">Ide masakan rumahan yang enak, praktis, dan cocok untuk hari ini.</p>
+              </div>
+              <a class="see-all group inline-flex min-h-12 items-center justify-center gap-3 self-end rounded-full border border-[var(--border)] bg-[color-mix(in_srgb,var(--bg-card)_72%,transparent)] px-5 font-semibold text-[var(--text-primary)] shadow-[0_5px_16px_rgba(31,21,12,.05)] transition duration-300 hover:-translate-y-0.5 hover:border-[var(--border-hover)] hover:bg-[var(--bg-card)] hover:shadow-[var(--shadow-card)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--primary)]" href="#/resep" @click.prevent="go('resep')"><span>Lihat semua resep</span><span class="see-all-arrow grid size-7 place-items-center rounded-full bg-[var(--bg-surface)] transition duration-300 group-hover:translate-x-0.5" aria-hidden="true">↗</span></a>
             </div>
-            <div class="recipes-scroll [display:grid] [gap:18px] [overflow-x:auto] [padding:8px_0_12px] [scrollbar-width:thin] [scrollbar-color:rgba(182,92,58,0.3)_transparent] [margin:0] [grid-template-columns:repeat(3,_minmax(0,_1fr))] [overflow:visible] [scroll-snap-type:none]" aria-label="Resep unggulan"></div>
+            <div class="recipes-scroll featured-recipes-grid grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-12" aria-label="Resep unggulan"></div>
           </div>
         </section>
 
