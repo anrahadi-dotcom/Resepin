@@ -6007,7 +6007,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     margin: 0 !important;
     transform: translateX(-50%);
   }
-  #page-home .hero-paper-theme > #heroApp > .hero-title {
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title {
     position: absolute;
     inset: 0;
     z-index: auto;
@@ -6028,8 +6028,8 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     text-transform: uppercase;
     -webkit-text-fill-color: var(--hero-paper-red) !important;
   }
-  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-line,
-  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-swap-line {
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-line,
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-swap-line {
     position: absolute;
     display: block;
     width: max-content;
@@ -6044,7 +6044,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     -webkit-text-fill-color: var(--hero-paper-red) !important;
     text-shadow: 0 1px 0 color-mix(in srgb, var(--hero-paper-sheet-light) 28%, transparent);
   }
-  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-line {
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-line {
     top: 20%;
     left: 9%;
     z-index: 3;
@@ -6052,14 +6052,14 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     font-size: clamp(4.6rem, 8.2vw, 8.6rem) !important;
     opacity: 1;
   }
-  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-swap {
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-swap {
     position: absolute;
     inset: 0;
     display: block;
     width: 100%;
     height: 100%;
   }
-  #page-home .hero-paper-theme > #heroApp > .hero-title .title-gradient {
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .title-gradient {
     top: 33%;
     left: 60%;
     z-index: 1;
@@ -6067,14 +6067,14 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     font-size: clamp(4.4rem, 7.4vw, 7.8rem) !important;
     opacity: 1;
   }
-  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-swap-line:not(.title-gradient) {
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-swap-line:not(.title-gradient) {
     top: 44%;
     left: 10%;
     z-index: 3;
     font-size: clamp(3.8rem, 6.3vw, 6.4rem) !important;
     opacity: 1;
   }
-  #page-home .hero-paper-theme > #heroApp > .hero-title .title-gradient {
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .title-gradient {
     padding: 0;
     margin: 0;
     font-weight: 500 !important;
@@ -6125,9 +6125,9 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 
 @media (max-width: 1100px) and (min-width: 901px) {
   #page-home .hero-paper-theme .hero-copy-eyebrow { top: 12%; }
-  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-line { top: 19%; left: 7%; font-size: clamp(3.8rem, 7vw, 5.8rem) !important; }
-  #page-home .hero-paper-theme > #heroApp > .hero-title .title-gradient { top: 34%; left: 61%; font-size: clamp(3.25rem, 5.8vw, 4.9rem) !important; }
-  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-swap-line:not(.title-gradient) { top: 46%; left: 7%; font-size: clamp(3rem, 5.6vw, 4.7rem) !important; }
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-line { top: 19%; left: 7%; font-size: clamp(3.8rem, 7vw, 5.8rem) !important; }
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .title-gradient { top: 34%; left: 61%; font-size: clamp(3.25rem, 5.8vw, 4.9rem) !important; }
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-swap-line:not(.title-gradient) { top: 46%; left: 7%; font-size: clamp(3rem, 5.6vw, 4.7rem) !important; }
   #page-home .hero-paper-theme .hero-favorites { width: min(760px, 84vw); }
   #page-home .hero-paper-theme .hero-favorite-card.is-slot-1 { width: min(58%, 390px) !important; }
 }
@@ -6163,7 +6163,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     margin: 0 0 13px !important;
     transform: none;
   }
-  #page-home .hero-paper-theme > #heroApp > .hero-title {
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title {
     position: relative;
     inset: auto;
     width: 100%;
@@ -6182,8 +6182,8 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     transform: none;
     -webkit-text-fill-color: var(--hero-paper-red) !important;
   }
-  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-line,
-  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-swap-line {
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-line,
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-swap-line {
     position: relative;
     inset: auto;
     display: block;
@@ -6201,14 +6201,14 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     color: var(--hero-paper-red) !important;
     -webkit-text-fill-color: var(--hero-paper-red) !important;
   }
-  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-swap {
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-swap {
     position: relative;
     inset: auto;
     display: block;
     width: auto;
     height: auto;
   }
-  #page-home .hero-paper-theme > #heroApp > .hero-title .title-gradient { background: none !important; -webkit-background-clip: initial !important; background-clip: initial !important; color: var(--hero-paper-red) !important; -webkit-text-fill-color: var(--hero-paper-red) !important; }
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .title-gradient { background: none !important; -webkit-background-clip: initial !important; background-clip: initial !important; color: var(--hero-paper-red) !important; -webkit-text-fill-color: var(--hero-paper-red) !important; }
   #page-home .hero-paper-theme .hero-favorites {
     position: relative;
     top: auto;
