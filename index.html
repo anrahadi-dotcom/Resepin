@@ -194,9 +194,22 @@
       <div class="hero-scene hero-paper-scene [position:absolute] [z-index:0] [inset:0] [overflow:hidden] [background:var(--hero-paper-edge)] [pointer-events:none] [translate:0_var(--hero-scene-scroll-y,0px)]" aria-hidden="true">
         <span class="hero-paper-edition">RESEPIN <i>·</i> JURNAL DAPUR <b>01</b></span>
         <span class="hero-paper-note">DARI YANG ADA, JADI CERITA</span>
+        <svg class="hero-topographic-map" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <g fill="none" stroke="currentColor" stroke-width="1.1" vector-effect="non-scaling-stroke">
+            <path d="M-110 150C70 34 151 44 246 117s167 99 268 38S684 20 795 74s142 142 253 123 199-105 318-47 113 127 196 112"/>
+            <path d="M-118 183C61 68 151 76 239 145s166 94 267 33 175-130 285-77 142 140 253 121 202-102 320-44 114 124 198 110"/>
+            <path d="M-126 218C54 104 143 110 231 178s165 91 265 31 176-126 286-74 143 138 254 119 204-99 322-41 116 122 200 107"/>
+            <path d="M-138 714C18 641 133 636 245 686s203 71 305 26 187-105 287-66 138 112 255 102 180-74 291-38 127 88 242 51"/>
+            <path d="M-144 750C17 680 130 671 242 720s202 69 304 23 187-100 287-62 139 111 256 101 182-72 293-36 128 88 244 50"/>
+            <path d="M-150 786C10 718 127 707 239 755s201 67 303 21 188-96 289-58 140 109 257 99 184-69 295-33 130 86 246 48"/>
+            <path d="M1100-50c-41 117-21 180 60 226s121 94 97 177-100 125-65 204 110 97 86 179-78 132-31 226"/>
+            <path d="M1138-64c-39 118-17 180 64 225s119 93 95 176-98 126-62 205 108 96 83 179-76 133-28 227"/>
+            <path d="M1178-78c-37 119-14 181 67 225s118 91 93 174-95 127-59 206 105 95 80 178-73 134-25 228"/>
+          </g>
+        </svg>
       </div>
       <div id="heroApp" class="hero-container [max-width:none] [margin:0] [display:block] [grid-template-columns:1fr_1fr] [gap:60px] [align-items:center] [position:relative] [z-index:2] [width:100%] [height:100%] [min-height:0] max-[900px]:h-auto max-[900px]:min-h-[100svh]" v-cloak>
-        <div class="hero-content [position:absolute] [z-index:3] !top-[52%] !left-1/2 !w-[min(1380px,calc(100%_-_112px))] !p-0 ![transform:translate(-50%,-50%)] [text-shadow:0_2px_22px_rgba(0,0,0,.32)] [display:grid] !grid-cols-1 min-[901px]:!grid-cols-[minmax(0,.92fr)_minmax(0,1.08fr)] !justify-items-stretch !items-center !gap-[clamp(34px,5.2vw,88px)] max-[900px]:!relative max-[900px]:!left-auto max-[900px]:!top-auto max-[900px]:!mx-auto max-[900px]:!w-full max-[900px]:!transform-none max-[900px]:!gap-6 max-[900px]:!px-5 max-[900px]:!pb-16 max-[900px]:!pt-[clamp(6rem,16svh,9rem)]">
+        <div class="hero-content [position:absolute] [z-index:3] !top-[52%] !left-1/2 !w-[min(1380px,calc(100%_-_112px))] !p-0 ![transform:translate(-50%,-50%)] [text-shadow:0_2px_22px_rgba(0,0,0,.32)] [display:grid] !grid-cols-1 min-[901px]:grid-cols-[minmax(0,.34fr)_minmax(0,.66fr)] !justify-items-stretch !items-center !gap-[clamp(34px,5.2vw,88px)] max-[900px]:!relative max-[900px]:!left-auto max-[900px]:!top-auto max-[900px]:!mx-auto max-[900px]:!w-full max-[900px]:!transform-none max-[900px]:!gap-6 max-[900px]:!px-5 max-[900px]:!pb-16 max-[900px]:!pt-[clamp(6rem,16svh,9rem)]">
           <div class="hero-copy [position:relative] [z-index:1] [width:min(100%,620px)] [max-width:620px] [translate:0_var(--hero-copy-scroll-y,0px)] [opacity:var(--hero-copy-scroll-opacity,1)] !text-left">
             <span class="hero-copy-eyebrow hero-enter hero-enter-2 motion-safe:animate-home-recipe-enter [display:inline-flex] [align-items:center] [gap:9px] [margin-bottom:14px] [color:var(--hero-ink)] [font-size:.7rem] [font-weight:750] [letter-spacing:.16em] [--motion-delay:.08s]"><i aria-hidden="true"></i> DARI BAHAN YANG ADA</span>
             <h1 class="hero-title !mx-0 !mb-3 !max-w-[800px] !text-left !text-balance !font-[var(--font-display)] !text-[clamp(3.35rem,5.6vw,6.25rem)] max-[900px]:!text-[clamp(3.15rem,8.2vw,4.65rem)] max-[600px]:!text-[clamp(2.75rem,11vw,3.65rem)] !font-bold !leading-[.98] !tracking-[-.055em]" :aria-label="heroHeadlines[heroHeadlineIndex].label"><span class="hero-title-line hero-enter-3 motion-safe:animate-home-recipe-enter [display:block] [--motion-delay:.18s]">Dari isi dapur,</span><Transition name="hero-title-swap" mode="out-in"><span :key="heroHeadlineIndex" class="hero-title-swap [display:block]"><span class="title-gradient hero-title-swap-line [background:linear-gradient(135deg,_var(--primary)_0%,_var(--accent)_100%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] [background-clip:text] [display:block]">{{ heroHeadlines[heroHeadlineIndex].highlight }}</span><span class="hero-title-swap-line [display:block]">{{ heroHeadlines[heroHeadlineIndex].ending }}</span></span></Transition></h1>
@@ -205,10 +218,10 @@
               <a href="#/resep" @click.prevent="go('resep')">Temukan resep <span aria-hidden="true">↗</span></a>
             </div>
           </div>
-          <section class="hero-favorites hero-enter hero-enter-8 motion-safe:animate-home-recipe-enter [display:grid] [align-content:center] !justify-items-stretch [gap:10px] !w-full !justify-self-stretch !p-0 [--motion-delay:.34s] [translate:0_var(--hero-favorites-scroll-y,0px)] [opacity:var(--hero-seq-opacity,var(--hero-favorites-scroll-opacity,1))] [transition:none] [color:var(--hero-ink)] !text-left" aria-label="Dua resep pilihan Resepin">
+          <section class="hero-favorites hero-enter hero-enter-8 motion-safe:animate-home-recipe-enter [display:grid] [align-content:center] justify-items-center [gap:10px] w-full justify-self-stretch !p-0 [--motion-delay:.34s] [translate:0_var(--hero-favorites-scroll-y,0px)] [opacity:var(--hero-seq-opacity,var(--hero-favorites-scroll-opacity,1))] [transition:none] [color:var(--hero-ink)] !text-left" aria-label="Dua resep pilihan Resepin">
             <div class="hero-favorites-heading [display:grid] [justify-items-start] [gap:4px] [padding:0]">
               <span><i aria-hidden="true"></i> MENU RACIKAN <b>· 02 PILIHAN</b></span>
-              <h2>Sudah ada, tinggal diolah.</h2>
+              <h2>Dua ide, satu meja.</h2>
             </div>
             <div class="hero-feature-viewport">
               <span class="hero-feature-orbit" aria-hidden="true"><i>✳</i><b>MENU<br/>RUMAHAN</b></span>
