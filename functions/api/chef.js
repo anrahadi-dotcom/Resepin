@@ -1,7 +1,52 @@
 const MAX_MESSAGE_LENGTH = 1000;
 const MODEL = '@cf/qwen/qwen3-30b-a3b-fp8';
 const FALLBACK_MODEL = '@cf/meta/llama-3.1-8b-instruct-fp8';
+const GEMINI_MODEL = 'gemini-3.5-flash-lite';
 const requestWindows = new Map();
+
+async function generateGeminiAnswer(apiKey, messages, maxOutputTokens) {
+  const contents = [];
+  for (const message of messages) {
+    if (message.role === 'system') continue;
+    const role = message.role === 'assistant' ? 'model' : 'user';
+    const text = typeof message.content === 'string' ? message.content.trim() : '';
+    if (!text || (!contents.length && role !== 'user')) continue;
+    const last = contents.at(-1);
+    if (last?.role === role) last.parts[0].text += '\n\n' + text;
+    else contents.push({ role, parts: [{ text }] });
+  }
+  if (!contents.length) return '';
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
+  try {
+    const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/' + GEMINI_MODEL + ':generateContent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': apiKey },
+      body: JSON.stringify({
+        systemInstruction: { parts: [{ text: messages.find(item => item.role === 'system')?.content || '' }] },
+        contents,
+        generationConfig: { temperature: 0.7, maxOutputTokens }
+      }),
+      signal: controller.signal
+    });
+    if (!response.ok) {
+      console.warn('Gemini fallback returned ' + response.status + '.');
+      return '';
+    }
+    const data = await response.json();
+    return (data?.candidates?.[0]?.content?.parts || [])
+      .map(part => typeof part.text === 'string' ? part.text : '')
+      .join('')
+      .trim()
+      .slice(0, 3000);
+  } catch (error) {
+    console.warn('Gemini fallback unavailable.', error);
+    return '';
+  } finally {
+    clearTimeout(timeout);
+  }
+}
 
 function decodeSearchHtml(value) {
   return value.replace(/<[^>]*>/g, '').replace(/&amp;/g, '&').replace(/&quot;/g, '"')
@@ -55,7 +100,7 @@ async function searchWebReferences(message) {
 const SYSTEM_PROMPT = `Kamu adalah Chef Resepin, asisten berbahasa Indonesia yang ramah, jelas, praktis, dan terasa seperti teman ngobrol.
 Bantu urusan memasak dengan kuat, tetapi tetap jawab pertanyaan pengetahuan umum yang wajar jika pengguna bertanya di luar makanan. Jangan menolak pertanyaan umum hanya karena bukan topik dapur. Untuk fakta yang bisa berubah atau pertanyaan yang perlu konteks khusus, gunakan referensi pencarian web jika tersedia; jika tidak cukup yakin, katakan begitu.
 Gaya percakapan: ikuti tingkat santai pengguna dengan natural (misalnya sapaan "bro" boleh dibalas santai), tetapi jangan mengumumkan bahwa kamu akan menjadi asik, jangan mengulang permintaan gaya, dan jangan memakai kalimat meta seperti "Siap, aku akan menjawab lebih santai". Jawab maksud pertanyaan dulu dengan bahasa sehari-hari yang ringkas; humor dan emoji secukupnya.
-Konteks percakapan: pertanyaan lanjutan seperti "dia", "itu", "kapan menjabat", atau "yang tadi" merujuk ke orang/topik paling baru yang relevan dalam percakapan, bukan tokoh dari jawaban lama. Periksa beberapa giliran terakhir sebelum menjawab dan jangan mencampur dua tokoh bernama mirip. Jika nama memang ambigu (contoh George H.W. Bush vs George W. Bush), sebutkan perbedaannya atau minta klarifikasi. Jika jawaban sebelumnya tampak tidak cocok dengan pertanyaan, koreksi dengan terus terang sebelum melanjutkan.
+Konteks percakapan: pertanyaan lanjutan seperti "dia", "itu", "kapan menjabat", atau "yang tadi" merujuk ke orang/topik paling baru yang relevan dalam percakapan, bukan tokoh dari jawaban lama. Periksa beberapa giliran terakhir sebelum menjawab dan jangan mencampur dua tokoh bernama mirip. Jika nama memang ambigu (contoh George H.W. Bush vs George W. Bush), sebutkan perbedaannya atau minta klarifikasi. Koreksi terbaru pengguna mengalahkan tebakan atau saranmu sebelumnya: akui singkat bila salah paham, jawab maksud yang dikoreksi, jangan mengulang opsi yang sudah ditolak, dan gunakan bahan yang pengguna katakan tersedia. Jika jawaban sebelumnya tampak tidak cocok dengan pertanyaan, koreksi dengan terus terang sebelum melanjutkan.
 Untuk jawaban fakta, jawab inti yang ditanya saja. Jangan menambahkan trivia, klaim personal, humor, atau detail sampingan yang tidak diminta dan tidak didukung sumber. Jangan mengarang sifat/hobi tokoh (misalnya "suka menangkap burung").
 Gunakan bahan yang disebut pengguna; tandai bahan tambahan sebagai opsional. Jika diminta resep, selalu beri nama hidangan yang jelas, perkiraan waktu dan porsi, takaran sederhana (atau jelaskan bahwa jumlahnya mengikuti bahan yang ada), langkah bernomor yang cukup rinci, dan tanda matang yang perlu dicek. Jangan hanya memberi langkah umum. Jangan mengarang data katalog, harga lokal, nutrisi presisi, tanggal kedaluwarsa, atau fakta yang tidak diketahui; nyatakan ketidakpastian dan tanyakan detail jika perlu.
 Keamanan: jangan menyatakan makanan pasti aman hanya dari bau/tampilan. Beri panduan konservatif untuk makanan mudah rusak, hindari anjuran mencairkan di suhu ruang, dan sarankan membuang makanan bila waktu/suhu penanganan tidak diketahui atau berisiko. Untuk alergi, jangan menjamin bebas kontaminasi silang; minta pengguna memeriksa label dan proses dapur. Jangan memberi diagnosis atau nasihat medis; arahkan kondisi kesehatan/alergi berat ke tenaga kesehatan.
@@ -154,11 +199,11 @@ export async function onRequestPost({ request, env }) {
         : 'Waduh, kalau oli atau serpihan bodi motor benar-benar tertelan, jangan paksa muntah atau coba menetralkan sendiri. Hubungi tenaga kesehatan/IGD setempat untuk arahan sesuai jenis dan jumlahnya; kalau batuk, tersedak, muntah, sesak, atau sulit dibangunkan, segera ke IGD. Catat jumlah dan waktunya, lalu siapkan kemasan atau foto bahannya. Kalau belum tertelan, keluarkan dari mulut dan jangan lanjut dimakan.';
     return Response.json({ answer, references }, { headers: { 'Cache-Control': 'no-store' } });
   }
-  if (!env.AI?.run && /\blawar\s+plek\b/i.test(message)) {
+  if (!env.AI?.run && !env.GEMINI_API_KEY && /\blawar\s+plek\b/i.test(message)) {
     const answer = 'Kamu benar—lawar plek itu bukan lawar sayur. Lawar plek biasanya merujuk lawar daging dengan darah segar (seringnya babi), berbeda dari lawar sayur. Karena versi tradisional dapat memakai daging/darah mentah dan berisiko membawa kuman, aku nggak mau menyebut versi matang sebagai plek asli. Aku bisa bantu bikin versi rumahan matang dengan bumbu lawar kalau kamu mau.';
     return Response.json({ answer, references }, { headers: { 'Cache-Control': 'no-store' } });
   }
-  if (!env.AI?.run) {
+  if (!env.AI?.run && !env.GEMINI_API_KEY) {
     return Response.json({ error: 'AI belum terhubung di deployment ini.' }, { status: 503 });
   }
 
@@ -204,13 +249,27 @@ export async function onRequestPost({ request, env }) {
       return typeof candidate === 'string' ? candidate.trim().slice(0, 3000) : '';
     };
 
-    let answer = extractAnswer(await env.AI.run(MODEL, {
-      ...options,
-      messages: [...messages.slice(0, -1), { role: 'user', content: `${promptMessage}\n/no_think` }]
-    }));
-    if (!answer) {
-      console.warn('Chef primary model returned no final text; trying fallback model.');
-      answer = extractAnswer(await env.AI.run(FALLBACK_MODEL, { messages, max_tokens: requestedRecipeCount ? 700 : 420, temperature: 0.3 }));
+    let answer = '';
+    if (env.AI?.run) {
+      try {
+        answer = extractAnswer(await env.AI.run(MODEL, {
+          ...options,
+          messages: [...messages.slice(0, -1), { role: 'user', content: promptMessage + '\n/no_think' }]
+        }));
+      } catch (error) {
+        console.warn('Chef primary model failed.', error);
+      }
+      if (!answer) {
+        console.warn('Chef primary model returned no final text; trying fallback model.');
+        try {
+          answer = extractAnswer(await env.AI.run(FALLBACK_MODEL, { messages, max_tokens: requestedRecipeCount ? 700 : 420, temperature: 0.3 }));
+        } catch (error) {
+          console.warn('Chef secondary Workers AI model failed.', error);
+        }
+      }
+    }
+    if (!answer && env.GEMINI_API_KEY) {
+      answer = await generateGeminiAnswer(env.GEMINI_API_KEY, messages, requestedRecipeCount ? 1100 : 800);
     }
     if (!answer) throw new Error('AI models returned no final text');
     return Response.json({ answer, references }, { headers: { 'Cache-Control': 'no-store' } });

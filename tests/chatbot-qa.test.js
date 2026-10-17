@@ -19,6 +19,7 @@ function createChatbotContext() {
     vm.runInContext(readFileSync(resolve(root, file), 'utf8'), context);
   }
   vm.runInContext('globalThis.testGenerate = generateAIResponse', context);
+  vm.runInContext('globalThis.testGenerateContextual = generateContextualResponse', context);
   return context;
 }
 
@@ -137,20 +138,42 @@ test('salt-fix technique questions do not get routed to an unrelated recipe card
   assert.match(answer.text, /air atau kaldu|bahan utama tawar/);
 });
 
-test('web search runs before the answer and shows animated source pages below the typing bubble', () => {
+test('web search keeps only the chef avatar and a simple animated three-dot loading bubble', () => {
   const source = readFileSync(resolve(root, 'src/legacy/chatbot.js'), 'utf8');
   const styles = readFileSync(resolve(root, 'css/style.css'), 'utf8');
   assert.match(source, /action: 'search'/);
-  assert.match(source, /Membaca halaman/);
-  assert.match(source, /Memantapkan jawaban/);
   assert.match(source, /body: JSON\.stringify\(\{ message, history, references \}\)/);
-  assert.match(source, /class="chef-search-activity" hidden/);
   assert.match(source, /chef-typing-stack/);
-  assert.match(source, /chef-search-globe/);
-  assert.match(source, /chef-search-track/);
+  assert.match(source, /class="typing-dots" aria-hidden="true"><span><\/span><span><\/span><span><\/span>/);
+  assert.doesNotMatch(source, /chef-search-activity|chef-search-globe|chef-search-page|Membaca halaman|Memantapkan jawaban/);
   assert.match(source, /chef-web-references/);
-  assert.match(styles, /chefPageHop/);
-  assert.match(styles, /chefSearchSweep/);
+  assert.match(styles, /@keyframes typingBounce/);
+  assert.doesNotMatch(styles, /chefPageHop|chefSearchSweep|chef-search-globe|chef-search-page/);
   assert.doesNotMatch(styles, /\.typing-dots span\s*\{\s*@apply \[animation:none\]/);
-  assert.match(styles, /chef-search-activity\[hidden\]/);
+  assert.match(styles, /prefers-reduced-motion:\s*reduce/);
+  assert.doesNotMatch(source, /const delay = 1200 \+ Math\.random/);
+});
+
+test('Chef admits the tone in the recording was stiff, then conversationally corrects the French-fries mistake', () => {
+  const context = createChatbotContext();
+  const tone = context.testGenerate('kurang asik itu harus kaya sohib bareng');
+  assert.equal(tone.type, 'text');
+  assert.match(tone.text, /tadi kaku banget/);
+  const history = [
+    { role: 'user', content: 'aku punya wortel sama kentang doang bro' },
+    { role: 'assistant', content: 'Kamu bisa bikin keripik kentang atau wortel goreng.' },
+    { role: 'user', content: 'waduh kalau french fries aja gimana wortel nya gausah deh' },
+    { role: 'assistant', content: 'Keripik kentang sih gampang.' }
+  ];
+  for (const prompt of [
+    'bukan keripik kentang bro, french fries',
+    'aku ga jadi pake wortel nya',
+    'waduh kalau french fries aja gimana wortel nya gausah deh'
+  ]) {
+    const answer = context.testGenerateContextual(prompt, history);
+    assert.equal(answer.type, 'text', prompt);
+    assert.match(answer.text, /French fries dari kentang/, prompt);
+    assert.match(answer.text, /wortelnya kita skip/i, prompt);
+    assert.doesNotMatch(answer.text, /wortel bisa diganti dengan kentang|wortel goreng|keripik kentang sih gampang/i, prompt);
+  }
 });

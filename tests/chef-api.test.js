@@ -253,6 +253,56 @@ test('web search action accepts a general question and returns source cards befo
   }
 });
 
+test('Gemini Flash-Lite stays a server-side fallback after both Workers AI models fail', async () => {
+  const originalFetch = globalThis.fetch;
+  let capturedUrl = '';
+  let capturedHeaders = {};
+  let capturedBody = {};
+  const workerModels = [];
+  globalThis.fetch = async (url, options) => {
+    capturedUrl = String(url);
+    capturedHeaders = options.headers;
+    capturedBody = JSON.parse(options.body);
+    return new Response(JSON.stringify({
+      candidates: [{ content: { parts: [{ text: 'Nah iya, kita bikin French fries dari kentang.' }] } }]
+    }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  };
+  try {
+    const response = await onRequestPost({
+      request: new Request('https://example.test/api/chef', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'CF-Connecting-IP': 'qa-gemini-fallback' },
+        body: JSON.stringify({
+          message: 'Bukan keripik kentang, maksudku French fries. Wortelnya tidak usah.',
+          history: [
+            { role: 'user', content: 'Aku punya wortel sama kentang.' },
+            { role: 'assistant', content: 'Kamu bisa bikin keripik kentang.' }
+          ]
+        })
+      }),
+      env: {
+        GEMINI_API_KEY: 'test-server-secret',
+        AI: { run: async model => {
+          workerModels.push(model);
+          throw new Error('Workers AI unavailable');
+        } }
+      }
+    });
+    const data = await response.json();
+    assert.equal(response.status, 200);
+    assert.deepEqual(workerModels, ['@cf/qwen/qwen3-30b-a3b-fp8', '@cf/meta/llama-3.1-8b-instruct-fp8']);
+    assert.equal(capturedUrl, 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent');
+    assert.equal(capturedHeaders['x-goog-api-key'], 'test-server-secret');
+    assert.doesNotMatch(capturedUrl, /test-server-secret/);
+    assert.match(capturedBody.systemInstruction.parts[0].text, /Koreksi terbaru pengguna mengalahkan tebakan/);
+    assert.deepEqual(capturedBody.contents.map(item => item.role), ['user', 'model', 'user']);
+    assert.match(capturedBody.contents.at(-1).parts[0].text, /French fries/);
+    assert.equal(data.answer, 'Nah iya, kita bikin French fries dari kentang.');
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
 test('pronoun follow-up web search is grounded in the latest assistant turn', async () => {
   const originalFetch = globalThis.fetch;
   let searchUrl = '';

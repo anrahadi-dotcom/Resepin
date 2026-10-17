@@ -117,6 +117,10 @@ Tema mengikuti preferensi sistem pada kunjungan pertama dan pilihan manual disim
 
 Katalog awal berisi 40 resep: masakan rumahan dan Bali serta hidangan populer. Katalog ini bukan ensiklopedia; resep baru dapat ditambahkan ke `RECIPES_DB`.
 
+### Cadangan Gemini (opsional)
+
+Cloudflare Workers AI tetap menjadi backend utama. Jika kedua model Workers AI gagal, endpoint Chef dapat memakai Gemini Flash-Lite sebagai cadangan setelah `GEMINI_API_KEY` ditambahkan sebagai secret Cloudflare Pages: `npx wrangler pages secret put GEMINI_API_KEY --project-name=resepin`. Kunci hanya digunakan di endpoint server dan tidak dikirim ke browser. Tanpa secret tersebut, alur Gemini tidak aktif. Saat fallback dipakai, pertanyaan beserta maksimal enam pesan konteks terakhir dikirim ke Google; periksa kebijakan data dan kuota Gemini sebelum mengaktifkannya. Kuota model dapat berubah dan berbeda menurut project.
+
 ## Prompt Chef Resepin
 
 Jadilah chef yang ramah, kreatif, dan ahli masakan minim limbah. Susun resep praktis dari bahan pengguna, termasuk saat bahan terbatas; sarankan substitusi bila bumbu tidak tersedia. Jawab dalam bahasa Indonesia dengan nama masakan, estimasi waktu dan kesulitan, bahan utama dan bumbu dasar, langkah singkat, serta tips hemat/substitusi. Jangan menganggap bahan opsional tersedia tanpa menjelaskannya.

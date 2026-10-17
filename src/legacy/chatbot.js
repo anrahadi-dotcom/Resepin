@@ -62,17 +62,33 @@ function sendChat(options = {}) {
   const typingId = 'typing-' + Date.now();
   appendTypingIndicator(typingId, messagesId);
 
-  // Simulate AI response delay
-  const delay = 1200 + Math.random() * 800;
-  setTimeout(() => {
-    generateAIResponseAsync(message, history, typingId).then(response => {
-      removeTypingIndicator(typingId);
-      appendAIResponse(response, messagesId, options);
-    });
-  }, delay);
+  generateAIResponseAsync(message, history).then(response => {
+    removeTypingIndicator(typingId);
+    appendAIResponse(response, messagesId, options);
+  });
 }
 
-async function generateAIResponseAsync(message, history = [], typingId = '') {
+function generateContextualResponse(message, history = []) {
+  const previousUserMessages = history.filter(item => item.role === 'user').map(item => item.content).join(' ');
+  const previousAssistantMessages = history.filter(item => item.role === 'assistant').map(item => item.content).join(' ');
+  const conversation = `${previousUserMessages} ${previousAssistantMessages} ${message}`;
+  const correctsOrRemovesCarrot = /\b(?:bukan|maksud(?:ku|nya)?|nggak|enggak|gak|ga|tidak|jadi|usah|pakai|pake|gausah|gakusah|nggakusah)\b/i.test(message) &&
+    /\b(?:wortel|keripik|fries|kentang)\b/i.test(message);
+  const confirmsFries = /\b(?:french\s+fries|fries|kentang\s+goreng)\b/i.test(conversation);
+  const potatoesAvailable = /\b(?:kentang|potato)\b/i.test(previousUserMessages);
+  const carrotsAvailable = /\bwortel\b/i.test(previousUserMessages);
+  if (!correctsOrRemovesCarrot || !confirmsFries || !potatoesAvailable || !carrotsAvailable) return null;
+
+  return {
+    type: 'text',
+    text: 'Nah iya, bro—French fries dari kentang, bukan keripik 😅 Wortelnya kita skip; kentangmu sudah cukup. Potong kentang memanjang, rendam 20–30 menit, lalu tiriskan dan keringkan. Goreng dengan api sedang sampai empuk dan pucat, angkat sebentar, lalu goreng lagi dengan api lebih besar sampai keemasan. Bumbui setelah diangkat. 🍟'
+  };
+}
+
+async function generateAIResponseAsync(message, history = []) {
+  const contextualResponse = generateContextualResponse(message, history);
+  if (contextualResponse) return contextualResponse;
+
   const localResponse = generateAIResponse(message);
   const followsNonFoodExposure = history.some(item => item.role === 'user' &&
     /\b(?:body|bodi)\s+motor\b|\boli(?:\s+(?:motor|bekas))?\b|\bcairan\s+rem\b|\bbensin\b/i.test(item.content) &&
@@ -81,7 +97,6 @@ async function generateAIResponseAsync(message, history = [], typingId = '') {
   if (localResponse.type !== 'fallback' && !isLawarPlekRequest(message) && !followsNonFoodExposure) return localResponse;
 
   try {
-    updateTypingSearch(typingId, 'Menelusuri web…');
     let references = [];
     try {
       const searchResponse = await fetch('/api/chef', {
@@ -96,16 +111,6 @@ async function generateAIResponseAsync(message, history = [], typingId = '') {
     } catch (searchError) {
       console.warn('Chef web search unavailable; continuing without web sources.', searchError);
     }
-    if (references.length) {
-      for (let index = 0; index < references.length; index += 1) {
-        const reference = references[index];
-        updateTypingSearch(typingId, `Membaca halaman ${index + 1} dari ${references.length}`, reference);
-        await new Promise(resolve => setTimeout(resolve, 420));
-      }
-    } else {
-      updateTypingSearch(typingId, 'Menyusun jawaban…');
-    }
-    updateTypingSearch(typingId, 'Memantapkan jawaban…');
     const response = await fetch('/api/chef', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -191,6 +196,9 @@ function generateAIResponse(message) {
   if (/\b(terima kasih|makasih|thanks|thank you)\b/.test(normalized)) {
     return { type: 'text', text: CHEF_PROMPTS.thanks };
   }
+  if (/\bkurang\b.{0,24}\basik\b/.test(normalized) && /\b(?:sohib|teman|santai|gaul|natural|nyambung)\b/.test(normalized)) {
+    return { type: 'text', text: 'Wkwk iya, tadi kaku banget 😅 Oke, ngobrol biasa aja, bro. Ada bahan apa di dapur?' };
+  }
   // Treat requests for a more playful/casual tone as conversation preferences,
   // not as requests for a recipe or a generic explanation of the assistant.
   if (/\b(?:jawab(?:nya)?|respon(?:s)?(?:\s*(?:mu|nya))?|gaya(?: bicara)?|bahasa(?:nya)?|ngobrol)\b.{0,60}\b(?:asik|asyik|seru|santai|lucu|gaul|ramah)\b/.test(normalized) ||
@@ -200,7 +208,8 @@ function generateAIResponse(message) {
   if (/\b(?:siapa nama(?:mu)?|nama.{0,20}(?:kamu|mu|chef|respon)|nama kamu siapa|nama chef(?:-nya)?|nama chef resepin|apa nama(?:mu)?|siapa namamu)\b/.test(normalized)) {
     return { type: 'text', text: 'Aku Chef Resepin 😄 Teman ngobrol soal masak dan ide resep.' };
   }
-  if (/\b(kamu siapa|siapa kamu|bisa apa|bant[u]? apa|help|tolong|apa yang bisa kamu bantu|bisa bantu apa|tanya apa|menu apa saja)\b/.test(normalized)) {
+  if (/\b(kamu siapa|siapa kamu|bisa apa|bant[u]? apa|help|apa yang bisa kamu bantu|bisa bantu apa|tanya apa|menu apa saja)\b/.test(normalized) ||
+      /^\s*tolong\s*[?.!]*$/i.test(normalized)) {
     return { type: 'text', text: CHEF_PROMPTS.help };
   }
 
@@ -388,7 +397,7 @@ function generateAIResponse(message) {
       : `Aku belum menemukan resep katalog yang cocok untuk ${condition}. Sebutkan bahan yang tersedia dan aku bantu cari opsi; tetap periksa label dan bahan tersembunyi seperti kaldu atau saus.` };
   }
 
-  const asksSubstitution = /\b(ganti|diganti|pengganti|alternatif|substitusi|tidak ada|tidak punya|nggak ada|nggak punya|gak ada|gak punya|ga ada|ga punya|enggak ada|enggak punya|habis|kehabisan)\b/.test(normalized);
+  const asksSubstitution = /\b(ganti|diganti|pengganti|alternatif|substitusi|tidak ada|tidak punya|nggak ada|nggak punya|gak ada|gak punya|ga ada|ga punya|enggak ada|enggak punya|habis|kehabisan|kosong)\b/.test(normalized);
   const isAcknowledgement = /^(oke|ok|iya|ya|boleh|siap|gas|lanjut|sip)(?:\s+(?:deh|dong|bro|kak|bang|sis|lanjut|ya|boleh|aja))*[!?.\s]*$/.test(normalized.trim());
   if (awaitingSubstitutionIngredient && !asksSubstitution && !explicitRecipeRequest) {
     if (isAcknowledgement) {
@@ -552,7 +561,9 @@ function generateAIResponse(message) {
     (recipe.title === 'Ayam Teriyaki' && /\bteriyaki\b/.test(normalized)) ||
     (recipe.title === 'Sate Lilit Bali' && /\bsate\s+lilit\b/.test(normalized))
   );
-  if (requestedRecipe) {
+  const asksHowToCook = /\b(cara|gimana|gmn|bagaimana|tips|trik)\b/.test(normalized) &&
+    !/\b(?:mau|kasih|beri|buat|bikin|minta)\b.{0,24}\b(?:resep|menu|hidangan)\b/.test(normalized);
+  if (requestedRecipe && !asksSubstitution && !asksHowToCook) {
     const dietaryNote = ['Babi Guling Bali (Versi Rumahan)', 'Lawar Sayur Bali'].includes(requestedRecipe.title)
       ? '\n\nCatatan: babi guling memakai daging babi. Lawar ini versi sayur tanpa daging dan tanpa darah.'
       : '';
@@ -797,39 +808,13 @@ function appendTypingIndicator(id, containerId = 'chatMessages') {
   div.innerHTML = `
     <div class="chat-bubble bot-bubble chef-search-loading">
       <div class="bubble-avatar"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
-      <div class="bubble-content chef-search-dots" aria-label="Chef sedang berpikir">
-        <div class="typing-dots"><span></span><span></span><span></span></div>
-      </div>
-    </div>
-    <div class="chef-search-activity" hidden>
-      <span class="chef-search-globe" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span>
-      <div class="chef-search-progress">
-        <span class="typing-search-status" role="status">Menelusuri web…</span>
-        <span class="chef-search-track" aria-hidden="true"><span></span></span>
-        <div class="chef-search-page" aria-hidden="true"></div>
+      <div class="bubble-content chef-search-dots" role="status" aria-label="Chef sedang menyiapkan jawaban">
+        <div class="typing-dots" aria-hidden="true"><span></span><span></span><span></span></div>
       </div>
     </div>
   `;
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
-}
-
-function updateTypingSearch(id, status, reference = null) {
-  const indicator = document.getElementById(id);
-  const activity = indicator?.querySelector('.chef-search-activity');
-  const statusLabel = activity?.querySelector('.typing-search-status');
-  if (!activity || !statusLabel) return;
-  activity.hidden = false;
-  statusLabel.textContent = status;
-  if (reference) {
-    let domain = '';
-    try { domain = new URL(reference.url).hostname.replace(/^www\./, ''); } catch { /* invalid source has no domain */ }
-    const page = activity.querySelector('.chef-search-page');
-    page.innerHTML = `<span class="chef-search-page-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 3.75h9l5 5v11.5H5z"/><path d="M14 3.75v5h5M8 13h8M8 16.5h6"/></svg></span><span class="chef-search-page-copy"><strong>${escapeHtml(reference.title || domain || 'Halaman web')}</strong><small>${escapeHtml(domain)}</small></span><span class="chef-search-page-arrow" aria-hidden="true">↗</span>`;
-    page.classList.remove('is-arriving');
-    void page.offsetWidth;
-    page.classList.add('is-arriving');
-  }
 }
 
 function removeTypingIndicator(id) {
