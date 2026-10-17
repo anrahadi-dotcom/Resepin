@@ -6030,11 +6030,11 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     text-shadow: 0 1px 0 color-mix(in srgb, var(--hero-paper-sheet-light) 28%, transparent);
   }
   #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-line {
-    top: 20%;
-    left: 24%;
+    top: 15%;
+    left: 22%;
     z-index: 3;
     translate: none;
-    font-size: clamp(3.9rem, 6.8vw, 7.1rem) !important;
+    font-size: clamp(3.7rem, 6.3vw, 6.7rem) !important;
     opacity: 1;
   }
   #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-swap {
@@ -6044,19 +6044,28 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     width: 100%;
     height: 100%;
   }
-  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .title-gradient {
-    top: 32%;
-    left: 14%;
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-middle-left {
+    top: 39%;
+    left: 23%;
     z-index: 1;
     translate: none;
-    font-size: clamp(3.7rem, 6.2vw, 6.5rem) !important;
+    font-size: clamp(3.3rem, 5.8vw, 6rem) !important;
     opacity: 1;
   }
-  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-swap-line:not(.title-gradient) {
-    top: 44%;
-    left: 44%;
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-middle-right {
+    top: 39%;
+    left: 56%;
     z-index: 3;
-    font-size: clamp(3.2rem, 5.2vw, 5.5rem) !important;
+    translate: none;
+    font-size: clamp(3.3rem, 5.8vw, 6rem) !important;
+    opacity: 1;
+  }
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-ending {
+    top: 58%;
+    left: 28%;
+    z-index: 3;
+    translate: none;
+    font-size: clamp(3.5rem, 5.7vw, 5.9rem) !important;
     opacity: 1;
   }
   #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .title-gradient {
@@ -6110,9 +6119,10 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 
 @media (max-width: 1100px) and (min-width: 901px) {
   #page-home .hero-paper-theme .hero-copy-eyebrow { top: 12%; }
-  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-line { top: 19%; left: 21%; font-size: clamp(3.35rem, 6vw, 5rem) !important; }
-  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .title-gradient { top: 34%; left: 12%; font-size: clamp(2.95rem, 5.1vw, 4.2rem) !important; }
-  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-swap-line:not(.title-gradient) { top: 46%; left: 43%; font-size: clamp(2.8rem, 4.6vw, 3.9rem) !important; }
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-line { top: 15%; left: 21%; font-size: clamp(3.2rem, 5.8vw, 4.8rem) !important; }
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-middle-left { top: 38%; left: 22%; font-size: clamp(2.8rem, 4.8vw, 4rem) !important; }
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-middle-right { top: 38%; left: 55%; font-size: clamp(2.8rem, 4.8vw, 4rem) !important; }
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-ending { top: 57%; left: 27%; font-size: clamp(3rem, 5vw, 4.4rem) !important; }
   #page-home .hero-paper-theme .hero-favorites { width: min(760px, 84vw); }
   #page-home .hero-paper-theme .hero-favorite-card.is-slot-1 { width: min(58%, 390px) !important; }
 }
@@ -6186,6 +6196,14 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     color: var(--hero-paper-red) !important;
     -webkit-text-fill-color: var(--hero-paper-red) !important;
   }
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-middle-left,
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-middle-right {
+    display: inline-block;
+    width: auto;
+    margin: 0;
+    vertical-align: baseline;
+  }
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-middle-left { margin-right: .18em; }
   #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-swap {
     position: relative;
     inset: auto;
