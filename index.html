@@ -57,10 +57,10 @@
       <div class="recipe-intro-progress" aria-hidden="true"><span></span></div>
     </div>
   </div>
-  <a class="skip-link" href="#page-home" onclick="focusActivePage(event)">Lewati ke konten</a>
+  <a class="skip-link [position:fixed] [z-index:4000] [top:8px] [left:8px] [padding:12px_16px] [transform:translateY(-160%)] [border-radius:10px] [color:var(--action-text)] [background:var(--action-bg)] [font-weight:700] focus:[transform:translateY(0)] focus:[outline:3px_solid_var(--primary)] focus:[outline-offset:3px]" href="#page-home" onclick="focusActivePage(event)">Lewati ke konten</a>
   <div id="app" v-cloak>
 
-  <svg class="ui-icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <svg class="ui-icon-sprite [position:absolute] [width:0] [height:0] [overflow:hidden] [pointer-events:none]" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
     <symbol id="ui-icon-carrot" viewBox="0 0 24 24"><path d="M12 8 5 15a3.5 3.5 0 0 0 5 5l7-7M12 8c1-3 3-4 6-5 0 3-1 5-4 6M12 8c-2-2-4-2-7-2 0 3 2 5 5 5M8 17l2 2m1-5 2 2"/></symbol>
     <symbol id="ui-icon-basket" viewBox="0 0 24 24"><path d="m3 10 2 10h14l2-10H3Zm3 0 5-7m7 7-5-7M8 13v4m4-4v4m4-4v4"/></symbol>
     <symbol id="ui-icon-pot" viewBox="0 0 24 24"><path d="M4 10h16l-1 10H5L4 10Zm-2 0h20M8 7h8M12 4v3M2 13H1m22 0h-1"/></symbol>
@@ -91,10 +91,10 @@
   </svg>
 
   <!-- ===== NAVBAR ===== -->
-  <nav class="navbar" id="navbar">
-    <div class="nav-container" :class="{ 'menu-open': menuOpen }">
-      <a class="nav-logo" href="#/" aria-label="Resepin, kembali ke Beranda" @click.prevent="go('home')">
-        <div class="logo-icon">
+  <nav class="navbar [position:fixed] [top:0] [left:0] [right:0] [z-index:var(--z-nav)] [padding:0_24px] [height:68px] [display:flex] [align-items:center] [background:transparent] [backdrop-filter:none] [-webkit-backdrop-filter:none] [border-bottom:1px_solid_var(--border)] [transition:none] [box-shadow:none] [border-bottom-color:transparent]" id="navbar">
+    <div class="nav-container [max-width:calc(100vw_-_36px)] [width:fit-content] [margin:0_auto] [display:flex] [align-items:center] [justify-content:center] [gap:12px] [min-width:0] [padding:8px_12px] [border:1px_solid_rgba(225,220,201,.2)] [border-radius:999px] [position:relative] [background:rgba(20,16,13,.38)] [box-shadow:0_12px_34px_rgba(0,0,0,.2),_inset_0_1px_0_rgba(255,255,255,.17),_inset_0_-1px_0_rgba(255,255,255,.045)] [backdrop-filter:blur(24px)_saturate(155%)] [-webkit-backdrop-filter:blur(24px)_saturate(155%)] [transition:transform_.48s_cubic-bezier(.18,1.22,.34,1),_box-shadow_.3s_ease]" :class="{ 'menu-open': menuOpen }">
+      <a class="nav-logo [display:flex] [align-items:center] [gap:10px] [font-family:var(--font-display)] [font-size:1.4rem] [font-weight:400] [color:#e1dcc9] [flex:0_0_38px] [width:38px] [height:42px] [justify-content:center]" href="#/" aria-label="Resepin, kembali ke Beranda" @click.prevent="go('home')">
+        <div class="logo-icon [width:36px] [height:36px] [display:flex] [align-items:center] [justify-content:center] [background:var(--bg-surface)] [border-radius:50%]">
           <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="16" cy="16" r="15" fill="url(#logoGrad)" opacity="0.12"/>
             <circle cx="16" cy="17" r="8" stroke="url(#logoGrad)" stroke-width="2.2" fill="none"/>
@@ -109,20 +109,20 @@
         </div>
       </a>
 
-      <div class="nav-links" id="navLinks">
-        <a class="nav-link active" data-page="home" href="#/" aria-current="page" @click.prevent="go('home')">Beranda</a>
-        <a class="nav-link" data-page="resep" href="#/resep" @click.prevent="go('resep')">Resep</a>
-        <a class="nav-link" data-page="chef" href="#/chef" @click.prevent="go('chef')">Chef Resepin</a>
-        <a class="nav-link" data-page="jelajahi" href="#/jelajahi" @click.prevent="go('jelajahi')">Jelajahi</a>
-        <a class="nav-link" data-page="tersimpan" href="#/tersimpan" @click.prevent="go('tersimpan')">Tersimpan</a>
+      <div class="nav-links [display:flex] [align-items:center] [gap:2px] [flex:0_1_auto] [justify-content:center] [margin-left:auto] [padding:3px] [border:0] [border-radius:999px] [background:transparent] [border-color:transparent] [box-shadow:none] [backdrop-filter:none] [-webkit-backdrop-filter:none]" id="navLinks">
+        <a class="nav-link active [padding:9px_11px] [border-radius:999px] [font-size:.85rem] [font-weight:500] [color:rgba(225,220,201,.76)] [transition:color_.2s_ease,_background_.2s_ease,_box-shadow_.2s_ease] [white-space:nowrap] hover:[color:#fff] hover:[background:rgba(225,220,201,.1)] focus-visible:[outline:2px_solid_rgba(225,220,201,.64)] focus-visible:[outline-offset:2px]" data-page="home" href="#/" aria-current="page" @click.prevent="go('home')">Beranda</a>
+        <a class="nav-link [padding:9px_11px] [border-radius:999px] [font-size:.85rem] [font-weight:500] [color:rgba(225,220,201,.76)] [transition:color_.2s_ease,_background_.2s_ease,_box-shadow_.2s_ease] [white-space:nowrap] hover:[color:#fff] hover:[background:rgba(225,220,201,.1)] focus-visible:[outline:2px_solid_rgba(225,220,201,.64)] focus-visible:[outline-offset:2px]" data-page="resep" href="#/resep" @click.prevent="go('resep')">Resep</a>
+        <a class="nav-link [padding:9px_11px] [border-radius:999px] [font-size:.85rem] [font-weight:500] [color:rgba(225,220,201,.76)] [transition:color_.2s_ease,_background_.2s_ease,_box-shadow_.2s_ease] [white-space:nowrap] hover:[color:#fff] hover:[background:rgba(225,220,201,.1)] focus-visible:[outline:2px_solid_rgba(225,220,201,.64)] focus-visible:[outline-offset:2px]" data-page="chef" href="#/chef" @click.prevent="go('chef')">Chef Resepin</a>
+        <a class="nav-link [padding:9px_11px] [border-radius:999px] [font-size:.85rem] [font-weight:500] [color:rgba(225,220,201,.76)] [transition:color_.2s_ease,_background_.2s_ease,_box-shadow_.2s_ease] [white-space:nowrap] hover:[color:#fff] hover:[background:rgba(225,220,201,.1)] focus-visible:[outline:2px_solid_rgba(225,220,201,.64)] focus-visible:[outline-offset:2px]" data-page="jelajahi" href="#/jelajahi" @click.prevent="go('jelajahi')">Jelajahi</a>
+        <a class="nav-link [padding:9px_11px] [border-radius:999px] [font-size:.85rem] [font-weight:500] [color:rgba(225,220,201,.76)] [transition:color_.2s_ease,_background_.2s_ease,_box-shadow_.2s_ease] [white-space:nowrap] hover:[color:#fff] hover:[background:rgba(225,220,201,.1)] focus-visible:[outline:2px_solid_rgba(225,220,201,.64)] focus-visible:[outline-offset:2px]" data-page="tersimpan" href="#/tersimpan" @click.prevent="go('tersimpan')">Tersimpan</a>
         <div class="nav-search-wrap" :class="{ 'is-open': navSearchOpen }">
-          <button class="nav-link nav-search-toggle" type="button" :aria-label="navSearchOpen ? 'Tutup pencarian resep' : 'Buka pencarian resep'" title="Cari resep" :aria-expanded="navSearchOpen" aria-controls="navIngredientSearch" @click.stop="toggleNavSearch">
+          <button class="nav-link nav-search-toggle [padding:9px_11px] [border-radius:999px] [font-size:.85rem] [font-weight:500] [color:rgba(225,220,201,.76)] [transition:color_.2s_ease,_background_.2s_ease,_box-shadow_.2s_ease] [white-space:nowrap] hover:[color:#fff] hover:[background:rgba(225,220,201,.1)] focus-visible:[outline:2px_solid_rgba(225,220,201,.64)] focus-visible:[outline-offset:2px]" type="button" :aria-label="navSearchOpen ? 'Tutup pencarian resep' : 'Buka pencarian resep'" title="Cari resep" :aria-expanded="navSearchOpen" aria-controls="navIngredientSearch" @click.stop="toggleNavSearch">
             <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
-            <span class="visually-hidden">Cari resep</span>
+            <span class="visually-hidden [position:absolute] [width:1px] [height:1px] [padding:0] [margin:-1px] [overflow:hidden] [clip:rect(0,0,0,0)] [white-space:nowrap] [border:0]">Cari resep</span>
           </button>
-          <form class="nav-ingredient-search" id="navIngredientSearch" :aria-hidden="!navSearchOpen" :inert="!navSearchOpen" @submit.prevent="submitHeroSearch">
-            <label class="visually-hidden" for="heroIngredientSearch">Cari resep dari bahan</label>
-            <div class="nav-search-heading">
+          <form class="nav-ingredient-search [position:absolute] [z-index:12] [display:grid] [flex:0_1_190px] [align-items:center] [gap:10px_9px] [min-width:0] [height:auto] [padding:15px] [color:#e1dcc9] [border:1px_solid_rgba(225,220,201,.2)] [border-radius:20px] [background:rgba(31,24,17,.68)] [backdrop-filter:blur(26px)_saturate(125%)] [-webkit-backdrop-filter:blur(26px)_saturate(125%)] [max-width:none] [top:calc(100%_+_1px)] [left:50%] [grid-template-columns:minmax(0,1fr)_116px] [grid-template-rows:auto_46px_auto_auto] [width:min(438px,calc(100vw_-_32px))] [min-height:0] [overflow:visible] [box-shadow:0_18px_40px_rgba(0,0,0,.25),_inset_0_1px_0_rgba(255,255,255,.09)] [opacity:0] [visibility:hidden] [pointer-events:none] [transform:translate(-50%,-20px)] [transform-origin:top_center] [transition:opacity_.2s_ease,_transform_.56s_cubic-bezier(.16,1.3,.3,1),_visibility_0s_linear_.2s] [border-color:rgba(225,220,201,.16)]" id="navIngredientSearch" :aria-hidden="!navSearchOpen" :inert="!navSearchOpen" @submit.prevent="submitHeroSearch">
+            <label class="visually-hidden [position:absolute] [width:1px] [height:1px] [padding:0] [margin:-1px] [overflow:hidden] [clip:rect(0,0,0,0)] [white-space:nowrap] [border:0]" for="heroIngredientSearch">Cari resep dari bahan</label>
+            <div class="nav-search-heading [grid-column:1_/_-1] [grid-row:1] [display:grid] [gap:3px] [padding:0_2px_2px]">
               <div class="nav-search-heading-top">
                 <small><span class="nav-search-spark" aria-hidden="true">✳</span> RACIK DARI ISI DAPUR</small>
                 <span class="nav-search-count"><b>{{ heroSearchIngredients.length }}</b> bahan dipilih</span>
@@ -135,18 +135,18 @@
                 <div class="nav-search-field">
                   <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
                   <input id="heroIngredientSearch" v-model="heroIngredientText" type="search" aria-label="Ketik bahan untuk mencari resep" placeholder="Contoh: telur, tomat, bawang..." autocomplete="off" />
-                  <button class="nav-search-submit" type="submit" aria-label="Cari resep" title="Cari resep" :disabled="heroSearchIngredients.length === 0">
+                  <button class="nav-search-submit [display:flex] [flex:0_0_38px] [width:116px] [height:46px] [place-items:center] [color:#1f150c] [border:1px_solid_rgba(225,220,201,.3)] [border-radius:13px] [background:#e1dcc9] [cursor:pointer] [transition:transform_.2s_ease,_opacity_.2s_ease] [grid-column:2] [grid-row:2] [align-items:center] [justify-content:center] [gap:7px] [box-shadow:inset_0_1px_0_rgba(255,255,255,.48),_0_3px_8px_rgba(0,0,0,.16)] [font-size:.78rem] [font-weight:700] [white-space:nowrap] hover:[transform:translateY(-1px)] disabled:[opacity:.5] disabled:[cursor:not-allowed]" type="submit" aria-label="Cari resep" title="Cari resep" :disabled="heroSearchIngredients.length === 0">
                     <span>Cari resep</span>
                     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
                   </button>
                 </div>
-                <div class="hero-popular-ingredients nav-ingredient-popular" role="group" aria-label="Bahan populer">
-                  <span class="hero-popular-label">Tambahkan bahan</span>
-                  <button v-for="ingredient in popularIngredients" :key="ingredient" class="hero-ingredient-chip" :class="{active: heroSelectedIngredients.includes(ingredient)}" type="button" :aria-pressed="heroSelectedIngredients.includes(ingredient)" @click="toggleHeroIngredient(ingredient)">
+                <div class="hero-popular-ingredients nav-ingredient-popular [align-items:center] [margin-top:12px] [position:static] [top:calc(100%_+_9px)] [left:0] [z-index:5] [width:auto] [max-width:100%] [padding:3px_0_0] [border:0] [border-radius:0] [background:transparent] [box-shadow:none] [opacity:1] [visibility:visible] [transform:none] [transition:none] [grid-column:1_/_-1] [grid-row:3] [flex-wrap:wrap] [padding-top:1px]" role="group" aria-label="Bahan populer">
+                  <span class="hero-popular-label [flex:0_0_auto] [color:rgba(255,255,255,.86)] [font-size:.78rem] [font-weight:600]">Tambahkan bahan</span>
+                  <button v-for="ingredient in popularIngredients" :key="ingredient" class="hero-ingredient-chip [flex:0_0_auto] [padding:6px_11px] [color:#fff] [background:rgba(0,0,0,.34)] [border:1px_solid_rgba(225,220,201,.42)] [border-radius:999px] [font:500_.78rem_var(--font-body)] [cursor:pointer] [transition:background_.2s_ease,_color_.2s_ease,_border-color_.2s_ease,_transform_.2s_ease] hover:[transform:translateY(-1px)] hover:[border-color:#e1dcc9]" :class="{active: heroSelectedIngredients.includes(ingredient)}" type="button" :aria-pressed="heroSelectedIngredients.includes(ingredient)" @click="toggleHeroIngredient(ingredient)">
                     <span class="nav-chip-mark" aria-hidden="true">{{ heroSelectedIngredients.includes(ingredient) ? '✓' : '+' }}</span>{{ ingredient }}
                   </button>
                 </div>
-                <p v-if="heroSearchMessage" class="hero-search-message nav-search-message" role="status">{{ heroSearchMessage }}</p>
+                <p v-if="heroSearchMessage" class="hero-search-message nav-search-message [font-size:.8rem] [position:static] [top:calc(100%_+_8px)] [left:0] [z-index:6] [padding:0_2px_2px] [border-radius:12px] [background:transparent] [opacity:1] [visibility:visible] [transform:none] [transition:none] [grid-column:1_/_-1] [grid-row:4]" role="status">{{ heroSearchMessage }}</p>
                 <div class="nav-search-note"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3v18m9-9H3"/></svg><span>Pisahkan bahan dengan koma untuk memilih beberapa sekaligus</span></div>
               </div>
               <button v-if="heroRecipeSuggestion" class="nav-search-preview" type="button" :aria-label="`Lihat resep ${heroRecipeSuggestion.title}, cocok dengan ${heroRecipeMatchCount} bahan`" @click="openHeroFavorite(heroRecipeSuggestion.id)">
@@ -171,61 +171,61 @@
         </div>
       </div>
 
-      <div class="nav-actions">
-        <button class="btn-scan-nav" aria-label="Scan bahan" title="Scan bahan" @click="go('scan')">
+      <div class="nav-actions [display:flex] [align-items:center] [gap:9px] [flex:0_0_auto]">
+        <button class="btn-scan-nav [display:inline-flex] [align-items:center] [gap:8px] [padding:0_14px] [background:#e1dcc9] [color:#1f150c] [border:1px_solid_rgba(225,220,201,.48)] [border-radius:10px] [font-size:.84rem] [font-weight:700] [cursor:pointer] [transition:var(--transition-bounce)] [position:relative] [isolation:isolate] [overflow:visible] [flex:0_0_auto] [width:auto] [min-width:0] [height:40px] [min-height:40px] hover:[transform:scale(1.05)] hover:[box-shadow:0_5px_18px_rgba(31,21,12,.2)] hover:[background:#412d15] hover:[color:#e1dcc9] hover:[border-color:#8a7254]" aria-label="Scan bahan" title="Scan bahan" @click="go('scan')">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3m8 0h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3m-8 0H5a1 1 0 0 1-1-1v-3"/><path d="M7 12h10"/><circle cx="12" cy="12" r="3.2"/></svg>
           <span>Scan bahan</span>
         </button>
-        <button class="btn-avatar" aria-label="Pengaturan" title="Pengaturan" @click="go('profil')">
+        <button class="btn-avatar [width:40px] [height:40px] [border-radius:10px] [background:rgba(225,220,201,.06)] [border:1px_solid_var(--border)] [color:#e1dcc9] [cursor:pointer] [display:flex] [align-items:center] [justify-content:center] [transition:var(--transition)] [min-width:40px] [min-height:40px] [border-color:rgba(225,220,201,.3)] hover:[border-color:#e1dcc9] hover:[color:#1f150c] hover:[background:#e1dcc9]" aria-label="Pengaturan" title="Pengaturan" @click="go('profil')">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         </button>
-        <button class="btn-hamburger" id="hamburgerBtn" type="button" :aria-label="menuOpen ? 'Tutup menu navigasi' : 'Buka menu navigasi'" aria-controls="navLinks" :aria-expanded="menuOpen" @click="toggleMenu">
+        <button class="btn-hamburger [display:none] [flex-direction:column] [gap:5px] [background:none] [border:none] [cursor:pointer] [padding:4px] [border-radius:50%]" id="hamburgerBtn" type="button" :aria-label="menuOpen ? 'Tutup menu navigasi' : 'Buka menu navigasi'" aria-controls="navLinks" :aria-expanded="menuOpen" @click="toggleMenu">
           <span></span><span></span><span></span>
         </button>
       </div>
     </div>
-    <span class="nav-hint" aria-hidden="true">Arahkan mouse ke sini</span>
+    <span class="nav-hint [position:absolute] [top:72px] [left:50%] [z-index:5] [padding:7px_11px] [color:rgba(225,220,201,.9)] [border:1px_solid_rgba(225,220,201,.16)] [border-radius:999px] [background:rgba(31,21,12,.76)] [box-shadow:0_8px_20px_rgba(0,0,0,.18)] [backdrop-filter:blur(14px)_saturate(140%)] [-webkit-backdrop-filter:blur(14px)_saturate(140%)] [font-size:.78rem] [font-weight:600] [line-height:1.2] [white-space:nowrap] [opacity:1] [visibility:visible] [pointer-events:none] [transform:translateX(-50%)] [transition:opacity_.18s_ease,_visibility_.18s_ease,_transform_.18s_ease] [font:500_.72rem/1.2_var(--font-body)] [display:block] [animation:nav-hint-float_2.2s_ease-in-out_infinite]" aria-hidden="true">Arahkan mouse ke sini</span>
   </nav>
 
   <!-- ===== PAGE: HOME ===== -->
-  <div class="page active" id="page-home" role="main" tabindex="-1">
+  <div class="page active [display:none] [min-height:100vh]" id="page-home" role="main" tabindex="-1">
     <!-- Hero Section -->
-    <section class="hero">
-      <div class="hero-scene" aria-hidden="true">
-        <video ref="heroVideo" class="hero-scene-video" :class="{'is-playing': heroVideoPlaying}" muted loop playsinline preload="metadata" poster="/assets/img/chef-hero.jpg" tabindex="-1" aria-hidden="true">
+    <section class="hero [min-height:100svh] [display:block] [align-items:center] [position:relative] [overflow:hidden] [padding:0] [background:#050403] [height:100svh] [isolation:isolate]">
+      <div class="hero-scene [position:absolute] [z-index:0] [inset:0] [overflow:hidden] [background:#050403] [pointer-events:none]" aria-hidden="true">
+        <video ref="heroVideo" class="hero-scene-video [position:absolute] [inset:0] [display:block] [width:100%] [height:100%] [object-fit:cover] [object-position:center_54%] [transform:scale(1.035)] [filter:brightness(.8)_saturate(.92)] [transition:filter_.6s_ease,_transform_8s_ease]" :class="{'is-playing': heroVideoPlaying}" muted loop playsinline preload="metadata" poster="/assets/img/chef-hero.jpg" tabindex="-1" aria-hidden="true">
           <source src="/assets/video/hero-tumis-tahu.mp4" type="video/mp4" />
         </video>
-        <span class="hero-light-veil"></span>
-        <span class="hero-light-glow"></span>
-        <span class="hero-copy-spotlight"></span>
+        <span class="hero-light-veil [position:absolute] [inset:0] [background:linear-gradient(90deg,rgba(0,0,0,.98)_0%,rgba(0,0,0,.94)_34%,rgba(0,0,0,.72)_55%,rgba(0,0,0,.18)_88%),linear-gradient(0deg,rgba(0,0,0,.36),transparent_50%)] [opacity:.3] [animation:hero-footage-veil_2.8s_ease_both]"></span>
+        <span class="hero-light-glow [position:absolute] [top:36%] [left:25%] [width:clamp(100px,18vw,250px)] [aspect-ratio:1] [border-radius:50%] [background:radial-gradient(circle,rgba(255,241,196,.5)_0%,rgba(255,220,150,.2)_22%,rgba(255,218,160,.06)_48%,transparent_72%)] [filter:blur(8px)] [opacity:.5] [transform:translate(-50%,-50%)] [animation:lamp-glow-warmup_4.8s_cubic-bezier(.2,.7,.2,1)_both,_lamp-glow-breathe_7s_ease-in-out_4.8s_infinite_alternate]"></span>
+        <span class="hero-copy-spotlight [position:absolute] [z-index:1] [inset:0] [pointer-events:none] [background:radial-gradient(ellipse_20%_12%_at_25%_36%,_rgba(255,235,190,.3),_transparent_78%),_linear-gradient(180deg,_rgba(255,226,168,.16),_rgba(255,226,168,.06)_52%,_transparent_92%)] [opacity:0] [animation:lamp-beam-visible_2s_cubic-bezier(.2,.7,.2,1)_both] [clip-path:polygon(22%_34%,_28%_34%,_50%_100%,_4%_100%)] [filter:blur(32px)] [transform-origin:25%_36%]"></span>
       </div>
-      <div class="hero-bg-glow"></div>
-      <div class="hero-particles" id="heroParticles"></div>
-      <div id="heroApp" class="hero-container" v-cloak>
-        <div class="hero-content">
-          <div class="hero-copy">
-            <span class="hero-copy-eyebrow hero-enter hero-enter-2"><i aria-hidden="true"></i> DARI DAPUR, JADI CERITA</span>
-            <h1 class="hero-title" :aria-label="heroHeadlines[heroHeadlineIndex].label"><span class="hero-title-line hero-enter-3">Dari isi dapur,</span><Transition name="hero-title-swap" mode="out-in"><span :key="heroHeadlineIndex" class="hero-title-swap"><span class="title-gradient hero-title-swap-line">{{ heroHeadlines[heroHeadlineIndex].highlight }}</span><span class="hero-title-swap-line">{{ heroHeadlines[heroHeadlineIndex].ending }}</span></span></Transition></h1>
-            <p class="hero-desc hero-enter hero-enter-6">Bahan yang hampir terlupa bisa jadi hidangan favorit berikutnya. Yuk, racik sesuatu dari yang sudah ada.</p>
-            <div class="hero-cta hero-cta-link hero-enter hero-enter-7">
+      <div class="hero-bg-glow [position:absolute] [top:-200px] [left:-200px] [width:700px] [height:700px] [background:radial-gradient(ellipse_at_78%_34%,rgba(225,220,201,.12),transparent_54%)] [pointer-events:none] [opacity:0.18]"></div>
+      <div class="hero-particles [position:absolute] [inset:0] [pointer-events:none] [overflow:hidden] [display:none]" id="heroParticles"></div>
+      <div id="heroApp" class="hero-container [max-width:none] [margin:0] [display:block] [grid-template-columns:1fr_1fr] [gap:60px] [align-items:center] [position:relative] [z-index:2] [width:100%] [height:100%] [min-height:0]" v-cloak>
+        <div class="hero-content [position:absolute] [z-index:3] [top:53%] [left:50%] [width:min(1240px,calc(100%_-_96px))] [padding:0] [transform:translate(-50%,-50%)] [text-shadow:0_2px_22px_rgba(0,0,0,.32)] [display:grid] [grid-template-columns:minmax(0,1fr)_minmax(450px,.9fr)] [align-items:center] [gap:clamp(38px,6vw,88px)]">
+          <div class="hero-copy [position:relative] [z-index:1] [max-width:610px]">
+            <span class="hero-copy-eyebrow hero-enter hero-enter-2 [display:inline-flex] [align-items:center] [gap:9px] [margin-bottom:25px] [color:rgba(255,255,255,.78)] [font-size:.7rem] [font-weight:750] [letter-spacing:.16em] [animation-delay:1s]"><i aria-hidden="true"></i> DARI DAPUR, JADI CERITA</span>
+            <h1 class="hero-title [font-family:var(--font-display)] [font-size:clamp(2.5rem,_5vw,_4rem)] [font-weight:700] [line-height:1.1] [margin-bottom:20px]" :aria-label="heroHeadlines[heroHeadlineIndex].label"><span class="hero-title-line hero-enter-3 [display:block] [animation-delay:1.08s]">Dari isi dapur,</span><Transition name="hero-title-swap" mode="out-in"><span :key="heroHeadlineIndex" class="hero-title-swap [display:block]"><span class="title-gradient hero-title-swap-line [background:linear-gradient(135deg,_var(--primary)_0%,_var(--accent)_100%)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] [background-clip:text] [display:block]">{{ heroHeadlines[heroHeadlineIndex].highlight }}</span><span class="hero-title-swap-line [display:block]">{{ heroHeadlines[heroHeadlineIndex].ending }}</span></span></Transition></h1>
+            <p class="hero-desc hero-enter hero-enter-6 [font-size:1.1rem] [color:var(--text-secondary)] [margin-bottom:32px] [max-width:480px] [animation-delay:1.34s]">Bahan yang hampir terlupa bisa jadi hidangan favorit berikutnya. Yuk, racik sesuatu dari yang sudah ada.</p>
+            <div class="hero-cta hero-cta-link hero-enter hero-enter-7 [display:flex] [align-items:center] [gap:16px] [flex-wrap:wrap] [animation-delay:1.44s]">
               <a href="#/resep" @click.prevent="go('resep')">Lihat inspirasi lainnya <span aria-hidden="true">→</span></a>
             </div>
           </div>
-          <section v-if="false" class="hero-demo-card" aria-hidden="true"></section>
-          <section class="hero-favorites hero-enter hero-enter-8" aria-label="Tiga menu favorit Resepin">
-            <div class="hero-favorites-heading">
+          <section v-if="false" class="hero-demo-card [position:relative] [z-index:2] [width:min(100%,548px)] [justify-self:end] [margin:0] [padding:25px_25px_21px] [border:1px_solid_rgba(255,255,255,.58)] [border-radius:25px] [background:rgba(225,220,201,.96)] [box-shadow:0_30px_90px_rgba(10,8,5,.32),0_2px_8px_rgba(10,8,5,.08)] [color:#2b2116] [text-shadow:none] [backdrop-filter:blur(18px)] [-webkit-backdrop-filter:blur(18px)]" aria-hidden="true"></section>
+          <section class="hero-favorites hero-enter hero-enter-8 [display:grid] [align-content:center] [gap:5px] [width:min(100%,560px)] [justify-self:end] [padding:3px_0_0] [color:#e1dcc9] [text-shadow:0_2px_18px_rgba(0,0,0,.42)] [animation-delay:.66s]" aria-label="Tiga menu favorit Resepin">
+            <div class="hero-favorites-heading [display:grid] [gap:5px] [padding-left:5%]">
               <span><i aria-hidden="true"></i> FAVORIT RESEPIN</span>
               <h2>Tiga menu, susah pilih satu.</h2>
             </div>
-            <transition-group name="hero-favorite-shuffle" tag="div" class="hero-favorite-stage" aria-label="Menu yang sedang dipilih">
-              <button v-for="(recipe, index) in heroFavoriteRecipes" :key="recipe.id" class="hero-favorite-card" :class="`is-slot-${index}`" type="button" :aria-label="`Lihat resep ${recipe.title}, ${recipe.time}, ${recipe.difficulty}`" @click="openHeroFavorite(recipe.id)">
+            <transition-group name="hero-favorite-shuffle" tag="div" class="hero-favorite-stage [position:relative] [width:100%] [height:348px] [max-width:560px] [overflow:visible] [perspective:1100px]" aria-label="Menu yang sedang dipilih">
+              <button v-for="(recipe, index) in heroFavoriteRecipes" :key="recipe.id" class="hero-favorite-card [position:absolute] [top:50%] [display:block] [width:clamp(196px,43%,232px)] [height:306px] [padding:0] [overflow:hidden] [border:1px_solid_rgba(225,220,201,.68)] [border-radius:25px_25px_14px_25px] [color:#2b2116] [background:#e1dcc9] [box-shadow:0_22px_52px_rgba(0,0,0,.3),_0_4px_12px_rgba(0,0,0,.15)] [text-align:left] [cursor:pointer] [transform-origin:50%_78%] [transition:left_.95s_cubic-bezier(.22,.72,.22,1),transform_.95s_cubic-bezier(.22,.72,.22,1),filter_.95s_ease,box-shadow_.3s_ease] [-webkit-tap-highlight-color:transparent] focus-visible:[z-index:4] focus-visible:[outline:3px_solid_#d8c8f2] focus-visible:[outline-offset:4px]" :class="`is-slot-${index}`" type="button" :aria-label="`Lihat resep ${recipe.title}, ${recipe.time}, ${recipe.difficulty}`" @click="openHeroFavorite(recipe.id)">
                 <img :src="heroFavoriteImage(recipe)" alt="" :loading="index === 1 ? 'eager' : 'lazy'" />
-                <span class="hero-favorite-shade" aria-hidden="true"></span>
-                <span class="hero-favorite-badge"><i aria-hidden="true"></i> MENU FAVORIT</span>
-                <span class="hero-favorite-copy"><strong>{{ recipe.title }}</strong><small>{{ recipe.time }} <i aria-hidden="true">·</i> {{ recipe.difficulty }}</small><span class="hero-favorite-cta" aria-hidden="true">Lihat resep <b>↗</b></span></span>
+                <span class="hero-favorite-shade [position:absolute] [inset:0_0_40%_0] [background:linear-gradient(180deg,rgba(20,14,9,.3),transparent_46%,rgba(20,14,9,.16))] [border-radius:24px_24px_0_0]" aria-hidden="true"></span>
+                <span class="hero-favorite-badge [position:absolute] [top:12px] [left:12px] [display:inline-flex] [align-items:center] [gap:6px] [padding:7px_10px] [border:1px_solid_rgba(225,220,201,.33)] [border-radius:999px] [color:#fffaf0] [background:rgba(31,21,12,.5)] [font:750_.55rem_var(--font-body)] [letter-spacing:.09em] [backdrop-filter:blur(8px)] [border-color:rgba(225,220,201,.36)] [white-space:nowrap]"><i aria-hidden="true"></i> MENU FAVORIT</span>
+                <span class="hero-favorite-copy [position:absolute] [right:0] [bottom:0] [left:0] [display:grid] [gap:5px] [min-height:40%] [align-content:start] [padding:11px_13px_12px] [border-radius:0_0_13px_24px] [background:#e1dcc9] [text-shadow:none] [text-align:left]"><strong>{{ recipe.title }}</strong><small>{{ recipe.time }} <i aria-hidden="true">·</i> {{ recipe.difficulty }}</small><span class="hero-favorite-cta [display:flex] [align-items:center] [justify-content:space-between] [gap:8px] [width:100%] [min-height:30px] [margin-top:3px] [padding:0_10px_0_11px] [border:1px_solid_rgba(65,45,21,.12)] [border-radius:999px] [color:#fffaf0] [background:#493923] [font:700_.64rem_var(--font-body)] [transition:background_.2s_ease,_transform_.2s_ease]" aria-hidden="true">Lihat resep <b>↗</b></span></span>
               </button>
             </transition-group>
-            <div class="hero-favorites-controls">
+            <div class="hero-favorites-controls [display:flex] [align-items:center] [justify-content:space-between] [gap:12px] [padding:0_5%]">
               <span><i></i><i class="is-current"></i><i></i> <small>Berputar otomatis</small></span>
               <button type="button" @click="shuffleHeroFavorites" aria-label="Acak urutan menu favorit">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m16 3 4 4-4 4M4 17l5-5m4-4 3-3m0 12 4-4-4-4M4 7l2 2m5 6 5 5"/></svg>
@@ -237,8 +237,8 @@
       </div>
     </section>
 
-    <a class="hero-scroll-hint" href="#hero-followthrough" @click.prevent.stop="scrollToHomeSection('hero-followthrough')" aria-label="Gulir untuk melihat bagaimana Resepin mengubah bahan menjadi ide masak">
-      <div class="scroll-dot"></div>
+    <a class="hero-scroll-hint [position:absolute] [bottom:24px] [left:50%] [transform:translateX(-50%)] [display:flex] [flex-direction:column] [align-items:center] [gap:8px] [color:rgba(255,255,255,.72)] [font-size:0.8rem] [z-index:4]" href="#hero-followthrough" @click.prevent.stop="scrollToHomeSection('hero-followthrough')" aria-label="Gulir untuk melihat bagaimana Resepin mengubah bahan menjadi ide masak">
+      <div class="scroll-dot [width:6px] [height:20px] [border:1.5px_solid_var(--text-muted)] [border-radius:3px] [position:relative] [overflow:hidden]"></div>
       <span>Gulir untuk menjelajah</span>
     </a>
     <div class="hero-scroll-runway" aria-hidden="true"></div>
@@ -277,40 +277,40 @@
     </section>
 
     <!-- How It Works -->
-    <section class="section how-it-works" id="how-it-works">
-      <div class="container">
-        <div class="section-header">
-          <span class="section-tag">Cara Kerja</span>
-          <h2>3 Langkah Mudah Masak<br/><span class="gradient-text">dari Sisa Dapur</span></h2>
+    <section class="section how-it-works [padding:80px_0] [padding-top:64px] [padding-bottom:64px]" id="how-it-works">
+      <div class="container [margin:0_auto]">
+        <div class="section-header [text-align:center] [margin-bottom:36px]">
+          <span class="section-tag [display:inline-block] [padding:4px_14px] [background:rgba(182,92,58,0.1)] [border:1px_solid_rgba(182,92,58,0.2)] [border-radius:6px] [font-size:0.8rem] [font-weight:600] [color:var(--primary)] [text-transform:uppercase] [letter-spacing:.04em] [margin-bottom:12px]">Cara Kerja</span>
+          <h2>3 Langkah Mudah Masak<br/><span class="gradient-text [background:linear-gradient(135deg,_var(--primary),_var(--accent))] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] [background-clip:text] [background-image:linear-gradient(115deg,#412d15,#1f150c)] [color:transparent]">dari Sisa Dapur</span></h2>
         </div>
-        <div class="steps-grid">
-          <div class="step-card" data-step="1">
-            <div class="step-visual step-visual--ingredients"><img src="/assets/img/workflow-ingredients.svg" alt="" loading="lazy"/><span class="step-number">01</span></div>
+        <div class="steps-grid [display:flex] [align-items:center] [gap:0] [justify-content:center]">
+          <div class="step-card [flex:1] [max-width:320px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:var(--radius-lg)] [padding:36px_28px] [text-align:center] [position:relative] [transition:var(--transition)] [cursor:default] hover:[border-color:var(--primary)] hover:[box-shadow:var(--shadow-glow)] hover:[transform:translateY(-8px)]" data-step="1">
+            <div class="step-visual step-visual--ingredients"><img src="/assets/img/workflow-ingredients.svg" alt="" loading="lazy"/><span class="step-number [font-family:var(--font-display)] [font-size:3rem] [font-weight:900] [color:rgba(65,45,21,.16)] [position:absolute] [top:16px] [right:20px] [line-height:1]">01</span></div>
             <div class="step-card-body">
               <div class="step-card-heading"><span class="step-kicker">Mulai dari dapurmu</span></div>
               <h3>Pilih bahanmu</h3>
               <p>Foto bahan yang tersisa atau ketik namanya, seperti jagung, wortel, atau ayam.</p>
-              <div class="step-tag"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-camera"/></svg><span>Kamera atau ketik</span></div>
+              <div class="step-tag [display:inline-block] [padding:4px_12px] [background:rgba(120,132,102,0.1)] [border:1px_solid_rgba(120,132,102,0.3)] [border-radius:999px] [font-size:0.75rem] [font-weight:600] [color:var(--secondary)]"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-camera"/></svg><span>Kamera atau ketik</span></div>
             </div>
           </div>
-          <div class="step-connector"></div>
-          <div class="step-card" data-step="2">
-            <div class="step-visual step-visual--checklist"><img src="/assets/img/workflow-checklist.svg" alt="" loading="lazy"/><span class="step-number">02</span></div>
+          <div class="step-connector [width:60px] [height:2px] [background:var(--border)] [flex-shrink:0] [position:relative]"></div>
+          <div class="step-card [flex:1] [max-width:320px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:var(--radius-lg)] [padding:36px_28px] [text-align:center] [position:relative] [transition:var(--transition)] [cursor:default] hover:[border-color:var(--primary)] hover:[box-shadow:var(--shadow-glow)] hover:[transform:translateY(-8px)]" data-step="2">
+            <div class="step-visual step-visual--checklist"><img src="/assets/img/workflow-checklist.svg" alt="" loading="lazy"/><span class="step-number [font-family:var(--font-display)] [font-size:3rem] [font-weight:900] [color:rgba(65,45,21,.16)] [position:absolute] [top:16px] [right:20px] [line-height:1]">02</span></div>
             <div class="step-card-body">
               <div class="step-card-heading"><span class="step-kicker">Cek sebentar</span></div>
               <h3>Periksa daftar bahanmu</h3>
               <p>Periksa daftar bahan, lalu ubah atau lengkapi kalau ada yang kurang tepat.</p>
-              <div class="step-tag"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-book"/></svg><span>Daftarnya bisa diubah</span></div>
+              <div class="step-tag [display:inline-block] [padding:4px_12px] [background:rgba(120,132,102,0.1)] [border:1px_solid_rgba(120,132,102,0.3)] [border-radius:999px] [font-size:0.75rem] [font-weight:600] [color:var(--secondary)]"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-book"/></svg><span>Daftarnya bisa diubah</span></div>
             </div>
           </div>
-          <div class="step-connector"></div>
-          <div class="step-card" data-step="3">
-            <div class="step-visual step-visual--recipe"><img src="/assets/img/workflow-cooking.svg" alt="" loading="lazy"/><span class="step-number">03</span></div>
+          <div class="step-connector [width:60px] [height:2px] [background:var(--border)] [flex-shrink:0] [position:relative]"></div>
+          <div class="step-card [flex:1] [max-width:320px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:var(--radius-lg)] [padding:36px_28px] [text-align:center] [position:relative] [transition:var(--transition)] [cursor:default] hover:[border-color:var(--primary)] hover:[box-shadow:var(--shadow-glow)] hover:[transform:translateY(-8px)]" data-step="3">
+            <div class="step-visual step-visual--recipe"><img src="/assets/img/workflow-cooking.svg" alt="" loading="lazy"/><span class="step-number [font-family:var(--font-display)] [font-size:3rem] [font-weight:900] [color:rgba(65,45,21,.16)] [position:absolute] [top:16px] [right:20px] [line-height:1]">03</span></div>
             <div class="step-card-body">
               <div class="step-card-heading"><span class="step-kicker">Saatnya memasak</span></div>
               <h3>Dapat Resep & Masak!</h3>
               <p>Dapatkan rekomendasi resep dari bahan yang kamu punya. Tanya Chef Resepin untuk variasi, pengganti bahan, dan tips memasak.</p>
-              <div class="step-tag"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-bulb"/></svg><span>Ide dari bahanmu</span></div>
+              <div class="step-tag [display:inline-block] [padding:4px_12px] [background:rgba(120,132,102,0.1)] [border:1px_solid_rgba(120,132,102,0.3)] [border-radius:999px] [font-size:0.75rem] [font-weight:600] [color:var(--secondary)]"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-bulb"/></svg><span>Ide dari bahanmu</span></div>
             </div>
           </div>
         </div>
@@ -320,53 +320,53 @@
     <!-- Featured Recipes / right-side takeover stage -->
     <div class="recipe-takeover-stage">
       <div class="recipe-takeover-viewport">
-        <section class="section featured-recipes">
-          <div class="container">
-            <div class="section-header">
-              <span class="section-tag">Resep Unggulan</span>
+        <section class="section featured-recipes [padding:80px_0] [padding-top:64px] [padding-bottom:64px]">
+          <div class="container [margin:0_auto]">
+            <div class="section-header [text-align:center] [margin-bottom:36px]">
+              <span class="section-tag [display:inline-block] [padding:4px_14px] [background:rgba(182,92,58,0.1)] [border:1px_solid_rgba(182,92,58,0.2)] [border-radius:6px] [font-size:0.8rem] [font-weight:600] [color:var(--primary)] [text-transform:uppercase] [letter-spacing:.04em] [margin-bottom:12px]">Resep Unggulan</span>
               <h2>Resep Pilihan</h2>
               <p class="featured-intro">Ide masakan rumahan yang enak, praktis, dan cocok untuk hari ini.</p>
-              <a class="see-all" href="#/resep" @click.prevent="go('resep')">Lihat Semua →</a>
+              <a class="see-all [color:var(--primary)] [font-size:0.9rem] [font-weight:600] [transition:var(--transition)] hover:[text-decoration:underline]" href="#/resep" @click.prevent="go('resep')">Lihat Semua →</a>
             </div>
-            <div class="recipes-scroll" aria-label="Resep unggulan"></div>
+            <div class="recipes-scroll [display:grid] [gap:18px] [overflow-x:auto] [padding:8px_0_12px] [scrollbar-width:thin] [scrollbar-color:rgba(182,92,58,0.3)_transparent] [margin:0] [grid-template-columns:repeat(3,_minmax(0,_1fr))] [overflow:visible] [scroll-snap-type:none]" aria-label="Resep unggulan"></div>
           </div>
         </section>
 
         <!-- Zero Waste Stats -->
-        <section class="section waste-stats">
-          <div class="container">
-            <div class="stats-banner">
-          <div class="stats-content">
-            <span class="stats-kicker"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-sprout"/></svg> DAPUR LEBIH BIJAK</span>
+        <section class="section waste-stats [padding:80px_0] [padding-top:64px] [padding-bottom:64px] [background:var(--bg-card)] [border-top:1px_solid_var(--border)] [border-bottom:1px_solid_var(--border)]">
+          <div class="container [margin:0_auto]">
+            <div class="stats-banner [display:flex] [align-items:center] [justify-content:space-between] [gap:40px] [flex-wrap:wrap] [background:var(--bg-surface)] [border-radius:var(--radius)] [box-shadow:none]">
+          <div class="stats-content [align-self:center]">
+            <span class="stats-kicker [display:inline-flex] [align-items:center] [gap:8px] [margin-bottom:20px] [color:var(--text-secondary)] [font-size:.72rem] [font-weight:800] [letter-spacing:.14em]"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-sprout"/></svg> DAPUR LEBIH BIJAK</span>
             <h2>Setiap bahan punya <em>kesempatan kedua.</em></h2>
-            <p class="stats-fact">Makanan yang terbuang berawal dari hal kecil: bahan terlupa di kulkas, belanja berlebih, atau bingung mau dimasak apa. Mulai dari dapur sendiri, satu bahan pada satu waktu.</p>
-            <div class="stats-actions">
-              <button class="stats-cta" type="button" @click="go('scan')">Cek bahan di dapur <span aria-hidden="true">→</span></button>
-              <a class="stats-source" href="https://greeneconomy.bappenas.go.id/home/bappenas-jabarkan-pentingnya-kelola-food-loss-and-waste-untuk-pembangunan-rendah-karbon-dan-ekonomi-sirkular/" target="_blank" rel="noopener noreferrer">Sumber data Bappenas <span aria-hidden="true">↗</span></a>
+            <p class="stats-fact [max-width:500px] [margin:0_0_26px] [color:var(--text-secondary)] [font-size:clamp(.98rem,1.3vw,1.1rem)] [line-height:1.8]">Makanan yang terbuang berawal dari hal kecil: bahan terlupa di kulkas, belanja berlebih, atau bingung mau dimasak apa. Mulai dari dapur sendiri, satu bahan pada satu waktu.</p>
+            <div class="stats-actions [display:flex] [flex-wrap:wrap] [align-items:center] [gap:12px_20px]">
+              <button class="stats-cta [display:inline-flex] [min-height:50px] [align-items:center] [justify-content:center] [gap:14px] [padding:0_20px] [color:var(--bg-card)] [background:var(--primary)] [border:1px_solid_var(--primary)] [border-radius:999px] [font:inherit] [font-size:.9rem] [font-weight:750] [cursor:pointer] [transition:transform_.2s_ease,_box-shadow_.2s_ease] hover:[transform:translateY(-2px)] hover:[box-shadow:var(--shadow-glow)] focus-visible:[outline:3px_solid_var(--primary)] focus-visible:[outline-offset:4px]" type="button" @click="go('scan')">Cek bahan di dapur <span aria-hidden="true">→</span></button>
+              <a class="stats-source [display:inline-flex] [align-items:center] [gap:6px] [min-height:44px] [color:var(--text-secondary)] [font-size:.82rem] [font-weight:700] [text-underline-offset:4px] hover:[text-decoration-thickness:2px] focus-visible:[outline:3px_solid_var(--primary)] focus-visible:[outline-offset:3px] focus-visible:[border-radius:4px]" href="https://greeneconomy.bappenas.go.id/home/bappenas-jabarkan-pentingnya-kelola-food-loss-and-waste-untuk-pembangunan-rendah-karbon-dan-ekonomi-sirkular/" target="_blank" rel="noopener noreferrer">Sumber data Bappenas <span aria-hidden="true">↗</span></a>
             </div>
           </div>
 
-          <div class="impact-figure">
-            <div class="impact-figure-top"><span>INDONESIA · <span>{{ impactYear }}</span></span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-sprout"/></svg></div>
-            <output class="impact-number" for="impactYearSlider" aria-live="polite" aria-atomic="true">{{ impactTonnage }}</output>
-            <div class="impact-unit">juta ton <span>/ tahun</span></div>
-            <div class="impact-range">
+          <div class="impact-figure [min-height:345px] [display:flex] [flex-direction:column] [justify-content:center] [overflow:hidden] [padding:clamp(24px,4vw,48px)] [color:var(--primary-light)] [background:var(--primary-dark)] [border-radius:28px_28px_28px_8px] [box-shadow:0_20px_50px_rgba(31,21,12,.15)]">
+            <div class="impact-figure-top [display:flex] [align-items:center] [justify-content:space-between] [gap:12px] [color:color-mix(in_srgb,var(--primary-light)_70%,transparent)] [font-size:.68rem] [font-weight:800] [letter-spacing:.14em]"><span>INDONESIA · <span>{{ impactYear }}</span></span><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-sprout"/></svg></div>
+            <output class="impact-number [display:flex] [align-items:baseline] [gap:clamp(4px,1vw,14px)] [margin:clamp(22px,3vw,38px)_0_0] [font-size:clamp(4.2rem,9vw,8rem)] [font-weight:750] [letter-spacing:-.09em] [line-height:.82] [font-variant-numeric:lining-nums_tabular-nums] [min-height:.82em]" for="impactYearSlider" aria-live="polite" aria-atomic="true">{{ impactTonnage }}</output>
+            <div class="impact-unit [margin-top:13px] [font-family:var(--font-display,Georgia,serif)] [font-size:clamp(1.55rem,2.7vw,2.2rem)] [font-weight:700] [letter-spacing:-.03em]">juta ton <span>/ tahun</span></div>
+            <div class="impact-range [position:relative] [height:3px] [margin:30px_0_9px] [background:color-mix(in_srgb,var(--primary-light)_24%,transparent)]">
               <input id="impactYearSlider" v-model.number="impactYear" type="range" min="2000" max="2019" step="1" aria-label="Pilih tahun untuk melihat perkiraan timbulan food loss dan food waste" :aria-valuetext="`${impactYear}, ${impactTonnage} juta ton per tahun`" :style="{ '--slider-progress': `${((impactYear - 2000) / 19) * 100}%` }" />
             </div>
-            <div class="impact-range-labels"><span>2000</span><span>2019</span></div>
+            <div class="impact-range-labels [display:flex] [justify-content:space-between] [color:color-mix(in_srgb,var(--primary-light)_62%,transparent)] [font-size:.72rem] [font-variant-numeric:tabular-nums]"><span>2000</span><span>2019</span></div>
             <p>Geser untuk melihat tren tahunan. Kajian Bappenas menampilkan rentang dan grafik, bukan tabel tahunan; nilai di antara titik acuan adalah interpolasi visual.</p>
           </div>
 
-          <div class="stats-personal">
-            <div class="stats-personal-heading">
-              <div><span class="stats-personal-title">Langkah kecilmu juga berarti</span><span class="stats-personal-note">Aktivitas tersimpan di perangkat ini</span></div>
-              <svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-book"/></svg>
+          <div class="stats-personal [grid-column:1/-1] [display:grid] [grid-template-columns:minmax(190px,.72fr)_minmax(0,1.5fr)] [align-items:center] [gap:16px_32px] [padding:22px_0_0] [border-top:1px_solid_var(--border)]">
+            <div class="stats-personal-heading [display:flex] [align-items:center] [justify-content:space-between] [gap:12px]">
+              <div><span class="stats-personal-title [color:var(--text-primary)] [font-size:1rem] [font-weight:800]">Langkah kecilmu juga berarti</span><span class="stats-personal-note [color:var(--text-muted)] [font-size:.76rem]">Aktivitas tersimpan di perangkat ini</span></div>
+              <svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-book"/></svg>
             </div>
-            <div class="stats-numbers" id="personalStatsNumbers" hidden>
-              <div class="waste-stat"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-sprout"/></svg><span class="ws-num" id="personalIngredientsUsed">0</span><span class="ws-label">Bahan dicari lewat Scan</span></div>
-              <div class="waste-stat"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-book"/></svg><span class="ws-num" id="personalRecipesOpened">0</span><span class="ws-label">Resep yang dibuka</span></div>
+            <div class="stats-numbers [display:flex] [gap:48px]" id="personalStatsNumbers" hidden>
+              <div class="waste-stat [text-align:center]"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-sprout"/></svg><span class="ws-num [display:block] [font-family:var(--font-display)] [font-size:2.5rem] [font-weight:900] [background:linear-gradient(135deg,_var(--primary),_var(--accent))] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] [background-clip:text]" id="personalIngredientsUsed">0</span><span class="ws-label [font-size:0.8rem] [color:var(--text-muted)] [display:block] [margin-top:4px]">Bahan dicari lewat Scan</span></div>
+              <div class="waste-stat [text-align:center]"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-book"/></svg><span class="ws-num [display:block] [font-family:var(--font-display)] [font-size:2.5rem] [font-weight:900] [background:linear-gradient(135deg,_var(--primary),_var(--accent))] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] [background-clip:text]" id="personalRecipesOpened">0</span><span class="ws-label [font-size:0.8rem] [color:var(--text-muted)] [display:block] [margin-top:4px]">Resep yang dibuka</span></div>
             </div>
-            <p class="personal-stats-empty" id="personalStatsEmpty">Belum ada aktivitas. Mulai dengan mencatat bahan yang tersedia atau menemukan resep pertamamu.</p>
+            <p class="personal-stats-empty [grid-column:2] [margin:0] [color:var(--text-muted)] [font-size:.78rem] [line-height:1.5]" id="personalStatsEmpty">Belum ada aktivitas. Mulai dengan mencatat bahan yang tersedia atau menemukan resep pertamamu.</p>
           </div>
             </div>
           </div>
@@ -375,22 +375,22 @@
     </div>
 
     <!-- Footer -->
-    <footer class="footer">
-      <div class="container">
-        <div class="footer-grid footer-grid-simple">
+    <footer class="footer [background:var(--bg-surface)] [border-top:1px_solid_var(--border)] [padding:60px_0_24px]">
+      <div class="container [margin:0_auto]">
+        <div class="footer-grid footer-grid-simple [display:grid] [gap:40px] [margin-bottom:48px]">
           <div class="footer-brand">
-            <div class="footer-logo">
-              <div class="logo-icon"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-pot"/></svg></div>
+            <div class="footer-logo [display:flex] [align-items:center] [gap:8px] [font-family:var(--font-display)] [font-size:1.4rem] [font-weight:800] [margin-bottom:16px] [background:linear-gradient(135deg,_var(--primary),_var(--accent))] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] [background-clip:text]">
+              <div class="logo-icon [width:36px] [height:36px] [display:flex] [align-items:center] [justify-content:center] [background:var(--bg-surface)] [border-radius:50%]"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-pot"/></svg></div>
               <span>Resepin</span>
             </div>
             <p>Temukan ide masak dari bahan yang tersedia di dapurmu.</p>
-            <div class="footer-social">
-              <a href="https://github.com/anrahadi-dotcom/Resepin" class="social-link" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <div class="footer-social [display:flex] [gap:12px]">
+              <a href="https://github.com/anrahadi-dotcom/Resepin" class="social-link [padding:6px_14px] [background:var(--bg-surface)] [border:1px_solid_var(--border)] [border-radius:var(--radius-sm)] [font-size:0.8rem] [color:var(--text-secondary)] [transition:var(--transition)] hover:[border-color:var(--primary)] hover:[color:var(--primary)]" target="_blank" rel="noopener noreferrer">GitHub</a>
             </div>
             <p class="portfolio-note">Project portofolio. Resep merupakan contoh; biaya per porsi adalah perkiraan kasar dan dapat berbeda menurut lokasi, merek, serta harga saat belanja.</p>
           </div>
         </div>
-        <div class="footer-bottom">
+        <div class="footer-bottom [display:flex] [justify-content:space-between] [align-items:center] [padding-top:24px] [border-top:1px_solid_var(--border)] [flex-wrap:wrap] [gap:12px]">
           <p>© 2026 Resepin</p>
         </div>
       </div>
@@ -398,107 +398,107 @@
   </div>
 
   <!-- ===== PAGE: SCAN ===== -->
-  <div class="page" id="page-scan" role="main" tabindex="-1">
-    <div class="scan-page">
-      <div class="scan-header">
-        <button class="back-btn" @click="go('home')">← Kembali</button>
+  <div class="page [display:none] [min-height:100vh]" id="page-scan" role="main" tabindex="-1">
+    <div class="scan-page [padding-top:90px] [min-height:100vh]">
+      <div class="scan-header [text-align:center] [padding:40px_24px_20px]">
+        <button class="back-btn [display:inline-flex] [align-items:center] [gap:6px] [padding:8px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:var(--radius-sm)] [color:var(--text-secondary)] [cursor:pointer] [font-size:0.875rem] [font-family:var(--font-body)] [transition:var(--transition)] [margin-bottom:16px] hover:[border-color:var(--primary)] hover:[color:var(--primary)]" @click="go('home')">← Kembali</button>
         <h1>Tambah bahan dapur</h1>
         <p>Arahkan kamera ke bahan makanan; hasil pindai bisa kamu periksa dan koreksi</p>
       </div>
 
-      <div class="scan-layout">
+      <div class="scan-layout [display:grid] [grid-template-columns:1fr_380px] [gap:24px] [max-width:1100px] [margin:0_auto] [padding:20px_24px_60px] [align-items:start]">
         <!-- Camera Section -->
-        <div class="camera-section">
-          <div class="camera-viewport" id="cameraViewport">
+        <div class="camera-section [display:flex] [flex-direction:column] [gap:16px]">
+          <div class="camera-viewport [position:relative] [background:var(--bg-surface)] [border:1px_solid_var(--border)] [border-radius:var(--radius-lg)] [overflow:hidden] [aspect-ratio:4/3] [display:flex] [align-items:center] [justify-content:center]" id="cameraViewport">
             <video id="cameraFeed" autoplay muted playsinline></video>
             <canvas id="cameraCanvas"></canvas>
             <!-- Scan overlay -->
-            <div class="scan-overlay" id="scanOverlay">
-              <div class="scan-corner-tl"></div>
-              <div class="scan-corner-tr"></div>
-              <div class="scan-corner-bl"></div>
-              <div class="scan-corner-br"></div>
-              <div class="scan-laser" id="scanLaser"></div>
+            <div class="scan-overlay [position:absolute] [inset:0] [pointer-events:none] [display:none]" id="scanOverlay">
+              <div class="scan-corner-tl [top:20px] [left:20px] [border-top:3px_solid_var(--primary)] [border-left:3px_solid_var(--primary)] [border-radius:4px_0_0_0]"></div>
+              <div class="scan-corner-tr [top:20px] [right:20px] [border-top:3px_solid_var(--primary)] [border-right:3px_solid_var(--primary)] [border-radius:0_4px_0_0]"></div>
+              <div class="scan-corner-bl [bottom:20px] [left:20px] [border-bottom:3px_solid_var(--primary)] [border-left:3px_solid_var(--primary)] [border-radius:0_0_0_4px]"></div>
+              <div class="scan-corner-br [bottom:20px] [right:20px] [border-bottom:3px_solid_var(--primary)] [border-right:3px_solid_var(--primary)] [border-radius:0_0_4px_0]"></div>
+              <div class="scan-laser [position:absolute] [top:0] [left:0] [right:0] [height:2px] [background:linear-gradient(90deg,_transparent_0%,_var(--primary)_30%,_var(--accent)_70%,_transparent_100%)] [box-shadow:0_0_12px_var(--primary),_0_0_24px_rgba(182,92,58,0.4)] [animation:laserScan_2s_ease-in-out_infinite]" id="scanLaser"></div>
             </div>
             <!-- Detection boxes (simulated) -->
-            <div class="detection-boxes" id="detectionBoxes"></div>
+            <div class="detection-boxes [position:absolute] [inset:0] [pointer-events:none]" id="detectionBoxes"></div>
             <!-- Camera placeholder -->
-            <div class="camera-placeholder" id="cameraPlaceholder">
-              <div class="cp-icon"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-camera"/></svg></div>
+            <div class="camera-placeholder [text-align:center] [padding:40px]" id="cameraPlaceholder">
+              <div class="cp-icon [font-size:4rem] [margin-bottom:16px] [opacity:0.3]"><svg class="ui-icon ui-icon-large [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-camera"/></svg></div>
               <p>Gunakan kamera untuk mengenali bahan</p>
-              <p class="cp-sub">atau pilih bahan secara manual</p>
+              <p class="cp-sub [font-size:0.85rem] [margin-top:8px]">atau pilih bahan secara manual</p>
             </div>
           </div>
-          <div class="camera-controls">
-            <button class="cam-btn primary" id="startCamBtn" onclick="startCamera()">
+          <div class="camera-controls [display:flex] [gap:12px] [flex-wrap:wrap]">
+            <button class="cam-btn primary [gap:8px] [padding:12px_20px] [border-radius:var(--radius-sm)] [font-size:0.9rem] [font-weight:600] [border:none] [transition:var(--transition-bounce)] [font-family:var(--font-body)] disabled:[opacity:0.4] disabled:[cursor:not-allowed]" id="startCamBtn" onclick="startCamera()">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
               Buka kamera
             </button>
-            <label class="cam-btn gallery-upload" id="galleryUploadLabel">Unggah dari galeri
-              <input class="visually-hidden" id="galleryIngredientUpload" type="file" accept="image/*" onchange="handleGalleryUpload(this)" />
+            <label class="cam-btn gallery-upload [gap:8px] [padding:12px_20px] [border-radius:var(--radius-sm)] [font-size:0.9rem] [font-weight:600] [border:none] [transition:var(--transition-bounce)] [font-family:var(--font-body)] [justify-content:center] disabled:[opacity:0.4] disabled:[cursor:not-allowed]" id="galleryUploadLabel">Unggah dari galeri
+              <input class="visually-hidden [position:absolute] [width:1px] [height:1px] [padding:0] [margin:-1px] [overflow:hidden] [clip:rect(0,0,0,0)] [white-space:nowrap] [border:0]" id="galleryIngredientUpload" type="file" accept="image/*" onchange="handleGalleryUpload(this)" />
             </label>
-            <button class="cam-btn demo" onclick="runDemo()">
+            <button class="cam-btn demo [gap:8px] [padding:12px_20px] [border-radius:var(--radius-sm)] [font-size:0.9rem] [font-weight:600] [border:none] [transition:var(--transition-bounce)] [font-family:var(--font-body)] disabled:[opacity:0.4] disabled:[cursor:not-allowed]" onclick="runDemo()">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5,3 19,12 5,21"/></svg>
               Coba contoh
             </button>
-            <button class="cam-btn capture" id="captureBtn" onclick="captureAndDetect()" disabled>
-              <svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-camera"/></svg> Ambil Foto
+            <button class="cam-btn capture [gap:8px] [padding:12px_20px] [border-radius:var(--radius-sm)] [font-size:0.9rem] [font-weight:600] [border:none] [transition:var(--transition-bounce)] [font-family:var(--font-body)] disabled:[opacity:0.4] disabled:[cursor:not-allowed]" id="captureBtn" onclick="captureAndDetect()" disabled>
+              <svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-camera"/></svg> Ambil Foto
             </button>
           </div>
-          <p class="cp-sub" id="scanAvailabilityNote">Memeriksa ketersediaan pemindai foto…</p>
-          <div class="detection-status" id="detectionStatus">
-            <div class="status-idle">
-              <div class="status-dot idle"></div>
+          <p class="cp-sub [font-size:0.85rem] [margin-top:8px]" id="scanAvailabilityNote">Memeriksa ketersediaan pemindai foto…</p>
+          <div class="detection-status [padding:12px_16px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:var(--radius-sm)]" id="detectionStatus">
+            <div class="status-idle [display:flex] [align-items:center] [gap:10px]">
+              <div class="status-dot idle [width:8px] [height:8px] [border-radius:50%]"></div>
               <span>Menunggu kamera aktif...</span>
             </div>
           </div>
         </div>
 
         <!-- Ingredients Panel -->
-        <div class="ingredients-panel">
-          <div class="ip-header">
+        <div class="ingredients-panel [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:var(--radius-lg)] [overflow:hidden] [display:flex] [flex-direction:column] [max-height:calc(100vh_-_130px)] [position:sticky] [top:88px]">
+          <div class="ip-header [padding:20px] [border-bottom:1px_solid_var(--border)] [display:flex] [justify-content:space-between] [align-items:center] [background:var(--bg-surface)]">
             <h3>Bahan pilihanmu</h3>
-            <span class="ip-count" id="ingredientCount">0 bahan</span>
+            <span class="ip-count [padding:3px_10px] [background:rgba(182,92,58,0.1)] [color:var(--primary)] [border-radius:999px] [font-size:0.8rem] [font-weight:600]" id="ingredientCount">0 bahan</span>
           </div>
 
-          <div class="ip-list" id="ingredientList">
-            <div class="ip-empty" id="ipEmpty">
-              <div class="ip-empty-icon"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-search"/></svg></div>
+          <div class="ip-list [padding:16px] [flex:1] [overflow-y:auto] [display:flex] [flex-direction:column] [gap:10px]" id="ingredientList">
+            <div class="ip-empty [text-align:center] [padding:28px_18px] [color:var(--text-muted)] [display:flex] [flex-direction:column] [align-items:center] [gap:10px] [background:var(--bg-surface)] [border:1px_solid_var(--border)] [border-radius:16px]" id="ipEmpty">
+              <div class="ip-empty-icon [font-size:2rem] [margin-bottom:12px] [opacity:1] [display:grid] [width:60px] [height:60px] [place-items:center] [margin:0] [color:var(--primary)] [background:var(--bg-glass)] [border-radius:50%]"><svg class="ui-icon ui-icon-large [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-search"/></svg></div>
               <h4>Belum ada bahan</h4>
               <p>Coba contoh bahan tanpa membuka kamera, atau tambahkan bahan secara manual.</p>
-              <button class="btn-primary ip-empty-example" type="button" onclick="runDemo()">Coba contoh</button>
+              <button class="btn-primary ip-empty-example [gap:10px] [background:linear-gradient(135deg,_var(--primary),_var(--primary-dark))] [color:white] [font-size:1rem] [font-weight:700] [font-family:var(--font-display)] [cursor:pointer] [transition:var(--transition-bounce)] [box-shadow:0_4px_20px_rgba(182,92,58,0.3)] [min-height:44px] [margin-top:4px] hover:[transform:translateY(-3px)_scale(1.02)] hover:[box-shadow:0_8px_32px_rgba(182,92,58,0.5)]" type="button" onclick="runDemo()">Coba contoh</button>
             </div>
           </div>
 
-          <div class="ip-manual">
+          <div class="ip-manual [padding:16px] [border-top:1px_solid_var(--border)]">
             <h4>+ Tambah Manual</h4>
-            <div class="ip-manual-input">
+            <div class="ip-manual-input [display:flex] [gap:8px] [margin-bottom:12px]">
               <input type="text" id="manualIngredientInput" aria-label="Nama bahan untuk ditambahkan" placeholder="Cth: tomat, kentang..." onkeydown="if(event.key==='Enter') addManualIngredient()" />
               <button onclick="addManualIngredient()">Tambah</button>
             </div>
-            <div class="quick-add-chips">
-              <button type="button" class="chip" onclick="addIngredient('Telur')">Telur</button>
-              <button type="button" class="chip" onclick="addIngredient('Nasi')">Nasi</button>
-              <button type="button" class="chip" onclick="addIngredient('Ayam')">Ayam</button>
-              <button type="button" class="chip" onclick="addIngredient('Tempe')">Tempe</button>
-              <button type="button" class="chip" onclick="addIngredient('Kangkung')">Kangkung</button>
-              <button type="button" class="chip" onclick="addIngredient('Mie')">Mi</button>
+            <div class="quick-add-chips [display:flex] [flex-wrap:wrap] [gap:6px]">
+              <button type="button" class="chip [font:inherit] [color:var(--text-secondary)] [padding:4px_10px] [background:var(--bg-surface)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:0.8rem] [cursor:pointer] [transition:var(--transition)] hover:[border-color:var(--primary)] hover:[color:var(--primary)] hover:[background:rgba(182,92,58,0.05)]" onclick="addIngredient('Telur')">Telur</button>
+              <button type="button" class="chip [font:inherit] [color:var(--text-secondary)] [padding:4px_10px] [background:var(--bg-surface)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:0.8rem] [cursor:pointer] [transition:var(--transition)] hover:[border-color:var(--primary)] hover:[color:var(--primary)] hover:[background:rgba(182,92,58,0.05)]" onclick="addIngredient('Nasi')">Nasi</button>
+              <button type="button" class="chip [font:inherit] [color:var(--text-secondary)] [padding:4px_10px] [background:var(--bg-surface)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:0.8rem] [cursor:pointer] [transition:var(--transition)] hover:[border-color:var(--primary)] hover:[color:var(--primary)] hover:[background:rgba(182,92,58,0.05)]" onclick="addIngredient('Ayam')">Ayam</button>
+              <button type="button" class="chip [font:inherit] [color:var(--text-secondary)] [padding:4px_10px] [background:var(--bg-surface)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:0.8rem] [cursor:pointer] [transition:var(--transition)] hover:[border-color:var(--primary)] hover:[color:var(--primary)] hover:[background:rgba(182,92,58,0.05)]" onclick="addIngredient('Tempe')">Tempe</button>
+              <button type="button" class="chip [font:inherit] [color:var(--text-secondary)] [padding:4px_10px] [background:var(--bg-surface)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:0.8rem] [cursor:pointer] [transition:var(--transition)] hover:[border-color:var(--primary)] hover:[color:var(--primary)] hover:[background:rgba(182,92,58,0.05)]" onclick="addIngredient('Kangkung')">Kangkung</button>
+              <button type="button" class="chip [font:inherit] [color:var(--text-secondary)] [padding:4px_10px] [background:var(--bg-surface)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:0.8rem] [cursor:pointer] [transition:var(--transition)] hover:[border-color:var(--primary)] hover:[color:var(--primary)] hover:[background:rgba(182,92,58,0.05)]" onclick="addIngredient('Mie')">Mi</button>
             </div>
           </div>
 
-          <div class="ip-actions">
-            <button class="btn-primary full-width" id="findRecipesBtn" @click="findRecipesFromScan" disabled>
-              <svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-pot"/></svg> Cari Resep (<span id="ingredientCountBtn">0</span> bahan)
+          <div class="ip-actions [padding:16px] [border-top:1px_solid_var(--border)] [display:flex] [flex-direction:column] [gap:10px]">
+            <button class="btn-primary full-width [gap:10px] [background:linear-gradient(135deg,_var(--primary),_var(--primary-dark))] [color:white] [font-size:1rem] [font-weight:700] [font-family:var(--font-display)] [cursor:pointer] [transition:var(--transition-bounce)] [box-shadow:0_4px_20px_rgba(182,92,58,0.3)] hover:[transform:translateY(-3px)_scale(1.02)] hover:[box-shadow:0_8px_32px_rgba(182,92,58,0.5)]" id="findRecipesBtn" @click="findRecipesFromScan" disabled>
+              <svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-pot"/></svg> Cari Resep (<span id="ingredientCountBtn">0</span> bahan)
             </button>
-            <button class="btn-secondary full-width" @click="go('chef')">
+            <button class="btn-secondary full-width [display:inline-flex] [align-items:center] [gap:8px] [padding:14px_24px] [background:transparent] [color:var(--text-primary)] [border:1px_solid_var(--border)] [border-radius:var(--radius)] [font-size:1rem] [font-weight:600] [cursor:pointer] [transition:var(--transition)] hover:[border-color:var(--primary)] hover:[color:var(--primary)] hover:[background:rgba(182,92,58,0.05)]" @click="go('chef')">
               Tanya Chef Resepin
             </button>
           </div>
 
-          <div class="ip-confidence" id="confidenceBar" style="display:none">
+          <div class="ip-confidence [padding:12px_16px] [border-top:1px_solid_var(--border)] [display:flex] [align-items:center] [gap:10px] [font-size:0.8rem] [color:var(--text-muted)]" id="confidenceBar" style="display:none">
             <span>Tingkat keyakinan</span>
-            <div class="conf-bar-wrap">
-              <div class="conf-bar-fill" id="confFill" style="width:0%"></div>
+            <div class="conf-bar-wrap [flex:1] [height:6px] [background:var(--bg-surface)] [border-radius:3px] [overflow:hidden]">
+              <div class="conf-bar-fill [height:100%] [background:linear-gradient(90deg,_var(--primary),_var(--accent))] [border-radius:3px] [transition:width_0.5s_ease]" id="confFill" style="width:0%"></div>
             </div>
             <span id="confPct">0%</span>
           </div>
@@ -508,23 +508,23 @@
   </div>
 
   <!-- ===== PAGE: RESEP ===== -->
-  <div class="page" id="page-resep" role="main" tabindex="-1">
-    <div class="resep-page">
-      <div class="container resep-content">
-        <div class="resep-header">
-          <button class="back-btn" @click="go('home')">← Kembali</button>
-          <h1><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-book"/></svg> Semua Resep</h1>
+  <div class="page [display:none] [min-height:100vh]" id="page-resep" role="main" tabindex="-1">
+    <div class="resep-page [padding-top:84px] [min-height:100vh] [padding-bottom:76px]">
+      <div class="container resep-content [margin:0_auto] [width:100%]">
+        <div class="resep-header [text-align:left] [padding:22px_0_12px] [max-width:none] [margin:0]">
+          <button class="back-btn [display:inline-flex] [align-items:center] [gap:6px] [padding:8px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:var(--radius-sm)] [color:var(--text-secondary)] [cursor:pointer] [font-size:0.875rem] [font-family:var(--font-body)] [transition:var(--transition)] [margin-bottom:16px] hover:[border-color:var(--primary)] hover:[color:var(--primary)]" @click="go('home')">← Kembali</button>
+          <h1><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-book"/></svg> Semua Resep</h1>
           <p>Temukan resep terbaik dari bahan yang kamu punya</p>
         </div>
 
       <!-- Search & Filter -->
-      <div class="resep-filters">
-        <div class="recipe-toolbar">
-          <label class="search-box" for="recipeSearch">
+      <div class="resep-filters [max-width:none] [margin:0_0_8px] [padding:12px_0_0] [display:flex] [flex-direction:column] [gap:13px] [align-items:stretch]">
+        <div class="recipe-toolbar [display:grid] [width:100%] [grid-template-columns:minmax(0,_1fr)_auto_auto] [align-items:center] [gap:12px]">
+          <label class="search-box [display:flex] [align-items:center] [gap:12px] [padding:12px_16px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:var(--radius)] [transition:var(--transition)]" for="recipeSearch">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
             <input type="search" id="recipeSearch" aria-label="Cari nama resep atau bahan" placeholder="Cari nama resep atau bahan..." oninput="filterRecipes()" />
           </label>
-          <div class="recipe-sort-group" role="group" aria-label="Urutkan resep">
+          <div class="recipe-sort-group [display:flex] [align-items:center] [gap:9px] [color:var(--text-secondary)] [font-size:.86rem]" role="group" aria-label="Urutkan resep">
             <label for="recipeSort">Urutkan</label>
             <select id="recipeSort" onchange="setRecipeSort(this.value)">
               <option value="match">Paling cocok</option>
@@ -532,50 +532,50 @@
               <option value="cheapest">Termurah</option>
             </select>
           </div>
-          <button class="clear-recipe-filters" id="clearRecipeFilters" type="button" onclick="clearRecipeFilters()" hidden>Hapus filter</button>
+          <button class="clear-recipe-filters [min-height:40px] [padding:7px_13px] [border:1px_solid_var(--border)] [border-radius:10px] [color:var(--text-primary)] [background:var(--bg-surface)] [font:inherit] [font-size:.84rem] [cursor:pointer] hover:[border-color:var(--primary)]" id="clearRecipeFilters" type="button" onclick="clearRecipeFilters()" hidden>Hapus filter</button>
         </div>
-        <div class="recipe-filter-heading">
+        <div class="recipe-filter-heading [width:100%] [margin:2px_0_-5px] [color:var(--text-secondary)] [font-size:.79rem] [font-weight:700] [letter-spacing:.025em]">
           <span>Kategori resep</span>
         </div>
-        <div class="filter-chips" id="basicRecipeFilters" role="group" aria-label="Filter kategori resep">
-          <button type="button" class="filter-chip active" aria-pressed="true" onclick="setFilter('all', this)">Semua</button>
-          <button type="button" class="filter-chip" aria-pressed="false" onclick="setFilter('mudah', this)">Mudah</button>
-          <button type="button" class="filter-chip" aria-pressed="false" onclick="setFilter('cepat', this)">&lt; 15 Menit</button>
-          <button type="button" class="filter-chip" aria-pressed="false" onclick="setFilter('sehat', this)">Sehat</button>
-          <button type="button" class="filter-chip" aria-pressed="false" onclick="setFilter('sayur', this)">Sayur</button>
-          <button type="button" class="filter-chip" aria-pressed="false" onclick="setFilter('berkuah', this)">Berkuah</button>
-          <button type="button" class="filter-chip" aria-pressed="false" onclick="setFilter('5bahan', this)">≤ 5 Bahan</button>
+        <div class="filter-chips [display:flex] [gap:8px] [flex-wrap:wrap]" id="basicRecipeFilters" role="group" aria-label="Filter kategori resep">
+          <button type="button" class="filter-chip active [font:inherit] [padding:7px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:.84rem] [cursor:pointer] [transition:var(--transition)] [color:var(--text-secondary)] [min-height:40px] [font-weight:550]" aria-pressed="true" onclick="setFilter('all', this)">Semua</button>
+          <button type="button" class="filter-chip [font:inherit] [padding:7px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:.84rem] [cursor:pointer] [transition:var(--transition)] [color:var(--text-secondary)] [min-height:40px] [font-weight:550]" aria-pressed="false" onclick="setFilter('mudah', this)">Mudah</button>
+          <button type="button" class="filter-chip [font:inherit] [padding:7px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:.84rem] [cursor:pointer] [transition:var(--transition)] [color:var(--text-secondary)] [min-height:40px] [font-weight:550]" aria-pressed="false" onclick="setFilter('cepat', this)">&lt; 15 Menit</button>
+          <button type="button" class="filter-chip [font:inherit] [padding:7px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:.84rem] [cursor:pointer] [transition:var(--transition)] [color:var(--text-secondary)] [min-height:40px] [font-weight:550]" aria-pressed="false" onclick="setFilter('sehat', this)">Sehat</button>
+          <button type="button" class="filter-chip [font:inherit] [padding:7px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:.84rem] [cursor:pointer] [transition:var(--transition)] [color:var(--text-secondary)] [min-height:40px] [font-weight:550]" aria-pressed="false" onclick="setFilter('sayur', this)">Sayur</button>
+          <button type="button" class="filter-chip [font:inherit] [padding:7px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:.84rem] [cursor:pointer] [transition:var(--transition)] [color:var(--text-secondary)] [min-height:40px] [font-weight:550]" aria-pressed="false" onclick="setFilter('berkuah', this)">Berkuah</button>
+          <button type="button" class="filter-chip [font:inherit] [padding:7px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:.84rem] [cursor:pointer] [transition:var(--transition)] [color:var(--text-secondary)] [min-height:40px] [font-weight:550]" aria-pressed="false" onclick="setFilter('5bahan', this)">≤ 5 Bahan</button>
         </div>
-        <details class="recipe-advanced-filters">
+        <details class="recipe-advanced-filters [width:100%] [border-top:1px_solid_color-mix(in_srgb,var(--border)_72%,transparent)] [border-bottom:1px_solid_color-mix(in_srgb,var(--border)_72%,transparent)]">
           <summary>Filter kebutuhan makan &amp; biaya <span id="advancedRecipeFilterCount" hidden></span></summary>
-          <div class="recipe-advanced-panel">
-            <div class="recipe-advanced-group">
-              <span class="recipe-filter-label">Kebutuhan makan</span>
-              <div class="filter-chips" role="group" aria-label="Filter kebutuhan makan">
-                <button type="button" class="filter-chip" aria-pressed="false" onclick="setDietFilter('vegetarian', this)">Vegetarian</button>
-                <button type="button" class="filter-chip" aria-pressed="false" onclick="setDietFilter('no-egg', this)">Tanpa telur</button>
-                <button type="button" class="filter-chip" aria-pressed="false" onclick="setDietFilter('no-seafood', this)">Tanpa seafood</button>
-                <button type="button" class="filter-chip" aria-pressed="false" onclick="setDietFilter('no-peanut', this)">Tanpa kacang</button>
+          <div class="recipe-advanced-panel [display:grid] [grid-template-columns:minmax(0,_1.2fr)_minmax(190px,_1fr)] [gap:16px_24px] [padding:0_0_15px]">
+            <div class="recipe-advanced-group [min-width:0]">
+              <span class="recipe-filter-label [color:var(--text-muted)] [font-size:.74rem] [font-weight:700] [letter-spacing:.035em]">Kebutuhan makan</span>
+              <div class="filter-chips [display:flex] [gap:8px] [flex-wrap:wrap]" role="group" aria-label="Filter kebutuhan makan">
+                <button type="button" class="filter-chip [font:inherit] [padding:7px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:.84rem] [cursor:pointer] [transition:var(--transition)] [color:var(--text-secondary)] [min-height:40px] [font-weight:550]" aria-pressed="false" onclick="setDietFilter('vegetarian', this)">Vegetarian</button>
+                <button type="button" class="filter-chip [font:inherit] [padding:7px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:.84rem] [cursor:pointer] [transition:var(--transition)] [color:var(--text-secondary)] [min-height:40px] [font-weight:550]" aria-pressed="false" onclick="setDietFilter('no-egg', this)">Tanpa telur</button>
+                <button type="button" class="filter-chip [font:inherit] [padding:7px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:.84rem] [cursor:pointer] [transition:var(--transition)] [color:var(--text-secondary)] [min-height:40px] [font-weight:550]" aria-pressed="false" onclick="setDietFilter('no-seafood', this)">Tanpa seafood</button>
+                <button type="button" class="filter-chip [font:inherit] [padding:7px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:.84rem] [cursor:pointer] [transition:var(--transition)] [color:var(--text-secondary)] [min-height:40px] [font-weight:550]" aria-pressed="false" onclick="setDietFilter('no-peanut', this)">Tanpa kacang</button>
               </div>
             </div>
-            <div class="recipe-advanced-group">
-              <span class="recipe-filter-label">Perkiraan biaya per porsi</span>
-              <div class="filter-chips" role="group" aria-label="Filter perkiraan biaya per porsi">
-                <button type="button" class="filter-chip" aria-pressed="false" onclick="setBudgetFilter(10000, this)">≤ Rp10.000</button>
-                <button type="button" class="filter-chip" aria-pressed="false" onclick="setBudgetFilter(20000, this)">≤ Rp20.000</button>
+            <div class="recipe-advanced-group [min-width:0]">
+              <span class="recipe-filter-label [color:var(--text-muted)] [font-size:.74rem] [font-weight:700] [letter-spacing:.035em]">Perkiraan biaya per porsi</span>
+              <div class="filter-chips [display:flex] [gap:8px] [flex-wrap:wrap]" role="group" aria-label="Filter perkiraan biaya per porsi">
+                <button type="button" class="filter-chip [font:inherit] [padding:7px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:.84rem] [cursor:pointer] [transition:var(--transition)] [color:var(--text-secondary)] [min-height:40px] [font-weight:550]" aria-pressed="false" onclick="setBudgetFilter(10000, this)">≤ Rp10.000</button>
+                <button type="button" class="filter-chip [font:inherit] [padding:7px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:.84rem] [cursor:pointer] [transition:var(--transition)] [color:var(--text-secondary)] [min-height:40px] [font-weight:550]" aria-pressed="false" onclick="setBudgetFilter(20000, this)">≤ Rp20.000</button>
               </div>
             </div>
-            <div class="recipe-advanced-group recipe-pantry-group" role="group" aria-label="Preferensi bahan dasar dapur">
-              <span class="recipe-filter-label">Bahan dasar</span>
-              <label class="pantry-toggle"><input id="assumePantryBasics" type="checkbox" onchange="setAssumePantryBasics(this.checked)" /> <span>Anggap bahan dasar dapur seperti garam dan minyak tersedia</span></label>
+            <div class="recipe-advanced-group recipe-pantry-group [min-width:0] [grid-column:1_/_-1] [flex-wrap:wrap]" role="group" aria-label="Preferensi bahan dasar dapur">
+              <span class="recipe-filter-label [color:var(--text-muted)] [font-size:.74rem] [font-weight:700] [letter-spacing:.035em]">Bahan dasar</span>
+              <label class="pantry-toggle [display:inline-flex] [align-items:center] [gap:8px] [min-height:40px] [padding:6px_10px] [border:1px_solid_var(--border)] [border-radius:999px] [color:var(--text-secondary)] [font-size:.82rem]"><input id="assumePantryBasics" type="checkbox" onchange="setAssumePantryBasics(this.checked)" /> <span>Anggap bahan dasar dapur seperti garam dan minyak tersedia</span></label>
             </div>
           </div>
         </details>
-        <p class="recipe-results-status" id="recipeResultsStatus" aria-live="polite"></p>
+        <p class="recipe-results-status [min-height:1.25em] [margin:0] [font-size:.8rem] [color:var(--text-muted)]" id="recipeResultsStatus" aria-live="polite"></p>
       </div>
 
       <!-- Recipes Grid -->
-        <div class="recipes-grid" id="recipesGrid">
+        <div class="recipes-grid [display:grid] [grid-template-columns:repeat(4,_minmax(0,_1fr))] [gap:20px] [padding:8px_0_20px] [align-items:stretch]" id="recipesGrid">
           <!-- populated by JS -->
         </div>
       </div>
@@ -583,59 +583,61 @@
   </div>
 
   <!-- ===== PAGE: CHEF RESEPIN ===== -->
-  <div class="page" id="page-chef" role="main" tabindex="-1">
-    <div class="chef-page">
-      <div class="chef-header">
-        <button class="back-btn" @click="go('home')">← Kembali</button>
-        <div class="chef-title-area">
-          <div class="chef-avatar"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
+  <div class="page [display:none] [min-height:100vh]" id="page-chef" role="main" tabindex="-1">
+    <div class="chef-page [display:flex] [flex-direction:column] [height:100vh] [padding-top:68px]">
+      <div class="chef-header [padding:16px_24px] [border-bottom:1px_solid_var(--border)] [background:var(--bg-card)] [display:flex] [align-items:center] [justify-content:space-between] [gap:16px] [flex-wrap:wrap]">
+        <button class="back-btn [display:inline-flex] [align-items:center] [gap:6px] [padding:8px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:var(--radius-sm)] [color:var(--text-secondary)] [cursor:pointer] [font-size:0.875rem] [font-family:var(--font-body)] [transition:var(--transition)] [margin-bottom:16px] hover:[border-color:var(--primary)] hover:[color:var(--primary)]" @click="go('home')">← Kembali</button>
+        <div class="chef-title-area [display:flex] [align-items:center] [gap:14px]">
+          <div class="chef-avatar [width:50px] [height:50px] [background:var(--bg-surface)] [border:1px_solid_rgba(182,92,58,0.3)] [border-radius:50%] [display:flex] [align-items:center] [justify-content:center] [font-size:1.6rem] [border-color:var(--border)]"><svg class="ui-icon ui-icon-large [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
           <div>
             <h1>Chef Resepin</h1>
-            <span class="chef-status"><span class="status-online"></span> Siap membantu di dapur</span>
+            <span class="chef-status [display:flex] [align-items:center] [gap:6px] [font-size:0.8rem] [color:var(--text-muted)]"><span class="status-online [width:8px] [height:8px] [background:#2ECC71] [border-radius:50%] [animation:blink_2s_ease-in-out_infinite]"></span> Siap membantu di dapur</span>
           </div>
         </div>
-        <div class="chef-bahan-badge" id="chefBahanBadge">
+        <div class="chef-bahan-badge [display:flex] [align-items:center] [gap:6px] [padding:6px_14px] [background:rgba(120,132,102,0.1)] [border:1px_solid_rgba(120,132,102,0.3)] [border-radius:999px] [font-size:0.8rem] [color:var(--secondary)]" id="chefBahanBadge">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M7 12h10M10 18h4"/></svg>
           <span id="chefBahanText">Belum ada bahan</span>
         </div>
       </div>
 
-      <div class="chat-container">
-        <div class="chat-messages" id="chatMessages" role="log" aria-live="polite" aria-relevant="additions text">
-          <div class="chat-bubble bot-bubble">
-            <div class="bubble-avatar"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
-            <div class="bubble-content">
+      <div class="chat-container [flex:1] [display:flex] [flex-direction:column] [overflow:hidden] [max-width:800px] [width:100%] [margin:0_auto] [padding:0_24px]">
+        <div class="chat-messages [flex:1] [overflow-y:auto] [padding:20px_0] [display:flex] [flex-direction:column] [gap:16px]" id="chatMessages" role="log" aria-live="polite" aria-relevant="additions text">
+          <div class="chat-bubble bot-bubble [display:flex] [gap:12px]">
+            <div class="bubble-avatar [width:36px] [height:36px] [background:var(--bg-surface)] [border:1px_solid_var(--border)] [border-radius:50%] [display:flex] [align-items:center] [justify-content:center] [font-size:1rem] [flex-shrink:0]"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
+            <div class="bubble-content [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:20px_20px_20px_4px] [font-size:0.9rem] [line-height:1.6] [color:var(--text-primary)]">
               <p>Hai, aku <strong>Chef Resepin</strong>.</p>
               <p>Mau cari ide masak? Pilih salah satu topik di bawah, atau ceritakan bahan yang kamu punya.</p>
             </div>
-            <span class="bubble-time">Sekarang</span>
+            <span class="bubble-time [font-size:0.7rem] [color:var(--text-muted)] [align-self:flex-end]">Sekarang</span>
           </div>
         </div>
 
-        <div class="quick-prompts" id="quickPrompts">
-          <div class="qp-scroll">
-            <button class="qp-btn" onclick="sendQuickPrompt('Aku punya wortel, jagung, dan bawang. Bisa masak apa?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-carrot"/></svg> Punya wortel & jagung</button>
-            <button class="qp-btn" onclick="sendQuickPrompt('Ada nasi sisa dan telur di kulkas. Ada resep simpel?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-rice"/></svg> Nasi sisa + telur</button>
-            <button class="qp-btn" onclick="sendQuickPrompt('Mau masak sesuatu yang kaya protein tapi cepat, ada ayam.')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chicken"/></svg> Masak dari ayam</button>
-            <button class="qp-btn" onclick="sendQuickPrompt('Ada tempe dan tahu, mau bikin lauk yang enak.')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-tempe"/></svg> Tempe & tahu</button>
-            <button class="qp-btn" onclick="sendQuickPrompt('Bahan di kulkas tinggal sedikit, ada brokoli dan wortel saja.')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-leaf"/></svg> Sayuran sisa</button>
-            <button class="qp-btn" onclick="sendQuickPrompt('Apa pengganti santan kalau habis?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-bulb"/></svg> Substitusi bahan</button>
-            <button class="qp-btn" onclick="sendQuickPrompt('Bagaimana cara menyimpan sisa makanan dengan aman?')">Simpan sisa makanan</button>
-            <button class="qp-btn" onclick="sendQuickPrompt('Bagaimana cara menggoreng tempe agar renyah?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-bulb"/></svg> Teknik memasak</button>
-            <button class="qp-btn" onclick="sendQuickPrompt('Bantu susun menu 3 hari dari bahan telur, tahu, dan sayur.')">Rencana menu</button>
-            <button class="qp-btn" onclick="sendQuickPrompt('Aku alergi udang, apa yang perlu kuperhatikan di resep?')">Alergi & bahan</button>
+        <div class="quick-prompts [padding:12px_0] [border-top:1px_solid_var(--border)]" id="quickPrompts">
+          <div class="qp-scroll [display:flex] [gap:8px] [overflow-x:auto] [padding-bottom:4px] [scrollbar-width:thin] [scrollbar-color:var(--border)_transparent] [cursor:grab] [user-select:none] [touch-action:pan-x]">
+            <button class="qp-btn [flex-shrink:0] [padding:8px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:0.825rem] [color:var(--text-secondary)] [cursor:pointer] [transition:var(--transition)] [white-space:nowrap] [font-family:var(--font-body)] hover:[border-color:var(--primary)] hover:[color:var(--primary)] hover:[background:rgba(182,92,58,0.05)] focus-visible:[outline:3px_solid_var(--primary)] focus-visible:[outline-offset:2px]" onclick="sendQuickPrompt('Aku punya wortel, jagung, dan bawang. Bisa masak apa?')"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-carrot"/></svg> Punya wortel & jagung</button>
+            <button class="qp-btn [flex-shrink:0] [padding:8px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:0.825rem] [color:var(--text-secondary)] [cursor:pointer] [transition:var(--transition)] [white-space:nowrap] [font-family:var(--font-body)] hover:[border-color:var(--primary)] hover:[color:var(--primary)] hover:[background:rgba(182,92,58,0.05)] focus-visible:[outline:3px_solid_var(--primary)] focus-visible:[outline-offset:2px]" onclick="sendQuickPrompt('Ada nasi sisa dan telur di kulkas. Ada resep simpel?')"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-rice"/></svg> Nasi sisa + telur</button>
+            <button class="qp-btn [flex-shrink:0] [padding:8px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:0.825rem] [color:var(--text-secondary)] [cursor:pointer] [transition:var(--transition)] [white-space:nowrap] [font-family:var(--font-body)] hover:[border-color:var(--primary)] hover:[color:var(--primary)] hover:[background:rgba(182,92,58,0.05)] focus-visible:[outline:3px_solid_var(--primary)] focus-visible:[outline-offset:2px]" onclick="sendQuickPrompt('Mau masak sesuatu yang kaya protein tapi cepat, ada ayam.')"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-chicken"/></svg> Masak dari ayam</button>
+            <button class="qp-btn [flex-shrink:0] [padding:8px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:0.825rem] [color:var(--text-secondary)] [cursor:pointer] [transition:var(--transition)] [white-space:nowrap] [font-family:var(--font-body)] hover:[border-color:var(--primary)] hover:[color:var(--primary)] hover:[background:rgba(182,92,58,0.05)] focus-visible:[outline:3px_solid_var(--primary)] focus-visible:[outline-offset:2px]" onclick="sendQuickPrompt('Ada tempe dan tahu, mau bikin lauk yang enak.')"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-tempe"/></svg> Tempe & tahu</button>
+            <button class="qp-btn [flex-shrink:0] [padding:8px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:0.825rem] [color:var(--text-secondary)] [cursor:pointer] [transition:var(--transition)] [white-space:nowrap] [font-family:var(--font-body)] hover:[border-color:var(--primary)] hover:[color:var(--primary)] hover:[background:rgba(182,92,58,0.05)] focus-visible:[outline:3px_solid_var(--primary)] focus-visible:[outline-offset:2px]" onclick="sendQuickPrompt('Bahan di kulkas tinggal sedikit, ada brokoli dan wortel saja.')"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-leaf"/></svg> Sayuran sisa</button>
+            <button class="qp-btn [flex-shrink:0] [padding:8px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:0.825rem] [color:var(--text-secondary)] [cursor:pointer] [transition:var(--transition)] [white-space:nowrap] [font-family:var(--font-body)] hover:[border-color:var(--primary)] hover:[color:var(--primary)] hover:[background:rgba(182,92,58,0.05)] focus-visible:[outline:3px_solid_var(--primary)] focus-visible:[outline-offset:2px]" onclick="sendQuickPrompt('Apa pengganti santan kalau habis?')"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-bulb"/></svg> Substitusi bahan</button>
+            <button class="qp-btn [flex-shrink:0] [padding:8px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:0.825rem] [color:var(--text-secondary)] [cursor:pointer] [transition:var(--transition)] [white-space:nowrap] [font-family:var(--font-body)] hover:[border-color:var(--primary)] hover:[color:var(--primary)] hover:[background:rgba(182,92,58,0.05)] focus-visible:[outline:3px_solid_var(--primary)] focus-visible:[outline-offset:2px]" onclick="sendQuickPrompt('Bagaimana cara menyimpan sisa makanan dengan aman?')">Simpan sisa makanan</button>
+            <button class="qp-btn [flex-shrink:0] [padding:8px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:0.825rem] [color:var(--text-secondary)] [cursor:pointer] [transition:var(--transition)] [white-space:nowrap] [font-family:var(--font-body)] hover:[border-color:var(--primary)] hover:[color:var(--primary)] hover:[background:rgba(182,92,58,0.05)] focus-visible:[outline:3px_solid_var(--primary)] focus-visible:[outline-offset:2px]" onclick="sendQuickPrompt('Bagaimana cara menggoreng tempe agar renyah?')"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-bulb"/></svg> Teknik memasak</button>
+            <button class="qp-btn [flex-shrink:0] [padding:8px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:0.825rem] [color:var(--text-secondary)] [cursor:pointer] [transition:var(--transition)] [white-space:nowrap] [font-family:var(--font-body)] hover:[border-color:var(--primary)] hover:[color:var(--primary)] hover:[background:rgba(182,92,58,0.05)] focus-visible:[outline:3px_solid_var(--primary)] focus-visible:[outline-offset:2px]" onclick="sendQuickPrompt('Bantu susun menu 3 hari dari bahan telur, tahu, dan sayur.')">Rencana menu</button>
+            <button class="qp-btn [flex-shrink:0] [padding:8px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:999px] [font-size:0.825rem] [color:var(--text-secondary)] [cursor:pointer] [transition:var(--transition)] [white-space:nowrap] [font-family:var(--font-body)] hover:[border-color:var(--primary)] hover:[color:var(--primary)] hover:[background:rgba(182,92,58,0.05)] focus-visible:[outline:3px_solid_var(--primary)] focus-visible:[outline-offset:2px]" onclick="sendQuickPrompt('Aku alergi udang, apa yang perlu kuperhatikan di resep?')">Alergi & bahan</button>
           </div>
         </div>
 
-        <div class="chat-input-area">
-          <div class="chef-image-preview" id="chatImagePreview" hidden aria-live="polite"></div>
-          <div class="chat-input-box">
-            <input class="chef-image-file-input" id="chatImageInput" type="file" accept="image/png,image/jpeg,image/webp" aria-label="Pilih gambar untuk Chef Resepin" onchange="handleChefImageSelection(this, 'chatImagePreview')">
-            <button class="chef-image-attach" type="button" aria-label="Tambahkan gambar" title="Tambahkan gambar" onclick="document.getElementById('chatImageInput').click()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.4 11.1 12.2 20a6 6 0 0 1-8.5-8.5l9.2-8.9a4 4 0 0 1 5.7 5.7l-9.2 8.9a2 2 0 0 1-2.8-2.8l8.5-8.2"/></svg>
+        <div class="chat-input-area [padding:16px_0_20px] [border-top:1px_solid_var(--border)]">
+          <div class="chef-image-preview [display:flex] [align-items:center] [gap:9px] [width:fit-content] [max-width:100%] [padding:7px_9px] [border:1px_solid_var(--border)] [border-radius:13px] [background:var(--bg-surface)] [color:var(--text-secondary)]" id="chatImagePreview" hidden aria-live="polite"></div>
+          <p class="chef-image-hint [padding-left:2px] [color:var(--text-muted)] [line-height:1.4]">Foto bahan atau masakan? Kirim ke Chef supaya bisa dibantu mengenali.</p>
+          <div class="chat-input-box [display:flex] [gap:10px] [align-items:flex-end] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:var(--radius)] [padding:10px_12px] [transition:var(--transition)]">
+            <input class="chef-image-file-input [display:none]" id="chatImageInput" type="file" accept="image/png,image/jpeg,image/webp" aria-label="Pilih gambar untuk Chef Resepin" onchange="handleChefImageSelection(this, 'chatImagePreview')">
+            <button class="chef-image-attach inline-flex h-[34px] min-w-[58px] flex-none items-center justify-center gap-[5px] rounded-[11px] border border-[var(--border)] bg-[var(--bg-surface)] px-2 text-[var(--text-secondary)] cursor-pointer hover:border-[var(--primary)] hover:text-[var(--primary)]" type="button" aria-label="Tambahkan foto bahan atau masakan" title="Kirim foto JPG, PNG, atau WebP (maksimal 4 MB)" onclick="document.getElementById('chatImageInput').click()">
+              <svg class="h-[18px] w-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.4 11.1 12.2 20a6 6 0 0 1-8.5-8.5l9.2-8.9a4 4 0 0 1 5.7 5.7l-9.2 8.9a2 2 0 0 1-2.8-2.8l8.5-8.2"/></svg>
+              <span class="text-[.72rem] font-semibold leading-none">Foto</span>
             </button>
             <textarea id="chatInput" aria-label="Pesan untuk Chef Resepin" placeholder="Tanya resep, bahan, teknik, atau cara menyimpan makanan..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}" oninput="autoResizeTextarea(this)"></textarea>
-            <button class="chat-send-btn" aria-label="Kirim pesan" onclick="sendChat()" id="chatSendBtn">
+            <button class="chat-send-btn [width:38px] [height:38px] [background:linear-gradient(135deg,_var(--primary),_var(--primary-dark))] [color:white] [border:none] [border-radius:var(--radius-sm)] [cursor:pointer] [display:flex] [align-items:center] [justify-content:center] [flex-shrink:0] [transition:var(--transition-bounce)] hover:[transform:scale(1.1)] hover:[box-shadow:0_4px_16px_rgba(182,92,58,0.4)]" aria-label="Kirim pesan" onclick="sendChat()" id="chatSendBtn">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
           </div>
@@ -645,56 +647,56 @@
   </div>
 
   <!-- ===== PAGE: JELAJAHI ===== -->
-  <div class="page" id="page-jelajahi" role="main" tabindex="-1">
-    <div class="jelajahi-page">
-      <div class="jelajahi-header">
-        <button class="back-btn" @click="go('home')">← Kembali</button>
+  <div class="page [display:none] [min-height:100vh]" id="page-jelajahi" role="main" tabindex="-1">
+    <div class="jelajahi-page [padding-top:90px] [min-height:100vh] [padding-bottom:60px]">
+      <div class="jelajahi-header [text-align:center] [padding:40px_24px_20px]">
+        <button class="back-btn [display:inline-flex] [align-items:center] [gap:6px] [padding:8px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:var(--radius-sm)] [color:var(--text-secondary)] [cursor:pointer] [font-size:0.875rem] [font-family:var(--font-body)] [transition:var(--transition)] [margin-bottom:16px] hover:[border-color:var(--primary)] hover:[color:var(--primary)]" @click="go('home')">← Kembali</button>
         <h1>Jelajahi Resep</h1>
         <p>Temukan inspirasi masakan dari berbagai kategori</p>
       </div>
 
-      <div class="container">
-        <section class="jelajahi-section">
+      <div class="container [margin:0_auto]">
+        <section class="jelajahi-section [margin-bottom:48px]">
           <h2>Kategori Masakan</h2>
-          <div class="category-grid" id="exploreCategories"></div>
+          <div class="category-grid [display:grid] [grid-template-columns:repeat(auto-fill,_minmax(190px,_1fr))] [gap:10px]" id="exploreCategories"></div>
         </section>
 
-        <section class="jelajahi-section">
+        <section class="jelajahi-section [margin-bottom:48px]">
           <h2>Masak praktis, 30 menit atau kurang</h2>
-          <p class="explore-results-count" id="quickRecipesCount"></p>
-          <div class="quick-recipes-list" id="quickRecipesList"></div>
+          <p class="explore-results-count [margin:-12px_0_18px] [font-size:0.88rem]" id="quickRecipesCount"></p>
+          <div class="quick-recipes-list [display:flex] [flex-direction:column] [gap:10px]" id="quickRecipesList"></div>
         </section>
 
-        <section class="jelajahi-section">
+        <section class="jelajahi-section [margin-bottom:48px]">
           <h2>Resep dengan 5 bahan atau kurang</h2>
-          <div class="recipes-grid mini" id="fiveBahanGrid">
+          <div class="recipes-grid mini [display:grid] [grid-template-columns:repeat(4,_minmax(0,_1fr))] [gap:20px] [padding:8px_0_20px] [align-items:stretch]" id="fiveBahanGrid">
             <!-- populated by JS -->
           </div>
         </section>
 
-        <section class="jelajahi-section explore-results" id="exploreResults">
+        <section class="jelajahi-section explore-results [margin-bottom:48px] [scroll-margin-top:96px]" id="exploreResults">
           <h2 id="exploreResultsTitle">Koleksi pilihan</h2>
-          <p id="exploreResultsCount" class="explore-results-count"></p>
-          <div class="recipes-grid" id="exploreResultsGrid"></div>
+          <p id="exploreResultsCount" class="explore-results-count [margin:-12px_0_18px] [font-size:0.88rem]"></p>
+          <div class="recipes-grid [display:grid] [grid-template-columns:repeat(4,_minmax(0,_1fr))] [gap:20px] [padding:8px_0_20px] [align-items:stretch]" id="exploreResultsGrid"></div>
         </section>
       </div>
     </div>
   </div>
 
   <!-- ===== PAGE: ACCOUNT SETTINGS ===== -->
-  <div class="page" id="page-profil" role="main" tabindex="-1">
-    <div class="account-page container">
-      <button class="back-btn" @click="go('home')">← Kembali</button>
-      <header class="account-header">
+  <div class="page [display:none] [min-height:100vh]" id="page-profil" role="main" tabindex="-1">
+    <div class="account-page container [margin:0_auto]">
+      <button class="back-btn [display:inline-flex] [align-items:center] [gap:6px] [padding:8px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:var(--radius-sm)] [color:var(--text-secondary)] [cursor:pointer] [font-size:0.875rem] [font-family:var(--font-body)] [transition:var(--transition)] [margin-bottom:16px] hover:[border-color:var(--primary)] hover:[color:var(--primary)]" @click="go('home')">← Kembali</button>
+      <header class="account-header [display:flex] [align-items:center] [gap:20px] [margin:28px_0_34px]">
         <span class="account-avatar"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2m8-10a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/></svg></span>
-        <div><p class="account-eyebrow">RESEPIN</p><h1>Pengaturan</h1><p>Atur tampilan Resepin sesuai kenyamananmu.</p></div>
+        <div><p class="account-eyebrow [margin:0_0_4px] [color:var(--text-muted)] [font-size:.72rem] [font-weight:700] [letter-spacing:.14em]">RESEPIN</p><h1>Pengaturan</h1><p>Atur tampilan Resepin sesuai kenyamananmu.</p></div>
       </header>
-      <section class="account-settings-card" aria-labelledby="appearanceTitle">
-        <div class="account-setting-copy">
-          <span class="account-setting-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.9 13A8.5 8.5 0 0 1 11 3.1 8.5 8.5 0 1 0 20.9 13Z"/></svg></span>
+      <section class="account-settings-card [display:flex] [align-items:center] [justify-content:space-between] [gap:20px] [padding:22px_24px] [border:1px_solid_var(--border)] [border-radius:22px] [background:var(--bg-surface)] [box-shadow:0_12px_34px_rgba(31,21,12,.07)]" aria-labelledby="appearanceTitle">
+        <div class="account-setting-copy [display:flex] [align-items:center] [gap:15px]">
+          <span class="account-setting-icon [width:48px] [height:48px]"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20.9 13A8.5 8.5 0 0 1 11 3.1 8.5 8.5 0 1 0 20.9 13Z"/></svg></span>
           <div><h2 id="appearanceTitle">Tampilan</h2><p>Gunakan tema terang atau gelap.</p></div>
         </div>
-        <button class="theme-toggle account-theme-toggle" id="themeToggle" type="button" @click="toggleTheme" aria-label="Aktifkan mode gelap" title="Ganti tema warna">
+        <button class="theme-toggle account-theme-toggle [font:600_0.78rem_var(--font-body)] [transition:var(--transition)] [justify-content:center] [min-width:122px] [border-radius:999px] hover:[color:var(--primary)] hover:[border-color:var(--border-hover)] hover:[transform:translateY(-1px)]" id="themeToggle" type="button" @click="toggleTheme" aria-label="Aktifkan mode gelap" title="Ganti tema warna">
           <svg id="themeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
           <span id="themeLabel">Gelap</span>
         </button>
@@ -702,123 +704,125 @@
     </div>
   </div>
 
-  <div class="page" id="page-tersimpan" role="main" tabindex="-1">
-    <div class="resep-page">
-      <header class="resep-header">
-        <button class="back-btn" @click="go('home')">← Kembali</button>
-        <h1><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-book"/></svg> Resep Tersimpan</h1>
+  <div class="page [display:none] [min-height:100vh]" id="page-tersimpan" role="main" tabindex="-1">
+    <div class="resep-page [padding-top:84px] [min-height:100vh] [padding-bottom:76px]">
+      <header class="resep-header [text-align:left] [padding:22px_0_12px] [max-width:none] [margin:0]">
+        <button class="back-btn [display:inline-flex] [align-items:center] [gap:6px] [padding:8px_14px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:var(--radius-sm)] [color:var(--text-secondary)] [cursor:pointer] [font-size:0.875rem] [font-family:var(--font-body)] [transition:var(--transition)] [margin-bottom:16px] hover:[border-color:var(--primary)] hover:[color:var(--primary)]" @click="go('home')">← Kembali</button>
+        <h1><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-book"/></svg> Resep Tersimpan</h1>
         <p>Kumpulan resep yang kamu simpan di browser ini.</p>
       </header>
-      <div class="container"><div class="recipes-grid" id="savedRecipesGrid"></div></div>
+      <div class="container [margin:0_auto]"><div class="recipes-grid [display:grid] [grid-template-columns:repeat(4,_minmax(0,_1fr))] [gap:20px] [padding:8px_0_20px] [align-items:stretch]" id="savedRecipesGrid"></div></div>
     </div>
   </div>
 
-  <div class="page" id="page-not-found" role="main" tabindex="-1">
-    <div class="route-not-found container">
-      <svg class="ui-icon route-not-found-icon" aria-hidden="true"><use href="#ui-icon-food"/></svg>
+  <div class="page [display:none] [min-height:100vh]" id="page-not-found" role="main" tabindex="-1">
+    <div class="route-not-found container [display:grid] [min-height:70vh] [align-content:center] [justify-items:center] [gap:14px] [text-align:center] [margin:0_auto]">
+      <svg class="ui-icon route-not-found-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-food"/></svg>
       <h1>Halaman tidak ditemukan</h1>
       <p>Tautan ini belum punya halaman Resepin.</p>
-      <button class="btn-primary" type="button" @click="go('home')">Kembali ke Beranda</button>
+      <button class="btn-primary [gap:10px] [background:linear-gradient(135deg,_var(--primary),_var(--primary-dark))] [color:white] [font-size:1rem] [font-weight:700] [font-family:var(--font-display)] [cursor:pointer] [transition:var(--transition-bounce)] [box-shadow:0_4px_20px_rgba(182,92,58,0.3)] hover:[transform:translateY(-3px)_scale(1.02)] hover:[box-shadow:0_8px_32px_rgba(182,92,58,0.5)]" type="button" @click="go('home')">Kembali ke Beranda</button>
     </div>
   </div>
 
   <!-- ===== RECIPE DETAIL MODAL ===== -->
-  <div class="modal-overlay" id="recipeModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1" onclick="closeModal(event)">
-    <div class="modal-content">
-      <button class="modal-close" type="button" aria-label="Tutup detail resep" onclick="closeRecipeModal()">✕</button>
-      <div class="modal-hero" id="modalHero">
-        <div class="modal-hero-media" id="modalHeroMedia"></div>
-        <div class="modal-hero-emoji" id="modalHeroEmoji" aria-hidden="true"><svg class="ui-icon ingredient-icon"><use href="#ui-icon-food"/></svg></div>
+  <div class="modal-overlay [display:none] [position:fixed] [inset:0] [background:rgba(31,21,12,.78)] [backdrop-filter:none] [z-index:var(--z-modal)] [align-items:center] [justify-content:center] [padding:20px]" id="recipeModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1" onclick="closeModal(event)">
+    <div class="modal-content [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:var(--radius-xl)] [max-width:700px] [width:100%] [max-height:min(90dvh,_900px)] [overflow-y:auto] [position:relative] [animation:none] [box-shadow:0_8px_32px_rgba(0,0,0,.16)]">
+      <button class="modal-close [position:absolute] [top:16px] [right:16px] [background:rgba(255,255,255,0.1)] [border:none] [color:var(--text-primary)] [width:34px] [height:34px] [border-radius:50%] [font-size:1rem] [cursor:pointer] [z-index:10] [transition:var(--transition)] hover:[background:rgba(231,76,60,0.2)] hover:[color:#E74C3C]" type="button" aria-label="Tutup detail resep" onclick="closeRecipeModal()">✕</button>
+      <div class="modal-hero [height:180px] [display:flex] [align-items:center] [justify-content:center] [position:relative] [overflow:hidden] [background:var(--bg-surface)] [border-radius:var(--radius-xl)_var(--radius-xl)_0_0]" id="modalHero">
+        <div class="modal-hero-media [position:absolute] [inset:0] [display:flex] [align-items:center] [justify-content:center]" id="modalHeroMedia"></div>
+        <div class="modal-hero-emoji [font-size:5rem]" id="modalHeroEmoji" aria-hidden="true"><svg class="ui-icon ingredient-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]"><use href="#ui-icon-food"/></svg></div>
       </div>
-      <div class="modal-body">
-        <div class="modal-header-info">
+      <div class="modal-body [padding:24px]">
+        <div class="modal-header-info [margin-bottom:24px]">
           <h2 id="modalTitle">Nama Resep</h2>
-          <div class="modal-meta" id="modalMeta">
-            <span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>20 mnt</span>
-            <span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-users"/></svg>2 Porsi</span>
+          <div class="modal-meta [display:flex] [gap:16px] [flex-wrap:wrap]" id="modalMeta">
+            <span><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-clock"/></svg>20 mnt</span>
+            <span><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-users"/></svg>2 Porsi</span>
           </div>
-          <div class="modal-match-summary" id="modalMatchSummary"></div>
-          <div class="modal-servings-control" id="modalServingsControl" hidden>
+          <div class="modal-match-summary [display:grid] [gap:8px] [margin:12px_0] [color:var(--text-primary)] [font-size:.88rem]" id="modalMatchSummary"></div>
+          <div class="modal-servings-control [display:flex] [align-items:center] [gap:12px] [margin:12px_0]" id="modalServingsControl" hidden>
             <span>Porsi</span><button type="button" aria-label="Kurangi porsi" onclick="changeRecipeServings(-1)">−</button><strong id="modalServingsValue"></strong><button type="button" aria-label="Tambah porsi" onclick="changeRecipeServings(1)">+</button>
           </div>
         </div>
 
-        <div class="modal-grid">
+        <div class="modal-grid [display:grid] [grid-template-columns:1fr_1fr] [gap:24px] [margin-bottom:24px]">
           <div class="modal-ingredients">
-            <h3><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-basket"/></svg> Bahan-bahan <small id="checklistProgress"></small></h3>
+            <h3><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-basket"/></svg> Bahan-bahan <small id="checklistProgress"></small></h3>
             <ul id="modalIngredients"></ul>
           </div>
           <div class="modal-steps">
-            <h3><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chef"/></svg> Langkah Memasak</h3>
+            <h3><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-chef"/></svg> Langkah Memasak</h3>
             <ol id="modalSteps"></ol>
           </div>
         </div>
 
-        <div class="modal-ai-tip">
-          <div class="tip-icon"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
+        <div class="modal-ai-tip [display:flex] [gap:14px] [padding:16px] [background:var(--bg-surface)] [border:1px_solid_rgba(120,132,102,0.2)] [border-radius:var(--radius)] [margin-bottom:24px] [border-color:var(--border)]">
+          <div class="tip-icon [font-size:1.5rem] [flex-shrink:0]"><svg class="ui-icon ui-icon-large [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
           <div>
             <strong>Tips Chef Resepin:</strong>
             <p id="modalTip">Jika tidak punya salah satu bahan, tanyakan ke Chef Resepin untuk saran penggantinya.</p>
           </div>
         </div>
 
-        <div class="modal-actions">
-          <button class="btn-primary" @click="closeModalAndGo('chef')">Tanya Chef Resepin</button>
-          <button class="btn-secondary" type="button" onclick="startCookingMode()">Mode Memasak</button>
-          <button class="btn-secondary" id="saveRecipeButton" onclick="saveRecipe()">Simpan Resep</button>
+        <div class="modal-actions [display:flex] [gap:12px] [flex-wrap:wrap]">
+          <button class="btn-primary [gap:10px] [background:linear-gradient(135deg,_var(--primary),_var(--primary-dark))] [color:white] [font-size:1rem] [font-weight:700] [font-family:var(--font-display)] [cursor:pointer] [transition:var(--transition-bounce)] [box-shadow:0_4px_20px_rgba(182,92,58,0.3)] hover:[transform:translateY(-3px)_scale(1.02)] hover:[box-shadow:0_8px_32px_rgba(182,92,58,0.5)]" @click="closeModalAndGo('chef')">Tanya Chef Resepin</button>
+          <button class="btn-secondary [display:inline-flex] [align-items:center] [gap:8px] [padding:14px_24px] [background:transparent] [color:var(--text-primary)] [border:1px_solid_var(--border)] [border-radius:var(--radius)] [font-size:1rem] [font-weight:600] [cursor:pointer] [transition:var(--transition)] hover:[border-color:var(--primary)] hover:[color:var(--primary)] hover:[background:rgba(182,92,58,0.05)]" type="button" onclick="startCookingMode()">Mode Memasak</button>
+          <button class="btn-secondary [display:inline-flex] [align-items:center] [gap:8px] [padding:14px_24px] [background:transparent] [color:var(--text-primary)] [border:1px_solid_var(--border)] [border-radius:var(--radius)] [font-size:1rem] [font-weight:600] [cursor:pointer] [transition:var(--transition)] hover:[border-color:var(--primary)] hover:[color:var(--primary)] hover:[background:rgba(182,92,58,0.05)]" id="saveRecipeButton" onclick="saveRecipe()">Simpan Resep</button>
         </div>
       </div>
     </div>
   </div>
 
-  <section class="cooking-mode" id="cookingMode" aria-modal="true" aria-labelledby="cookingModeTitle" role="dialog" hidden>
-    <button class="cooking-close" type="button" aria-label="Tutup mode memasak" onclick="closeCookingMode()">×</button>
-    <p id="cookingModeTitle" class="cooking-step-count"></p>
+  <section class="cooking-mode [position:fixed] [z-index:3000] [inset:0] [display:flex] [flex-direction:column] [align-items:center] [justify-content:center] [gap:24px] [padding:max(24px,_env(safe-area-inset-top))_24px_max(24px,_env(safe-area-inset-bottom))] [color:var(--text-primary)] [background:var(--bg)] [text-align:center]" id="cookingMode" aria-modal="true" aria-labelledby="cookingModeTitle" role="dialog" hidden>
+    <button class="cooking-close [position:absolute] [top:max(20px,_env(safe-area-inset-top))] [right:max(20px,_env(safe-area-inset-right))] [width:48px] [border:1px_solid_var(--border)] [border-radius:50%] [color:var(--text-primary)] [background:var(--bg-card)] [font-size:1.6rem]" type="button" aria-label="Tutup mode memasak" onclick="closeCookingMode()">×</button>
+    <p id="cookingModeTitle" class="cooking-step-count [color:var(--text-muted)] [font-size:.9rem]"></p>
     <h2 id="cookingStepText"></h2>
-    <div class="cooking-controls">
-      <button type="button" class="btn-secondary" id="cookingPrevious" onclick="moveCookingStep(-1)">Sebelumnya</button>
-      <button type="button" class="btn-primary" id="cookingNext" onclick="moveCookingStep(1)">Langkah berikutnya</button>
+    <div class="cooking-controls [display:flex] [flex-wrap:wrap] [justify-content:center] [gap:12px]">
+      <button type="button" class="btn-secondary [display:inline-flex] [align-items:center] [gap:8px] [padding:14px_24px] [background:transparent] [color:var(--text-primary)] [border:1px_solid_var(--border)] [border-radius:var(--radius)] [font-size:1rem] [font-weight:600] [cursor:pointer] [transition:var(--transition)] hover:[border-color:var(--primary)] hover:[color:var(--primary)] hover:[background:rgba(182,92,58,0.05)]" id="cookingPrevious" onclick="moveCookingStep(-1)">Sebelumnya</button>
+      <button type="button" class="btn-primary [gap:10px] [background:linear-gradient(135deg,_var(--primary),_var(--primary-dark))] [color:white] [font-size:1rem] [font-weight:700] [font-family:var(--font-display)] [cursor:pointer] [transition:var(--transition-bounce)] [box-shadow:0_4px_20px_rgba(182,92,58,0.3)] hover:[transform:translateY(-3px)_scale(1.02)] hover:[box-shadow:0_8px_32px_rgba(182,92,58,0.5)]" id="cookingNext" onclick="moveCookingStep(1)">Langkah berikutnya</button>
     </div>
-    <p id="cookingTimerNote" class="cooking-timer-note"></p>
-    <button class="btn-secondary" id="cookingTimerButton" type="button" onclick="startCookingTimer()" hidden>Mulai timer</button>
+    <p id="cookingTimerNote" class="cooking-timer-note [margin:0]"></p>
+    <button class="btn-secondary [display:inline-flex] [align-items:center] [gap:8px] [padding:14px_24px] [background:transparent] [color:var(--text-primary)] [border:1px_solid_var(--border)] [border-radius:var(--radius)] [font-size:1rem] [font-weight:600] [cursor:pointer] [transition:var(--transition)] hover:[border-color:var(--primary)] hover:[color:var(--primary)] hover:[background:rgba(182,92,58,0.05)]" id="cookingTimerButton" type="button" onclick="startCookingTimer()" hidden>Mulai timer</button>
   </section>
 
   <!-- ===== TOAST ===== -->
-  <div class="toast" id="toast"></div>
+  <div class="toast [position:fixed] [bottom:24px] [left:50%] [transform:translateX(-50%)_translateY(100px)] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:var(--radius)] [padding:12px_24px] [font-size:0.9rem] [font-weight:500] [z-index:9999] [transition:transform_0.3s_var(--transition-bounce)] [white-space:nowrap] [box-shadow:var(--shadow-card)]" id="toast"></div>
 
-  <section v-show="activePage !== 'chef' && floatingChefChatOpen" id="floatingChefChat" class="floating-chef-chat" role="dialog" aria-modal="false" aria-labelledby="miniChatTitle" @keydown.esc.prevent="floatingChefChatOpen = false">
-    <header class="floating-chef-chat-header">
-      <span class="floating-chef-chat-avatar" aria-hidden="true"><svg class="ui-icon"><use href="#ui-icon-chef"/></svg></span>
-      <span class="floating-chef-chat-title"><strong id="miniChatTitle">Chef Resepin</strong><small><i></i> Siap bantu di dapur</small></span>
-      <button class="floating-chef-chat-close" type="button" aria-label="Tutup chat" @click="floatingChefChatOpen = false">×</button>
+  <section v-show="activePage !== 'chef' && floatingChefChatOpen" id="floatingChefChat" class="floating-chef-chat [position:fixed] [z-index:1200] [right:max(18px,env(safe-area-inset-right))] [bottom:calc(max(14px,env(safe-area-inset-bottom))_+_116px)] [display:flex] [flex-direction:column] [width:min(310px,calc(100vw_-_28px))] [max-height:min(400px,_calc(100dvh_-_150px))] [min-height:210px] [overflow:hidden] [color:var(--text-primary)] [border:1px_solid_var(--border)] [border-radius:20px] [background:var(--bg-card)] [box-shadow:0_22px_64px_rgba(0,0,0,.3),_inset_0_1px_0_rgba(255,255,255,.12)] [animation:floating-chat-open_.24s_cubic-bezier(.2,.8,.2,1)_both]" role="dialog" aria-modal="false" aria-labelledby="miniChatTitle" @keydown.esc.prevent="floatingChefChatOpen = false">
+    <header class="floating-chef-chat-header [display:flex] [flex:0_0_auto] [align-items:center] [gap:10px] [padding:9px_11px] [border-bottom:1px_solid_var(--border)] [background:color-mix(in_srgb,var(--bg-surface)_82%,transparent)]">
+      <span class="floating-chef-chat-avatar [display:grid] [width:34px] [height:34px] [flex:0_0_auto] [place-items:center] [border:1px_solid_var(--border)] [border-radius:50%] [color:var(--text-primary)] [background:var(--bg-card)]" aria-hidden="true"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]"><use href="#ui-icon-chef"/></svg></span>
+      <span class="floating-chef-chat-title [display:grid] [gap:2px] [font-size:.84rem]"><strong id="miniChatTitle">Chef Resepin</strong><small><i></i> Siap bantu di dapur</small></span>
+      <button class="floating-chef-chat-close [display:grid] [width:34px] [height:34px] [margin-left:auto] [place-items:center] [border:1px_solid_var(--border)] [border-radius:50%] [color:var(--text-secondary)] [background:transparent] [font:400_1.35rem/1_var(--font-body)] [cursor:pointer] hover:[color:var(--text-primary)] hover:[background:var(--bg-surface)]" type="button" aria-label="Tutup chat" @click="floatingChefChatOpen = false">×</button>
     </header>
-    <div class="floating-chef-chat-messages" id="miniChatMessages" aria-live="polite">
-      <div class="chat-bubble bot-bubble">
-        <div class="bubble-avatar"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
-        <div class="bubble-content"><p>Hai! Mau masak apa hari ini? 🍳</p></div>
+    <div class="floating-chef-chat-messages [display:flex] [flex:1_1_auto] [flex-direction:column] [gap:9px] [min-height:64px] [padding:11px] [overflow:auto] [overscroll-behavior:contain]" id="miniChatMessages" aria-live="polite">
+      <div class="chat-bubble bot-bubble [display:flex] [gap:12px]">
+        <div class="bubble-avatar [width:36px] [height:36px] [background:var(--bg-surface)] [border:1px_solid_var(--border)] [border-radius:50%] [display:flex] [align-items:center] [justify-content:center] [font-size:1rem] [flex-shrink:0]"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
+        <div class="bubble-content [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:20px_20px_20px_4px] [font-size:0.9rem] [line-height:1.6] [color:var(--text-primary)]"><p>Hai! Mau masak apa hari ini? 🍳</p></div>
       </div>
-      <div class="floating-chat-suggestions" id="miniChatSuggestions" aria-label="Mulai dari topik ini">
-        <button type="button" onclick="sendMiniPrompt('Aku punya nasi sisa dan telur. Ada resep simpel?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-rice"/></svg> Nasi + telur</button>
-        <button type="button" onclick="sendMiniPrompt('Aku punya sayuran sisa. Ada ide masak yang praktis?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-carrot"/></svg> Sayuran sisa</button>
+      <div class="floating-chat-suggestions [display:flex] [flex-wrap:wrap] [gap:6px] [padding-left:36px]" id="miniChatSuggestions" aria-label="Mulai dari topik ini">
+        <button type="button" onclick="sendMiniPrompt('Aku punya nasi sisa dan telur. Ada resep simpel?')"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-rice"/></svg> Nasi + telur</button>
+        <button type="button" onclick="sendMiniPrompt('Aku punya sayuran sisa. Ada ide masak yang praktis?')"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-carrot"/></svg> Sayuran sisa</button>
         <button type="button" onclick="sendMiniPrompt('Aku mau tanya substitusi bahan.')">↔️ Substitusi</button>
       </div>
     </div>
-    <div class="chef-image-preview mini-chef-image-preview" id="miniChatImagePreview" hidden aria-live="polite"></div>
-    <form class="floating-chef-chat-composer" onsubmit="event.preventDefault(); sendMiniChat()">
-      <input class="chef-image-file-input" id="miniChatImageInput" type="file" accept="image/png,image/jpeg,image/webp" aria-label="Pilih gambar untuk Chef Resepin" onchange="handleChefImageSelection(this, 'miniChatImagePreview')">
-      <button class="chef-image-attach" type="button" aria-label="Tambahkan gambar" title="Tambahkan gambar" onclick="document.getElementById('miniChatImageInput').click()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.4 11.1 12.2 20a6 6 0 0 1-8.5-8.5l9.2-8.9a4 4 0 0 1 5.7 5.7l-9.2 8.9a2 2 0 0 1-2.8-2.8l8.5-8.2"/></svg>
+    <p class="chef-image-hint mini-chef-image-hint [padding-left:2px] [color:var(--text-muted)] [line-height:1.4]">Kirim foto bahan atau masakan agar Chef bisa bantu mengenali.</p>
+    <div class="chef-image-preview mini-chef-image-preview [display:flex] [align-items:center] [gap:9px] [width:fit-content] [max-width:100%] [padding:7px_9px] [border:1px_solid_var(--border)] [border-radius:13px] [background:var(--bg-surface)] [color:var(--text-secondary)]" id="miniChatImagePreview" hidden aria-live="polite"></div>
+    <form class="floating-chef-chat-composer [display:flex] [flex:0_0_auto] [align-items:flex-end] [gap:7px] [margin:0_10px_10px] [padding:6px_6px_6px_10px] [border:1px_solid_var(--border)] [border-radius:15px] [background:var(--bg-surface)]" onsubmit="event.preventDefault(); sendMiniChat()">
+      <input class="chef-image-file-input [display:none]" id="miniChatImageInput" type="file" accept="image/png,image/jpeg,image/webp" aria-label="Pilih gambar untuk Chef Resepin" onchange="handleChefImageSelection(this, 'miniChatImagePreview')">
+      <button class="chef-image-attach inline-flex h-[30px] min-w-[47px] flex-none items-center justify-center gap-1 rounded-[9px] border border-[var(--border)] bg-[var(--bg-surface)] px-[5px] text-[var(--text-secondary)] cursor-pointer hover:border-[var(--primary)] hover:text-[var(--primary)]" type="button" aria-label="Tambahkan foto bahan atau masakan" title="Kirim foto JPG, PNG, atau WebP (maksimal 4 MB)" onclick="document.getElementById('miniChatImageInput').click()">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.4 11.1 12.2 20a6 6 0 0 1-8.5-8.5l9.2-8.9a4 4 0 0 1 5.7 5.7l-9.2 8.9a2 2 0 0 1-2.8-2.8l8.5-8.2"/></svg>
+        <span class="text-[.68rem] font-semibold leading-none">Foto</span>
       </button>
       <textarea id="miniChatInput" aria-label="Tulis pesan untuk Chef Resepin" placeholder="Ceritakan bahan yang ada..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMiniChat()}" oninput="autoResizeTextarea(this)"></textarea>
       <button type="submit" aria-label="Kirim pesan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4 20-7ZM22 2 11 13"/></svg></button>
     </form>
   </section>
 
-  <button v-if="activePage !== 'chef'" class="floating-chef-button" type="button" :aria-label="floatingChefChatOpen ? 'Tutup chat Chef Resepin' : 'Buka chat Chef Resepin'" aria-controls="floatingChefChat" :aria-expanded="floatingChefChatOpen" @click="toggleFloatingChefChat()">
+  <button v-if="activePage !== 'chef'" class="floating-chef-button [position:fixed] [z-index:1100] [right:max(18px,env(safe-area-inset-right))] [bottom:max(14px,env(safe-area-inset-bottom))] [display:grid] [width:82px] [height:106px] [place-items:center] [color:#1f150c] [background:transparent] [border:0] [border-radius:0] [box-shadow:none] [cursor:pointer] [transition:transform_.2s_ease,_box-shadow_.2s_ease] [border-color:#412d15] [isolation:isolate] [animation:full-chef-float_3.4s_ease-in-out_infinite] [overflow:visible] [padding:0] [-webkit-tap-highlight-color:transparent] hover:[transform:translateY(-5px)_scale(1.035)] hover:[box-shadow:none] hover:[background:#fff] focus-visible:[outline:3px_solid_#e1dcc9] focus-visible:[outline-offset:2px] focus-visible:[outline-color:#e1dcc9] focus-visible:[border-radius:42%_42%_30%_30%]" type="button" :aria-label="floatingChefChatOpen ? 'Tutup chat Chef Resepin' : 'Buka chat Chef Resepin'" aria-controls="floatingChefChat" :aria-expanded="floatingChefChatOpen" @click="toggleFloatingChefChat()">
     <svg class="chef-mascot" viewBox="0 0 104 132" fill="none" aria-hidden="true">
       <ellipse cx="53" cy="124" rx="28" ry="5" fill="#1f150c" opacity=".2"/>
-      <g class="chef-character">
-        <g class="chef-arm chef-arm-wave">
+      <g class="chef-character [transform-box:fill-box] [transform-origin:center_bottom] [animation:chef-body-sway_3.4s_ease-in-out_infinite]">
+        <g class="chef-arm chef-arm-wave [transform-box:view-box] [transform-origin:72px_81px] [animation:chef-wave_1.35s_ease-in-out_infinite_alternate]">
           <path d="M69 79c7-3 12-9 14-17l4-14c1-4 7-3 6 1l-3 14c-2 11-6 19-15 24Z" fill="#fff8df" stroke="#1f150c" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="m84 56 8 2" stroke="#946d6d" stroke-width="2.4" stroke-linecap="round"/>
           <path d="M87 55 89 44c.6-3.5 5-3.3 5 0l-.5 8 3.8-6.5c1.8-2.9 5.6-.5 4 2.2l-3.6 6.4 3-3.4c2.1-2.4 5.3.4 3.5 2.8l-5.6 7.2c-2.8 3.7-7.9 4.5-11.6 1.7l-2.5-2.1Z" fill="#f3bd8b" stroke="#1f150c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -829,7 +833,7 @@
         <path d="m35 79 18 14 18-14 5 36H30l5-36Z" fill="#e1dcc9" stroke="#1f150c" stroke-width="2.4" stroke-linejoin="round"/>
         <path d="m46 82 7 8 7-8m-7 9v22" stroke="#946d6d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M32 47c0-13 9-22 21-22s21 9 21 22v15c0 13-9 21-21 21s-21-8-21-21V47Z" fill="#f3bd8b" stroke="#1f150c" stroke-width="2.6"/>
-        <g class="chef-hat">
+        <g class="chef-hat [transform-box:fill-box] [transform-origin:center_bottom] [animation:chef-hat-bob_2.4s_ease-in-out_infinite]">
           <path d="M32 38c-8-2-12-9-8-16 2-4 6-6 11-6-1-8 5-13 12-12 4 0 7 2 9 5 5-5 15-4 18 3 2 3 2 6 1 9 7 1 11 8 8 14-2 4-6 6-11 6H32v-3Z" fill="#fff8df" stroke="#1f150c" stroke-width="2.6" stroke-linejoin="round"/>
           <path d="M29 38h47v7H29z" fill="#e1dcc9" stroke="#1f150c" stroke-width="2.6" stroke-linejoin="round"/>
         </g>
@@ -840,7 +844,7 @@
         <path d="M25 122c-2 4 1 6 12 5m42-5c2 4-1 6-12 5" fill="#946d6d" stroke="#1f150c" stroke-width="2.4" stroke-linecap="round"/>
       </g>
     </svg>
-    <span v-if="!floatingChefChatOpen" class="floating-chef-tooltip" aria-hidden="true">Ceritakan apa saja yang ada di rumahmu 👨‍🍳</span>
+    <span v-if="!floatingChefChatOpen" class="floating-chef-tooltip [position:absolute] [right:calc(100%_+_14px)] [top:50%] [width:min(264px,_calc(100vw_-_150px))] [padding:10px_14px] [color:var(--primary-dark)] [background:var(--primary-light)] [border:1px_solid_rgba(225,220,201,.7)] [border-radius:18px] [box-shadow:0_8px_24px_rgba(0,0,0,.22)] [font:600_.86rem_var(--font-body)] [line-height:1.35] [text-align:center] [opacity:1] [visibility:visible] [pointer-events:none] [transform:translateY(-50%)] [animation:chef-tooltip-idle_3.2s_ease-in-out_infinite]" aria-hidden="true">Ceritakan apa saja yang ada di rumahmu 👨‍🍳</span>
   </button>
 
   </div>

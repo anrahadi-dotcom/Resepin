@@ -86,14 +86,14 @@ test('critical static UI controls stay accessible and independent of external Vu
   assert.match(html, /id="chatMessages" role="log" aria-live="polite"/);
   assert.doesNotMatch(html, /href="#resep"/);
   assert.doesNotMatch(html, /id="recipeJsonLd"/);
-  assert.match(html, /class="recipes-scroll" aria-label="Resep unggulan"><\/div>/);
+  assert.match(html, /class="[^"]*\brecipes-scroll\b[^"]*" aria-label="Resep unggulan"><\/div>/);
   assert.match(main, /RECIPES_DB\.slice\(0, 6\)\.map\(recipe => createRecipeCardHTML\(recipe, \{ keepCurrentPage: true \}\)\)/);
   assert.match(main, /href="#\/resep\/\$\{recipeSlug\(r\)\}"/);
   assert.match(main, /checkScanBackendAvailability/);
   assert.match(html, /id="navIngredientSearch"/);
   assert.match(html, /id="heroIngredientSearch" v-model="heroIngredientText"/);
   assert.doesNotMatch(html, /class="hero-search-form/);
-  assert.match(html, /class="btn-scan-nav" aria-label="Scan bahan"/);
+  assert.match(html, /class="[^"]*\bbtn-scan-nav\b[^"]*" aria-label="Scan bahan"/);
   assert.doesNotMatch(html, /class="nav-wordmark"/);
   assert.match(html, /id="recipeSort"/);
   assert.match(html, /id="clearRecipeFilters"[^>]*hidden/);
@@ -106,7 +106,7 @@ test('phase three preserves one main landmark per route and manages focus and th
   const main = readFileSync(resolve(root, 'src/legacy/main.js'), 'utf8');
   assert.doesNotMatch(html, /<main\b/i);
   assert.equal((html.match(/class="page[^\"]*" id="page-[^\"]+" role="main" tabindex="-1"/g) || []).length, 8);
-  assert.match(html, /<a class="skip-link"[^>]*onclick="focusActivePage\(event\)"/);
+  assert.match(html, /<a class="[^"]*\bskip-link\b[^"]*"[^>]*onclick="focusActivePage\(event\)"/);
   assert.match(main, /window\.focusActivePage = focusActivePage/);
   assert.match(main, /requestAnimationFrame\(\(\) => document\.getElementById\(`page-\$\{page\}`\)\?\.focus/);
   assert.ok(html.indexOf("localStorage.getItem('resep-theme')") < html.indexOf('rel="stylesheet"'));
@@ -122,5 +122,5 @@ test('restored navbar keeps its search field inside the navigation', () => {
   assert.doesNotMatch(main, /initDesktopNavHoverGuard/);
   assert.match(html, /id="navIngredientSearch"/);
   assert.match(styles, /\.nav-container:hover \.nav-ingredient-search/);
-  assert.match(html, /class="nav-logo" href="#\/"[^>]*aria-label="Resepin, kembali ke Beranda"/);
+  assert.match(html, /class="[^"]*\bnav-logo\b[^"]*" href="#\/"[^>]*aria-label="Resepin, kembali ke Beranda"/);
 });

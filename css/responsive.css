@@ -44,6 +44,92 @@
 
 }
 
+/* Keep the full Chef page usable when the viewport narrows or the mobile
+   browser chrome changes height. */
+@media (max-width: 700px) {
+  .chef-page {
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+  }
+
+  .chef-header {
+    @apply [display:grid];
+    @apply [grid-template-columns:auto_minmax(0,1fr)];
+    @apply [align-items:center];
+    @apply [gap:10px_12px];
+    @apply [padding:12px_16px];
+  }
+
+  .chef-header .back-btn {
+    @apply [grid-column:1];
+    @apply [grid-row:1];
+    @apply [min-height:42px];
+    @apply [margin:0];
+    @apply [padding-inline:11px];
+  }
+
+  .chef-title-area {
+    @apply [grid-column:2];
+    @apply [grid-row:1];
+    @apply [min-width:0];
+    @apply [gap:9px];
+  }
+
+  .chef-title-area > div:last-child { @apply [min-width:0]; }
+  .chef-title-area h1 { @apply [font-size:1.04rem]; @apply [white-space:nowrap]; }
+  .chef-title-area .chef-status { @apply [font-size:.72rem]; }
+
+  .chef-avatar {
+    @apply [width:42px];
+    @apply [height:42px];
+    @apply [flex:0_0_42px];
+  }
+
+  .chef-bahan-badge {
+    @apply [grid-column:1_/_-1];
+    @apply [justify-self:start];
+    @apply [min-height:36px];
+  }
+
+  .chef-page .chat-container {
+    @apply [min-height:0];
+    @apply [padding-inline:16px];
+  }
+
+  .chef-page .chat-messages {
+    @apply [min-height:0];
+    @apply [overscroll-behavior:contain];
+  }
+
+  .chef-page .chat-input-area {
+    padding: 12px 0 max(12px, env(safe-area-inset-bottom));
+  }
+
+  .chef-page .chat-input-box { @apply [gap:7px]; @apply [padding:8px]; }
+  .chef-page .chat-input-box textarea { @apply [min-width:0]; }
+
+  .chef-page .chat-input-box .chef-image-attach {
+    @apply [width:44px];
+    @apply [min-width:44px];
+    @apply [height:44px];
+    @apply [flex:0_0_44px];
+    @apply [padding:0];
+  }
+
+  .chef-page .chat-input-box .chef-image-attach span { @apply [display:none]; }
+  .chef-page .chat-input-box .chef-image-attach svg { @apply [width:19px]; @apply [height:19px]; }
+  .chef-page .chat-input-box .chat-send-btn { @apply [width:44px]; @apply [height:44px]; }
+}
+
+@media (max-width: 380px) {
+  .chef-header { @apply [gap:9px]; @apply [padding:10px_12px]; }
+  .chef-header .back-btn { @apply [font-size:.8rem]; @apply [padding-inline:9px]; }
+  .chef-title-area { @apply [gap:7px]; }
+  .chef-title-area h1 { @apply [font-size:.98rem]; }
+  .chef-page .chat-container { @apply [padding-inline:12px]; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { @apply [scroll-behavior:auto]!; @apply [animation-duration:.01ms]!; @apply [transition-duration:.01ms]!; }
 }

@@ -232,7 +232,7 @@ test('web search keeps only the chef avatar and a simple animated three-dot load
   assert.match(source, /action: 'search'/);
   assert.match(source, /body: JSON\.stringify\(\{ message, history, references, \.\.\.\(image \? \{ image:/);
   assert.match(source, /chef-typing-stack/);
-  assert.match(source, /class="typing-dots" aria-hidden="true"><span><\/span><span><\/span><span><\/span>/);
+  assert.match(source, /class="[^"]*\btyping-dots\b[^"]*" aria-hidden="true"><span><\/span><span><\/span><span><\/span>/);
   assert.doesNotMatch(source, /chef-search-activity|chef-search-globe|chef-search-page|Membaca halaman|Memantapkan jawaban/);
   assert.match(source, /chef-web-references/);
   assert.match(styles, /@keyframes typingBounce/);

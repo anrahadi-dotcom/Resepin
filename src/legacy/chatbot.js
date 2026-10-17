@@ -943,15 +943,15 @@ function appendChatMessage(text, role, containerId = 'chatMessages', attachment 
         ? '<span class="bubble-attachment-note">📷 Foto dikirim sebelumnya · file tidak disimpan</span>'
         : '';
     div.innerHTML = `
-      <div class="bubble-content"><p>${escapeHtml(text)}</p>${attachmentHTML}</div>
-      <div class="bubble-avatar"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-user"/></svg></div>
-      <span class="bubble-time">${time}</span>
+      <div class="bubble-content [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:20px_20px_20px_4px] [font-size:0.9rem] [line-height:1.6] [color:var(--text-primary)]"><p>${escapeHtml(text)}</p>${attachmentHTML}</div>
+      <div class="bubble-avatar [width:36px] [height:36px] [background:var(--bg-surface)] [border:1px_solid_var(--border)] [border-radius:50%] [display:flex] [align-items:center] [justify-content:center] [font-size:1rem] [flex-shrink:0]"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-user"/></svg></div>
+      <span class="bubble-time [font-size:0.7rem] [color:var(--text-muted)] [align-self:flex-end]">${time}</span>
     `;
   } else {
     div.innerHTML = `
-      <div class="bubble-avatar"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
-      <div class="bubble-content"><p>${formatBotText(text)}</p></div>
-      <span class="bubble-time">${time}</span>
+      <div class="bubble-avatar [width:36px] [height:36px] [background:var(--bg-surface)] [border:1px_solid_var(--border)] [border-radius:50%] [display:flex] [align-items:center] [justify-content:center] [font-size:1rem] [flex-shrink:0]"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
+      <div class="bubble-content [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:20px_20px_20px_4px] [font-size:0.9rem] [line-height:1.6] [color:var(--text-primary)]"><p>${formatBotText(text)}</p></div>
+      <span class="bubble-time [font-size:0.7rem] [color:var(--text-muted)] [align-self:flex-end]">${time}</span>
     `;
   }
 
@@ -965,38 +965,38 @@ function appendAIResponse(response, containerId = 'chatMessages', options = {}) 
   const container = document.getElementById(containerId);
   const time = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
   const div = document.createElement('div');
-  div.className = 'chat-bubble bot-bubble';
+  div.className = 'chat-bubble bot-bubble [display:flex] [gap:12px]';
 
   let recipeCardHTML = '';
   if (response.type === 'recipe' && response.recipe) {
     const r = RECIPES_DB[response.recipe.idx] || RECIPES_DB[0];
     currentChatRecipeIdx = response.recipe.idx;
     recipeCardHTML = `
-      <section class="chat-recipe-card" aria-label="Resep ${escapeHtml(r.title)}">
-        <div class="crc-title">${recipeIconHTML(r)} ${escapeHtml(r.title)}</div>
-        <div class="crc-meta"><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>${escapeHtml(r.time)}</span><span>${escapeHtml(r.difficulty)}</span><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-users"/></svg>${escapeHtml(r.servings)}</span></div>
+      <section class="chat-recipe-card [margin-top:12px] [background:var(--bg-surface)] [border:1px_solid_var(--border)] [border-radius:var(--radius)] [padding:14px] [transition:var(--transition)] hover:[border-color:var(--border)]" aria-label="Resep ${escapeHtml(r.title)}">
+        <div class="crc-title [font-weight:700] [margin-bottom:6px]">${recipeIconHTML(r)} ${escapeHtml(r.title)}</div>
+        <div class="crc-meta [font-size:0.8rem] [color:var(--text-muted)]"><span><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-clock"/></svg>${escapeHtml(r.time)}</span><span>${escapeHtml(r.difficulty)}</span><span><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-users"/></svg>${escapeHtml(r.servings)}</span></div>
         <h4>Bahan-bahan</h4>
         <ul class="chat-recipe-ingredients">${r.ingredients.map(ingredient => `<li>${escapeHtml(ingredient)}</li>`).join('')}</ul>
         <h4>Langkah memasak</h4>
         <ol class="chat-recipe-steps">${r.steps.map(step => `<li>${escapeHtml(step)}</li>`).join('')}</ol>
-        <button class="crc-link" type="button" onclick="openRecipeByIndex(${response.recipe.idx})">Buka tampilan resep ↗</button>
-        ${options.mini ? '' : `<div class="chat-recipe-actions">
-          <button type="button" onclick="sendQuickPrompt('Bikin versi lebih pedas')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chili"/></svg> Bikin lebih pedas</button>
-          <button type="button" onclick="sendQuickPrompt('Bahan apa yang bisa diganti?')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-repeat"/></svg> Tanya substitusi</button>
-          <button type="button" onclick="sendQuickPrompt('Kasih tips biar lebih hemat')"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-bulb"/></svg> Tips hemat</button>
+        <button class="crc-link [color:var(--primary)] [font-size:0.85rem] [font-weight:600] [display:inline-flex] [margin-top:12px] [padding:8px_0] [background:transparent] [border:0] [cursor:pointer]" type="button" onclick="openRecipeByIndex(${response.recipe.idx})">Buka tampilan resep ↗</button>
+        ${options.mini ? '' : `<div class="chat-recipe-actions [display:flex] [flex-wrap:wrap] [gap:7px] [margin-top:10px] [padding-top:10px] [border-top:1px_solid_var(--border)]">
+          <button type="button" onclick="sendQuickPrompt('Bikin versi lebih pedas')"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-chili"/></svg> Bikin lebih pedas</button>
+          <button type="button" onclick="sendQuickPrompt('Bahan apa yang bisa diganti?')"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-repeat"/></svg> Tanya substitusi</button>
+          <button type="button" onclick="sendQuickPrompt('Kasih tips biar lebih hemat')"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-bulb"/></svg> Tips hemat</button>
         </div>`}
       </section>
     `;
   }
 
   div.innerHTML = `
-    <div class="bubble-avatar"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
-    <div class="bubble-content">
+    <div class="bubble-avatar [width:36px] [height:36px] [background:var(--bg-surface)] [border:1px_solid_var(--border)] [border-radius:50%] [display:flex] [align-items:center] [justify-content:center] [font-size:1rem] [flex-shrink:0]"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
+    <div class="bubble-content [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:20px_20px_20px_4px] [font-size:0.9rem] [line-height:1.6] [color:var(--text-primary)]">
       <p>${formatBotText(response.text)}</p>
       ${recipeCardHTML}
-      ${Array.isArray(response.references) && response.references.length ? `<div class="chef-web-references" aria-label="Sumber web"><span>Referensi:</span>${response.references.slice(0, 4).map(reference => `<a href="${escapeHtml(reference.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(reference.title || 'Buka sumber')} ↗</a>`).join('')}</div>` : ''}
+      ${Array.isArray(response.references) && response.references.length ? `<div class="chef-web-references [display:flex] [flex-wrap:wrap] [gap:6px] [align-items:center] [margin-top:10px] [padding-top:9px] [border-top:1px_solid_var(--border)] [font-size:0.72rem] [color:var(--text-muted)]" aria-label="Sumber web"><span>Referensi:</span>${response.references.slice(0, 4).map(reference => `<a href="${escapeHtml(reference.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(reference.title || 'Buka sumber')} ↗</a>`).join('')}</div>` : ''}
     </div>
-    <span class="bubble-time">${time}</span>
+    <span class="bubble-time [font-size:0.7rem] [color:var(--text-muted)] [align-self:flex-end]">${time}</span>
   `;
 
   container.appendChild(div);
@@ -1009,12 +1009,12 @@ function appendTypingIndicator(id, containerId = 'chatMessages') {
   const container = document.getElementById(containerId);
   const div = document.createElement('div');
   div.id = id;
-  div.className = 'chef-typing-stack';
+  div.className = 'chef-typing-stack [display:flex] [width:fit-content] [max-width:80%] [align-self:flex-start]';
   div.innerHTML = `
-    <div class="chat-bubble bot-bubble chef-search-loading">
-      <div class="bubble-avatar"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
-      <div class="bubble-content chef-search-dots" role="status" aria-label="Chef sedang menyiapkan jawaban">
-        <div class="typing-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+    <div class="chat-bubble bot-bubble chef-search-loading [display:flex] [gap:12px] [width:fit-content]">
+      <div class="bubble-avatar [width:36px] [height:36px] [background:var(--bg-surface)] [border:1px_solid_var(--border)] [border-radius:50%] [display:flex] [align-items:center] [justify-content:center] [font-size:1rem] [flex-shrink:0]"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
+      <div class="bubble-content chef-search-dots [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:20px_20px_20px_4px] [font-size:0.9rem] [line-height:1.6] [color:var(--text-primary)] [display:flex] [min-width:58px] [justify-content:center]" role="status" aria-label="Chef sedang menyiapkan jawaban">
+        <div class="typing-dots [display:flex] [gap:4px] [align-items:center]" aria-hidden="true"><span></span><span></span><span></span></div>
       </div>
     </div>
   `;

@@ -495,7 +495,7 @@ function startHomeCounters() {
 function ensureScrollProgress() {
   if (!document.querySelector('.scroll-progress')) {
     const progress = document.createElement('div');
-    progress.className = 'scroll-progress';
+    progress.className = 'scroll-progress [position:fixed] [z-index:2200] [top:0] [right:0] [left:0] [height:3px] [pointer-events:none] [transform:scaleX(0)] [transform-origin:left_center] [background:linear-gradient(90deg,_#e1dcc9_0%,_#946d6d_52%,_#412d15_100%)] [box-shadow:0_0_10px_rgba(148,109,109,.4)] [will-change:transform]';
     progress.setAttribute('aria-hidden', 'true');
     document.body.append(progress);
   }
@@ -589,7 +589,7 @@ function initParticles() {
   if (!container) return;
   for (let i = 0; i < 20; i++) {
     const p = document.createElement('div');
-    p.className = 'particle';
+    p.className = 'particle [position:absolute] [width:4px] [height:4px] [background:var(--primary)] [border-radius:50%] [opacity:0.3] [animation:floatUp_linear_infinite]';
     p.style.cssText = `
       left: ${Math.random() * 100}%;
       animation-duration: ${8 + Math.random() * 12}s;
@@ -762,10 +762,10 @@ function runDemo() {
     setTimeout(() => {
       // Create bounding box
       const box = document.createElement('div');
-      box.className = 'det-box';
+      box.className = 'det-box [position:absolute] [border:2px_solid_var(--primary)] [border-radius:3px] [background:rgba(182,92,58,0.05)] [transition:all_0.3s_ease] [border-width:1px] [box-shadow:none]';
       box.style.cssText = `top:${item.box.top};left:${item.box.left};width:${item.box.width};height:${item.box.height}`;
       const label = document.createElement('div');
-      label.className = 'det-box-label';
+      label.className = 'det-box-label [position:absolute] [bottom:calc(100%_+_4px)] [left:0] [background:var(--primary)] [color:white] [font-size:11px] [font-weight:700] [padding:3px_8px] [border-radius:4px] [white-space:nowrap]';
       label.innerHTML = `${ingredientIconHTML(item.name)} ${escapeHtml(item.name)} · contoh`;
       box.appendChild(label);
       detBoxes.appendChild(box);
@@ -829,10 +829,10 @@ async function submitPhotoForDetection(imageBlob, width, height, filename) {
   matches.forEach(({ label, confidence, bbox }) => {
     const [x1, y1, x2, y2] = bbox;
     const box = document.createElement('div');
-    box.className = 'det-box';
+    box.className = 'det-box [position:absolute] [border:2px_solid_var(--primary)] [border-radius:3px] [background:rgba(182,92,58,0.05)] [transition:all_0.3s_ease] [border-width:1px] [box-shadow:none]';
     box.style.cssText = `left:${x1 / width * 100}%;top:${y1 / height * 100}%;width:${(x2 - x1) / width * 100}%;height:${(y2 - y1) / height * 100}%`;
     const caption = document.createElement('div');
-    caption.className = 'det-box-label';
+    caption.className = 'det-box-label [position:absolute] [bottom:calc(100%_+_4px)] [left:0] [background:var(--primary)] [color:white] [font-size:11px] [font-weight:700] [padding:3px_8px] [border-radius:4px] [white-space:nowrap]';
     caption.innerHTML = `${ingredientIconHTML(label)} ${escapeHtml(label)} ${Math.round(confidence * 100)}%`;
     box.appendChild(caption);
     boxes.appendChild(box);
@@ -939,9 +939,9 @@ function updateDetectionStatus(type, message) {
   el.dataset.state = type;
   el.replaceChildren();
   const row = document.createElement('div');
-  row.className = 'status-idle';
+  row.className = 'status-idle [display:flex] [align-items:center] [gap:10px]';
   const dot = document.createElement('div');
-  dot.className = 'status-dot ' + dotClass;
+  dot.className = 'status-dot  [width:8px] [height:8px] [border-radius:50%]' + dotClass;
   const text = document.createElement('span');
   text.textContent = message;
   row.append(dot, text);
@@ -1008,21 +1008,21 @@ function renderIngredientList() {
 
   list.replaceChildren(...detectedIngredients.map(item => {
     const row = document.createElement('div');
-    row.className = 'ingredient-item';
+    row.className = 'ingredient-item [display:flex] [align-items:center] [gap:12px] [padding:10px_12px] [background:var(--bg-surface)] [border:1px_solid_var(--border)] [border-radius:var(--radius-sm)] [animation:slideIn_0.3s_var(--transition-bounce)]';
     const emoji = document.createElement('span');
-    emoji.className = 'ing-icon';
+    emoji.className = 'ing-icon [font-size:1.4rem] [display:grid] [place-items:center]';
     emoji.innerHTML = ingredientIconHTML(item.name);
     const info = document.createElement('div');
-    info.className = 'ing-info';
+    info.className = 'ing-info [flex:1]';
     const name = document.createElement('span');
-    name.className = 'ing-name';
+    name.className = 'ing-name [display:block] [font-size:0.9rem] [font-weight:600]';
     name.textContent = item.name;
     const confidence = document.createElement('span');
-    confidence.className = 'ing-conf';
+    confidence.className = 'ing-conf [display:block] [font-size:0.75rem] [color:var(--text-muted)]';
     confidence.textContent = item.conf ? ('Kepercayaan: ' + item.conf + '%') : 'Diinput manual';
     info.append(name, confidence);
     const remove = document.createElement('button');
-    remove.className = 'ing-remove';
+    remove.className = 'ing-remove [background:none] [border:none] [color:var(--text-muted)] [cursor:pointer] [font-size:1rem] [padding:4px] [border-radius:4px] [transition:var(--transition)] hover:[color:#E74C3C] hover:[background:rgba(231,76,60,0.1)]';
     remove.type = 'button';
     remove.title = 'Hapus ' + item.name;
     remove.setAttribute('aria-label', 'Hapus ' + item.name);
@@ -1036,12 +1036,12 @@ function renderIngredientList() {
 function createEmptyEl() {
   const div = document.createElement('div');
   div.id = 'ipEmpty';
-  div.className = 'ip-empty';
+  div.className = 'ip-empty [text-align:center] [padding:28px_18px] [color:var(--text-muted)] [display:flex] [flex-direction:column] [align-items:center] [gap:10px] [background:var(--bg-surface)] [border:1px_solid_var(--border)] [border-radius:16px]';
   div.innerHTML = `
-    <div class="ip-empty-icon"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-search"/></svg></div>
+    <div class="ip-empty-icon [font-size:2rem] [margin-bottom:12px] [opacity:1] [display:grid] [width:60px] [height:60px] [place-items:center] [margin:0] [color:var(--primary)] [background:var(--bg-glass)] [border-radius:50%]"><svg class="ui-icon ui-icon-large [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-search"/></svg></div>
     <h4>Belum ada bahan</h4>
     <p>Coba contoh bahan tanpa membuka kamera, atau tambahkan bahan secara manual.</p>
-    <button class="btn-primary ip-empty-example" type="button" onclick="runDemo()">Coba contoh</button>
+    <button class="btn-primary ip-empty-example [gap:10px] [background:linear-gradient(135deg,_var(--primary),_var(--primary-dark))] [color:white] [font-size:1rem] [font-weight:700] [font-family:var(--font-display)] [cursor:pointer] [transition:var(--transition-bounce)] [box-shadow:0_4px_20px_rgba(182,92,58,0.3)] [min-height:44px] [margin-top:4px] hover:[transform:translateY(-3px)_scale(1.02)] hover:[box-shadow:0_8px_32px_rgba(182,92,58,0.5)]" type="button" onclick="runDemo()">Coba contoh</button>
   `;
   return div;
 }
@@ -1054,7 +1054,7 @@ function updateIngredientCount() {
   const findBtn = document.getElementById('findRecipesBtn');
   findBtn.disabled = count === 0;
   if (count > 0) {
-    findBtn.innerHTML = `<svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-pot"/></svg> Cari Resep (<span id="ingredientCountBtn">${count}</span> bahan)`;
+    findBtn.innerHTML = `<svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-pot"/></svg> Cari Resep (<span id="ingredientCountBtn">${count}</span> bahan)`;
   }
 }
 
@@ -1181,7 +1181,7 @@ function renderRecipesGrid() {
   const hasIngredientParams = new URLSearchParams(window.location.search).has('bahan');
   if (clearButton) clearButton.hidden = !(activeQuery || hasIngredientParams || currentFilter !== 'all' || currentDietFilter !== 'all' || currentBudgetFilter !== null || currentRecipeSort !== 'match' || assumePantryBasics);
   grid.innerHTML = filtered.length === 0
-    ? `<div class="recipe-empty-state"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-book"/></svg><p>Tidak ada resep yang cocok.<br/>Coba kata kunci lain!</p></div>`
+    ? `<div class="recipe-empty-state [grid-column:1_/_-1] [padding:60px_20px] [color:var(--text-muted)] [text-align:center]"><svg class="ui-icon ui-icon-large [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-book"/></svg><p>Tidak ada resep yang cocok.<br/>Coba kata kunci lain!</p></div>`
     : filtered.map(r => createRecipeCardHTML(r)).join('');
   bindRecipeImageFallbacks(grid);
 }
@@ -1213,7 +1213,7 @@ function ingredientIconHTML(name) {
                       : /ikan|udang|teri|terasi/.test(normalized) ? 'fish'
                         : /kacang|buncis/.test(normalized) ? 'bean'
                           : /sayur|daun|bayam|kangkung|kol|sawi|selada|brokoli|tauge|paprika/.test(normalized) ? 'leaf' : 'food';
-  return `<svg class="ui-icon ingredient-icon" aria-hidden="true"><use href="#ui-icon-${icon}"/></svg>`;
+  return `<svg class="ui-icon ingredient-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-${icon}"/></svg>`;
 }
 
 function recipeIconHTML(recipe) {
@@ -1224,7 +1224,7 @@ function recipeIconHTML(recipe) {
 function recipeImageHTML(recipe, className, altText) {
   const src = getRecipeImage(recipe);
   const alt = altText || (recipe ? `Foto hidangan ${recipe.title}` : 'Foto hidangan');
-  if (!src) return `<span class="${className} recipe-img-fallback" role="img" aria-label="${escapeHtml(alt)}"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-food"/></svg></span>`;
+  if (!src) return `<span class="${className} recipe-img-fallback [display:grid] [width:100%] [height:100%] [place-items:center] [color:var(--primary)] [background:linear-gradient(135deg,var(--bg-surface),var(--bg-card))]" role="img" aria-label="${escapeHtml(alt)}"><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-food"/></svg></span>`;
   const objectPosition = recipe?.imagePosition || 'center';
   const image = `<img class="${className}" src="${src}" alt="${escapeHtml(alt)}" width="800" height="600" style="object-position:${objectPosition}" loading="lazy" decoding="async" data-fallback="dish" />`;
   if (recipe && RECIPE_WEBP_IDS.has(recipe.id)) {
@@ -1241,10 +1241,10 @@ function bindRecipeImageFallbacks(root = document) {
     if (img.complete && img.naturalWidth > 0) markLoaded();
     img.addEventListener('error', function handleError() {
       const span = document.createElement('span');
-      span.className = `${img.className} recipe-img-fallback`;
+      span.className = `${img.className} recipe-img-fallback [display:grid] [width:100%] [height:100%] [place-items:center] [color:var(--primary)] [background:linear-gradient(135deg,var(--bg-surface),var(--bg-card))]`;
       span.setAttribute('role', 'img');
       span.setAttribute('aria-label', img.alt || 'Foto hidangan tidak tersedia');
-      span.innerHTML = '<svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-food"/></svg>';
+      span.innerHTML = '<svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-food"/></svg>';
       img.replaceWith(span);
       span.closest('.recipe-img')?.classList.add('image-loaded');
     }, { once: true });
@@ -1262,27 +1262,27 @@ function createRecipeCardHTML(r, { keepCurrentPage = false } = {}) {
   const featuredKicker = keepCurrentPage
     ? `<div class="recipe-card-kicker"><span class="recipe-card-category">${escapeHtml(category)}</span><span class="recipe-card-ingredient-count">${ingredientCount ? `${ingredientCount} bahan` : 'Bahan sederhana'}</span></div>`
     : '';
-  const recipeAction = '<span class="recipe-card-action" aria-hidden="true"><span class="recipe-card-action-label">Intip resep</span><span class="recipe-card-action-arrow">↗</span></span>';
+  const recipeAction = '<span class="recipe-card-action [right:12px] [bottom:12px]" aria-hidden="true"><span class="recipe-card-action-label [font-size:.76rem]">Intip resep</span><span class="recipe-card-action-arrow">↗</span></span>';
   const matchLabel = available.length
     ? ` Kecocokan bahan: ${match.matched} dari ${match.total}.`
     : ' Tambahkan bahan untuk melihat kecocokan.';
   const matchMarkup = available.length ? `
-        <div class="recipe-match" aria-label="Kecocokan bahan: ${match.matched} dari ${match.total}">
-          <div class="recipe-match-label"><strong>Cocok ${match.matched} dari ${match.total} bahan</strong><span>${Math.round(match.percentage * 100)}%</span></div>
-          <div class="recipe-match-track" role="progressbar" aria-valuemin="0" aria-valuemax="${match.total}" aria-valuenow="${match.matched}" aria-label="Kecocokan bahan"><span style="width:${Math.round(match.percentage * 100)}%"></span></div>
+        <div class="recipe-match [display:grid] [gap:6px] [margin-top:12px]" aria-label="Kecocokan bahan: ${match.matched} dari ${match.total}">
+          <div class="recipe-match-label [display:flex] [justify-content:space-between] [gap:10px] [color:var(--text-primary)] [font-size:.78rem]"><strong>Cocok ${match.matched} dari ${match.total} bahan</strong><span>${Math.round(match.percentage * 100)}%</span></div>
+          <div class="recipe-match-track [height:6px] [overflow:hidden] [background:var(--bg-surface)] [border-radius:99px]" role="progressbar" aria-valuemin="0" aria-valuemax="${match.total}" aria-valuenow="${match.matched}" aria-label="Kecocokan bahan"><span style="width:${Math.round(match.percentage * 100)}%"></span></div>
           ${missing ? `<p>Kurang: ${escapeHtml(missing)}${match.missing.length > 3 ? ' +' + (match.missing.length - 3) : ''}</p>` : '<p>Semua bahan tersedia.</p>'}
         </div>` : '';
   return `
-    <a class="recipe-card" href="#/resep/${recipeSlug(r)}" aria-label="Lihat resep ${escapeHtml(r.title)}.${matchLabel}" onclick="event.preventDefault();${keepCurrentPage ? 'openFeaturedRecipeByIndex' : 'openRecipeByIndex'}(${recipeIndex})">
-      <div class="recipe-img" style="background:${r.gradient}">
+    <a class="recipe-card [flex-shrink:0] [width:260px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:18px] [overflow:hidden] [cursor:pointer] [transition:transform_.22s_ease,_opacity_.22s_ease] [position:relative] [display:block] [padding:0] [color:var(--text-primary)] [font:inherit] [text-align:left] [text-decoration:none] hover:[transform:translateY(-4px)] hover:[border-color:var(--border)] hover:[box-shadow:var(--shadow-card)] hover:[opacity:.96] focus-visible:[outline:3px_solid_var(--primary)] focus-visible:[outline-offset:3px] active:[transform:scale(.99)]" href="#/resep/${recipeSlug(r)}" aria-label="Lihat resep ${escapeHtml(r.title)}.${matchLabel}" onclick="event.preventDefault();${keepCurrentPage ? 'openFeaturedRecipeByIndex' : 'openRecipeByIndex'}(${recipeIndex})">
+      <div class="recipe-img [height:auto] [display:flex] [align-items:center] [justify-content:center] [position:relative] [overflow:hidden] [aspect-ratio:4_/_3] [isolation:isolate] [background-color:var(--bg-surface)]" style="background:${r.gradient}">
         ${recipeImageHTML(r, 'recipe-img-photo')}
         ${keepCurrentPage ? '' : recipeAction}
       </div>
       <div class="recipe-badge-diff ${r.difficulty === 'Mudah' ? 'easy' : 'medium'}">${r.difficulty}</div>
-      <div class="recipe-info">
+      <div class="recipe-info [padding:20px]">
         ${featuredKicker}
         <h3>${escapeHtml(r.title)}</h3>
-        <p class="recipe-meta"><span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>${escapeHtml(r.time)}</span><span class="recipe-cost-estimate">Est. ${cost}/porsi</span>${keepCurrentPage ? recipeAction : ''}</p>
+        <p class="recipe-meta [font-size:.84rem] [color:var(--text-secondary)] [margin-bottom:10px] [display:flex] [flex-wrap:wrap] [align-items:center] [gap:10px_16px] [margin:0]"><span><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-clock"/></svg>${escapeHtml(r.time)}</span><span class="recipe-cost-estimate [color:var(--text-secondary)] [font-size:.78rem] [font-variant-numeric:tabular-nums]">Est. ${cost}/porsi</span>${keepCurrentPage ? recipeAction : ''}</p>
         ${matchMarkup}
       </div>
     </a>
@@ -1303,7 +1303,7 @@ function renderSavedRecipes() {
   const recipes = RECIPES_DB.filter(recipe => savedIds.has(recipe.id));
   grid.innerHTML = recipes.length
     ? recipes.map(recipe => createRecipeCardHTML(recipe)).join('')
-    : `<div class="recipe-empty-state"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-book"/></svg><p>Belum ada resep tersimpan.</p><a class="btn-primary saved-empty-action" href="#/jelajahi" onclick="event.preventDefault();navigateToPage('jelajahi')">Jelajahi koleksi resep</a></div>`;
+    : `<div class="recipe-empty-state [grid-column:1_/_-1] [padding:60px_20px] [color:var(--text-muted)] [text-align:center]"><svg class="ui-icon ui-icon-large [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-book"/></svg><p>Belum ada resep tersimpan.</p><a class="btn-primary saved-empty-action [gap:10px] [background:linear-gradient(135deg,_var(--primary),_var(--primary-dark))] [color:white] [font-size:1rem] [font-weight:700] [font-family:var(--font-display)] [cursor:pointer] [transition:var(--transition-bounce)] [box-shadow:0_4px_20px_rgba(182,92,58,0.3)] [min-height:44px] [margin-top:12px] hover:[transform:translateY(-3px)_scale(1.02)] hover:[box-shadow:0_8px_32px_rgba(182,92,58,0.5)]" href="#/jelajahi" onclick="event.preventDefault();navigateToPage('jelajahi')">Jelajahi koleksi resep</a></div>`;
   bindRecipeImageFallbacks(grid);
 }
 
@@ -1373,9 +1373,9 @@ function renderJelajahiGrid() {
     const count = RECIPES_DB.filter(category.matches).length;
     const active = category.id === selectedExploreCategory;
     return `<button class="cat-card${active ? ' active' : ''}" type="button" data-category="${category.id}" aria-pressed="${active}" onclick="filterByCategory('${category.id}')" style="--cat-color:${category.color}">
-      <span class="cat-swatch" aria-hidden="true"></span>
-      <span class="cat-name">${category.label}</span>
-      <span class="cat-count">${count} resep</span>
+      <span class="cat-swatch [grid-row:1_/_3] [width:4px] [height:30px] [border-radius:4px] [background:var(--cat-color,_var(--primary))]" aria-hidden="true"></span>
+      <span class="cat-name [font-weight:600] [font-size:0.9rem]">${category.label}</span>
+      <span class="cat-count [color:var(--text-muted)] [font-size:0.76rem]">${count} resep</span>
     </button>`;
   }).join('');
 
@@ -1386,12 +1386,12 @@ function renderJelajahiGrid() {
     const quickCount = document.getElementById('quickRecipesCount');
     if (quickCount) quickCount.textContent = `Menampilkan ${Math.min(4, quickRecipes.length)} dari ${quickRecipes.length} resep`;
     quickList.innerHTML = quickRecipes.length
-      ? quickRecipes.slice(0, 4).map(recipe => `<button class="qr-item" type="button" onclick="openRecipeByIndex(${RECIPES_DB.indexOf(recipe)})">
+      ? quickRecipes.slice(0, 4).map(recipe => `<button class="qr-item [display:flex] [align-items:center] [gap:16px] [padding:14px_20px] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:var(--radius)] [cursor:pointer] [transition:var(--transition)] [width:100%] [text-align:left] [font:inherit] [color:var(--text-primary)] [min-height:82px] [overflow:visible] hover:[border-color:var(--primary)] hover:[background:var(--bg-surface)]" type="button" onclick="openRecipeByIndex(${RECIPES_DB.indexOf(recipe)})">
           ${recipeImageHTML(recipe, 'qr-photo')}
-          <span class="qr-info"><span class="qr-name">${recipe.title}</span><span class="qr-meta">${recipe.difficulty} · ${recipe.ingredients.length} bahan</span></span>
-          <span class="qr-time">${recipe.time}</span>
+          <span class="qr-info [flex:1] [min-width:0]"><span class="qr-name [display:block] [font-weight:600] [margin-bottom:4px] [overflow-wrap:anywhere]">${recipe.title}</span><span class="qr-meta [font-size:0.8rem] [color:var(--text-muted)]">${recipe.difficulty} · ${recipe.ingredients.length} bahan</span></span>
+          <span class="qr-time [padding:4px_10px] [background:rgba(120,132,102,0.1)] [border:1px_solid_rgba(120,132,102,0.3)] [border-radius:999px] [font-size:0.8rem] [font-weight:700] [color:var(--secondary)] [flex:0_0_auto] [white-space:nowrap]">${recipe.time}</span>
         </button>`).join('')
-      : '<p class="explore-empty">Belum ada resep singkat di katalog.</p>';
+      : '<p class="explore-empty [grid-column:1_/_-1] [padding:24px_0] [color:var(--text-muted)]">Belum ada resep singkat di katalog.</p>';
     bindRecipeImageFallbacks(quickList);
   }
 
@@ -1400,7 +1400,7 @@ function renderJelajahiGrid() {
     const fiveBahan = RECIPES_DB.filter(recipe => recipe.ingredients.length <= 5);
     fiveBahanGrid.innerHTML = fiveBahan.length
       ? fiveBahan.map(recipe => createRecipeCardHTML(recipe)).join('')
-      : '<p class="explore-empty">Belum ada resep dengan lima bahan atau kurang.</p>';
+      : '<p class="explore-empty [grid-column:1_/_-1] [padding:24px_0] [color:var(--text-muted)]">Belum ada resep dengan lima bahan atau kurang.</p>';
     bindRecipeImageFallbacks(fiveBahanGrid);
   }
   renderExploreResults();
@@ -1417,7 +1417,7 @@ function renderExploreResults() {
   if (grid) {
     grid.innerHTML = recipes.length
       ? recipes.map(recipe => createRecipeCardHTML(recipe)).join('')
-      : '<p class="explore-empty">Belum ada resep dalam kategori ini.</p>';
+      : '<p class="explore-empty [grid-column:1_/_-1] [padding:24px_0] [color:var(--text-muted)]">Belum ada resep dalam kategori ini.</p>';
     bindRecipeImageFallbacks(grid);
   }
 }
@@ -1444,16 +1444,16 @@ function openRecipeModal(title, time, servings, ingredients, steps, { updateRout
   activeModalRecipe = recipe;
   activeModalServings = recipe?.servingsCount || Number.parseInt(servings, 10) || 1;
   document.getElementById('modalMeta').innerHTML = `
-    <span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-clock"/></svg>${time}</span>
-    <span><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-users"/></svg>${servings}</span>
+    <span><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-clock"/></svg>${time}</span>
+    <span><svg class="ui-icon [display:inline-block] [flex:0_0_auto] [fill:none] [stroke:currentColor] [stroke-width:1.75] [stroke-linecap:round] [stroke-linejoin:round] [vertical-align:middle]" aria-hidden="true"><use href="#ui-icon-users"/></svg>${servings}</span>
     ${recipe?.difficulty ? `<span>${escapeHtml(recipe.difficulty)}</span>` : ''}
-    ${recipe ? `<span class="recipe-cost-estimate">Est. ${window.ResepinRecipeUtils?.formatIDR(recipe.estimatedCostPerServingIDR) || ''}/porsi</span>` : ''}
+    ${recipe ? `<span class="recipe-cost-estimate [color:var(--text-secondary)] [font-size:.78rem] [font-variant-numeric:tabular-nums]">Est. ${window.ResepinRecipeUtils?.formatIDR(recipe.estimatedCostPerServingIDR) || ''}/porsi</span>` : ''}
   `;
 
   if (recipe) {
     const match = recipeMatch(recipe);
     const summary = document.getElementById('modalMatchSummary');
-    if (summary) summary.innerHTML = `<strong>Kamu punya ${match.matched}/${match.total} bahan</strong><div class="recipe-match-track" role="progressbar" aria-valuemin="0" aria-valuemax="${match.total}" aria-valuenow="${match.matched}"><span style="width:${Math.round(match.percentage * 100)}%"></span></div>${match.missing.length ? `<p>Kurang: ${escapeHtml(match.missing.join(', '))}</p>` : '<p>Semua bahan cocok dengan daftar yang tersedia.</p>'}`;
+    if (summary) summary.innerHTML = `<strong>Kamu punya ${match.matched}/${match.total} bahan</strong><div class="recipe-match-track [height:6px] [overflow:hidden] [background:var(--bg-surface)] [border-radius:99px]" role="progressbar" aria-valuemin="0" aria-valuemax="${match.total}" aria-valuenow="${match.matched}"><span style="width:${Math.round(match.percentage * 100)}%"></span></div>${match.missing.length ? `<p>Kurang: ${escapeHtml(match.missing.join(', '))}</p>` : '<p>Semua bahan cocok dengan daftar yang tersedia.</p>'}`;
     const servingControl = document.getElementById('modalServingsControl');
     const hasQuantities = recipe.ingredientDetails?.some(item => Number.isFinite(item.amount));
     if (servingControl) servingControl.hidden = !hasQuantities;
@@ -1465,7 +1465,7 @@ function openRecipeModal(title, time, servings, ingredients, steps, { updateRout
   const heroMedia = document.getElementById('modalHeroMedia');
   const photoSrc = getRecipeImage(recipe);
   if (photoSrc) {
-    heroMedia.innerHTML = `<img class="modal-hero-photo" src="${photoSrc}" alt="${title}" onerror="this.style.display='none';document.getElementById('modalHeroEmoji').style.display='flex'" />`;
+    heroMedia.innerHTML = `<img class="modal-hero-photo [width:100%] [height:100%] [object-fit:cover] [display:block]" src="${photoSrc}" alt="${title}" onerror="this.style.display='none';document.getElementById('modalHeroEmoji').style.display='flex'" />`;
     document.getElementById('modalHeroEmoji').style.display = 'none';
   } else {
     heroMedia.innerHTML = '';
@@ -1671,7 +1671,7 @@ let toastTimeout;
 function showToast(message, type = 'success') {
   const toast = document.getElementById('toast');
   toast.textContent = message;
-  toast.className = `toast show ${type}`;
+  toast.className = `toast show ${type} [position:fixed] [bottom:24px] [left:50%] [transform:translateX(-50%)_translateY(100px)] [background:var(--bg-card)] [border:1px_solid_var(--border)] [border-radius:var(--radius)] [padding:12px_24px] [font-size:0.9rem] [font-weight:500] [z-index:9999] [transition:transform_0.3s_var(--transition-bounce)] [white-space:nowrap] [box-shadow:var(--shadow-card)]`;
   clearTimeout(toastTimeout);
   toastTimeout = setTimeout(() => {
     toast.classList.remove('show');
