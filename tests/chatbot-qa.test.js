@@ -18,7 +18,7 @@ function createChatbotContext() {
   for (const file of ['src/legacy/recipes.js', 'src/legacy/chef-prompts.js', 'src/legacy/chatbot.js']) {
     vm.runInContext(readFileSync(resolve(root, file), 'utf8'), context);
   }
-  vm.runInContext('globalThis.testGenerate = generateAIResponse', context);
+  vm.runInContext('globalThis.testGenerate = generateAIResponse; globalThis.testSearch = shouldSearchChefWeb', context);
   return context;
 }
 
@@ -116,4 +116,17 @@ test('suspected poisoned food gets practical safety guidance instead of a refusa
     assert.match(answer.text, /IGD|layanan darurat medis/);
     assert.doesNotMatch(answer.text, /tidak bisa membantu/);
   }
+});
+
+test('lawar plek stays distinct from lawar sayur and goes to the web-backed recipe route', () => {
+  const context = createChatbotContext();
+  const answer = context.testGenerate('Bro aku mau resep lawar plek');
+  assert.equal(answer.type, 'fallback');
+});
+
+test('web-search loading appears for niche or safety questions, not every recipe question', () => {
+  const context = createChatbotContext();
+  assert.equal(context.testSearch('Bro aku mau resep lawar plek'), true);
+  assert.equal(context.testSearch('Aku makan body motor bercampur oli'), true);
+  assert.equal(context.testSearch('Kasih resep nasi goreng'), false);
 });

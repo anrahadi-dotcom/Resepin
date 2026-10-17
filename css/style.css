@@ -892,6 +892,10 @@ span.recipe-img-photo {
 }
 .typing-dots span:nth-child(2) { @apply [animation-delay:0.2s]; }
 .typing-dots span:nth-child(3) { @apply [animation-delay:0.4s]; }
+.typing-search-status { @apply [margin-top:7px]; @apply [font-size:0.72rem]; @apply [color:var(--text-muted)]; }
+.chef-web-references { @apply [display:flex]; @apply [flex-wrap:wrap]; @apply [gap:6px]; @apply [align-items:center]; @apply [margin-top:10px]; @apply [padding-top:9px]; @apply [border-top:1px_solid_var(--border)]; @apply [font-size:0.72rem]; @apply [color:var(--text-muted)]; }
+.chef-web-references a { @apply [padding:4px_8px]; @apply [border:1px_solid_var(--border)]; @apply [border-radius:999px]; @apply [color:var(--text-secondary)]; @apply [text-decoration:none]; }
+.chef-web-references a:hover { @apply [color:var(--primary)]; @apply [border-color:var(--primary)]; }
 @keyframes typingBounce {
   0%,60%,100% { transform: translateY(0); }
   30% { transform: translateY(-6px); }

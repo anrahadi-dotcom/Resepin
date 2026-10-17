@@ -60,7 +60,7 @@ function sendChat(options = {}) {
 
   // Show typing indicator
   const typingId = 'typing-' + Date.now();
-  appendTypingIndicator(typingId, messagesId);
+  appendTypingIndicator(typingId, messagesId, shouldSearchChefWeb(message));
 
   // Simulate AI response delay
   const delay = 1200 + Math.random() * 800;
@@ -74,7 +74,7 @@ function sendChat(options = {}) {
 
 async function generateAIResponseAsync(message, history = []) {
   const localResponse = generateAIResponse(message);
-  if (localResponse.type !== 'fallback') return localResponse;
+  if (localResponse.type !== 'fallback' && !isLawarPlekRequest(message)) return localResponse;
 
   try {
     const response = await fetch('/api/chef', {
@@ -85,11 +85,24 @@ async function generateAIResponseAsync(message, history = []) {
     if (!response.ok) throw new Error(`Chef API returned ${response.status}`);
     const data = await response.json();
     if (typeof data.answer !== 'string' || !data.answer.trim()) throw new Error('Chef API returned no answer');
-    return { type: 'text', text: data.answer.trim() };
+    return { type: 'text', text: data.answer.trim(), references: Array.isArray(data.references) ? data.references : [] };
   } catch (error) {
     console.warn('Chef AI fallback unavailable; using local response.', error);
+    if (isLawarPlekRequest(message)) {
+      return { type: 'text', text: 'Kamu benar—lawar plek itu bukan lawar sayur. Lawar plek biasanya merujuk lawar daging dengan darah segar (seringnya babi), berbeda dari lawar sayur. Karena versi tradisional dapat memakai daging/darah mentah dan berisiko membawa kuman, aku nggak mau menyebut versi matang sebagai plek asli. Aku bisa bantu bikin versi rumahan matang dengan bumbu lawar kalau kamu mau.' };
+    }
     return { type: 'text', text: CHEF_PROMPTS.fallback(message) };
   }
+}
+
+function isLawarPlekRequest(message) {
+  return /\blawar\s+plek\b/i.test(message);
+}
+
+function shouldSearchChefWeb(message) {
+  return isLawarPlekRequest(message) ||
+    (/\b(?:body|bodi)\s+motor\b|\boli(?:\s+(?:motor|bekas))?\b|\bcairan\s+rem\b/i.test(message) &&
+      /\b(?:makan|dimakan|kemakan|tertelan|menelan|minum|terminum)\b/i.test(message));
 }
 
 function generateAIResponse(message) {
@@ -171,6 +184,11 @@ function generateAIResponse(message) {
     /\b(minyak|masak|masakan|makanan|resep|bahan|tumis|goreng|bisa|ganti|pengganti)\b/.test(normalized);
   if (asksAboutHazardousCookingSubstitute) {
     return { type: 'text', text: 'Jangan pakai bensin untuk memasak atau sebagai pengganti minyak goreng. Bensin bukan bahan pangan, beracun, dan sangat mudah terbakar. Kalau bensin mengenai makanan, jangan dimakan atau dicicipi; jauhkan dari api dan buang dengan aman. Untuk menumis, gunakan minyak goreng atau sedikit air/kaldu bila cocok dengan resep.' };
+  }
+
+  if (/\b(?:body|bodi)\s+motor\b|\boli(?:\s+(?:motor|bekas))?\b|\bcairan\s+rem\b|\bbensin\b/.test(normalized) &&
+      /\b(?:makan|dimakan|kemakan|tertelan|menelan|minum|terminum)\b/.test(normalized)) {
+    return { type: 'fallback' };
   }
 
   const asksAboutPoisonExposure = /\b(?:makanan|minuman|masakan|bahan pangan|sup|sayur|lauk)\b.{0,35}\b(?:racun|pestisida|bahan kimia|tercemar|terkontaminasi|kena)\b/.test(normalized) ||
@@ -487,6 +505,10 @@ function generateAIResponse(message) {
     return { type: 'text', text: CHEF_PROMPTS.okay };
   }
 
+  // The catalog contains only a vegetable-lawar entry. Never let its broad
+  // "lawar" alias override the user's explicit request for lawar plek.
+  if (isLawarPlekRequest(message)) return { type: 'fallback' };
+
   const requestedRecipe = RECIPES_DB.find(recipe => normalized.includes(recipe.title.toLowerCase()) ||
     (recipe.title === 'Coto Makassar' && /\bcoto\b/.test(normalized)) ||
     (recipe.title === 'Ayam Betutu Bali' && /\bayam\s+betutu\b/.test(normalized)) ||
@@ -733,6 +755,7 @@ function appendAIResponse(response, containerId = 'chatMessages', options = {}) 
     <div class="bubble-content">
       <p>${formatBotText(response.text)}</p>
       ${recipeCardHTML}
+      ${Array.isArray(response.references) && response.references.length ? `<div class="chef-web-references" aria-label="Sumber web"><span>Referensi:</span>${response.references.slice(0, 4).map(reference => `<a href="${escapeHtml(reference.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(reference.title || 'Buka sumber')} ↗</a>`).join('')}</div>` : ''}
     </div>
     <span class="bubble-time">${time}</span>
   `;
@@ -742,7 +765,7 @@ function appendAIResponse(response, containerId = 'chatMessages', options = {}) 
   container.scrollTop = container.scrollHeight;
 }
 
-function appendTypingIndicator(id, containerId = 'chatMessages') {
+function appendTypingIndicator(id, containerId = 'chatMessages', searchingWeb = false) {
   const container = document.getElementById(containerId);
   const div = document.createElement('div');
   div.id = id;
@@ -753,6 +776,7 @@ function appendTypingIndicator(id, containerId = 'chatMessages') {
       <div class="typing-dots">
         <span></span><span></span><span></span>
       </div>
+      ${searchingWeb ? '<div class="typing-search-status" role="status">Mencari referensi web…</div>' : ''}
     </div>
   `;
   container.appendChild(div);
