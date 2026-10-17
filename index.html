@@ -628,7 +628,12 @@
         </div>
 
         <div class="chat-input-area">
+          <div class="chef-image-preview" id="chatImagePreview" hidden aria-live="polite"></div>
           <div class="chat-input-box">
+            <input class="chef-image-file-input" id="chatImageInput" type="file" accept="image/png,image/jpeg,image/webp" aria-label="Pilih gambar untuk Chef Resepin" onchange="handleChefImageSelection(this, 'chatImagePreview')">
+            <button class="chef-image-attach" type="button" aria-label="Tambahkan gambar" title="Tambahkan gambar" onclick="document.getElementById('chatImageInput').click()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.4 11.1 12.2 20a6 6 0 0 1-8.5-8.5l9.2-8.9a4 4 0 0 1 5.7 5.7l-9.2 8.9a2 2 0 0 1-2.8-2.8l8.5-8.2"/></svg>
+            </button>
             <textarea id="chatInput" aria-label="Pesan untuk Chef Resepin" placeholder="Tanya resep, bahan, teknik, atau cara menyimpan makanan..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}" oninput="autoResizeTextarea(this)"></textarea>
             <button class="chat-send-btn" aria-label="Kirim pesan" onclick="sendChat()" id="chatSendBtn">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
@@ -798,7 +803,12 @@
         <button type="button" onclick="sendMiniPrompt('Aku mau tanya substitusi bahan.')">↔️ Substitusi</button>
       </div>
     </div>
+    <div class="chef-image-preview mini-chef-image-preview" id="miniChatImagePreview" hidden aria-live="polite"></div>
     <form class="floating-chef-chat-composer" onsubmit="event.preventDefault(); sendMiniChat()">
+      <input class="chef-image-file-input" id="miniChatImageInput" type="file" accept="image/png,image/jpeg,image/webp" aria-label="Pilih gambar untuk Chef Resepin" onchange="handleChefImageSelection(this, 'miniChatImagePreview')">
+      <button class="chef-image-attach" type="button" aria-label="Tambahkan gambar" title="Tambahkan gambar" onclick="document.getElementById('miniChatImageInput').click()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.4 11.1 12.2 20a6 6 0 0 1-8.5-8.5l9.2-8.9a4 4 0 0 1 5.7 5.7l-9.2 8.9a2 2 0 0 1-2.8-2.8l8.5-8.2"/></svg>
+      </button>
       <textarea id="miniChatInput" aria-label="Tulis pesan untuk Chef Resepin" placeholder="Ceritakan bahan yang ada..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMiniChat()}" oninput="autoResizeTextarea(this)"></textarea>
       <button type="submit" aria-label="Kirim pesan"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4 20-7ZM22 2 11 13"/></svg></button>
     </form>

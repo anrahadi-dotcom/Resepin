@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "test": "node --test tests/*.test.js"
+    "test": "node --test tests/*.test.js",
+    "qa:offline": "node tools/chef-qa/run-offline-qa.mjs"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.3",

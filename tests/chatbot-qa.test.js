@@ -55,7 +55,7 @@ test('free-form chats from the full page and floating Chef use the shared AI bac
   const context = createChatbotContext();
   const source = readFileSync(resolve(root, 'src/legacy/chatbot.js'), 'utf8');
   assert.match(source, /function sendMiniChat\(\)\s*\{\s*sendChat\(\{ inputId: 'miniChatInput', messagesId: 'miniChatMessages', mini: true \}\);/);
-  assert.match(source, /generateAIResponseAsync\(message, history\)/);
+  assert.match(source, /generateAIResponseAsync\(message, history, attachment\)/);
 
   const calls = [];
   context.fetch = async (_url, options) => {
@@ -207,7 +207,7 @@ test('web search keeps only the chef avatar and a simple animated three-dot load
   const source = readFileSync(resolve(root, 'src/legacy/chatbot.js'), 'utf8');
   const styles = readFileSync(resolve(root, 'css/style.css'), 'utf8');
   assert.match(source, /action: 'search'/);
-  assert.match(source, /body: JSON\.stringify\(\{ message, history, references \}\)/);
+  assert.match(source, /body: JSON\.stringify\(\{ message, history, references, \.\.\.\(image \? \{ image:/);
   assert.match(source, /chef-typing-stack/);
   assert.match(source, /class="typing-dots" aria-hidden="true"><span><\/span><span><\/span><span><\/span>/);
   assert.doesNotMatch(source, /chef-search-activity|chef-search-globe|chef-search-page|Membaca halaman|Memantapkan jawaban/);

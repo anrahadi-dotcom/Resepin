@@ -164,7 +164,10 @@ createApp({
         this.heroSearchMessage = '';
       }
       window.navigateToPage(page);
-      this.$nextTick(() => window.refreshMotionReveals?.());
+      this.$nextTick(() => {
+        if (page === 'chef') window.restoreChefChatHistory?.('chatMessages');
+        window.refreshMotionReveals?.();
+      });
     },
     toggleMenu() {
       this.menuOpen = !this.menuOpen;
@@ -199,7 +202,10 @@ createApp({
     toggleFloatingChefChat() {
       this.floatingChefChatOpen = !this.floatingChefChatOpen;
       if (this.floatingChefChatOpen) {
-        this.$nextTick(() => document.getElementById('miniChatInput')?.focus());
+        this.$nextTick(() => {
+          window.restoreChefChatHistory?.('miniChatMessages');
+          document.getElementById('miniChatInput')?.focus();
+        });
       }
     },
     toggleTheme() {

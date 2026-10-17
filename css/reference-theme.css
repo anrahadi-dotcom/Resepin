@@ -1716,6 +1716,25 @@ body[data-theme="dark"] .nav-links.open { @apply [background:rgba(0,0,0,.56)]; }
 .floating-chef-chat-composer button { @apply [display:grid]; @apply [width:32px]; @apply [height:32px]; @apply [flex:0_0_auto]; @apply [place-items:center]; @apply [border:0]; @apply [border-radius:11px]; @apply [color:var(--primary-light)]; @apply [background:var(--primary-dark)]; @apply [cursor:pointer]; }
 .floating-chef-chat-composer button:hover { @apply [transform:translateY(-1px)]; }
 .floating-chef-chat-composer button svg { @apply [width:19px]; @apply [height:19px]; @apply [fill:none]; @apply [stroke:currentColor]; @apply [stroke-width:1.8]; @apply [stroke-linecap:round]; @apply [stroke-linejoin:round]; }
+.chef-image-file-input { @apply [display:none]; }
+.chat-input-box .chef-image-attach,
+.floating-chef-chat-composer .chef-image-attach { @apply [display:grid]; @apply [width:34px]; @apply [height:34px]; @apply [flex:0_0_auto]; @apply [place-items:center]; @apply [border:1px_solid_var(--border)]; @apply [border-radius:11px]; @apply [color:var(--text-secondary)]; @apply [background:var(--bg-surface)]; @apply [cursor:pointer]; }
+.chat-input-box .chef-image-attach:hover,
+.floating-chef-chat-composer .chef-image-attach:hover { @apply [color:var(--primary)]; @apply [border-color:var(--primary)]; }
+.chat-input-box .chef-image-attach svg { @apply [width:18px]; @apply [height:18px]; }
+.floating-chef-chat-composer .chef-image-attach { @apply [width:30px]; @apply [height:30px]; @apply [border-radius:9px]; }
+.floating-chef-chat-composer .chef-image-attach svg { @apply [width:16px]; @apply [height:16px]; }
+.chef-image-preview { @apply [display:flex]; @apply [align-items:center]; @apply [gap:9px]; @apply [width:fit-content]; @apply [max-width:100%]; @apply [margin:0_0_9px]; @apply [padding:7px_9px]; @apply [border:1px_solid_var(--border)]; @apply [border-radius:13px]; @apply [background:var(--bg-surface)]; @apply [color:var(--text-secondary)]; @apply [font-size:.76rem]; }
+.chef-image-preview[hidden] { @apply [display:none]; }
+.chef-image-preview img { @apply [width:42px]; @apply [height:42px]; @apply [flex:0_0_auto]; @apply [border-radius:8px]; @apply [object-fit:cover]; }
+.chef-image-preview span { @apply [overflow:hidden]; @apply [text-overflow:ellipsis]; @apply [white-space:nowrap]; }
+.chef-image-preview button { @apply [display:grid]; @apply [width:26px]; @apply [height:26px]; @apply [flex:0_0_auto]; @apply [place-items:center]; @apply [border:0]; @apply [border-radius:50%]; @apply [color:var(--text-secondary)]; @apply [background:transparent]; @apply [font:500_1.1rem/1_var(--font-body)]; @apply [cursor:pointer]; }
+.chef-image-preview button:hover { @apply [color:var(--primary)]; @apply [background:color-mix(in_srgb,var(--primary)_10%,transparent)]; }
+.user-bubble .bubble-attachment-image { @apply [display:block]; @apply [width:min(240px,100%)]; @apply [max-height:180px]; @apply [margin-top:8px]; @apply [border-radius:10px]; @apply [object-fit:cover]; }
+.user-bubble .bubble-attachment-note { @apply [display:block]; @apply [margin-top:6px]; @apply [font-size:.7rem]; @apply [opacity:.72]; }
+.mini-chef-image-preview { @apply [margin:8px_10px_0_46px]; @apply [font-size:.7rem]; }
+.mini-chef-image-preview img { @apply [width:34px]; @apply [height:34px]; }
+.mini-chef-image-preview button { @apply [width:23px]; @apply [height:23px]; }
 .floating-chef-button[aria-expanded="true"] { @apply [animation-play-state:paused]; }
 .floating-chef-button[aria-expanded="true"] .chef-mascot { @apply [filter:drop-shadow(0_8px_12px_rgba(0,0,0,.28))]; }
 @media (max-width: 600px) {

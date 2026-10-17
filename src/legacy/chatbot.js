@@ -1,5 +1,131 @@
 /* Chef Resepin chat flow, response logic, and chat rendering. */
 
+const CHEF_CHAT_MEMORY_KEY = 'resepin-chef-chat-v1';
+const CHEF_FREE_MEMORY_TTL_MS = 24 * 60 * 60 * 1000;
+const CHEF_CHAT_MEMORY_LIMIT = 80;
+const CHEF_IMAGE_MAX_BYTES = 4 * 1024 * 1024;
+const chefPendingImages = new Map();
+
+function readChefChatMemory() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(CHEF_CHAT_MEMORY_KEY) || 'null');
+    if (!stored || !Array.isArray(stored.messages) || !Number.isFinite(stored.updatedAt)) return [];
+    if (Date.now() - stored.updatedAt >= CHEF_FREE_MEMORY_TTL_MS) {
+      localStorage.removeItem(CHEF_CHAT_MEMORY_KEY);
+      if (typeof document !== 'undefined') {
+        document.querySelectorAll('#chatMessages [data-chef-history-entry="true"], #miniChatMessages [data-chef-history-entry="true"]')
+          .forEach(node => node.remove());
+        const suggestions = document.getElementById('miniChatSuggestions');
+        if (suggestions) suggestions.hidden = false;
+      }
+      return [];
+    }
+    return stored.messages.filter(item => item && ['user', 'assistant'].includes(item.role) && typeof item.content === 'string')
+      .slice(-CHEF_CHAT_MEMORY_LIMIT);
+  } catch (_) { return []; }
+}
+
+function writeChefChatMemory(messages) {
+  const safeMessages = messages.slice(-CHEF_CHAT_MEMORY_LIMIT).map(item => ({
+    role: item.role,
+    content: String(item.content || '').slice(0, 3000),
+    ...(item.imageAttached ? { imageAttached: true } : {}),
+    ...(item.type === 'recipe' && item.recipe ? { type: 'recipe', recipe: item.recipe } : {}),
+    ...(Array.isArray(item.references) ? { references: item.references.slice(0, 4).filter(reference =>
+      reference && typeof reference.title === 'string' && typeof reference.url === 'string' && /^https?:\/\//i.test(reference.url)
+    ).map(reference => ({ title: reference.title.slice(0, 140), url: reference.url, snippet: String(reference.snippet || '').slice(0, 300) })) } : {})
+  }));
+  try {
+    localStorage.setItem(CHEF_CHAT_MEMORY_KEY, JSON.stringify({ updatedAt: Date.now(), messages: safeMessages }));
+  } catch (_) { /* Keep the conversation in the current page if storage is full or disabled. */ }
+}
+
+function addChefChatMemory(entry) {
+  writeChefChatMemory([...readChefChatMemory(), entry]);
+}
+
+function getChefModelHistory() {
+  return readChefChatMemory().slice(-6).map(item => ({
+    role: item.role,
+    content: item.content + (item.imageAttached ? '\n[Foto dari pesan lama tidak disimpan dan tidak tersedia untuk dilihat kembali.]' : '')
+  }));
+}
+
+function restoreChefChatHistory(containerId = 'chatMessages') {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.querySelectorAll('[data-chef-history-entry="true"]').forEach(node => node.remove());
+  const messages = readChefChatMemory();
+  for (const item of messages) {
+    if (item.role === 'user') {
+      appendChatMessage(item.content, 'user', containerId, item.imageAttached ? { historyPlaceholder: true } : null);
+    } else {
+      appendAIResponse({
+        type: item.type === 'recipe' ? 'recipe' : 'text', text: item.content,
+        ...(item.recipe ? { recipe: item.recipe } : {}), ...(item.references ? { references: item.references } : {})
+      }, containerId, { mini: containerId === 'miniChatMessages' });
+    }
+  }
+  if (containerId === 'miniChatMessages') {
+    const suggestions = document.getElementById('miniChatSuggestions');
+    if (suggestions) suggestions.hidden = messages.length > 0;
+  }
+}
+
+function handleChefImageSelection(input, previewId) {
+  const preview = document.getElementById(previewId);
+  const file = input?.files?.[0];
+  if (!preview || !input) return;
+  if (!file) {
+    clearChefImage(input.id);
+    return;
+  }
+  if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+    input.value = '';
+    showToast('Pilih gambar JPG, PNG, atau WebP.', 'error');
+    return;
+  }
+  if (file.size > CHEF_IMAGE_MAX_BYTES) {
+    input.value = '';
+    showToast('Ukuran gambar maksimal 4 MB.', 'error');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    const dataUrl = typeof reader.result === 'string' ? reader.result : '';
+    if (!dataUrl.startsWith(`data:${file.type};base64,`)) {
+      showToast('Gambar gagal dibaca. Coba pilih ulang.', 'error');
+      return;
+    }
+    chefPendingImages.set(input.id, { mimeType: file.type, base64: dataUrl.split(',')[1], dataUrl, name: file.name });
+    preview.hidden = false;
+    preview.innerHTML = `<img src="${dataUrl}" alt="Pratinjau gambar"><span>${escapeHtml(file.name)}</span><button type="button" aria-label="Hapus gambar" onclick="clearChefImage('${input.id}')">×</button>`;
+  };
+  reader.onerror = () => showToast('Gambar gagal dibaca. Coba pilih ulang.', 'error');
+  reader.readAsDataURL(file);
+}
+
+function clearChefImage(inputId) {
+  chefPendingImages.delete(inputId);
+  const input = document.getElementById(inputId);
+  if (input) input.value = '';
+  const previewId = inputId === 'miniChatImageInput' ? 'miniChatImagePreview' : 'chatImagePreview';
+  const preview = document.getElementById(previewId);
+  if (preview) { preview.hidden = true; preview.replaceChildren(); }
+}
+
+if (typeof document !== 'undefined') {
+  window.restoreChefChatHistory = restoreChefChatHistory;
+  restoreChefChatHistory('chatMessages');
+  restoreChefChatHistory('miniChatMessages');
+  window.addEventListener('storage', event => {
+    if (event.key === CHEF_CHAT_MEMORY_KEY) {
+      restoreChefChatHistory('chatMessages');
+      restoreChefChatHistory('miniChatMessages');
+    }
+  });
+}
+
 // ============================================================
 // CHEF AI CHAT
 // ============================================================
@@ -41,22 +167,23 @@ function sendChat(options = {}) {
   const inputId = options.inputId || 'chatInput';
   const messagesId = options.messagesId || 'chatMessages';
   const input = document.getElementById(inputId);
-  const message = input.value.trim();
+  const imageInputId = options.mini ? 'miniChatImageInput' : 'chatImageInput';
+  const attachment = chefPendingImages.get(imageInputId) || null;
+  const message = input.value.trim() || (attachment ? 'Tolong lihat foto ini dan bantu aku memahami bahan atau makanan yang terlihat.' : '');
   if (!message) return;
   if (message.length > 1000) {
     appendChatMessage('Pesan maksimal 1.000 karakter. Ringkas pertanyaanmu lalu coba lagi.', 'assistant', messagesId);
     return;
   }
 
-  const history = [...document.querySelectorAll(`#${messagesId} .chat-bubble`)].slice(-6).map(bubble => ({
-    role: bubble.classList.contains('user-bubble') ? 'user' : 'assistant',
-    content: bubble.querySelector('.bubble-content')?.innerText?.trim() || ''
-  })).filter(item => item.content);
+  const history = getChefModelHistory();
 
   input.value = '';
   input.style.height = 'auto';
 
-  appendChatMessage(message, 'user', messagesId);
+  appendChatMessage(message, 'user', messagesId, attachment ? { dataUrl: attachment.dataUrl } : null);
+  addChefChatMemory({ role: 'user', content: message, imageAttached: Boolean(attachment) });
+  if (attachment) clearChefImage(imageInputId);
   if (options.mini) {
     const suggestions = document.getElementById('miniChatSuggestions');
     if (suggestions) suggestions.hidden = true;
@@ -68,9 +195,10 @@ function sendChat(options = {}) {
   const typingId = 'typing-' + Date.now();
   appendTypingIndicator(typingId, messagesId);
 
-  generateAIResponseAsync(message, history).then(response => {
+  generateAIResponseAsync(message, history, attachment).then(response => {
     removeTypingIndicator(typingId);
     appendAIResponse(response, messagesId, options);
+    addChefChatMemory({ role: 'assistant', content: response.text, type: response.type, recipe: response.recipe, references: response.references });
   });
 }
 
@@ -105,16 +233,16 @@ function generateContextualResponse(message, history = []) {
   };
 }
 
-async function generateAIResponseAsync(message, history = []) {
-  const contextualResponse = generateContextualResponse(message, history);
+async function generateAIResponseAsync(message, history = [], image = null) {
+  const contextualResponse = image ? null : generateContextualResponse(message, history);
   if (contextualResponse) return contextualResponse;
 
-  const localResponse = generateAIResponse(message);
+  const localResponse = image ? { type: 'fallback', text: '' } : generateAIResponse(message);
   // The full-page chat and floating Chef both use this shared backend path for
   // free-form conversation. Keep deterministic safety guidance and explicit
   // catalog recipe cards local; heuristic small talk/recipe guesses shouldn't
   // short-circuit the model and diverge between surfaces.
-  if (shouldKeepChefSafetyResponse(message, history, localResponse) || isExplicitCatalogRecipeRequest(message, localResponse)) {
+  if (!image && (shouldKeepChefSafetyResponse(message, history, localResponse) || isExplicitCatalogRecipeRequest(message, localResponse))) {
     return localResponse;
   }
 
@@ -136,7 +264,7 @@ async function generateAIResponseAsync(message, history = []) {
     const response = await fetch('/api/chef', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message, history, references })
+      body: JSON.stringify({ message, history, references, ...(image ? { image: { mimeType: image.mimeType, base64: image.base64 } } : {}) })
     });
     if (!response.ok) throw new Error(`Chef API returned ${response.status}`);
     const data = await response.json();
@@ -144,6 +272,9 @@ async function generateAIResponseAsync(message, history = []) {
     return { type: 'text', text: data.answer.trim(), references: Array.isArray(data.references) ? data.references : [] };
   } catch (error) {
     console.warn('Chef AI fallback unavailable; using local response.', error);
+    if (image) {
+      return { type: 'text', text: 'Aku belum berhasil membaca gambarnya kali ini. Coba kirim ulang sebagai JPG, PNG, atau WebP yang lebih kecil, atau ceritakan isi fotonya dulu ya.' };
+    }
     if (localResponse.type !== 'fallback') return localResponse;
     if (isLawarPlekRequest(message)) {
       return { type: 'text', text: 'Kamu benar—lawar plek itu bukan lawar sayur. Lawar plek biasanya merujuk lawar daging dengan darah segar (seringnya babi), berbeda dari lawar sayur. Karena versi tradisional dapat memakai daging/darah mentah dan berisiko membawa kuman, aku nggak mau menyebut versi matang sebagai plek asli. Aku bisa bantu bikin versi rumahan matang dengan bumbu lawar kalau kamu mau.' };
@@ -755,15 +886,20 @@ function generateAIResponse(message) {
   };
 }
 
-function appendChatMessage(text, role, containerId = 'chatMessages') {
+function appendChatMessage(text, role, containerId = 'chatMessages', attachment = null) {
   const container = document.getElementById(containerId);
   const time = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
   const div = document.createElement('div');
   div.className = `chat-bubble ${role === 'user' ? 'user-bubble' : 'bot-bubble'}`;
 
   if (role === 'user') {
+    const attachmentHTML = attachment?.dataUrl
+      ? `<img class="bubble-attachment-image" src="${escapeHtml(attachment.dataUrl)}" alt="Gambar yang dikirim ke Chef Resepin">`
+      : attachment?.historyPlaceholder
+        ? '<span class="bubble-attachment-note">📷 Foto dikirim sebelumnya · file tidak disimpan</span>'
+        : '';
     div.innerHTML = `
-      <div class="bubble-content"><p>${escapeHtml(text)}</p></div>
+      <div class="bubble-content"><p>${escapeHtml(text)}</p>${attachmentHTML}</div>
       <div class="bubble-avatar"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-user"/></svg></div>
       <span class="bubble-time">${time}</span>
     `;
@@ -776,6 +912,7 @@ function appendChatMessage(text, role, containerId = 'chatMessages') {
   }
 
   container.appendChild(div);
+  div.dataset.chefHistoryEntry = 'true';
   div.style.animation = 'slideIn 0.3s ease';
   container.scrollTop = container.scrollHeight;
 }
@@ -819,6 +956,7 @@ function appendAIResponse(response, containerId = 'chatMessages', options = {}) 
   `;
 
   container.appendChild(div);
+  div.dataset.chefHistoryEntry = 'true';
   div.style.animation = 'slideIn 0.3s ease';
   container.scrollTop = container.scrollHeight;
 }
