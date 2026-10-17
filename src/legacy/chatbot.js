@@ -5,21 +5,53 @@ const CHEF_FREE_MEMORY_TTL_MS = 24 * 60 * 60 * 1000;
 const CHEF_CHAT_MEMORY_LIMIT = 80;
 const CHEF_IMAGE_MAX_BYTES = 4 * 1024 * 1024;
 const chefPendingImages = new Map();
+let chefMemoryExpiryTimer = null;
+let chefMemoryExpiryAt = null;
+
+function clearChefChatMemory() {
+  if (typeof window !== 'undefined' && chefMemoryExpiryTimer !== null) {
+    window.clearTimeout(chefMemoryExpiryTimer);
+  }
+  chefMemoryExpiryTimer = null;
+  chefMemoryExpiryAt = null;
+  try { localStorage.removeItem(CHEF_CHAT_MEMORY_KEY); } catch (_) { /* Storage may be unavailable. */ }
+  if (typeof document !== 'undefined') {
+    document.querySelectorAll('#chatMessages [data-chef-history-entry="true"], #miniChatMessages [data-chef-history-entry="true"]')
+      .forEach(node => node.remove());
+    const suggestions = document.getElementById('miniChatSuggestions');
+    if (suggestions) suggestions.hidden = false;
+  }
+}
+
+function scheduleChefMemoryExpiry(updatedAt) {
+  if (typeof window === 'undefined' || typeof window.setTimeout !== 'function') return;
+  const expiresAt = updatedAt + CHEF_FREE_MEMORY_TTL_MS;
+  if (chefMemoryExpiryTimer !== null && chefMemoryExpiryAt === expiresAt) return;
+  if (chefMemoryExpiryTimer !== null) window.clearTimeout(chefMemoryExpiryTimer);
+  chefMemoryExpiryAt = expiresAt;
+  const delay = Math.max(0, expiresAt - Date.now());
+  chefMemoryExpiryTimer = window.setTimeout(() => {
+    chefMemoryExpiryTimer = null;
+    chefMemoryExpiryAt = null;
+    // Re-read and re-check the timestamp in case the browser clock changed
+    // while this tab was sleeping or backgrounded.
+    readChefChatMemory();
+  }, Math.min(delay + 25, 2147483647));
+}
 
 function readChefChatMemory() {
   try {
     const stored = JSON.parse(localStorage.getItem(CHEF_CHAT_MEMORY_KEY) || 'null');
-    if (!stored || !Array.isArray(stored.messages) || !Number.isFinite(stored.updatedAt)) return [];
-    if (Date.now() - stored.updatedAt >= CHEF_FREE_MEMORY_TTL_MS) {
-      localStorage.removeItem(CHEF_CHAT_MEMORY_KEY);
-      if (typeof document !== 'undefined') {
-        document.querySelectorAll('#chatMessages [data-chef-history-entry="true"], #miniChatMessages [data-chef-history-entry="true"]')
-          .forEach(node => node.remove());
-        const suggestions = document.getElementById('miniChatSuggestions');
-        if (suggestions) suggestions.hidden = false;
-      }
+    if (!stored) return [];
+    if (!Array.isArray(stored.messages) || !Number.isFinite(stored.updatedAt) || stored.updatedAt > Date.now() + 60_000) {
+      clearChefChatMemory();
       return [];
     }
+    if (Date.now() - stored.updatedAt >= CHEF_FREE_MEMORY_TTL_MS) {
+      clearChefChatMemory();
+      return [];
+    }
+    scheduleChefMemoryExpiry(stored.updatedAt);
     return stored.messages.filter(item => item && ['user', 'assistant'].includes(item.role) && typeof item.content === 'string')
       .slice(-CHEF_CHAT_MEMORY_LIMIT);
   } catch (_) { return []; }
@@ -35,9 +67,11 @@ function writeChefChatMemory(messages) {
       reference && typeof reference.title === 'string' && typeof reference.url === 'string' && /^https?:\/\//i.test(reference.url)
     ).map(reference => ({ title: reference.title.slice(0, 140), url: reference.url, snippet: String(reference.snippet || '').slice(0, 300) })) } : {})
   }));
+  const updatedAt = Date.now();
   try {
-    localStorage.setItem(CHEF_CHAT_MEMORY_KEY, JSON.stringify({ updatedAt: Date.now(), messages: safeMessages }));
+    localStorage.setItem(CHEF_CHAT_MEMORY_KEY, JSON.stringify({ updatedAt, messages: safeMessages }));
   } catch (_) { /* Keep the conversation in the current page if storage is full or disabled. */ }
+  scheduleChefMemoryExpiry(updatedAt);
 }
 
 function addChefChatMemory(entry) {
@@ -123,6 +157,10 @@ if (typeof document !== 'undefined') {
       restoreChefChatHistory('chatMessages');
       restoreChefChatHistory('miniChatMessages');
     }
+  });
+  window.addEventListener('focus', () => readChefChatMemory());
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') readChefChatMemory();
   });
 }
 

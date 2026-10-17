@@ -152,3 +152,45 @@ test('free chat memory expires after 24 hours and does not restore image bytes',
   assert.equal(context.testRead().length, 0);
   assert.equal(values.has('resepin-chef-chat-v1'), false);
 });
+
+test('free chat memory clears automatically after one idle day while the page stays open', () => {
+  const values = new Map();
+  const storage = {
+    getItem: key => values.get(key) ?? null,
+    setItem: (key, value) => values.set(key, String(value)),
+    removeItem: key => values.delete(key)
+  };
+  const timers = new Map();
+  let nextTimerId = 0;
+  let now = 1_800_000_000_000;
+  class TestDate extends Date { static now() { return now; } }
+  const restoredBubble = { removed: false, remove() { this.removed = true; } };
+  const suggestions = { hidden: true };
+  const document = {
+    querySelectorAll: () => [restoredBubble],
+    getElementById: id => id === 'miniChatSuggestions' ? suggestions : null,
+    addEventListener() {}
+  };
+  const window = {
+    addEventListener() {},
+    setTimeout(callback, delay) { const id = ++nextTimerId; timers.set(id, { callback, delay }); return id; },
+    clearTimeout(id) { timers.delete(id); }
+  };
+  const context = vm.createContext({ localStorage: storage, document, window, Date: TestDate });
+  for (const file of ['src/legacy/recipes.js', 'src/legacy/chef-prompts.js', 'src/legacy/chatbot.js']) {
+    vm.runInContext(readFileSync(resolve(root, file), 'utf8'), context);
+  }
+  vm.runInContext(`globalThis.testWrite = writeChefChatMemory;`, context);
+  context.testWrite([{ role: 'user', content: 'Hai Chef' }]);
+
+  const [timerId, { callback, delay }] = [...timers.entries()][0];
+  assert.equal(delay, 24 * 60 * 60 * 1000 + 25);
+  now += 24 * 60 * 60 * 1000;
+  timers.delete(timerId); // A browser removes a timer once its callback fires.
+  callback();
+
+  assert.equal(values.has('resepin-chef-chat-v1'), false);
+  assert.equal(restoredBubble.removed, true);
+  assert.equal(suggestions.hidden, false);
+  assert.equal(timers.size, 0);
+});
