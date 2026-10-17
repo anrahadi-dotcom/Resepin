@@ -105,7 +105,10 @@ test('AI recipe grounding uses the actual inventory and checks title/step consis
   const data = await response.json();
   assert.equal(response.status, 200);
   assert.match(capturedUserPrompt, /Indomie goreng, sosis, sama sayur hijau/);
-  assert.match(capturedUserPrompt, /Jangan menganggap telur, bawang, minyak, atau bahan lain ada/);
+  assert.match(capturedUserPrompt, /bedakan kata "tidak punya\/tidak ada" dari stok tersedia/);
+  assert.match(capturedUserPrompt, /minyak hanya boleh masuk bagian opsional/);
+  assert.match(capturedUserPrompt, /masak mi lebih dulu sesuai petunjuk kemasan/);
+  assert.match(capturedUserPrompt, /waktu dan porsi/);
   assert.match(capturedUserPrompt, /judul, daftar bahan, dan setiap langkah cocok/);
   assert.match(capturedUserPrompt, /kalau judul menyebut telur rebus, langkah harus merebus telur/);
   assert.equal(data.answer, 'Mi goreng sosis dan sayur, tanpa telur.');
