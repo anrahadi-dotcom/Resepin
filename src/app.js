@@ -7,13 +7,6 @@ createApp({
       heroIngredientText: '',
       heroSelectedIngredients: [],
       heroSearchMessage: '',
-      heroHeadlineIndex: 0,
-      heroHeadlineTimer: null,
-      heroHeadlines: [
-        { highlight: 'jadi menu', ending: 'istimewa.', label: 'Dari isi dapur, jadi menu istimewa.' },
-        { highlight: 'jadi sajian', ending: 'spesial.', label: 'Dari isi dapur, jadi sajian spesial.' },
-        { highlight: 'jadi kreasi', ending: 'favorit.', label: 'Dari isi dapur, jadi kreasi favorit.' }
-      ],
       heroInView: true,
       heroVisibilityObserver: null,
       heroIngredientOptions: ['Nasi', 'Telur', 'Cabai', 'Tahu', 'Ayam', 'Tempe', 'Jagung', 'Wortel'],
@@ -92,11 +85,6 @@ createApp({
         }, { threshold: 0.05 });
         this.heroVisibilityObserver.observe(hero);
       }
-      this.heroHeadlineTimer = window.setInterval(() => {
-        if (this.activePage !== 'home' || !this.heroInView || document.hidden
-          || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
-        this.heroHeadlineIndex = (this.heroHeadlineIndex + 1) % this.heroHeadlines.length;
-      }, 4800);
       this.heroFavoriteTimer = window.setInterval(() => {
         if (this.activePage !== 'home' || !this.heroInView || document.hidden || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
         this.shuffleHeroFavorites();
@@ -104,7 +92,6 @@ createApp({
     });
   },
   beforeUnmount() {
-    if (this.heroHeadlineTimer) window.clearInterval(this.heroHeadlineTimer);
     if (this.heroFavoriteTimer) window.clearInterval(this.heroFavoriteTimer);
     this.heroVisibilityObserver?.disconnect();
     document.removeEventListener('click', this.closeMenuOnOutside);

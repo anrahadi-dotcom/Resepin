@@ -4169,18 +4169,8 @@ body[data-theme="dark"] .section .gradient-text { @apply [background:linear-grad
   @apply [padding:.12em_.16em_.18em_.14em];
   @apply [margin:0_0_-.18em_-.14em];
 }
-.hero-title-swap-enter-active,
-.hero-title-swap-leave-active { @apply [transition:opacity_.32s_ease,_transform_.32s_ease,_filter_.32s_ease]; }
-.hero-title-swap-enter-from,
-.hero-title-swap-leave-to { @apply [opacity:0]; @apply [filter:blur(5px)]; @apply [transform:translateY(9px)]; }
 @media (max-width: 600px) {
   .hero-copy .hero-title { @apply [line-height:1.1]; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-title-swap-enter-active,
-  .hero-title-swap-leave-active { @apply [transition:none]; }
-  .hero-title-swap-enter-from,
-  .hero-title-swap-leave-to { @apply [filter:none]; @apply [transform:none]; }
 }
 
 /* FreshMenu-inspired recipe tiles with clear food photography and a recipe CTA. */
@@ -4992,7 +4982,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   .collage-card, .collage-card img, .collage-ingredient-strip button { transition-duration: .01ms !important; }
 }
 
-/* Keep the rotating headline inside narrow viewports and reveal its italic side bearings. */
+/* Keep the staggered hero title inside narrow viewports and reveal its side bearings. */
 @media (max-width: 900px) {
   .hero-copy { min-width: 0; }
   .hero-copy .hero-title { box-sizing: border-box; width: 100%; max-width: 100%; overflow: visible; font-size: clamp(2.3rem, 10.7vw, 4rem); letter-spacing: -.055em; }
@@ -5074,17 +5064,12 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     filter .84s cubic-bezier(.22,.72,.22,1) var(--motion-delay,0ms);
 }
 .motion-ready.motion-visible { filter: blur(0); transform: translate3d(0,0,0) scale(1); }
-.hero-title-swap-enter-active,
-.hero-title-swap-leave-active { transition: opacity .46s cubic-bezier(.22,.72,.22,1), transform .58s cubic-bezier(.18,.78,.2,1), filter .48s ease; }
-.hero-title-swap-enter-from,
-.hero-title-swap-leave-to { opacity: 0; filter: blur(4px); transform: translateY(13px); }
 .hero-favorite-card { transition: left .92s cubic-bezier(.18,.78,.2,1), transform .92s cubic-bezier(.18,.78,.2,1), filter .78s ease, box-shadow .28s ease; }
 @media (prefers-reduced-motion: reduce) {
   .recipe-intro { transition: none; }
   .recipe-intro::before, .recipe-intro::after,
   .recipe-intro *, .recipe-intro.is-ready .recipe-intro-progress span { animation: none !important; }
   .motion-ready, .motion-ready.motion-visible { opacity: 1; filter: none; transform: none; transition: none; }
-  .hero-title-swap-enter-active, .hero-title-swap-leave-active { transition: none; }
 }
 
 /* A more tactile, full-page motion pass: a short kitchen vignette, then a staged landing reveal. */
