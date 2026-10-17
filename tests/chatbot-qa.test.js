@@ -77,6 +77,29 @@ test('free-form chats from the full page and floating Chef use the shared AI bac
   }
 });
 
+test('an explicit TikTok search does not short-circuit to a matching local recipe card', async () => {
+  const context = createChatbotContext();
+  const calls = [];
+  context.fetch = async (_url, options) => {
+    const body = JSON.parse(options.body);
+    calls.push(body);
+    return new Response(JSON.stringify(body.action === 'search'
+      ? { references: [{ title: 'Resep nasi goreng TikTok', url: 'https://www.tiktok.com/@chef/video/123', snippet: 'Resep sederhana' }] }
+      : { answer: 'Aku menemukan beberapa resep nasi goreng sederhana di TikTok.', references: [{ title: 'Resep nasi goreng TikTok', url: 'https://www.tiktok.com/@chef/video/123' }] }), {
+      status: 200, headers: { 'Content-Type': 'application/json' }
+    });
+  };
+
+  const message = 'Carikan resep nasi goreng sederhana dari TikTok, kirim tautan sumbernya ya.';
+  const result = await context.testGenerateAsync(message, []);
+  assert.equal(calls.length, 2, 'explicit platform searches should call both search and answer endpoints');
+  assert.equal(calls[0].action, 'search');
+  assert.equal(calls[0].message, message);
+  assert.match(calls[1].references[0].url, /tiktok\.com/);
+  assert.match(result.text, /menemukan beberapa resep/i);
+  assert.equal(result.type, 'text');
+});
+
 test('urgent food safety guidance remains available without an AI request', async () => {
   const context = createChatbotContext();
   let calls = 0;

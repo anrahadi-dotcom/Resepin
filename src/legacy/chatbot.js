@@ -254,6 +254,11 @@ function isExplicitCatalogRecipeRequest(message, response) {
   return normalize(message).includes(normalize(response.recipe.title));
 }
 
+function isExplicitWebLookupRequest(message) {
+  return /\b(?:tiktok|youtube|instagram|cookpad|facebook|reddit|situs|website|web|internet)\b/i.test(message) &&
+    /\b(?:cari|carikan|cariin|telusuri|search|referensi|tautan|link|sumber|lihat|cek|temukan)\b/i.test(message);
+}
+
 function generateContextualResponse(message, history = []) {
   const previousUserMessages = history.filter(item => item.role === 'user').map(item => item.content).join(' ');
   const previousAssistantMessages = history.filter(item => item.role === 'assistant').map(item => item.content).join(' ');
@@ -280,7 +285,8 @@ async function generateAIResponseAsync(message, history = [], image = null) {
   // free-form conversation. Keep deterministic safety guidance and explicit
   // catalog recipe cards local; heuristic small talk/recipe guesses shouldn't
   // short-circuit the model and diverge between surfaces.
-  if (!image && (shouldKeepChefSafetyResponse(message, history, localResponse) || isExplicitCatalogRecipeRequest(message, localResponse))) {
+  if (!image && (shouldKeepChefSafetyResponse(message, history, localResponse) ||
+      (!isExplicitWebLookupRequest(message) && isExplicitCatalogRecipeRequest(message, localResponse)))) {
     return localResponse;
   }
 
