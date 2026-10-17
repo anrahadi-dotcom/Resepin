@@ -119,8 +119,8 @@ test('motor body and oil ingestion gets empathetic first aid even without the AI
   const data = await response.json();
   assert.equal(response.status, 200);
   assert.match(data.answer, /Waduh/);
-  assert.match(data.answer, /jangan dimuntahkan/);
-  assert.match(data.answer, /IGD atau layanan darurat/);
+  assert.match(data.answer, /jangan dimuntahkan|jangan paksa muntah/);
+  assert.match(data.answer, /Hubungi tenaga kesehatan\/IGD|layanan darurat/);
   assert.doesNotMatch(data.answer, /maaf.*tidak bisa membantu/i);
   assert.equal(data.references.length, 1);
   assert.match(data.references[0].url, /poison\.org/);
@@ -142,6 +142,37 @@ test('a symptom follow-up remembers a previously reported oil ingestion', async 
   assert.match(data.answer, /sudah menelan oli\/bahan bodi motor lalu sekarang merasa sakit/);
   assert.match(data.answer, /jangan tunggu chat ini/);
   assert.match(data.answer, /IGD/);
+});
+
+test('a request for web sources after an oil ingestion gets first-aid guidance, not a substitution response', async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async () => new Response(`
+    <a class="result__a" href="https://www.poison.org/articles/my-child-just-took-a-swig-of-motor-oil-173">My child drank motor oil | Poison Control</a>
+    <a class="result__snippet">If motor oil is swallowed, do not induce vomiting.</a>`, { status: 200 });
+  try {
+    const history = [{ role: 'user', content: 'Aku habis makan oli bro' }];
+    const search = await onRequestPost({
+      request: new Request('https://example.test/api/chef', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'search', message: 'Coba cari di sumber bro pertolongan pertamanya gimana ya', history })
+      }), env: {}
+    });
+    const references = (await search.json()).references;
+    const response = await onRequestPost({
+      request: new Request('https://example.test/api/chef', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: 'Coba cari di sumber bro pertolongan pertamanya gimana ya', history, references })
+      }), env: {}
+    });
+    const data = await response.json();
+    assert.equal(response.status, 200);
+    assert.match(data.answer, /jangan paksa muntah/);
+    assert.match(data.answer, /Hubungi tenaga kesehatan/);
+    assert.doesNotMatch(data.answer, /pengganti|bahan masakan/i);
+    assert.match(data.references[0].url, /poison\.org/);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
 });
 
 test('web search carries recent user context for a symptom follow-up', async () => {
@@ -217,6 +248,38 @@ test('web search action accepts a general question and returns source cards befo
     assert.equal(response.status, 200);
     assert.match(decodeURIComponent(searchUrl), /Siapa presiden pertama USA/);
     assert.equal(data.references[0].title, 'George Washington');
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('pronoun follow-up web search is grounded in the latest assistant turn', async () => {
+  const originalFetch = globalThis.fetch;
+  let searchUrl = '';
+  globalThis.fetch = async url => {
+    searchUrl = String(url);
+    return new Response('', { status: 503 });
+  };
+  try {
+    await onRequestPost({
+      request: new Request('https://example.test/api/chef', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'search', message: 'Kapan dia menjabat, bro?',
+          history: [
+            { role: 'user', content: 'Siapa presiden pertama Amerika Serikat?' },
+            { role: 'assistant', content: 'George Washington adalah presiden pertama AS.' },
+            { role: 'user', content: 'George Bush itu presiden ke berapa?' },
+            { role: 'assistant', content: 'George W. Bush adalah presiden ke-43 AS dan menjabat 2001–2009.' }
+          ]
+        })
+      }),
+      env: {}
+    });
+    const query = decodeURIComponent(searchUrl);
+    assert.match(query, /George W\. Bush/);
+    assert.match(query, /Kapan dia menjabat/);
+    assert.doesNotMatch(query, /George Washington/);
   } finally {
     globalThis.fetch = originalFetch;
   }

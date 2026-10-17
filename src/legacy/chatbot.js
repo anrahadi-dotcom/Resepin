@@ -74,7 +74,11 @@ function sendChat(options = {}) {
 
 async function generateAIResponseAsync(message, history = [], typingId = '') {
   const localResponse = generateAIResponse(message);
-  if (localResponse.type !== 'fallback' && !isLawarPlekRequest(message)) return localResponse;
+  const followsNonFoodExposure = history.some(item => item.role === 'user' &&
+    /\b(?:body|bodi)\s+motor\b|\boli(?:\s+(?:motor|bekas))?\b|\bcairan\s+rem\b|\bbensin\b/i.test(item.content) &&
+    /\b(?:makan|dimakan|kemakan|tertelan|menelan|minum|terminum)\b/i.test(item.content)) &&
+    /\b(?:sumber|rujukan|pertolongan|tindakan|gimana|bagaimana|harus apa|apa yang harus|sakit|mual|batuk|tersedak|sesak|muntah|pusing|nyeri|perih)\b/i.test(message);
+  if (localResponse.type !== 'fallback' && !isLawarPlekRequest(message) && !followsNonFoodExposure) return localResponse;
 
   try {
     updateTypingSearch(typingId, 'Menelusuri web…');
@@ -171,7 +175,8 @@ function generateAIResponse(message) {
     if (/sayur|bayam|kangkung|brokoli|sawi|kol|wortel|selada/.test(ingredient)) return 'ganti dengan sayuran lain yang tekstur dan waktu masaknya mirip, seperti kol, sawi, atau wortel. Masukkan sayuran keras lebih dulu.';
     return 'sebutkan jenis masakannya supaya aku bisa pilih pengganti yang rasanya dan fungsinya paling mendekati. Kalau bahan ini hanya pelengkap, biasanya bisa dilewati.';
   };
-  const asksForRecipe = /\b(resep|masak|masakan|makanan|menu|ide|buat apa|bikin apa|mau masak|mau bikin)\b/.test(normalized) ||
+  const asksForRecipe = /\b(resep|masak|memasak|menu|ide|buat apa|bikin apa|mau masak|mau bikin)\b/.test(normalized) ||
+    /\b(?:masakan|makanan)\s+apa\b/.test(normalized) ||
     RECIPES_DB.some(recipe => textHasPhrase(normalized, recipe.title)) ||
     /\b(ayam\s+betutu|ayam\s+sere\s+lemo|ayam\s+sisit\s+sere\s+lemo|ayam\s+bakar\s+(?:khas\s+)?bali|coto|babi\s+guling|lawar|fried\s+chicken|pizza|burger|spaghetti|ramen|sushi|taco|pancake|teriyaki|sate\s+lilit)\b/.test(normalized);
   const explicitRecipeRequest = asksForRecipe;
@@ -190,7 +195,7 @@ function generateAIResponse(message) {
   // not as requests for a recipe or a generic explanation of the assistant.
   if (/\b(?:jawab(?:nya)?|respon(?:s)?(?:\s*(?:mu|nya))?|gaya(?: bicara)?|bahasa(?:nya)?|ngobrol)\b.{0,60}\b(?:asik|asyik|seru|santai|lucu|gaul|ramah)\b/.test(normalized) ||
       /\b(?:asik|asyik|seru|santai|lucu|gaul|ramah)\b.{0,45}\b(?:jawab|respon|ngobrol|dong|ya|aja)\b/.test(normalized)) {
-    return { type: 'text', text: 'Siap 😄 Aku jawab lebih asik dan santai, tapi tetap nyambung. Mau ngobrolin apa?' };
+    return { type: 'text', text: 'Gas, bro 😄 Mau bahas apa? Tanyain aja, aku usahain jawabnya jelas dan nyambung.' };
   }
   if (/\b(?:siapa nama(?:mu)?|nama.{0,20}(?:kamu|mu|chef|respon)|nama kamu siapa|nama chef(?:-nya)?|nama chef resepin|apa nama(?:mu)?|siapa namamu)\b/.test(normalized)) {
     return { type: 'text', text: 'Aku Chef Resepin 😄 Teman ngobrol soal masak dan ide resep.' };
@@ -572,7 +577,7 @@ function generateAIResponse(message) {
   if (asksTechnique && /\b(telur dadar|omelet|omelette)\b/.test(normalized) && /\b(tebal|bantat|mengembang)\b/.test(normalized)) {
     return { type: 'text', text: 'Untuk telur dadar lebih tebal, kocok telur secukupnya, campur sedikit bahan cincang yang sudah ditiriskan, lalu masak dengan api kecil di wajan kecil dan tutup wajan. Jangan terlalu sering dibalik; angkat ketika bagian tengah sudah matang agar tidak kering.' };
   }
-  if (asksTechnique && /\b(terlalu asin|kebanyakan asin|keasinan|masakan asin)\b/.test(normalized)) {
+  if (asksTechnique && /\b(terlalu asin|kebanyakan asin|keasinan|masakan asin|mengurangi rasa asin|rasa asin pada masakan)\b/.test(normalized)) {
     return { type: 'text', text: 'Encerkan kuah dengan sedikit air atau kaldu tanpa garam. Untuk masakan kering, tambah bahan utama tawar seperti sayur, kentang, atau nasi; sedikit asam/gula hanya menyeimbangkan rasa dan tidak menghilangkan garam. Tambahkan bertahap sambil dicicipi.' };
   }
   if (asksTechnique && /\b(amis|bau amis)\b/.test(normalized) && /\b(ayam|daging|ikan)\b/.test(normalized)) {
@@ -788,18 +793,19 @@ function appendTypingIndicator(id, containerId = 'chatMessages') {
   const container = document.getElementById(containerId);
   const div = document.createElement('div');
   div.id = id;
-  div.className = 'chat-bubble bot-bubble chef-search-loading';
+  div.className = 'chef-typing-stack';
   div.innerHTML = `
-    <div class="bubble-avatar"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
-    <div class="bubble-content" style="padding:14px 18px">
-      <div class="typing-dots">
-        <span></span><span></span><span></span>
+    <div class="chat-bubble bot-bubble chef-search-loading">
+      <div class="bubble-avatar"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
+      <div class="bubble-content chef-search-dots" aria-label="Chef sedang berpikir">
+        <div class="typing-dots"><span></span><span></span><span></span></div>
       </div>
     </div>
     <div class="chef-search-activity" hidden>
       <span class="chef-search-globe" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span>
       <div class="chef-search-progress">
         <span class="typing-search-status" role="status">Menelusuri web…</span>
+        <span class="chef-search-track" aria-hidden="true"><span></span></span>
         <div class="chef-search-page" aria-hidden="true"></div>
       </div>
     </div>

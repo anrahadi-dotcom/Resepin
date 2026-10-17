@@ -893,13 +893,17 @@ span.recipe-img-photo {
 .typing-dots span:nth-child(2) { @apply [animation-delay:0.2s]; }
 .typing-dots span:nth-child(3) { @apply [animation-delay:0.4s]; }
 .typing-search-status { @apply [font-size:0.72rem]; @apply [color:var(--text-muted)]; }
-.chef-search-loading { @apply [width:min(80%,520px)]; @apply [max-width:80%]; @apply [flex-wrap:wrap]; }
-.chef-search-activity { @apply [display:flex]; @apply [align-items:flex-start]; @apply [gap:9px]; @apply [flex:0_0_calc(100%_-_48px)]; @apply [margin-left:48px]; @apply [margin-top:-4px]; @apply [color:var(--text-muted)]; }
+.chef-typing-stack { @apply [display:flex]; @apply [width:min(80%,520px)]; @apply [max-width:80%]; @apply [flex-direction:column]; @apply [align-self:flex-start]; @apply [gap:7px]; }
+.chef-search-loading { @apply [width:100%]; @apply [max-width:100%]; @apply [align-items:center]; }
+.chef-search-dots { @apply [padding:11px_16px]; }
+.chef-search-activity { @apply [display:flex]; @apply [align-items:center]; @apply [gap:9px]; @apply [width:calc(100%_-_48px)]; @apply [margin-left:48px]; @apply [color:var(--text-muted)]; }
 .chef-search-activity[hidden] { display:none; }
-.chef-search-globe { @apply [display:grid]; @apply [width:25px]; @apply [height:25px]; @apply [place-items:center]; @apply [flex-shrink:0]; @apply [border:1px_solid_var(--border)]; @apply [border-radius:50%]; @apply [background:var(--bg-surface)]; }
+.chef-search-globe { @apply [display:grid]; @apply [width:28px]; @apply [height:28px]; @apply [place-items:center]; @apply [flex-shrink:0]; @apply [border:1px_solid_var(--border)]; @apply [border-radius:50%]; @apply [background:var(--bg-surface)]; @apply [color:var(--primary)]; @apply [box-shadow:0_2px_6px_rgba(45,32,17,0.06)]; }
 .chef-search-globe svg, .chef-search-page-icon svg { @apply [width:15px]; @apply [height:15px]; @apply [fill:none]; @apply [stroke:currentColor]; @apply [stroke-width:1.7]; @apply [stroke-linecap:round]; @apply [stroke-linejoin:round]; }
-.chef-search-globe svg { @apply [animation:chefGlobeSpin_3s_linear_infinite]; }
+.chef-search-globe svg { @apply [animation:chefGlobeSpin_2.4s_linear_infinite]; }
 .chef-search-progress { @apply [min-width:0]; @apply [flex:1]; @apply [display:flex]; @apply [flex-direction:column]; @apply [gap:5px]; }
+.chef-search-track { @apply [position:relative]; @apply [display:block]; @apply [width:100%]; @apply [height:3px]; @apply [overflow:hidden]; @apply [border-radius:999px]; @apply [background:var(--border)]; }
+.chef-search-track span { @apply [position:absolute]; @apply [inset:0_auto_0_-38%]; @apply [width:38%]; @apply [border-radius:inherit]; @apply [background:linear-gradient(90deg,transparent,var(--primary),transparent)]; @apply [animation:chefSearchSweep_1.4s_ease-in-out_infinite]; }
 .chef-search-page { @apply [display:flex]; @apply [align-items:center]; @apply [gap:8px]; @apply [width:fit-content]; @apply [max-width:100%]; @apply [padding:7px_10px]; @apply [border:1px_solid_var(--border)]; @apply [border-radius:11px]; @apply [background:color-mix(in_srgb,var(--bg-card)_88%,transparent)]; @apply [box-shadow:0_3px_10px_rgba(45,32,17,0.06)]; @apply [opacity:0]; @apply [transform:translateX(10px)_scale(0.97)]; }
 .chef-search-page.is-arriving { @apply [animation:chefPageHop_0.42s_cubic-bezier(0.2,0.75,0.25,1)_forwards]; }
 .chef-search-page-icon { @apply [display:grid]; @apply [width:23px]; @apply [height:23px]; @apply [place-items:center]; @apply [flex-shrink:0]; @apply [border-radius:7px]; @apply [background:var(--bg-surface)]; @apply [color:var(--primary)]; }
@@ -909,11 +913,12 @@ span.recipe-img-photo {
 .chef-search-page-arrow { @apply [margin-left:4px]; @apply [font-size:0.75rem]; }
 @keyframes chefPageHop { 0% { opacity:0; transform:translateX(12px) scale(0.97); } 60% { opacity:1; transform:translateX(-2px) scale(1.01); } 100% { opacity:1; transform:translateX(0) scale(1); } }
 @keyframes chefGlobeSpin { to { transform:rotate(360deg); } }
+@keyframes chefSearchSweep { 0% { transform:translateX(0); } 100% { transform:translateX(370%); } }
 .chef-web-references { @apply [display:flex]; @apply [flex-wrap:wrap]; @apply [gap:6px]; @apply [align-items:center]; @apply [margin-top:10px]; @apply [padding-top:9px]; @apply [border-top:1px_solid_var(--border)]; @apply [font-size:0.72rem]; @apply [color:var(--text-muted)]; }
 .chef-web-references a { @apply [padding:4px_8px]; @apply [border:1px_solid_var(--border)]; @apply [border-radius:999px]; @apply [color:var(--text-secondary)]; @apply [text-decoration:none]; }
 .chef-web-references a:hover { @apply [color:var(--primary)]; @apply [border-color:var(--primary)]; }
 @media (prefers-reduced-motion: reduce) {
-  .chef-search-globe svg, .chef-search-page.is-arriving { animation:none; }
+  .typing-dots span, .chef-search-globe svg, .chef-search-track span, .chef-search-page.is-arriving { animation:none; }
   .chef-search-page { opacity:1; transform:none; }
 }
 @keyframes typingBounce {
@@ -1841,7 +1846,6 @@ html { @apply [scroll-behavior:auto]; }
 .modal-steps li::before { @apply [background:var(--bg-surface)]; @apply [border:0]; }
 .modal-ai-tip { @apply [background:var(--bg-surface)]; @apply [border-color:var(--border)]; }
 .modal-content { @apply [animation:none]; }
-.typing-dots span { @apply [animation:none]; }
 .scan-corner-tl, .scan-corner-tr, .scan-corner-bl, .scan-corner-br { @apply [display:none]; }
 .det-box { @apply [border-width:1px]; @apply [border-radius:3px]; @apply [box-shadow:none]; }
 .camera-viewport { @apply [background:var(--bg-surface)]; }

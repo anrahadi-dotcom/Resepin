@@ -59,7 +59,7 @@ test('casual response-style requests are acknowledged directly, not misread as r
   ]) {
     const answer = context.testGenerate(prompt);
     assert.equal(answer.type, 'text', prompt);
-    assert.match(answer.text, /lebih asik dan santai|lebih santai/i, prompt);
+    assert.match(answer.text, /Gas, bro|nyambung/i, prompt);
     assert.doesNotMatch(answer.text, /resep|bahan yang tersedia|aku bisa bantu cari/i, prompt);
   }
 });
@@ -124,6 +124,19 @@ test('lawar plek stays distinct from lawar sayur and goes to the web-backed reci
   assert.equal(answer.type, 'fallback');
 });
 
+test('a follow-up asking for ingestion first aid cannot fall into the ingredient-substitution route', () => {
+  const source = readFileSync(resolve(root, 'src/legacy/chatbot.js'), 'utf8');
+  assert.match(source, /followsNonFoodExposure/);
+  assert.match(source, /pertolongan\|tindakan\|gimana/);
+});
+
+test('salt-fix technique questions do not get routed to an unrelated recipe card', () => {
+  const context = createChatbotContext();
+  const answer = context.testGenerate('Bagaimana cara mengurangi rasa asin pada masakan?');
+  assert.notEqual(answer.type, 'recipe');
+  assert.match(answer.text, /air atau kaldu|bahan utama tawar/);
+});
+
 test('web search runs before the answer and shows animated source pages below the typing bubble', () => {
   const source = readFileSync(resolve(root, 'src/legacy/chatbot.js'), 'utf8');
   const styles = readFileSync(resolve(root, 'css/style.css'), 'utf8');
@@ -132,8 +145,12 @@ test('web search runs before the answer and shows animated source pages below th
   assert.match(source, /Memantapkan jawaban/);
   assert.match(source, /body: JSON\.stringify\(\{ message, history, references \}\)/);
   assert.match(source, /class="chef-search-activity" hidden/);
+  assert.match(source, /chef-typing-stack/);
   assert.match(source, /chef-search-globe/);
+  assert.match(source, /chef-search-track/);
   assert.match(source, /chef-web-references/);
   assert.match(styles, /chefPageHop/);
+  assert.match(styles, /chefSearchSweep/);
+  assert.doesNotMatch(styles, /\.typing-dots span\s*\{\s*@apply \[animation:none\]/);
   assert.match(styles, /chef-search-activity\[hidden\]/);
 });
