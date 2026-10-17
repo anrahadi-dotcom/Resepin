@@ -5996,7 +5996,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     width: 100%;
     height: 100%;
     max-width: none;
-    z-index: 4;
+    z-index: 5;
     text-align: center !important;
     pointer-events: none;
   }
@@ -6007,32 +6007,79 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     margin: 0 !important;
     transform: translateX(-50%);
   }
-  #page-home .hero-paper-theme .hero-copy .hero-title {
+  #page-home .hero-paper-theme > #heroApp > .hero-title {
     position: absolute;
-    z-index: 4;
-    top: 37%;
-    left: 50%;
-    width: min(1380px, calc(100vw - 72px));
+    inset: 0;
+    z-index: auto;
+    width: 100%;
+    height: 100%;
     max-width: none !important;
     margin: 0 !important;
-    transform: translate(-50%, -50%);
+    transform: none;
+    overflow: visible;
+    pointer-events: none;
     color: var(--hero-paper-red) !important;
+    font-family: "Cormorant Garamond", Georgia, serif !important;
     font-size: clamp(4rem, 7vw, 7.4rem) !important;
     font-weight: 400 !important;
-    line-height: .82 !important;
-    letter-spacing: -.045em !important;
+    line-height: .9 !important;
+    letter-spacing: -.025em !important;
     text-align: center !important;
     text-transform: uppercase;
-    mix-blend-mode: multiply;
-    opacity: .92;
+  }
+  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-line,
+  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-swap-line {
+    position: absolute;
+    display: block;
+    width: max-content;
+    max-width: none;
+    margin: 0;
+    white-space: nowrap;
+    font-weight: 400 !important;
+    font-style: normal !important;
+    line-height: .9 !important;
+    letter-spacing: -.025em !important;
     text-shadow: 0 1px 0 color-mix(in srgb, var(--hero-paper-sheet-light) 20%, transparent);
   }
-  #page-home .hero-paper-theme .hero-copy .hero-title .title-gradient {
+  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-line {
+    top: 26%;
+    left: 50%;
+    z-index: 3;
+    translate: -50% 0;
+    font-size: clamp(3.8rem, 6.2vw, 6.8rem) !important;
+    mix-blend-mode: multiply;
+    opacity: .9;
+  }
+  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-swap {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  #page-home .hero-paper-theme > #heroApp > .hero-title .title-gradient {
+    top: 42%;
+    left: 50%;
+    z-index: 1;
+    translate: -50% 0;
+    font-size: clamp(4rem, 7vw, 7.2rem) !important;
+    mix-blend-mode: multiply;
+    opacity: .92;
+  }
+  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-swap-line:not(.title-gradient) {
+    top: 33%;
+    left: 65%;
+    z-index: 3;
+    font-size: clamp(3.1rem, 5.2vw, 5.4rem) !important;
+    mix-blend-mode: multiply;
+    opacity: .9;
+  }
+  #page-home .hero-paper-theme > #heroApp > .hero-title .title-gradient {
     padding: 0;
     margin: 0;
     font-weight: 400 !important;
     font-style: normal !important;
-    letter-spacing: -.045em;
+    letter-spacing: -.025em !important;
     background-image: linear-gradient(110deg, var(--hero-paper-red), #b7351e 52%, var(--hero-paper-red));
   }
   #page-home .hero-paper-theme .hero-favorites {
@@ -6075,7 +6122,9 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 
 @media (max-width: 1100px) and (min-width: 901px) {
   #page-home .hero-paper-theme .hero-copy-eyebrow { top: 12%; }
-  #page-home .hero-paper-theme .hero-copy .hero-title { font-size: clamp(4rem, 8vw, 6.2rem) !important; }
+  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-line { font-size: clamp(3.2rem, 6vw, 5.4rem) !important; }
+  #page-home .hero-paper-theme > #heroApp > .hero-title .title-gradient { font-size: clamp(3.5rem, 6.5vw, 5.8rem) !important; }
+  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-swap-line:not(.title-gradient) { left: 61%; font-size: clamp(2.8rem, 4.8vw, 4.6rem) !important; }
   #page-home .hero-paper-theme .hero-favorites { width: min(760px, 84vw); }
   #page-home .hero-paper-theme .hero-favorite-card.is-slot-1 { width: min(58%, 390px) !important; }
 }
@@ -6111,22 +6160,49 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     margin: 0 0 13px !important;
     transform: none;
   }
-  #page-home .hero-paper-theme .hero-copy .hero-title {
+  #page-home .hero-paper-theme > #heroApp > .hero-title {
     position: relative;
-    top: auto;
-    left: auto;
+    inset: auto;
     width: 100%;
+    height: auto;
+    z-index: auto;
     max-width: none !important;
     margin: 0 !important;
     color: var(--hero-paper-ink) !important;
-    font-size: clamp(2.65rem, 10vw, 4.5rem);
-    line-height: .88;
-    letter-spacing: -.065em;
+    font-family: "Cormorant Garamond", Georgia, serif !important;
+    font-size: clamp(2.65rem, 10vw, 4.5rem) !important;
+    font-weight: 400 !important;
+    line-height: .9 !important;
+    letter-spacing: -.025em !important;
     text-align: center !important;
     text-transform: uppercase;
     transform: none;
   }
-  #page-home .hero-paper-theme .hero-copy .hero-title .title-gradient { background-image: linear-gradient(110deg, var(--hero-paper-red), var(--hero-paper-ink) 72%); }
+  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-line,
+  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-swap-line {
+    position: relative;
+    inset: auto;
+    display: block;
+    width: auto;
+    max-width: 100%;
+    margin: 0;
+    translate: none;
+    white-space: normal;
+    font-size: 1em !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+    line-height: .92 !important;
+    letter-spacing: -.025em !important;
+    text-align: center !important;
+  }
+  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-swap {
+    position: relative;
+    inset: auto;
+    display: block;
+    width: auto;
+    height: auto;
+  }
+  #page-home .hero-paper-theme > #heroApp > .hero-title .title-gradient { background-image: linear-gradient(110deg, var(--hero-paper-red), var(--hero-paper-ink) 72%); }
   #page-home .hero-paper-theme .hero-favorites {
     position: relative;
     top: auto;
