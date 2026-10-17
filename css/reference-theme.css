@@ -5476,3 +5476,222 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   #page-home .hero-paper-theme .hero-cta-link a { transition: none !important; }
   #page-home .hero-paper-theme .hero-favorite-card:hover { transform: none !important; }
 }
+
+/* Editorial split hero: keep the paper treatment, give copy and recipes a clear hierarchy. */
+#page-home .hero-paper-theme .hero-content {
+  width: min(1380px, calc(100% - 112px));
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  justify-items: stretch;
+  gap: clamp(34px, 5.2vw, 88px);
+}
+#page-home .hero-paper-theme .hero-copy {
+  width: 100%;
+  max-width: 600px;
+  text-align: left !important;
+}
+#page-home .hero-paper-theme .hero-copy-eyebrow { margin-bottom: 20px; }
+#page-home .hero-paper-theme .hero-copy .hero-title {
+  max-width: 680px;
+  margin: 0 0 15px !important;
+  text-align: left !important;
+  font-size: clamp(3.35rem, 5.6vw, 6.25rem);
+  line-height: .95;
+  letter-spacing: -.06em;
+}
+#page-home .hero-paper-theme .hero-copy .hero-title .title-gradient {
+  background-image: linear-gradient(112deg, var(--hero-paper-red), var(--hero-paper-ink) 62%, var(--hero-paper-sage));
+}
+#page-home .hero-paper-theme .hero-desc {
+  max-width: 470px;
+  margin: 0 0 25px !important;
+  text-align: left !important;
+}
+#page-home .hero-paper-theme .hero-cta { justify-content: flex-start !important; }
+#page-home .hero-paper-theme .hero-favorites {
+  width: 100%;
+  max-width: 730px;
+  justify-self: stretch;
+  justify-items: stretch !important;
+  gap: 8px;
+  text-align: left !important;
+}
+#page-home .hero-paper-theme .hero-favorites-heading {
+  justify-items: start !important;
+  gap: 4px;
+  padding-inline: 2px;
+}
+#page-home .hero-paper-theme .hero-favorites-heading > span {
+  gap: 7px;
+  font-size: .58rem;
+  letter-spacing: .16em;
+}
+#page-home .hero-paper-theme .hero-favorites-heading > span b {
+  color: var(--hero-paper-sage);
+  font-size: .58rem;
+}
+#page-home .hero-paper-theme .hero-favorites-heading h2 {
+  font-size: clamp(1.15rem, 1.7vw, 1.48rem);
+  letter-spacing: -.025em;
+}
+#page-home .hero-paper-theme .hero-favorite-stage {
+  display: block !important;
+  width: 100%;
+  height: clamp(348px, 47svh, 440px);
+  max-width: none;
+  overflow: visible;
+  perspective: 1250px;
+}
+#page-home .hero-paper-theme .hero-favorite-card {
+  position: absolute !important;
+  top: 50% !important;
+  min-width: 0;
+  height: 78%;
+  border: 1px solid color-mix(in srgb, var(--hero-paper-ink) 15%, transparent);
+  border-top: 4px solid var(--hero-paper-red);
+  border-radius: 24px 24px 14px 24px;
+  box-shadow: 0 24px 48px rgba(45,0,0,.18), 0 5px 14px rgba(45,0,0,.09);
+  transform-origin: 50% 74%;
+  transition: left .75s cubic-bezier(.2,.76,.2,1), transform .65s cubic-bezier(.2,.76,.2,1), filter .45s ease, box-shadow .35s ease;
+}
+#page-home .hero-paper-theme .hero-favorite-card.is-slot-0 {
+  left: 20% !important;
+  z-index: 1;
+  width: 48%;
+  height: 76%;
+  filter: brightness(.92) saturate(.86);
+  transform: translate(-50%, -50%) rotate(-8deg) scale(.94);
+}
+#page-home .hero-paper-theme .hero-favorite-card.is-slot-1 {
+  left: 51% !important;
+  z-index: 3;
+  width: 64%;
+  height: 98%;
+  filter: none;
+  transform: translate(-50%, -50%) rotate(-1deg) scale(1.015);
+}
+#page-home .hero-paper-theme .hero-favorite-card.is-slot-2 {
+  left: 82% !important;
+  z-index: 2;
+  width: 48%;
+  height: 76%;
+  filter: brightness(.92) saturate(.86);
+  transform: translate(-50%, -50%) rotate(8deg) scale(.94);
+}
+#page-home .hero-paper-theme .hero-favorite-card img {
+  inset: 0 0 auto;
+  width: 100%;
+  height: 68%;
+  border-radius: 20px 20px 0 0;
+  object-position: center 44%;
+  transition: transform .8s cubic-bezier(.2,.7,.2,1), filter .45s ease;
+}
+#page-home .hero-paper-theme .hero-favorite-shade {
+  inset: 0 0 auto;
+  height: 68%;
+  border-radius: 20px 20px 0 0;
+  background: linear-gradient(180deg, rgba(45,0,0,.28), transparent 42%, rgba(45,0,0,.08));
+}
+#page-home .hero-paper-theme .hero-favorite-badge {
+  top: 14px;
+  left: 14px;
+  padding: 7px 10px;
+  border-color: rgba(250,246,233,.6);
+  color: var(--hero-paper-sheet-light);
+  background: rgba(45,0,0,.72);
+  font-size: .52rem;
+}
+#page-home .hero-paper-theme .hero-favorite-badge i { background: var(--hero-paper-sage); }
+#page-home .hero-paper-theme .hero-favorite-copy {
+  right: 0;
+  bottom: 0;
+  left: 0;
+  min-height: 32%;
+  gap: 7px;
+  padding: 14px 17px 15px;
+  border-top: 1px solid color-mix(in srgb, var(--hero-paper-ink) 9%, transparent);
+  border-radius: 0 0 13px 23px;
+  background: var(--hero-paper-card);
+}
+#page-home .hero-paper-theme .hero-favorite-copy strong { font-size: clamp(1rem, 1.35vw, 1.25rem); line-height: 1.08; }
+#page-home .hero-paper-theme .hero-favorite-copy small { font-size: .68rem; }
+#page-home .hero-paper-theme .hero-favorite-cta {
+  min-height: 33px;
+  margin-top: 2px;
+  border-radius: 6px 999px 999px 999px;
+  background: var(--hero-paper-red);
+}
+#page-home .hero-paper-theme .hero-favorite-card.is-slot-0:hover,
+#page-home .hero-paper-theme .hero-favorite-card.is-slot-2:hover {
+  z-index: 4;
+  filter: brightness(1.01) saturate(1);
+  transform: translate(-50%, -53%) rotate(0) scale(.99);
+}
+#page-home .hero-paper-theme .hero-favorite-card.is-slot-1:hover {
+  z-index: 5;
+  box-shadow: 0 32px 58px rgba(45,0,0,.24), 0 0 0 3px color-mix(in srgb, var(--hero-paper-sage) 56%, transparent);
+  transform: translate(-50%, -53%) rotate(0) scale(1.035);
+}
+#page-home .hero-paper-theme .hero-favorite-card:hover img,
+#page-home .hero-paper-theme .hero-favorite-card:focus-visible img { transform: scale(1.055); }
+#page-home .hero-paper-theme .hero-favorites-controls {
+  justify-content: flex-start;
+  gap: 12px;
+  padding-inline: 2px;
+}
+
+/* Restore the desktop scroll story: hero one holds still, then hero two rises over it. */
+@media (min-width: 901px) and (min-height: 680px) and (prefers-reduced-motion: no-preference) {
+  #page-home > .hero.hero-paper-theme { position: sticky; top: 0; z-index: 2; }
+  #page-home > .hero-scroll-runway { height: 150svh; }
+}
+
+@media (max-width: 1100px) and (min-width: 901px) {
+  #page-home .hero-paper-theme .hero-content { width: calc(100% - 84px); gap: 34px; }
+  #page-home .hero-paper-theme .hero-copy .hero-title { font-size: clamp(3.05rem, 5.2vw, 4.6rem); }
+  #page-home .hero-paper-theme .hero-favorite-stage { height: clamp(330px, 45svh, 398px); }
+}
+
+@media (max-width: 900px) {
+  #page-home .hero-paper-theme .hero-content {
+    width: min(760px, calc(100% - 42px));
+    align-items: start;
+    justify-items: stretch;
+    gap: 26px;
+  }
+  #page-home .hero-paper-theme .hero-copy { max-width: 690px; }
+  #page-home .hero-paper-theme .hero-copy .hero-title { max-width: 720px; font-size: clamp(3.15rem, 8.2vw, 4.65rem); }
+  #page-home .hero-paper-theme .hero-desc { max-width: 540px; margin: 0 0 20px !important; }
+  #page-home .hero-paper-theme .hero-favorites { max-width: 690px; }
+  #page-home .hero-paper-theme .hero-favorite-stage { height: clamp(332px, 48vw, 390px); }
+  #page-home .hero-paper-theme .hero-favorite-card.is-slot-0,
+  #page-home .hero-paper-theme .hero-favorite-card.is-slot-2 { width: 53%; height: 78%; }
+  #page-home .hero-paper-theme .hero-favorite-card.is-slot-0 { left: 19% !important; }
+  #page-home .hero-paper-theme .hero-favorite-card.is-slot-1 { left: 50% !important; width: 72%; height: 98%; }
+  #page-home .hero-paper-theme .hero-favorite-card.is-slot-2 { left: 81% !important; }
+}
+
+@media (max-width: 600px) {
+  #page-home .hero-paper-theme .hero-content { width: calc(100% - 38px); gap: 22px; padding: 126px 0 74px; }
+  #page-home .hero-paper-theme .hero-copy-eyebrow { margin-bottom: 15px; }
+  #page-home .hero-paper-theme .hero-copy .hero-title { max-width: 500px; font-size: clamp(2.75rem, 11vw, 3.65rem); line-height: .98; }
+  #page-home .hero-paper-theme .hero-desc { max-width: 430px; margin-bottom: 17px !important; font-size: .93rem; line-height: 1.58; }
+  #page-home .hero-paper-theme .hero-favorites { gap: 5px; }
+  #page-home .hero-paper-theme .hero-favorites-heading h2 { font-size: 1.22rem; }
+  #page-home .hero-paper-theme .hero-favorite-stage { width: calc(100% - 4px); height: 318px; margin-inline: 2px; }
+  #page-home .hero-paper-theme .hero-favorite-card.is-slot-0,
+  #page-home .hero-paper-theme .hero-favorite-card.is-slot-2 { width: 72%; height: 76%; }
+  #page-home .hero-paper-theme .hero-favorite-card.is-slot-0 { left: 15% !important; }
+  #page-home .hero-paper-theme .hero-favorite-card.is-slot-1 { left: 50% !important; width: 79%; height: 98%; }
+  #page-home .hero-paper-theme .hero-favorite-card.is-slot-2 { left: 85% !important; }
+  #page-home .hero-paper-theme .hero-favorite-copy { min-height: 35%; padding: 11px 13px 12px; }
+  #page-home .hero-paper-theme .hero-favorite-copy strong { font-size: .98rem; }
+  #page-home .hero-paper-theme .hero-favorite-cta { min-height: 29px; font-size: .61rem; }
+  #page-home .hero-paper-theme .hero-favorite-badge { top: 10px; left: 10px; padding: 6px 8px; font-size: .45rem; }
+  #page-home .hero-paper-theme .hero-favorites-controls { gap: 8px; }
+  #page-home .hero-paper-theme .hero-favorites-controls small { font-size: .56rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #page-home > .hero.hero-paper-theme { position: relative !important; top: auto !important; }
+  #page-home > .hero-scroll-runway { display: none !important; }
+}
