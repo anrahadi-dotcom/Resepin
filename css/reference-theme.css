@@ -4049,7 +4049,7 @@ body[data-theme="dark"] .section .gradient-text { @apply [background:linear-grad
   .hero-favorite-copy small { @apply [flex-wrap:wrap]; @apply [gap:4px]; @apply [font-size:.62rem]; }
 }
 
-@media (min-width: 601px) and (max-width: 1100px) {
+@media (min-width: 601px) and (max-width: 900px) {
   .hero { @apply [height:auto]; @apply [min-height:100svh]; }
   .hero-container { @apply [height:auto]; @apply [min-height:100svh]; }
   .hero-content {

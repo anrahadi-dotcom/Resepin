@@ -86,7 +86,7 @@ p { @apply [line-height:1.7]; @apply [color:var(--text-secondary)]; }
 a { @apply [color:inherit]; @apply [text-decoration:none]; }
 
 /* ---- Container ---- */
-.container { @apply [max-width:1200px];  @apply [padding:0_24px]; }
+.container { @apply [width:100%]; @apply [max-width:1200px]; @apply [margin-inline:auto]; @apply [padding:0_24px]; }
 
 /* ---- Section ---- */
 
