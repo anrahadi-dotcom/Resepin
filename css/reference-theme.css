@@ -5996,7 +5996,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     width: 100%;
     height: 100%;
     max-width: none;
-    z-index: 1;
+    z-index: 4;
     text-align: center !important;
     pointer-events: none;
   }
@@ -6009,7 +6009,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   }
   #page-home .hero-paper-theme .hero-copy .hero-title {
     position: absolute;
-    z-index: 1;
+    z-index: 4;
     top: 37%;
     left: 50%;
     width: min(1380px, calc(100vw - 72px));
@@ -6031,7 +6031,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   }
   #page-home .hero-paper-theme .hero-favorites {
     position: absolute;
-    z-index: 3;
+    z-index: 2;
     top: 51%;
     left: 50%;
     display: grid;
