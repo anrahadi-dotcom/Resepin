@@ -35,6 +35,58 @@ test('AI prompt preserves requested recipe count and ingredient constraints', as
   assert.equal(capturedOptions.max_tokens, 1100);
 });
 
+test('AI prompt explicitly follows through when a user accepts a recipe offer', async () => {
+  let capturedUserPrompt = '';
+  let capturedSystemPrompt = '';
+  const response = await onRequestPost({
+    request: new Request('https://example.test/api/chef', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: 'gasss',
+        history: [
+          { role: 'user', content: 'Aku cuma ada mie instan.' },
+          { role: 'assistant', content: 'Mau aku kasih resep mie instan yang lebih enak?' }
+        ]
+      })
+    }),
+    env: { AI: { run: async (_model, options) => {
+      capturedUserPrompt = options.messages.filter(item => item.role === 'user').at(-1)?.content || '';
+      capturedSystemPrompt = options.messages.find(item => item.role === 'system')?.content || '';
+      return { response: 'Mi goreng sederhana dengan langkah memasak.' };
+    } } }
+  });
+  const data = await response.json();
+  assert.equal(response.status, 200);
+  assert.match(capturedSystemPrompt, /jangan memuji atau mengulang daftar bahannya/);
+  assert.match(capturedSystemPrompt, /tunaikan tawaran itu saat itu juga/);
+  assert.match(capturedSystemPrompt, /Jangan pernah mengaku makanan sudah dimasak\/siap/);
+  assert.match(capturedUserPrompt, /menanggapi tawaran resep\/langkahmu/i);
+  assert.match(capturedUserPrompt, /takaran sederhana/i);
+  assert.equal(data.answer, 'Mi goreng sederhana dengan langkah memasak.');
+});
+
+test('AI prompt turns offered-recipe ingredient replies into a usable recipe request', async () => {
+  let capturedUserPrompt = '';
+  const response = await onRequestPost({
+    request: new Request('https://example.test/api/chef', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: 'Gasin aku ada Indomie goreng, sosis, sama sayur hijau.',
+        history: [{ role: 'assistant', content: 'Mau aku kasih resep mi instan yang lebih enak?' }]
+      })
+    }),
+    env: { AI: { run: async (_model, options) => {
+      capturedUserPrompt = options.messages.filter(item => item.role === 'user').at(-1)?.content || '';
+      return { response: 'Mi goreng sosis sayur, berikut langkahnya.' };
+    } } }
+  });
+  const data = await response.json();
+  assert.equal(response.status, 200);
+  assert.match(capturedUserPrompt, /tunaikan sekarang/i);
+  assert.match(capturedUserPrompt, /bahan yang pengguna sebut/);
+  assert.equal(data.answer, 'Mi goreng sosis sayur, berikut langkahnya.');
+});
+
 test('food safety questions about dangerous substances are framed as help, not refusal', async () => {
   let capturedUserPrompt = '';
   const response = await onRequestPost({

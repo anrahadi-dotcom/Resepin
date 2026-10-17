@@ -31,6 +31,30 @@ function sendMiniPrompt(text) {
   sendMiniChat();
 }
 
+function isShortChefAcknowledgement(message) {
+  const normalized = String(message || '').toLowerCase().trim().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/(.)\1{2,}/g, '$1$1');
+  return /^(?:oke|ok|iya|ya|boleh|siap|gas+|lanjut|sip|yuk|hayuk)(?:\s+(?:deh|dong|bro|kak|bang|sis|lanjut|ya|boleh|aja))*[!?.\s]*$/.test(normalized);
+}
+
+function shouldFulfillRecipeOffer(message, history = []) {
+  const lastAssistantMessage = [...history].reverse().find(item => item.role === 'assistant')?.content || '';
+  if (!/\b(?:resep|masak|masakan|ide menu|menu)\b/i.test(lastAssistantMessage)) return false;
+
+  const offeredRecipe = /\b(?:mau|ingin|pengen|bisa|akan|coba)\b/i.test(lastAssistantMessage) &&
+    /\b(?:resep|masak|masakan|menu|langkah)\b/i.test(lastAssistantMessage);
+  if (!offeredRecipe) return false;
+
+  if (isShortChefAcknowledgement(message)) return true;
+  const asksForIngredients = /\b(?:bahan|punya|tersedia|di dapur|masak hari ini)\b/i.test(lastAssistantMessage) &&
+    /\b(?:ceritakan|sebutkan|apa|punya|tersedia)\b/i.test(lastAssistantMessage);
+  const mentionsFoodIngredients = /\b(?:mie|mi|indomie|telur|nasi|ayam|sosis|sayur|kangkung|bayam|wortel|kentang|tahu|tempe|ikan|udang|roti|jamur|kol|tomat|bawang|cabai|cab[eé]|santan|terasi|kecap|garam|tepung|minyak)\b/i.test(message);
+  const givesIngredients = mentionsFoodIngredients && (
+    /\b(?:ada|punya|tersedia|sisa|bahan(?:ku)?|stok)\b/i.test(message) || asksForIngredients
+  );
+  return givesIngredients;
+}
+
 function sendChat(options = {}) {
   const inputId = options.inputId || 'chatInput';
   const messagesId = options.messagesId || 'chatMessages';
@@ -89,7 +113,8 @@ async function generateAIResponseAsync(message, history = []) {
   const contextualResponse = generateContextualResponse(message, history);
   if (contextualResponse) return contextualResponse;
 
-  const localResponse = generateAIResponse(message);
+  const followsRecipeOffer = shouldFulfillRecipeOffer(message, history);
+  const localResponse = followsRecipeOffer ? { type: 'fallback' } : generateAIResponse(message);
   const followsNonFoodExposure = history.some(item => item.role === 'user' &&
     /\b(?:body|bodi)\s+motor\b|\boli(?:\s+(?:motor|bekas))?\b|\bcairan\s+rem\b|\bbensin\b/i.test(item.content) &&
     /\b(?:makan|dimakan|kemakan|tertelan|menelan|minum|terminum)\b/i.test(item.content)) &&
@@ -398,7 +423,7 @@ function generateAIResponse(message) {
   }
 
   const asksSubstitution = /\b(ganti|diganti|pengganti|alternatif|substitusi|tidak ada|tidak punya|nggak ada|nggak punya|gak ada|gak punya|ga ada|ga punya|enggak ada|enggak punya|habis|kehabisan|kosong)\b/.test(normalized);
-  const isAcknowledgement = /^(oke|ok|iya|ya|boleh|siap|gas|lanjut|sip)(?:\s+(?:deh|dong|bro|kak|bang|sis|lanjut|ya|boleh|aja))*[!?.\s]*$/.test(normalized.trim());
+  const isAcknowledgement = isShortChefAcknowledgement(normalized);
   if (awaitingSubstitutionIngredient && !asksSubstitution && !explicitRecipeRequest) {
     if (isAcknowledgement) {
       return { type: 'text', text: CHEF_PROMPTS.substitutionFollowup };

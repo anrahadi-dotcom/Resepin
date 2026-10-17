@@ -20,8 +20,36 @@ function createChatbotContext() {
   }
   vm.runInContext('globalThis.testGenerate = generateAIResponse', context);
   vm.runInContext('globalThis.testGenerateContextual = generateContextualResponse', context);
+  vm.runInContext('globalThis.testGenerateAsync = generateAIResponseAsync', context);
   return context;
 }
+
+test('Chef follows through on a recipe offer instead of claiming the meal is ready', async () => {
+  const context = createChatbotContext();
+  const calls = [];
+  context.fetch = async (_url, options) => {
+    const body = JSON.parse(options.body);
+    calls.push(body);
+    return new Response(JSON.stringify(body.action === 'search'
+      ? { references: [] }
+      : { answer: 'Bikin mi goreng sosis sayur: rebus mi, tumis sosis dan sayur, masukkan mi dan bumbu, lalu aduk sampai matang.' }), {
+      status: 200, headers: { 'Content-Type': 'application/json' }
+    });
+  };
+
+  const history = [
+    { role: 'assistant', content: 'Mie instan masih bisa jadi bahan masak kreatif, bro. Mau aku kasih resep mie instan yang lebih lezat?' }
+  ];
+  for (const reply of ['gas', 'gasss', 'oke bro', 'gasin aku ada Indomie goreng, sosis, sama sayur hijau']) {
+    calls.length = 0;
+    const result = await context.testGenerateAsync(reply, history);
+    assert.equal(result.type, 'text', reply);
+    assert.match(result.text, /rebus mi|tumis sosis/i, reply);
+    assert.equal(calls.length, 2, reply + ' should be sent through the contextual AI route');
+    assert.equal(calls[1].message, reply);
+    assert.doesNotMatch(result.text, /makan siangnya sudah siap|mau aku kasih resep/i, reply);
+  }
+});
 
 test('cooked chicken storage questions use cooked leftovers guidance', () => {
   const context = createChatbotContext();
