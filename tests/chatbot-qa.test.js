@@ -51,6 +51,42 @@ test('Chef follows through on a recipe offer instead of claiming the meal is rea
   }
 });
 
+test('free-form chats from the full page and floating Chef use the shared AI backend', async () => {
+  const context = createChatbotContext();
+  const source = readFileSync(resolve(root, 'src/legacy/chatbot.js'), 'utf8');
+  assert.match(source, /function sendMiniChat\(\)\s*\{\s*sendChat\(\{ inputId: 'miniChatInput', messagesId: 'miniChatMessages', mini: true \}\);/);
+  assert.match(source, /generateAIResponseAsync\(message, history\)/);
+
+  const calls = [];
+  context.fetch = async (_url, options) => {
+    const body = JSON.parse(options.body);
+    calls.push(body);
+    return new Response(JSON.stringify(body.action === 'search'
+      ? { references: [] }
+      : { answer: 'CORE AI: aku jawab langsung dari konteks chat ini.' }), {
+      status: 200, headers: { 'Content-Type': 'application/json' }
+    });
+  };
+
+  for (const message of ['Hai bro', 'Aku cuma punya Indomie, sosis, dan sayur hijau.']) {
+    calls.length = 0;
+    const result = await context.testGenerateAsync(message, []);
+    assert.equal(result.text, 'CORE AI: aku jawab langsung dari konteks chat ini.', message);
+    assert.equal(calls.length, 2, `${message} should pass through search and answer APIs`);
+    assert.equal(calls[1].message, message);
+  }
+});
+
+test('urgent food safety guidance remains available without an AI request', async () => {
+  const context = createChatbotContext();
+  let calls = 0;
+  context.fetch = async () => { calls += 1; throw new Error('Should stay local for urgent safety guidance'); };
+  const result = await context.testGenerateAsync('Makanan saya kena racun tikus, masih aman?', []);
+  assert.equal(result.type, 'text');
+  assert.match(result.text, /Jangan dimakan atau dicicipi/);
+  assert.equal(calls, 0);
+});
+
 test('cooked chicken storage questions use cooked leftovers guidance', () => {
   const context = createChatbotContext();
   const answer = context.testGenerate('Bagaimana cara menyimpan ayam matang di kulkas dengan aman sampai besok?');
@@ -155,8 +191,9 @@ test('lawar plek stays distinct from lawar sayur and goes to the web-backed reci
 
 test('a follow-up asking for ingestion first aid cannot fall into the ingredient-substitution route', () => {
   const source = readFileSync(resolve(root, 'src/legacy/chatbot.js'), 'utf8');
-  assert.match(source, /followsNonFoodExposure/);
-  assert.match(source, /pertolongan\|tindakan\|gimana/);
+  assert.match(source, /shouldKeepChefSafetyResponse/);
+  assert.match(source, /jangan paksa muntah/);
+  assert.match(source, /IGD/);
 });
 
 test('salt-fix technique questions do not get routed to an unrelated recipe card', () => {

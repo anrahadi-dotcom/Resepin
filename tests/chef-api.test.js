@@ -87,6 +87,53 @@ test('AI prompt turns offered-recipe ingredient replies into a usable recipe req
   assert.equal(data.answer, 'Mi goreng sosis sayur, berikut langkahnya.');
 });
 
+test('AI recipe grounding uses the actual inventory and checks title/step consistency', async () => {
+  let capturedUserPrompt = '';
+  const response = await onRequestPost({
+    request: new Request('https://example.test/api/chef', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: 'Aku cuma punya Indomie goreng, sosis, sama sayur hijau.',
+        history: [{ role: 'assistant', content: 'Ceritakan bahan yang kamu punya di dapur.' }]
+      })
+    }),
+    env: { AI: { run: async (_model, options) => {
+      capturedUserPrompt = options.messages.filter(item => item.role === 'user').at(-1)?.content || '';
+      return { response: 'Mi goreng sosis dan sayur, tanpa telur.' };
+    } } }
+  });
+  const data = await response.json();
+  assert.equal(response.status, 200);
+  assert.match(capturedUserPrompt, /Indomie goreng, sosis, sama sayur hijau/);
+  assert.match(capturedUserPrompt, /Jangan menganggap telur, bawang, minyak, atau bahan lain ada/);
+  assert.match(capturedUserPrompt, /judul, daftar bahan, dan setiap langkah cocok/);
+  assert.match(capturedUserPrompt, /kalau judul menyebut telur rebus, langkah harus merebus telur/);
+  assert.equal(data.answer, 'Mi goreng sosis dan sayur, tanpa telur.');
+});
+
+test('recipe grounding carries the earlier ingredient list through an accepted offer', async () => {
+  let capturedUserPrompt = '';
+  const response = await onRequestPost({
+    request: new Request('https://example.test/api/chef', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: 'gasss',
+        history: [
+          { role: 'user', content: 'Aku cuma punya mi instan dan sosis.' },
+          { role: 'assistant', content: 'Mau aku kasih resep mi instan yang lebih enak?' }
+        ]
+      })
+    }),
+    env: { AI: { run: async (_model, options) => {
+      capturedUserPrompt = options.messages.filter(item => item.role === 'user').at(-1)?.content || '';
+      return { response: 'Mi goreng sosis.' };
+    } } }
+  });
+  assert.equal(response.status, 200);
+  assert.match(capturedUserPrompt, /mi instan dan sosis/);
+  assert.match(capturedUserPrompt, /Bahan tersedia yang benar-benar disebut pengguna/);
+});
+
 test('food safety questions about dangerous substances are framed as help, not refusal', async () => {
   let capturedUserPrompt = '';
   const response = await onRequestPost({
