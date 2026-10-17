@@ -6020,12 +6020,13 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     pointer-events: none;
     color: var(--hero-paper-red) !important;
     font-family: "Cormorant Garamond", Georgia, serif !important;
-    font-size: clamp(4rem, 7vw, 7.4rem) !important;
-    font-weight: 400 !important;
+    font-size: clamp(4rem, 7.4vw, 7.8rem) !important;
+    font-weight: 500 !important;
     line-height: .9 !important;
     letter-spacing: -.025em !important;
     text-align: center !important;
     text-transform: uppercase;
+    -webkit-text-fill-color: var(--hero-paper-red) !important;
   }
   #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-line,
   #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-swap-line {
@@ -6035,20 +6036,21 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     max-width: none;
     margin: 0;
     white-space: nowrap;
-    font-weight: 400 !important;
+    font-weight: 500 !important;
     font-style: normal !important;
     line-height: .9 !important;
-    letter-spacing: -.025em !important;
-    text-shadow: 0 1px 0 color-mix(in srgb, var(--hero-paper-sheet-light) 20%, transparent);
+    letter-spacing: -.02em !important;
+    color: var(--hero-paper-red) !important;
+    -webkit-text-fill-color: var(--hero-paper-red) !important;
+    text-shadow: 0 1px 0 color-mix(in srgb, var(--hero-paper-sheet-light) 28%, transparent);
   }
   #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-line {
-    top: 26%;
-    left: 50%;
+    top: 20%;
+    left: 9%;
     z-index: 3;
-    translate: -50% 0;
-    font-size: clamp(3.8rem, 6.2vw, 6.8rem) !important;
-    mix-blend-mode: multiply;
-    opacity: .9;
+    translate: none;
+    font-size: clamp(4.6rem, 8.2vw, 8.6rem) !important;
+    opacity: 1;
   }
   #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-swap {
     position: absolute;
@@ -6058,29 +6060,30 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     height: 100%;
   }
   #page-home .hero-paper-theme > #heroApp > .hero-title .title-gradient {
-    top: 42%;
-    left: 50%;
+    top: 33%;
+    left: 60%;
     z-index: 1;
-    translate: -50% 0;
-    font-size: clamp(4rem, 7vw, 7.2rem) !important;
-    mix-blend-mode: multiply;
-    opacity: .92;
+    translate: none;
+    font-size: clamp(4.4rem, 7.4vw, 7.8rem) !important;
+    opacity: 1;
   }
   #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-swap-line:not(.title-gradient) {
-    top: 33%;
-    left: 65%;
+    top: 44%;
+    left: 10%;
     z-index: 3;
-    font-size: clamp(3.1rem, 5.2vw, 5.4rem) !important;
-    mix-blend-mode: multiply;
-    opacity: .9;
+    font-size: clamp(3.8rem, 6.3vw, 6.4rem) !important;
+    opacity: 1;
   }
   #page-home .hero-paper-theme > #heroApp > .hero-title .title-gradient {
     padding: 0;
     margin: 0;
-    font-weight: 400 !important;
+    font-weight: 500 !important;
     font-style: normal !important;
-    letter-spacing: -.025em !important;
-    background-image: linear-gradient(110deg, var(--hero-paper-red), #b7351e 52%, var(--hero-paper-red));
+    letter-spacing: -.02em !important;
+    background: none !important;
+    background-clip: initial !important;
+    -webkit-background-clip: initial !important;
+    -webkit-text-fill-color: var(--hero-paper-red) !important;
   }
   #page-home .hero-paper-theme .hero-favorites {
     position: absolute;
@@ -6122,9 +6125,9 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 
 @media (max-width: 1100px) and (min-width: 901px) {
   #page-home .hero-paper-theme .hero-copy-eyebrow { top: 12%; }
-  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-line { font-size: clamp(3.2rem, 6vw, 5.4rem) !important; }
-  #page-home .hero-paper-theme > #heroApp > .hero-title .title-gradient { font-size: clamp(3.5rem, 6.5vw, 5.8rem) !important; }
-  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-swap-line:not(.title-gradient) { left: 61%; font-size: clamp(2.8rem, 4.8vw, 4.6rem) !important; }
+  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-line { top: 19%; left: 7%; font-size: clamp(3.8rem, 7vw, 5.8rem) !important; }
+  #page-home .hero-paper-theme > #heroApp > .hero-title .title-gradient { top: 34%; left: 61%; font-size: clamp(3.25rem, 5.8vw, 4.9rem) !important; }
+  #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-swap-line:not(.title-gradient) { top: 46%; left: 7%; font-size: clamp(3rem, 5.6vw, 4.7rem) !important; }
   #page-home .hero-paper-theme .hero-favorites { width: min(760px, 84vw); }
   #page-home .hero-paper-theme .hero-favorite-card.is-slot-1 { width: min(58%, 390px) !important; }
 }
@@ -6171,12 +6174,13 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     color: var(--hero-paper-ink) !important;
     font-family: "Cormorant Garamond", Georgia, serif !important;
     font-size: clamp(2.65rem, 10vw, 4.5rem) !important;
-    font-weight: 400 !important;
+    font-weight: 500 !important;
     line-height: .9 !important;
-    letter-spacing: -.025em !important;
+    letter-spacing: -.02em !important;
     text-align: center !important;
     text-transform: uppercase;
     transform: none;
+    -webkit-text-fill-color: var(--hero-paper-red) !important;
   }
   #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-line,
   #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-swap-line {
@@ -6189,11 +6193,13 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     translate: none;
     white-space: normal;
     font-size: 1em !important;
-    font-weight: 400 !important;
+    font-weight: 500 !important;
     font-style: normal !important;
     line-height: .92 !important;
-    letter-spacing: -.025em !important;
+    letter-spacing: -.02em !important;
     text-align: center !important;
+    color: var(--hero-paper-red) !important;
+    -webkit-text-fill-color: var(--hero-paper-red) !important;
   }
   #page-home .hero-paper-theme > #heroApp > .hero-title .hero-title-swap {
     position: relative;
@@ -6202,7 +6208,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     width: auto;
     height: auto;
   }
-  #page-home .hero-paper-theme > #heroApp > .hero-title .title-gradient { background-image: linear-gradient(110deg, var(--hero-paper-red), var(--hero-paper-ink) 72%); }
+  #page-home .hero-paper-theme > #heroApp > .hero-title .title-gradient { background: none !important; -webkit-background-clip: initial !important; background-clip: initial !important; color: var(--hero-paper-red) !important; -webkit-text-fill-color: var(--hero-paper-red) !important; }
   #page-home .hero-paper-theme .hero-favorites {
     position: relative;
     top: auto;
