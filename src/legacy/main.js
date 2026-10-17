@@ -332,8 +332,8 @@ function updateHomeScrollStory() {
     hero.classList.toggle('is-scroll-story', Boolean(scrollSequenceEnabled));
     if (scrollSequenceEnabled) {
       const storyStart = window.scrollY + home.getBoundingClientRect().top;
-      // Keep the first hero pinned while each card gets its own longer scroll beat.
-      // The next hero enters from below after the last card has finished.
+      // Keep the first hero pinned with one centered recipe visual before the
+      // next hero takes over. The recipe itself stays visible throughout.
       sequenceProgress = Math.min(1, Math.max(0, (window.scrollY - storyStart) / (viewport * 2.5)));
       const hintFade = Math.min(1, Math.max(0, (sequenceProgress - 0.94) / 0.06));
       if (scrollHint) {
@@ -343,23 +343,12 @@ function updateHomeScrollStory() {
         const cueColor = [246, 238, 219].map((channel, index) => Math.round(channel + ([109, 8, 8][index] - channel) * colorProgress));
         scrollHint.style.setProperty('--scroll-hint-color', `rgb(${cueColor.join(',')})`);
       }
-      const revealOnScroll = (element, start, finish) => {
-        if (!element) return;
-        const linear = Math.min(1, Math.max(0, (sequenceProgress - start) / (finish - start)));
-        const eased = 1 - Math.pow(1 - linear, 3);
-        element.style.setProperty('--hero-seq-opacity', eased.toFixed(3));
-        element.style.setProperty('--hero-seq-y', `${((1 - eased) * 22).toFixed(1)}px`);
-        element.style.pointerEvents = eased > 0.98 ? '' : 'none';
-      };
-      // Keep copy static; only the recipe cards reveal in sequence while the
-      // hero stays pinned, before the next section takes over.
+      // Keep the hero copy and the single recipe visual visible. Scrolling
+      // controls the pinned section handoff, not a per-card reveal sequence.
       hero.querySelectorAll('.hero-desc, .hero-cta, .hero-favorites').forEach(element => {
         element.style.removeProperty('--hero-seq-opacity');
         element.style.removeProperty('--hero-seq-y');
         element.style.removeProperty('pointer-events');
-      });
-      favorites?.querySelectorAll('.hero-favorite-card').forEach((card, index) => {
-        revealOnScroll(card, 0.03 + index * 0.27, 0.17 + index * 0.27);
       });
     } else {
       scrollHint?.style.removeProperty('opacity');
@@ -379,14 +368,12 @@ function updateHomeScrollStory() {
     favorites?.style.setProperty('--hero-favorites-scroll-y', `${Math.round(foregroundProgress * 34)}px`);
     favorites?.style.setProperty('--hero-favorites-scroll-opacity', (1 - foregroundProgress * 0.72).toFixed(3));
     scene?.style.setProperty('--hero-scene-scroll-y', `${Math.round(foregroundProgress * 48)}px`);
-    favorites?.querySelectorAll('.hero-favorite-card').forEach((card, index) => {
-      const outer = index === 0 ? -1 : index === 2 ? 1 : 0;
-      const lift = foregroundProgress * (outer === 0 ? -124 : 40);
-      card.style.setProperty('--scroll-card-x', `${(foregroundProgress * outer * Math.min(118, viewport * 0.12)).toFixed(1)}px`);
-      card.style.setProperty('--scroll-card-y', `${lift.toFixed(1)}px`);
-      card.style.setProperty('--scroll-card-scale', (outer === 0 ? 1 + foregroundProgress * 0.28 : 1 - foregroundProgress * 0.46).toFixed(3));
-      card.style.setProperty('--scroll-card-rotation', `${(foregroundProgress * outer * 9).toFixed(2)}deg`);
-      card.style.setProperty('--scroll-card-depth', `${(foregroundProgress * (outer === 0 ? 110 : -100)).toFixed(1)}px`);
+    favorites?.querySelectorAll('.hero-favorite-card').forEach(card => {
+      card.style.setProperty('--scroll-card-x', '0px');
+      card.style.setProperty('--scroll-card-y', `${(foregroundProgress * -16).toFixed(1)}px`);
+      card.style.setProperty('--scroll-card-scale', (1 + foregroundProgress * 0.035).toFixed(3));
+      card.style.setProperty('--scroll-card-rotation', '0deg');
+      card.style.setProperty('--scroll-card-depth', `${(foregroundProgress * 16).toFixed(1)}px`);
     });
   }
 

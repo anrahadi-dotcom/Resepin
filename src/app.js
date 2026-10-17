@@ -69,6 +69,9 @@ createApp({
     },
     heroFavoriteRecipes() {
       return this.heroFavoriteOrder.map(id => RECIPES_DB.find(recipe => recipe.id === id)).filter(Boolean);
+    },
+    heroFeaturedRecipe() {
+      return this.heroFavoriteRecipes[0] || null;
     }
   },
   watch: {

@@ -5964,6 +5964,20 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 #page-home .hero-paper-theme .hero-favorite-card:hover img,
 #page-home .hero-paper-theme .hero-favorite-card:focus-visible img { filter: saturate(1.06); }
 #page-home .hero-paper-theme .hero-favorites-controls { position: relative; z-index: 3; margin-top: 2px; }
+#page-home .hero-paper-theme .hero-feature-swap-enter-active,
+#page-home .hero-paper-theme .hero-feature-swap-leave-active {
+  transition: opacity .32s ease, transform .48s cubic-bezier(.2,.72,.2,1), filter .32s ease;
+}
+#page-home .hero-paper-theme .hero-favorite-card.is-slot-1.hero-feature-swap-enter-from {
+  opacity: 0 !important;
+  filter: blur(8px);
+  transform: translate(-50%, -46%) rotate(-1deg) scale(.97) !important;
+}
+#page-home .hero-paper-theme .hero-favorite-card.is-slot-1.hero-feature-swap-leave-to {
+  opacity: 0 !important;
+  filter: blur(8px);
+  transform: translate(-50%, -54%) rotate(1deg) scale(1.02) !important;
+}
 
 @media (min-width: 901px) {
   #page-home .hero-paper-theme .hero-content {
@@ -6060,7 +6074,9 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   #page-home .hero-paper-scene .hero-topographic-map path { animation: none !important; stroke-dashoffset: 0; }
   #page-home .hero-paper-theme .hero-favorite-card,
   #page-home .hero-paper-theme .hero-favorite-card img,
-  #page-home .hero-paper-theme .hero-feature-orbit { transition: none !important; animation: none !important; }
+  #page-home .hero-paper-theme .hero-feature-orbit,
+  #page-home .hero-paper-theme .hero-feature-swap-enter-active,
+  #page-home .hero-paper-theme .hero-feature-swap-leave-active { transition: none !important; animation: none !important; }
   #page-home .hero-paper-theme .hero-favorite-card.is-slot-0,
   #page-home .hero-paper-theme .hero-favorite-card.is-slot-1 { transform: translate(-50%, -50%) !important; }
 }
