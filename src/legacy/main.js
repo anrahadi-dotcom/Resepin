@@ -379,9 +379,6 @@ function updateHomeScrollStory() {
     favorites?.style.setProperty('--hero-favorites-scroll-y', `${Math.round(foregroundProgress * 34)}px`);
     favorites?.style.setProperty('--hero-favorites-scroll-opacity', (1 - foregroundProgress * 0.72).toFixed(3));
     scene?.style.setProperty('--hero-scene-scroll-y', `${Math.round(foregroundProgress * 48)}px`);
-    const heroVideo = scene?.querySelector('.hero-scene-video');
-    heroVideo?.style.setProperty('--hero-video-scroll-y', `${(scrollSequenceEnabled ? sequenceProgress * 40 : 0).toFixed(1)}px`);
-    heroVideo?.style.setProperty('--hero-video-scroll-scale', (1.035 + (scrollSequenceEnabled ? sequenceProgress * 0.08 : 0)).toFixed(3));
     favorites?.querySelectorAll('.hero-favorite-card').forEach((card, index) => {
       const outer = index === 0 ? -1 : index === 2 ? 1 : 0;
       const lift = foregroundProgress * (outer === 0 ? -124 : 40);

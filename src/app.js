@@ -14,8 +14,6 @@ createApp({
         { highlight: 'jadi sajian', ending: 'spesial.', label: 'Dari isi dapur, jadi sajian spesial.' },
         { highlight: 'jadi kreasi', ending: 'favorit.', label: 'Dari isi dapur, jadi kreasi favorit.' }
       ],
-      heroVideoPlaying: false,
-      heroVideoUserChoice: null,
       heroInView: true,
       heroVisibilityObserver: null,
       heroIngredientOptions: ['Nasi', 'Telur', 'Cabai', 'Tahu', 'Ayam', 'Tempe', 'Jagung', 'Wortel'],
@@ -76,27 +74,21 @@ createApp({
   watch: {
     floatingChefChatOpen(isOpen, wasOpen) {
       if (!isOpen && wasOpen) this.$nextTick(() => document.querySelector('.floating-chef-button')?.focus());
-    },
-    activePage() {
-      this.$nextTick(() => this.syncHeroVideo());
     }
   },
   mounted() {
     window.resepinApp = this;
     document.addEventListener('click', this.closeMenuOnOutside);
     document.addEventListener('keydown', this.closeMenuOnEscape);
-    document.addEventListener('visibilitychange', this.syncHeroVideo);
     this.$nextTick(() => {
       window.refreshMotionReveals?.();
       const hero = document.querySelector('#page-home .hero');
       if (hero && 'IntersectionObserver' in window) {
         this.heroVisibilityObserver = new IntersectionObserver(([entry]) => {
           this.heroInView = entry.isIntersecting;
-          this.syncHeroVideo();
         }, { threshold: 0.05 });
         this.heroVisibilityObserver.observe(hero);
       }
-      this.syncHeroVideo();
       this.heroHeadlineTimer = window.setInterval(() => {
         if (this.activePage !== 'home' || !this.heroInView || document.hidden
           || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
@@ -114,35 +106,8 @@ createApp({
     this.heroVisibilityObserver?.disconnect();
     document.removeEventListener('click', this.closeMenuOnOutside);
     document.removeEventListener('keydown', this.closeMenuOnEscape);
-    document.removeEventListener('visibilitychange', this.syncHeroVideo);
   },
   methods: {
-    syncHeroVideo() {
-      const video = document.querySelector('.hero-scene-video');
-      if (!video) return;
-      const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-      const optedInToMotion = this.heroVideoUserChoice === 'playing';
-      const shouldPlay = this.activePage === 'home'
-        && this.heroInView
-        && !document.hidden
-        && this.heroVideoUserChoice !== 'paused'
-        && (!reducedMotion || optedInToMotion);
-      if (!shouldPlay) {
-        video.pause();
-        this.heroVideoPlaying = false;
-        return;
-      }
-      video.muted = true;
-      video.play().then(() => {
-        this.heroVideoPlaying = true;
-      }).catch(() => {
-        this.heroVideoPlaying = false;
-      });
-    },
-    toggleHeroVideo() {
-      this.heroVideoUserChoice = this.heroVideoPlaying ? 'paused' : 'playing';
-      this.syncHeroVideo();
-    },
     searchHeroDemo() {
       this.heroIngredientText = '';
       this.heroSearchMessage = '';
