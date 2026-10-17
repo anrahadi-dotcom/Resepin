@@ -6020,10 +6020,10 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     pointer-events: none;
     color: var(--hero-paper-red) !important;
     font-family: "Cormorant Garamond", Georgia, serif !important;
-    font-size: clamp(4rem, 7.4vw, 7.8rem) !important;
+    font-size: clamp(3.6rem, 6.6vw, 6.8rem) !important;
     font-weight: 500 !important;
     line-height: .9 !important;
-    letter-spacing: -.025em !important;
+    letter-spacing: -.018em !important;
     text-align: center !important;
     text-transform: uppercase;
     -webkit-text-fill-color: var(--hero-paper-red) !important;
@@ -6046,10 +6046,10 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   }
   #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-line {
     top: 20%;
-    left: 9%;
+    left: 10%;
     z-index: 3;
     translate: none;
-    font-size: clamp(4.6rem, 8.2vw, 8.6rem) !important;
+    font-size: clamp(3.9rem, 6.8vw, 7.1rem) !important;
     opacity: 1;
   }
   #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-swap {
@@ -6060,18 +6060,18 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     height: 100%;
   }
   #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .title-gradient {
-    top: 33%;
-    left: 60%;
+    top: 32%;
+    left: 32%;
     z-index: 1;
     translate: none;
-    font-size: clamp(4.4rem, 7.4vw, 7.8rem) !important;
+    font-size: clamp(3.7rem, 6.2vw, 6.5rem) !important;
     opacity: 1;
   }
   #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-swap-line:not(.title-gradient) {
     top: 44%;
-    left: 10%;
+    left: 62%;
     z-index: 3;
-    font-size: clamp(3.8rem, 6.3vw, 6.4rem) !important;
+    font-size: clamp(3.2rem, 5.2vw, 5.5rem) !important;
     opacity: 1;
   }
   #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .title-gradient {
@@ -6125,9 +6125,9 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 
 @media (max-width: 1100px) and (min-width: 901px) {
   #page-home .hero-paper-theme .hero-copy-eyebrow { top: 12%; }
-  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-line { top: 19%; left: 7%; font-size: clamp(3.8rem, 7vw, 5.8rem) !important; }
-  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .title-gradient { top: 34%; left: 61%; font-size: clamp(3.25rem, 5.8vw, 4.9rem) !important; }
-  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-swap-line:not(.title-gradient) { top: 46%; left: 7%; font-size: clamp(3rem, 5.6vw, 4.7rem) !important; }
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-line { top: 19%; left: 12%; font-size: clamp(3.35rem, 6vw, 5rem) !important; }
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .title-gradient { top: 34%; left: 31%; font-size: clamp(2.95rem, 5.1vw, 4.2rem) !important; }
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-swap-line:not(.title-gradient) { top: 46%; left: 62%; font-size: clamp(2.8rem, 4.6vw, 3.9rem) !important; }
   #page-home .hero-paper-theme .hero-favorites { width: min(760px, 84vw); }
   #page-home .hero-paper-theme .hero-favorite-card.is-slot-1 { width: min(58%, 390px) !important; }
 }
@@ -6173,7 +6173,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     margin: 0 !important;
     color: var(--hero-paper-ink) !important;
     font-family: "Cormorant Garamond", Georgia, serif !important;
-    font-size: clamp(2.65rem, 10vw, 4.5rem) !important;
+    font-size: clamp(2.45rem, 9.2vw, 4rem) !important;
     font-weight: 500 !important;
     line-height: .9 !important;
     letter-spacing: -.02em !important;
