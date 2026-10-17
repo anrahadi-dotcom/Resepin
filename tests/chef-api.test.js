@@ -71,11 +71,20 @@ test('lawar plek search results guide a distinct, safe recipe response and are r
     <a class="result__a" href="https://food.example/lawar-plek">Lawar Plek Bali</a>
     <a class="result__snippet">Lawar plek menggunakan daging dan darah segar.</a>`, { status: 200 });
   try {
+    const searchResponse = await onRequestPost({
+      request: new Request('https://example.test/api/chef', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'search', message: 'Bro aku mau resep lawar plek' })
+      }),
+      env: {}
+    });
+    const searched = await searchResponse.json();
+    assert.equal(searched.references.length, 1);
     const response = await onRequestPost({
       request: new Request('https://example.test/api/chef', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: 'Bro aku mau resep lawar plek' })
+        body: JSON.stringify({ message: 'Bro aku mau resep lawar plek', references: searched.references })
       }),
       env: { AI: { run: async (_model, options) => {
         capturedSystem = options.messages.find(item => item.role === 'system')?.content || '';
@@ -95,27 +104,119 @@ test('lawar plek search results guide a distinct, safe recipe response and are r
 });
 
 test('motor body and oil ingestion gets empathetic first aid even without the AI binding', async () => {
-  const originalFetch = globalThis.fetch;
-  globalThis.fetch = async () => new Response(`
-    <a class="result__a" href="https://www.poison.org/articles/my-child-just-took-a-swig-of-motor-oil-173">Poison Control: Motor oil swallowed</a>
-    <a class="result__snippet">Do not induce vomiting after swallowing motor oil.</a>`, { status: 200 });
-  try {
-    const response = await onRequestPost({
+  const response = await onRequestPost({
       request: new Request('https://example.test/api/chef', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: 'Aku makan body motor bercampur oli' })
+        body: JSON.stringify({ message: 'Aku makan body motor bercampur oli', references: [{
+          title: 'Poison Control: Motor oil swallowed',
+          url: 'https://www.poison.org/articles/my-child-just-took-a-swig-of-motor-oil-173',
+          snippet: 'Do not induce vomiting after swallowing motor oil.'
+        }] })
+      }),
+      env: {}
+    });
+  const data = await response.json();
+  assert.equal(response.status, 200);
+  assert.match(data.answer, /Waduh/);
+  assert.match(data.answer, /jangan dimuntahkan/);
+  assert.match(data.answer, /IGD atau layanan darurat/);
+  assert.doesNotMatch(data.answer, /maaf.*tidak bisa membantu/i);
+  assert.equal(data.references.length, 1);
+  assert.match(data.references[0].url, /poison\.org/);
+});
+
+test('a symptom follow-up remembers a previously reported oil ingestion', async () => {
+  const response = await onRequestPost({
+    request: new Request('https://example.test/api/chef', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: 'Sekarang aku mual dan sakit, harus gimana?',
+        history: [{ role: 'user', content: 'Aku tadi makan oli motor.' }]
+      })
+    }),
+    env: {}
+  });
+  const data = await response.json();
+  assert.equal(response.status, 200);
+  assert.match(data.answer, /sudah menelan oli\/bahan bodi motor lalu sekarang merasa sakit/);
+  assert.match(data.answer, /jangan tunggu chat ini/);
+  assert.match(data.answer, /IGD/);
+});
+
+test('web search carries recent user context for a symptom follow-up', async () => {
+  const originalFetch = globalThis.fetch;
+  let searchUrl = '';
+  globalThis.fetch = async url => {
+    searchUrl = String(url);
+    return new Response('', { status: 503 });
+  };
+  try {
+    await onRequestPost({
+      request: new Request('https://example.test/api/chef', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'search', message: 'Sekarang aku mual dan sakit, harus gimana?',
+          history: [{ role: 'user', content: 'Aku tadi makan oli motor.' }]
+        })
+      }),
+      env: {}
+    });
+    assert.match(decodeURIComponent(searchUrl), /motor oil swallowed do not induce vomiting/);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('general-knowledge questions can use the model and search result context', async () => {
+  let capturedSystem = '';
+  let capturedUser = '';
+  const response = await onRequestPost({
+    request: new Request('https://example.test/api/chef', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: 'Siapa presiden pertama Amerika Serikat?',
+        references: [{ title: 'White House History', url: 'https://www.whitehouse.gov/about-the-white-house/presidents/george-washington/', snippet: 'George Washington was the first president of the United States.' }]
+      })
+    }),
+    env: { AI: { run: async (_model, options) => {
+      capturedSystem = options.messages.find(item => item.role === 'system')?.content || '';
+      capturedUser = options.messages.filter(item => item.role === 'user').at(-1)?.content || '';
+      return { response: 'George Washington adalah presiden pertama Amerika Serikat.' };
+    } } }
+  });
+  const data = await response.json();
+  assert.equal(response.status, 200);
+  assert.match(capturedSystem, /pertanyaan pengetahuan umum/);
+  assert.doesNotMatch(capturedSystem, /pertanyaan di luar makanan.*arahkan kembali/);
+  assert.match(capturedSystem, /White House History/);
+  assert.match(capturedUser, /Siapa presiden pertama/);
+  assert.equal(data.references.length, 1);
+  assert.match(data.answer, /George Washington/);
+});
+
+test('web search action accepts a general question and returns source cards before generation', async () => {
+  const originalFetch = globalThis.fetch;
+  let searchUrl = '';
+  globalThis.fetch = async url => {
+    searchUrl = String(url);
+    return new Response(`
+      <a class="result__a" href="https://history.example/washington">George Washington</a>
+      <a class="result__snippet">The first president of the United States.</a>`, { status: 200 });
+  };
+  try {
+    const response = await onRequestPost({
+      request: new Request('https://example.test/api/chef', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'search', message: 'Siapa presiden pertama USA?' })
       }),
       env: {}
     });
     const data = await response.json();
     assert.equal(response.status, 200);
-    assert.match(data.answer, /Waduh/);
-    assert.match(data.answer, /jangan dimuntahkan/);
-    assert.match(data.answer, /IGD atau layanan darurat/);
-    assert.doesNotMatch(data.answer, /maaf.*tidak bisa membantu/i);
-    assert.equal(data.references.length, 1);
-    assert.match(data.references[0].url, /poison\.org/);
+    assert.match(decodeURIComponent(searchUrl), /Siapa presiden pertama USA/);
+    assert.equal(data.references[0].title, 'George Washington');
   } finally {
     globalThis.fetch = originalFetch;
   }

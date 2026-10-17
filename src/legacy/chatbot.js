@@ -60,27 +60,52 @@ function sendChat(options = {}) {
 
   // Show typing indicator
   const typingId = 'typing-' + Date.now();
-  appendTypingIndicator(typingId, messagesId, shouldSearchChefWeb(message));
+  appendTypingIndicator(typingId, messagesId);
 
   // Simulate AI response delay
   const delay = 1200 + Math.random() * 800;
   setTimeout(() => {
-    generateAIResponseAsync(message, history).then(response => {
+    generateAIResponseAsync(message, history, typingId).then(response => {
       removeTypingIndicator(typingId);
       appendAIResponse(response, messagesId, options);
     });
   }, delay);
 }
 
-async function generateAIResponseAsync(message, history = []) {
+async function generateAIResponseAsync(message, history = [], typingId = '') {
   const localResponse = generateAIResponse(message);
   if (localResponse.type !== 'fallback' && !isLawarPlekRequest(message)) return localResponse;
 
   try {
+    updateTypingSearch(typingId, 'Menelusuri web…');
+    let references = [];
+    try {
+      const searchResponse = await fetch('/api/chef', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'search', message, history })
+      });
+      if (searchResponse.ok) {
+        const searchData = await searchResponse.json();
+        references = Array.isArray(searchData.references) ? searchData.references : [];
+      }
+    } catch (searchError) {
+      console.warn('Chef web search unavailable; continuing without web sources.', searchError);
+    }
+    if (references.length) {
+      for (let index = 0; index < references.length; index += 1) {
+        const reference = references[index];
+        updateTypingSearch(typingId, `Membaca halaman ${index + 1} dari ${references.length}`, reference);
+        await new Promise(resolve => setTimeout(resolve, 420));
+      }
+    } else {
+      updateTypingSearch(typingId, 'Menyusun jawaban…');
+    }
+    updateTypingSearch(typingId, 'Memantapkan jawaban…');
     const response = await fetch('/api/chef', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message, history })
+      body: JSON.stringify({ message, history, references })
     });
     if (!response.ok) throw new Error(`Chef API returned ${response.status}`);
     const data = await response.json();
@@ -97,12 +122,6 @@ async function generateAIResponseAsync(message, history = []) {
 
 function isLawarPlekRequest(message) {
   return /\blawar\s+plek\b/i.test(message);
-}
-
-function shouldSearchChefWeb(message) {
-  return isLawarPlekRequest(message) ||
-    (/\b(?:body|bodi)\s+motor\b|\boli(?:\s+(?:motor|bekas))?\b|\bcairan\s+rem\b/i.test(message) &&
-      /\b(?:makan|dimakan|kemakan|tertelan|menelan|minum|terminum)\b/i.test(message));
 }
 
 function generateAIResponse(message) {
@@ -765,22 +784,46 @@ function appendAIResponse(response, containerId = 'chatMessages', options = {}) 
   container.scrollTop = container.scrollHeight;
 }
 
-function appendTypingIndicator(id, containerId = 'chatMessages', searchingWeb = false) {
+function appendTypingIndicator(id, containerId = 'chatMessages') {
   const container = document.getElementById(containerId);
   const div = document.createElement('div');
   div.id = id;
-  div.className = 'chat-bubble bot-bubble';
+  div.className = 'chat-bubble bot-bubble chef-search-loading';
   div.innerHTML = `
     <div class="bubble-avatar"><svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-chef"/></svg></div>
     <div class="bubble-content" style="padding:14px 18px">
       <div class="typing-dots">
         <span></span><span></span><span></span>
       </div>
-      ${searchingWeb ? '<div class="typing-search-status" role="status">Mencari referensi web…</div>' : ''}
+    </div>
+    <div class="chef-search-activity" hidden>
+      <span class="chef-search-globe" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg></span>
+      <div class="chef-search-progress">
+        <span class="typing-search-status" role="status">Menelusuri web…</span>
+        <div class="chef-search-page" aria-hidden="true"></div>
+      </div>
     </div>
   `;
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
+}
+
+function updateTypingSearch(id, status, reference = null) {
+  const indicator = document.getElementById(id);
+  const activity = indicator?.querySelector('.chef-search-activity');
+  const statusLabel = activity?.querySelector('.typing-search-status');
+  if (!activity || !statusLabel) return;
+  activity.hidden = false;
+  statusLabel.textContent = status;
+  if (reference) {
+    let domain = '';
+    try { domain = new URL(reference.url).hostname.replace(/^www\./, ''); } catch { /* invalid source has no domain */ }
+    const page = activity.querySelector('.chef-search-page');
+    page.innerHTML = `<span class="chef-search-page-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 3.75h9l5 5v11.5H5z"/><path d="M14 3.75v5h5M8 13h8M8 16.5h6"/></svg></span><span class="chef-search-page-copy"><strong>${escapeHtml(reference.title || domain || 'Halaman web')}</strong><small>${escapeHtml(domain)}</small></span><span class="chef-search-page-arrow" aria-hidden="true">↗</span>`;
+    page.classList.remove('is-arriving');
+    void page.offsetWidth;
+    page.classList.add('is-arriving');
+  }
 }
 
 function removeTypingIndicator(id) {

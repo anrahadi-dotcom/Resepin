@@ -18,7 +18,7 @@ function createChatbotContext() {
   for (const file of ['src/legacy/recipes.js', 'src/legacy/chef-prompts.js', 'src/legacy/chatbot.js']) {
     vm.runInContext(readFileSync(resolve(root, file), 'utf8'), context);
   }
-  vm.runInContext('globalThis.testGenerate = generateAIResponse; globalThis.testSearch = shouldSearchChefWeb', context);
+  vm.runInContext('globalThis.testGenerate = generateAIResponse', context);
   return context;
 }
 
@@ -124,9 +124,16 @@ test('lawar plek stays distinct from lawar sayur and goes to the web-backed reci
   assert.equal(answer.type, 'fallback');
 });
 
-test('web-search loading appears for niche or safety questions, not every recipe question', () => {
-  const context = createChatbotContext();
-  assert.equal(context.testSearch('Bro aku mau resep lawar plek'), true);
-  assert.equal(context.testSearch('Aku makan body motor bercampur oli'), true);
-  assert.equal(context.testSearch('Kasih resep nasi goreng'), false);
+test('web search runs before the answer and shows animated source pages below the typing bubble', () => {
+  const source = readFileSync(resolve(root, 'src/legacy/chatbot.js'), 'utf8');
+  const styles = readFileSync(resolve(root, 'css/style.css'), 'utf8');
+  assert.match(source, /action: 'search'/);
+  assert.match(source, /Membaca halaman/);
+  assert.match(source, /Memantapkan jawaban/);
+  assert.match(source, /body: JSON\.stringify\(\{ message, history, references \}\)/);
+  assert.match(source, /class="chef-search-activity" hidden/);
+  assert.match(source, /chef-search-globe/);
+  assert.match(source, /chef-web-references/);
+  assert.match(styles, /chefPageHop/);
+  assert.match(styles, /chef-search-activity\[hidden\]/);
 });
