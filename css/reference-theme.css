@@ -6010,14 +6010,14 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   #page-home .hero-paper-theme .hero-copy .hero-title {
     position: absolute;
     z-index: 4;
-    top: 47%;
+    top: 37%;
     left: 50%;
-    width: min(1500px, calc(100vw - 72px));
+    width: min(1380px, calc(100vw - 72px));
     max-width: none !important;
     margin: 0 !important;
     transform: translate(-50%, -50%);
     color: var(--hero-paper-red) !important;
-    font-size: clamp(4rem, 9vw, 9.5rem);
+    font-size: clamp(4rem, 7.3vw, 7.8rem) !important;
     line-height: .78;
     letter-spacing: -.075em;
     text-align: center !important;
@@ -6049,7 +6049,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   #page-home .hero-paper-theme .hero-favorite-card.is-slot-1 {
     top: 49% !important;
     left: 50% !important;
-    width: min(58%, 430px) !important;
+    width: min(60%, 480px) !important;
     height: clamp(350px, 43svh, 410px) !important;
   }
   #page-home .hero-paper-theme .hero-favorite-card.is-slot-1 img,
@@ -6069,7 +6069,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 
 @media (max-width: 1100px) and (min-width: 901px) {
   #page-home .hero-paper-theme .hero-copy-eyebrow { top: 12%; }
-  #page-home .hero-paper-theme .hero-copy .hero-title { font-size: clamp(4rem, 9vw, 6.5rem); }
+  #page-home .hero-paper-theme .hero-copy .hero-title { font-size: clamp(4rem, 9vw, 6.5rem) !important; }
   #page-home .hero-paper-theme .hero-favorites { width: min(760px, 84vw); }
   #page-home .hero-paper-theme .hero-favorite-card.is-slot-1 { width: min(58%, 390px) !important; }
 }
