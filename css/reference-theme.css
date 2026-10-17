@@ -6017,16 +6017,22 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     margin: 0 !important;
     transform: translate(-50%, -50%);
     color: var(--hero-paper-red) !important;
-    font-size: clamp(4rem, 7.3vw, 7.8rem) !important;
-    line-height: .78;
-    letter-spacing: -.075em;
+    font-size: clamp(4rem, 7vw, 7.4rem) !important;
+    font-weight: 400 !important;
+    line-height: .82 !important;
+    letter-spacing: -.045em !important;
     text-align: center !important;
     text-transform: uppercase;
-    text-shadow: 0 1px 0 color-mix(in srgb, var(--hero-paper-sheet-light) 26%, transparent), 0 12px 28px color-mix(in srgb, var(--hero-paper-ink) 14%, transparent);
+    mix-blend-mode: multiply;
+    opacity: .92;
+    text-shadow: 0 1px 0 color-mix(in srgb, var(--hero-paper-sheet-light) 20%, transparent);
   }
   #page-home .hero-paper-theme .hero-copy .hero-title .title-gradient {
     padding: 0;
     margin: 0;
+    font-weight: 400 !important;
+    font-style: normal !important;
+    letter-spacing: -.045em;
     background-image: linear-gradient(110deg, var(--hero-paper-red), #b7351e 52%, var(--hero-paper-red));
   }
   #page-home .hero-paper-theme .hero-favorites {
@@ -6069,7 +6075,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 
 @media (max-width: 1100px) and (min-width: 901px) {
   #page-home .hero-paper-theme .hero-copy-eyebrow { top: 12%; }
-  #page-home .hero-paper-theme .hero-copy .hero-title { font-size: clamp(4rem, 9vw, 6.5rem) !important; }
+  #page-home .hero-paper-theme .hero-copy .hero-title { font-size: clamp(4rem, 8vw, 6.2rem) !important; }
   #page-home .hero-paper-theme .hero-favorites { width: min(760px, 84vw); }
   #page-home .hero-paper-theme .hero-favorite-card.is-slot-1 { width: min(58%, 390px) !important; }
 }
