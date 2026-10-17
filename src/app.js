@@ -19,7 +19,7 @@ createApp({
       heroIngredientOptions: ['Nasi', 'Telur', 'Cabai', 'Tahu', 'Ayam', 'Tempe', 'Jagung', 'Wortel'],
       heroDropActive: false,
       heroCardDrag: null,
-      heroFavoriteOrder: [19, 23, 28],
+      heroFavoriteOrder: [19, 23],
       heroFavoriteTimer: null,
       popularIngredients: ['Telur', 'Ayam', 'Tahu', 'Nasi', 'Tempe'],
       activePage: 'home',
