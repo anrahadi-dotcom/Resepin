@@ -233,45 +233,10 @@
       </div>
     </section>
 
-    <a class="hero-scroll-hint [position:absolute] [bottom:24px] [left:50%] [transform:translateX(-50%)] [display:flex] [flex-direction:column] [align-items:center] [gap:8px] [color:var(--hero-copy-muted)] [font-size:0.8rem] [z-index:4]" href="#hero-followthrough" @click.prevent.stop="scrollToHomeSection('hero-followthrough')" aria-label="Gulir untuk melihat bagaimana Resepin mengubah bahan menjadi ide masak">
+    <a class="hero-scroll-hint [position:absolute] [bottom:24px] [left:50%] [transform:translateX(-50%)] [display:flex] [flex-direction:column] [align-items:center] [gap:8px] [color:var(--hero-copy-muted)] [font-size:0.8rem] [z-index:4]" href="#how-it-works" @click.prevent.stop="scrollToHomeSection('how-it-works')" aria-label="Gulir untuk melihat bagaimana Resepin mengubah bahan menjadi ide masak">
       <div class="scroll-dot [width:6px] [height:20px] [border:1.5px_solid_var(--text-muted)] [border-radius:3px] [position:relative] [overflow:hidden]"><span class="motion-safe:animate-home-scroll-cue [position:absolute] [top:2px] [left:50%] [width:5px] [height:5px] [border-radius:50%] [background:var(--scroll-hint-color,#fff)]"></span></div>
       <span>Gulir untuk menjelajah</span>
     </a>
-    <div class="hero-scroll-runway" aria-hidden="true"></div>
-
-    <section class="hero-followthrough" id="hero-followthrough" aria-labelledby="hero-followthrough-title">
-      <svg class="hero-followthrough-wave" viewBox="0 0 1440 180" preserveAspectRatio="none" aria-hidden="true"><path d="M0 91C104 116 183 139 294 118c112-21 177-82 302-91 117-9 178 54 290 67 112 12 168-33 272-45 106-12 183 16 282 1v130H0Z" fill="var(--bg)"/><path d="M0 91C104 116 183 139 294 118c112-21 177-82 302-91 117-9 178 54 290 67 112 12 168-33 272-45 106-12 183 16 282 1" fill="none" stroke="rgba(109,8,8,.24)" stroke-width="2" vector-effect="non-scaling-stroke"/></svg>
-      <div class="hero-followthrough-inner">
-        <div class="hero-followthrough-copy [translate:0_var(--copy-story-y,0px)] [opacity:var(--copy-story-opacity,1)]">
-          <span class="hero-followthrough-eyebrow [translate:0_var(--copy-line-y,0px)] [opacity:var(--copy-line-opacity,1)] [transition:none]"><i aria-hidden="true"></i> DARI DAPUR, JADI CERITA</span>
-          <h2 id="hero-followthrough-title" class="[translate:0_var(--copy-line-y,0px)] [opacity:var(--copy-line-opacity,1)] [transition:none]">Yang tersisa bisa jadi <em>favorit berikutnya.</em></h2>
-          <p class="[translate:0_var(--copy-line-y,0px)] [opacity:var(--copy-line-opacity,1)] [transition:none]">Mulai dari bahan sederhana yang sudah ada di rumah. Biarkan Resepin membantumu menemukan ide masak hari ini.</p>
-        </div>
-        <div class="hero-collage-stage [translate:0_var(--collage-story-y,0px)] [scale:var(--collage-story-scale,1)]" aria-label="Kolase resep interaktif">
-          <span class="collage-edition" aria-hidden="true">RESEPIN <b>·</b> EDISI DAPUR HARI INI</span>
-          <button class="collage-card collage-card--rice group [transform:translate3d(calc(var(--drag-x,0px)_+_var(--story-x,0px)),calc(var(--drag-y,0px)_+_var(--story-y,0px)),var(--story-z,0px))_rotate(calc(var(--card-angle,0deg)_+_var(--story-rotate,0deg)))_rotateX(var(--tilt-y,0deg))_rotateY(var(--tilt-x,0deg))_scale(var(--story-scale,1))] [opacity:var(--story-opacity,1)] [transition:transform_.32s_cubic-bezier(.2,.75,.25,1),box-shadow_.3s_ease,scale_.32s_cubic-bezier(.2,.75,.25,1),opacity_.2s_linear]" type="button" @pointerdown="startHeroCardDrag" @pointermove="moveHeroCardDrag" @pointerup="endHeroCardDrag" @pointercancel="endHeroCardDrag" @pointerleave="resetHeroCardTilt" @keydown="nudgeHeroCard" @click="openCollageRecipe(2, $event)" aria-label="Lihat resep Nasi Goreng Sederhana; seret untuk menggeser">
-            <img class="transition-transform duration-[800ms] ease-[cubic-bezier(.2,.7,.2,1)] group-hover:scale-[1.07] group-hover:saturate-[1.08]" src="/assets/img/nasi-goreng.jpg" alt="" loading="lazy" draggable="false" />
-            <span class="collage-card-copy"><small>01 / MENU RUMAHAN</small><strong>Nasi Goreng<br/>Sederhana</strong><i aria-hidden="true">↗</i></span>
-          </button>
-          <button class="collage-card collage-card--capcay group [transform:translate3d(calc(var(--drag-x,0px)_+_var(--story-x,0px)),calc(var(--drag-y,0px)_+_var(--story-y,0px)),var(--story-z,0px))_rotate(calc(var(--card-angle,0deg)_+_var(--story-rotate,0deg)))_rotateX(var(--tilt-y,0deg))_rotateY(var(--tilt-x,0deg))_scale(var(--story-scale,1))] [opacity:var(--story-opacity,1)] [transition:transform_.32s_cubic-bezier(.2,.75,.25,1),box-shadow_.3s_ease,scale_.32s_cubic-bezier(.2,.75,.25,1),opacity_.2s_linear]" type="button" @pointerdown="startHeroCardDrag" @pointermove="moveHeroCardDrag" @pointerup="endHeroCardDrag" @pointercancel="endHeroCardDrag" @pointerleave="resetHeroCardTilt" @keydown="nudgeHeroCard" @click="openCollageRecipe(5, $event)" aria-label="Lihat resep Capcay Kuah Segar; seret untuk menggeser">
-            <img class="transition-transform duration-[800ms] ease-[cubic-bezier(.2,.7,.2,1)] group-hover:scale-[1.07] group-hover:saturate-[1.08]" src="/assets/img/capcay.jpg" alt="" loading="lazy" draggable="false" />
-            <span class="collage-card-copy"><small>02 / WARNA DARI KEBUN</small><strong>Capcay Kuah<br/>Segar</strong><i aria-hidden="true">↗</i></span>
-          </button>
-          <button class="collage-card collage-card--sate group [transform:translate3d(calc(var(--drag-x,0px)_+_var(--story-x,0px)),calc(var(--drag-y,0px)_+_var(--story-y,0px)),var(--story-z,0px))_rotate(calc(var(--card-angle,0deg)_+_var(--story-rotate,0deg)))_rotateX(var(--tilt-y,0deg))_rotateY(var(--tilt-x,0deg))_scale(var(--story-scale,1))] [opacity:var(--story-opacity,1)] [transition:transform_.32s_cubic-bezier(.2,.75,.25,1),box-shadow_.3s_ease,scale_.32s_cubic-bezier(.2,.75,.25,1),opacity_.2s_linear]" type="button" @pointerdown="startHeroCardDrag" @pointermove="moveHeroCardDrag" @pointerup="endHeroCardDrag" @pointercancel="endHeroCardDrag" @pointerleave="resetHeroCardTilt" @keydown="nudgeHeroCard" @click="openCollageRecipe(29, $event)" aria-label="Lihat resep Sate Lilit Bali; seret untuk menggeser">
-            <img class="transition-transform duration-[800ms] ease-[cubic-bezier(.2,.7,.2,1)] group-hover:scale-[1.07] group-hover:saturate-[1.08]" src="/assets/img/sate-lilit.jpg" alt="" loading="lazy" draggable="false" />
-            <span class="collage-card-copy"><small>03 / RASA NUSANTARA</small><strong>Sate Lilit<br/>Bali</strong><i aria-hidden="true">↗</i></span>
-          </button>
-          <div class="collage-ingredient-strip" aria-label="Pilih bahan dapur">
-            <span>RACIK DARI BAHAN</span>
-            <button v-for="ingredient in ['Jagung', 'Wortel', 'Bawang Merah', 'Bawang Putih', 'Garam']" :key="ingredient" class="[translate:0_var(--chip-story-y,0px)] [scale:var(--chip-story-scale,1)] [opacity:var(--chip-story-opacity,1)] [transition:translate_.18s_linear,scale_.18s_linear,opacity_.18s_linear]" type="button" :class="{ 'is-selected': heroSelectedIngredients.includes(ingredient) }" :aria-pressed="heroSelectedIngredients.includes(ingredient)" @click="toggleHeroIngredient(ingredient)">{{ ingredient }} <b>{{ heroSelectedIngredients.includes(ingredient) ? '✓' : '+' }}</b></button>
-          </div>
-          <span class="collage-stamp" aria-hidden="true"><b>{{ String(heroSelectedIngredients.length).padStart(2, '0') }}</b><small>BAHAN<br/>DIPILIH</small></span>
-        </div>
-        <div class="collage-instructions"><span><i aria-hidden="true">✥</i> Seret panel untuk menyusun kolasemu</span><button type="button" @click="resetHeroGallery">Susun ulang <b aria-hidden="true">↺</b></button></div>
-        <a class="hero-followthrough-link" href="#how-it-works" @click.prevent.stop="scrollToHomeSection('how-it-works')">Lihat cara kerjanya <span aria-hidden="true">↓</span></a>
-      </div>
-    </section>
-
     <!-- How It Works -->
     <section class="section how-it-works relative isolate overflow-hidden [perspective:950px] [transform-origin:50%_0] [translate:var(--page-rise-x,0px)_var(--page-rise-y,0px)] [rotate:x_var(--page-rise-tilt,0deg)] [scale:var(--page-rise-scale,1)] [opacity:var(--page-rise-opacity,1)] [transform-style:preserve-3d] [transition:none] [padding:80px_0] [padding-top:clamp(5.5rem,9vw,8rem)] [padding-bottom:clamp(5rem,8vw,7rem)]" id="how-it-works">
       <div class="container relative z-[2] mx-auto w-full max-w-[1240px] px-6">
