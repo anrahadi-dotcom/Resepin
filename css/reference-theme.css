@@ -5382,6 +5382,20 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   transform: translateY(-2px);
 }
 
+#page-home .hero-paper-theme .hero-cta-link a.hero-how-link {
+  border-color: color-mix(in srgb, var(--hero-paper-red) 24%, transparent);
+  color: var(--hero-paper-red);
+  background: color-mix(in srgb, var(--hero-paper-sheet-light) 82%, transparent);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 5px 14px color-mix(in srgb, var(--hero-paper-ink) 7%, transparent);
+}
+
+#page-home .hero-paper-theme .hero-cta-link a.hero-how-link:hover {
+  border-color: var(--hero-paper-sage);
+  color: var(--hero-paper-red);
+  background: var(--hero-paper-card);
+  box-shadow: 0 10px 22px color-mix(in srgb, var(--hero-paper-ink) 12%, transparent);
+}
+
 #page-home .hero-paper-theme .hero-cta-link a:focus-visible,
 #page-home .hero-paper-theme .hero-favorite-card:focus-visible,
 #page-home .hero-paper-theme .hero-favorites-controls button:focus-visible {
