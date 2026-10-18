@@ -452,7 +452,7 @@ function updateHomeScrollStory() {
       const deck = section.querySelector('.steps-grid');
       const progress = desktopStory ? Math.min(1, Math.max(0, -section.getBoundingClientRect().top / (viewport * 0.92))) : 1;
       const activePosition = progress * Math.max(0, cards.length - 1);
-      const spread = Math.max(280, (deck?.clientWidth || window.innerWidth) * 0.78);
+      const spread = Math.max(280, (deck?.clientWidth || window.innerWidth) * 0.68);
       deck?.style.setProperty('--steps-progress', progress.toFixed(3));
       cards.forEach((card, cardIndex) => {
         const distance = cardIndex - activePosition;
@@ -469,7 +469,7 @@ function updateHomeScrollStory() {
           ['--step-story-x', '--step-story-y', '--step-story-z', '--step-story-rotate', '--step-story-scale', '--step-story-opacity'].forEach(property => card.style.removeProperty(property));
           card.style.removeProperty('z-index');
         }
-        card.classList.toggle('is-scroll-active', desktopStory && distanceAbs < 0.48);
+        card.classList.toggle('is-scroll-active', desktopStory && distanceAbs < 0.72);
       });
       const activeIndex = Math.min(cards.length - 1, Math.max(0, Math.round(activePosition)));
       const label = section.querySelector('#stepsActiveLabel');

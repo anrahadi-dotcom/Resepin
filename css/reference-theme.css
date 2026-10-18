@@ -6430,7 +6430,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     position: absolute;
     top: 50%;
     left: 50%;
-    width: min(720px, 58vw);
+    width: min(720px, 58vw, calc((min(560px, 67svh) - 190px) * 1.92));
     height: 100%;
     min-height: 0;
     padding: 0;
@@ -6451,9 +6451,9 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     box-shadow: 0 32px 72px rgba(45, 0, 0, .17), 0 8px 24px color-mix(in srgb, var(--step-accent) 15%, transparent);
   }
   #page-home .how-it-works .step-visual { aspect-ratio: 1.92 / 1; }
-  #page-home .how-it-works .step-card-body { min-height: 0; padding: 20px 24px 22px; }
+  #page-home .how-it-works .step-card-body { min-height: 0; padding: 15px 21px 17px; }
   #page-home .how-it-works .step-card h3 { color: var(--text-primary); font-size: clamp(1.25rem, 1.65vw, 1.65rem); }
-  #page-home .how-it-works .step-card p { color: var(--text-secondary); font-size: clamp(.9rem, 1.05vw, 1.02rem); }
+  #page-home .how-it-works .step-card p { margin-bottom: 11px; color: var(--text-secondary); font-size: clamp(.9rem, 1.05vw, 1.02rem); }
   #page-home .how-it-works .step-kicker { color: var(--step-accent); }
 }
 @media (max-width: 900px) {
