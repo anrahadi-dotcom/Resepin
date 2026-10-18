@@ -6128,7 +6128,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     right: clamp(38px, 8.4vw, 132px);
     width: clamp(170px, 17vw, 245px);
     margin: 0;
-    color: #eeead7;
+    color: #6d0808;
     font: 300 clamp(.96rem, 1.12vw, 1.12rem)/1.68 var(--font-body);
     letter-spacing: -.012em;
     text-shadow: none;
@@ -6136,6 +6136,8 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     text-wrap: pretty;
     translate: 0 -50%;
   }
+
+[data-theme="dark"] #page-home .hero-paper-theme .hero-feature-caption { color: #eeead7; }
 
   #page-home .hero-paper-theme .hero-cta {
     position: absolute;
