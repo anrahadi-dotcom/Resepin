@@ -5994,6 +5994,10 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     color: var(--hero-paper-title-front) !important;
     -webkit-text-fill-color: var(--hero-paper-title-front) !important;
   }
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-ending {
+    color: var(--hero-paper-title-ending) !important;
+    -webkit-text-fill-color: var(--hero-paper-title-ending) !important;
+  }
   #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-line {
     top: 14%;
     left: 50%;
@@ -6023,6 +6027,14 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     z-index: 3;
     translate: none;
     font-size: clamp(3.6rem, 6.2vw, 6.5rem) !important;
+    opacity: 1;
+  }
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-ending {
+    top: 57%;
+    left: 50%;
+    z-index: 3;
+    translate: -50% 0;
+    font-size: clamp(3.5rem, 5.7vw, 5.9rem) !important;
     opacity: 1;
   }
   #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .title-gradient {
@@ -6078,6 +6090,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-line { top: 14%; left: 50%; translate: -50% 0; font-size: clamp(3.15rem, 5.6vw, 4.7rem) !important; }
   #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-middle-left { top: 39%; left: 18%; font-size: clamp(3.15rem, 5.6vw, 4.7rem) !important; }
   #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-middle-right { top: 39%; left: 58%; font-size: clamp(3.15rem, 5.6vw, 4.7rem) !important; }
+  #page-home .hero-paper-theme > #heroApp > .hero-content > .hero-title .hero-title-ending { top: 56%; left: 50%; translate: -50% 0; font-size: clamp(2.95rem, 4.9vw, 4.3rem) !important; }
   #page-home .hero-paper-theme .hero-favorites { width: min(760px, 84vw); }
   #page-home .hero-paper-theme .hero-favorite-card.is-slot-1 { width: min(58%, 390px) !important; }
 }
