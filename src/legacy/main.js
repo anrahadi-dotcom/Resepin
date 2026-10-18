@@ -441,12 +441,44 @@ function updateHomeScrollStory() {
       ? (1 - statsTakeoverProgress) * window.innerWidth
       : 0;
     section.style.setProperty('--page-rise-x', `${enterFromRight.toFixed(1)}px`);
-    section.style.setProperty('--page-rise-y', `${(isPaperSection ? -pageProgress * viewport * 0.32 : 0).toFixed(1)}px`);
+    section.style.setProperty('--page-rise-y', '0px');
     const sectionScale = isPaperSection || isFeatured || isStats ? '1' : (0.955 + pageProgress * 0.045 + risePulse * 0.012).toFixed(3);
     section.style.setProperty('--page-rise-scale', sectionScale);
     const sectionOpacity = isPaperSection || isFeatured ? 1 : (isStats ? 0.82 + pageProgress * 0.18 : 0.42 + pageProgress * 0.58);
     section.style.setProperty('--page-rise-opacity', sectionOpacity.toFixed(3));
     section.style.setProperty('--page-rise-tilt', isPaperSection || isFeatured || isStats ? '0deg' : `${((1 - pageProgress) * 1.2).toFixed(2)}deg`);
+    if (isPaperSection) {
+      const cards = [...section.querySelectorAll('.step-card')];
+      const deck = section.querySelector('.steps-grid');
+      const progress = desktopStory ? Math.min(1, Math.max(0, -section.getBoundingClientRect().top / (viewport * 0.92))) : 1;
+      const activePosition = progress * Math.max(0, cards.length - 1);
+      const spread = Math.max(280, (deck?.clientWidth || window.innerWidth) * 0.78);
+      deck?.style.setProperty('--steps-progress', progress.toFixed(3));
+      cards.forEach((card, cardIndex) => {
+        const distance = cardIndex - activePosition;
+        const distanceAbs = Math.abs(distance);
+        if (desktopStory) {
+          card.style.setProperty('--step-story-x', `${(distance * spread).toFixed(1)}px`);
+          card.style.setProperty('--step-story-y', `${(Math.min(distanceAbs, 1.5) * 15).toFixed(1)}px`);
+          card.style.setProperty('--step-story-z', `${(-Math.min(distanceAbs, 2) * 56).toFixed(1)}px`);
+          card.style.setProperty('--step-story-rotate', `${(distance * -3.5).toFixed(2)}deg`);
+          card.style.setProperty('--step-story-scale', (1 - Math.min(distanceAbs, 2) * 0.105).toFixed(3));
+          card.style.setProperty('--step-story-opacity', Math.max(0.18, 1 - Math.min(distanceAbs, 2) * 0.36).toFixed(3));
+          card.style.zIndex = String(10 - Math.round(distanceAbs * 2));
+        } else {
+          ['--step-story-x', '--step-story-y', '--step-story-z', '--step-story-rotate', '--step-story-scale', '--step-story-opacity'].forEach(property => card.style.removeProperty(property));
+          card.style.removeProperty('z-index');
+        }
+        card.classList.toggle('is-scroll-active', desktopStory && distanceAbs < 0.48);
+      });
+      const activeIndex = Math.min(cards.length - 1, Math.max(0, Math.round(activePosition)));
+      const label = section.querySelector('#stepsActiveLabel');
+      const count = section.querySelector('#stepsActiveCount');
+      const meter = section.querySelector('.steps-story-meter');
+      if (label) label.textContent = ['Pilih bahan', 'Cek daftar', 'Mulai masak'][activeIndex] || `Langkah ${activeIndex + 1}`;
+      if (count) count.textContent = String(activeIndex + 1).padStart(2, '0');
+      if (meter) meter.setAttribute('aria-valuenow', String(activeIndex + 1));
+    }
     const heading = section.querySelector('.section-header h2, .stats-content h2');
     if (heading && !isPaperSection) {
       heading.style.setProperty('--heading-story-y', isStats ? '0px' : `${((1 - pageProgress) * 34 - risePulse * 12).toFixed(1)}px`);

@@ -6385,3 +6385,83 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   #page-home .hero-paper-theme .hero-favorite-card.is-slot-0,
   #page-home .hero-paper-theme .hero-favorite-card.is-slot-1 { transform: translate(-50%, -50%) !important; }
 }
+
+/* Scroll-linked workflow deck: one focused step travels through a shared stage. */
+.steps-story-meter-fill { transform: scaleX(var(--steps-progress, 0)); transform-origin: left center; transition: none; }
+@media (min-width: 901px) and (min-height: 680px) {
+  #page-home .how-it-works {
+    height: 200svh;
+    min-height: 0;
+    padding: 0;
+    overflow: clip;
+    translate: 0 0;
+  }
+  #page-home .how-it-works::before {
+    top: 0;
+    bottom: 0;
+    border-radius: clamp(24px, 3vw, 36px) clamp(24px, 3vw, 36px) 0 0;
+    background: var(--bg-card);
+    opacity: 1;
+  }
+  #page-home .how-it-works > .container {
+    position: sticky;
+    top: 0;
+    display: flex;
+    height: 100svh;
+    min-height: 680px;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(28px, 4.5svh, 48px) 24px 22px;
+  }
+  #page-home .how-it-works .section-header { margin: 0 auto 20px; }
+  #page-home .how-it-works .section-header h2 { font-size: clamp(2.4rem, 4.5vw, 4rem); line-height: 1.02; }
+  #page-home .how-it-works .steps-story-status { margin-bottom: 17px; }
+  #page-home .how-it-works .steps-grid {
+    position: relative;
+    display: block;
+    width: 100%;
+    max-width: 1180px;
+    height: min(560px, 67svh);
+    margin: 0 auto;
+    overflow: visible;
+    perspective: 1400px;
+  }
+  #page-home .how-it-works .step-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(720px, 58vw);
+    height: 100%;
+    min-height: 0;
+    padding: 0;
+    border: 1px solid color-mix(in srgb, var(--step-accent) 23%, transparent);
+    border-radius: 26px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    opacity: var(--step-story-opacity, 1);
+    translate: calc(-50% + var(--step-story-x, 0px)) calc(-50% + var(--step-story-y, 0px)) var(--step-story-z, 0px);
+    rotate: y var(--step-story-rotate, 0deg);
+    scale: var(--step-story-scale, 1);
+    transform-style: preserve-3d;
+    transition: border-color .24s ease, box-shadow .24s ease;
+    will-change: translate, rotate, scale, opacity;
+  }
+  #page-home .how-it-works .step-card.is-scroll-active {
+    border-color: color-mix(in srgb, var(--step-accent) 58%, transparent);
+    box-shadow: 0 32px 72px rgba(45, 0, 0, .17), 0 8px 24px color-mix(in srgb, var(--step-accent) 15%, transparent);
+  }
+  #page-home .how-it-works .step-visual { aspect-ratio: 1.92 / 1; }
+  #page-home .how-it-works .step-card-body { min-height: 0; padding: 20px 24px 22px; }
+  #page-home .how-it-works .step-card h3 { color: var(--text-primary); font-size: clamp(1.25rem, 1.65vw, 1.65rem); }
+  #page-home .how-it-works .step-card p { color: var(--text-secondary); font-size: clamp(.9rem, 1.05vw, 1.02rem); }
+  #page-home .how-it-works .step-kicker { color: var(--step-accent); }
+}
+@media (max-width: 900px) {
+  #page-home .how-it-works .steps-story-status { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #page-home .how-it-works { height: auto !important; min-height: 0 !important; padding-block: clamp(5rem, 9vw, 8rem); }
+  #page-home .how-it-works > .container { position: relative !important; top: auto !important; display: block !important; height: auto !important; min-height: 0 !important; padding: 0 24px !important; }
+  #page-home .how-it-works .steps-grid { display: grid !important; height: auto !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 18px; }
+  #page-home .how-it-works .step-card { position: relative !important; top: auto !important; left: auto !important; width: 100% !important; height: auto !important; opacity: 1 !important; translate: none !important; rotate: none !important; scale: 1 !important; will-change: auto; }
+}
