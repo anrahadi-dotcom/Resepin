@@ -6128,10 +6128,10 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     right: clamp(38px, 8.4vw, 132px);
     width: clamp(170px, 17vw, 245px);
     margin: 0;
-    color: #fffdf5;
-    font: 450 clamp(.96rem, 1.12vw, 1.12rem)/1.68 var(--font-body);
+    color: #eeead7;
+    font: 300 clamp(.96rem, 1.12vw, 1.12rem)/1.68 var(--font-body);
     letter-spacing: -.012em;
-    text-shadow: 0 1px 3px rgba(45,0,0,.76), 0 2px 14px rgba(45,0,0,.46);
+    text-shadow: none;
     text-align: left;
     text-wrap: pretty;
     translate: 0 -50%;
