@@ -5999,6 +5999,24 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     -webkit-text-fill-color: var(--hero-paper-title-front) !important;
   }
 
+  #page-home .hero-paper-theme .hero-editorial-title-finale {
+    position: relative;
+    z-index: 3;
+    display: block;
+    width: max-content;
+    max-width: 100%;
+    margin: -.035em 0 0 .9em;
+    color: var(--hero-paper-title-front) !important;
+    font-family: "Cormorant Garamond", Georgia, serif !important;
+    font-size: 1.08em;
+    font-style: italic;
+    font-weight: 600 !important;
+    line-height: .82;
+    letter-spacing: -.055em;
+    white-space: nowrap;
+    -webkit-text-fill-color: var(--hero-paper-title-front) !important;
+  }
+
   #page-home .hero-paper-theme .hero-favorites {
     position: absolute;
     z-index: 2;
@@ -6134,7 +6152,8 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   }
 
   #page-home .hero-paper-theme .hero-editorial-title-lead,
-  #page-home .hero-paper-theme .hero-editorial-title-emphasis {
+  #page-home .hero-paper-theme .hero-editorial-title-emphasis,
+  #page-home .hero-paper-theme .hero-editorial-title-finale {
     position: relative;
     inset: auto;
     z-index: auto;
@@ -6165,6 +6184,12 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     font-weight: 500 !important;
     letter-spacing: -.055em;
     -webkit-text-fill-color: var(--hero-paper-title-front) !important;
+  }
+
+  #page-home .hero-paper-theme .hero-editorial-title-finale {
+    margin-top: .02em;
+    font-size: 1.02em;
+    font-weight: 600 !important;
   }
 
   #page-home .hero-paper-theme .hero-favorites {
