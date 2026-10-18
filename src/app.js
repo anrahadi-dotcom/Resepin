@@ -19,10 +19,43 @@ createApp({
       menuOpen: false,
       navSearchOpen: false,
       impactYear: 2000,
+      whyChoiceIndex: 0,
+      whyChoices: [
+        {
+          label: 'Mulai dari bahanmu',
+          kicker: 'Dari isi dapurmu',
+          title: 'Nggak perlu mulai dari nol.',
+          copy: 'Sebutkan bahan yang masih ada. Resepin bantu menyusun ide masakan dari isi dapurmu, jadi kamu tahu apa yang bisa dimasak hari ini.',
+          image: '/assets/img/workflow-ingredients.webp',
+          imageLabel: 'Bahan segar yang sudah tersedia',
+          alt: 'Tomat, wortel, bayam, bawang, dan ayam di atas meja dapur.'
+        },
+        {
+          label: 'Resep yang fleksibel',
+          kicker: 'Kamu yang pegang kendali',
+          title: 'Sesuaikan sebelum mulai.',
+          copy: 'Cek daftar bahan dan ubah kalau ada yang kurang pas. Resep terasa lebih masuk akal untuk bahan dan kebutuhanmu.',
+          image: '/assets/img/workflow-checklist.webp',
+          imageLabel: 'Rencana masak yang bisa disesuaikan',
+          alt: 'Catatan daftar bahan dengan wortel, bayam, dan persiapan memasak.'
+        },
+        {
+          label: 'Ada teman masak',
+          kicker: 'Teman di dapur',
+          title: 'Kalau bingung, tinggal tanya.',
+          copy: 'Tanya Chef Resepin soal variasi, pengganti bahan, atau tips saat memasak. Biar langkah berikutnya terasa lebih jelas.',
+          image: '/assets/img/workflow-cooking.webp',
+          imageLabel: 'Ide masak siap disajikan',
+          alt: 'Semangkuk nasi goreng hangat dengan telur dan daun bawang.'
+        }
+      ],
       floatingChefChatOpen: false
     };
   },
   computed: {
+    activeWhyChoice() {
+      return this.whyChoices[this.whyChoiceIndex] || this.whyChoices[0];
+    },
     heroSearchIngredients() {
       const typed = this.heroIngredientText.split(/[,;\n]+/).map(value => value.trim()).filter(Boolean);
       const unique = new Map();
@@ -76,6 +109,11 @@ createApp({
     window.resepinApp = this;
     document.addEventListener('click', this.closeMenuOnOutside);
     document.addEventListener('keydown', this.closeMenuOnEscape);
+    this.whyChoices.forEach(choice => {
+      const image = new Image();
+      image.decoding = 'async';
+      image.src = choice.image;
+    });
     this.$nextTick(() => {
       window.refreshMotionReveals?.();
       const hero = document.querySelector('#page-home .hero');
@@ -98,6 +136,10 @@ createApp({
     document.removeEventListener('keydown', this.closeMenuOnEscape);
   },
   methods: {
+    selectWhyChoice(index) {
+      if (index < 0 || index >= this.whyChoices.length || index === this.whyChoiceIndex) return;
+      this.whyChoiceIndex = index;
+    },
     searchHeroDemo() {
       this.heroIngredientText = '';
       this.heroSearchMessage = '';

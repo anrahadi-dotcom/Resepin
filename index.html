@@ -27,7 +27,7 @@
   <title>Resepin — Masak dari Sisa, Praktis & Lezat</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400..900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400..900&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:wght@300;400;500;600;700;800&family=DM+Serif+Display&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="preload" as="image" href="/assets/img/hero-rustic-fried-rice.webp" fetchpriority="high" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="manifest" href="/site.webmanifest" />
@@ -208,7 +208,7 @@
       </div>
       <div id="heroApp" class="hero-container [max-width:none] [margin:0] [display:block] [grid-template-columns:1fr_1fr] [gap:60px] [align-items:center] [position:relative] [z-index:2] [width:100%] [height:100%] [min-height:0] max-[900px]:h-auto max-[900px]:min-h-[100svh]" v-cloak>
         <div class="hero-content">
-          <h1 class="hero-title hero-editorial-title" aria-label="Isi dapur, jadi menu lezat."><span class="hero-editorial-title-lead motion-safe:animate-home-recipe-enter [--motion-delay:.18s]">Isi dapur,</span><span class="hero-editorial-title-emphasis motion-safe:animate-home-recipe-enter [--motion-delay:.28s]">jadi menu</span><span class="hero-editorial-title-finale motion-safe:animate-home-recipe-enter [--motion-delay:.38s]">lezat.</span></h1>
+          <h1 class="hero-title hero-editorial-title" aria-label="Isi dapur, jadi lezat."><span class="hero-editorial-title-lead motion-safe:animate-home-recipe-enter [--motion-delay:.18s]">Isi dapur,</span><span class="hero-editorial-title-emphasis motion-safe:animate-home-recipe-enter [--motion-delay:.28s]">jadi lezat.</span></h1>
           <section class="hero-favorites [translate:0_var(--hero-favorites-scroll-y,0px)] [opacity:var(--hero-seq-opacity,var(--hero-favorites-scroll-opacity,1))] [transition:none] [color:var(--hero-ink)]" aria-label="Resep pilihan Resepin">
             <div class="hero-feature-viewport">
               <span class="hero-feature-orbit" aria-hidden="true"><i>✳</i><b>MENU<br/>RUMAHAN</b></span>
@@ -224,19 +224,62 @@
               </div>
             </div>
             <p class="hero-desc hero-feature-caption motion-safe:animate-home-recipe-enter [--motion-delay:.34s]">Masukkan bahan yang masih tersedia di dapur. Resepin bantu mencarikan ide masakan rumahan yang praktis, lengkap dengan bahan dan langkah memasak yang mudah diikuti.</p>
-            <div class="hero-cta hero-cta-link hero-enter hero-enter-7 motion-safe:animate-home-recipe-enter [display:flex] [align-items:center] [justify-content:center] [gap:16px] [flex-wrap:wrap] [--motion-delay:.42s]">
-              <a href="#/resep" @click.prevent="go('resep')">Temukan resep <span aria-hidden="true">↗</span></a>
-              <a class="hero-how-link" href="#how-it-works" @click.prevent.stop="scrollToHomeSection('how-it-works')">Cara kerja <span aria-hidden="true">↓</span></a>
-            </div>
           </section>
         </div>
       </div>
-    </section>
-
-    <a class="hero-scroll-hint [position:absolute] [bottom:24px] [left:50%] [transform:translateX(-50%)] [display:flex] [flex-direction:column] [align-items:center] [gap:8px] [color:var(--hero-copy-muted)] [font-size:0.8rem] [z-index:4]" href="#how-it-works" @click.prevent.stop="scrollToHomeSection('how-it-works')" aria-label="Gulir untuk melihat bagaimana Resepin mengubah bahan menjadi ide masak">
+    <a class="hero-scroll-hint [position:absolute] [bottom:24px] [left:50%] [transform:translateX(-50%)] [display:flex] [flex-direction:column] [align-items:center] [gap:8px] [color:var(--hero-copy-muted)] [font-size:0.8rem] [z-index:4]" href="#why-resepin" @click.prevent.stop="scrollToHomeSection('why-resepin')" aria-label="Gulir untuk melihat kenapa Resepin membantu saat memasak">
       <div class="scroll-dot [width:6px] [height:20px] [border:1.5px_solid_var(--text-muted)] [border-radius:3px] [position:relative] [overflow:hidden]"><span class="motion-safe:animate-home-scroll-cue [position:absolute] [top:2px] [left:50%] [width:5px] [height:5px] [border-radius:50%] [background:var(--scroll-hint-color,#fff)]"></span></div>
       <span>Gulir untuk menjelajah</span>
     </a>
+    </section>
+    <!-- Why choose Resepin: the next natural-scroll scene shares the hero canvas. -->
+    <div class="why-takeover-stage">
+    <section class="why-resepin relative isolate z-[3] overflow-hidden bg-[#757D6F] px-0 py-[clamp(4.5rem,9vw,7.5rem)] text-[#EEEAD7]" id="why-resepin" aria-labelledby="whyResepinTitle">
+      <div class="why-resepin-lines" aria-hidden="true"></div>
+      <div class="why-resepin-container relative z-[1] mx-auto w-full max-w-[1320px] px-6">
+        <header class="why-resepin-heading mb-9 grid gap-3 md:mb-12 md:grid-cols-[1fr_auto] md:items-end">
+          <div>
+            <h2 id="whyResepinTitle">Semua bermula dari bahan yang ada.</h2>
+            <span class="why-resepin-eyebrow">RESEPIN · TEMAN DARI DAPUR</span>
+          </div>
+          <span class="why-resepin-index" aria-hidden="true">01 <i></i> 03</span>
+        </header>
+        <div class="why-resepin-layout">
+          <div class="why-resepin-options" role="group" aria-label="Pilih yang paling kamu butuhkan">
+            <button v-for="(choice, index) in whyChoices" :key="choice.label" class="why-resepin-option" :class="{'is-active': whyChoiceIndex === index}" type="button" :aria-pressed="whyChoiceIndex === index" @click="selectWhyChoice(index)">
+              <span class="why-resepin-option-number">0{{ index + 1 }}</span>
+              <span>{{ choice.label }}</span>
+              <span class="why-resepin-option-arrow" aria-hidden="true">↗</span>
+            </button>
+            <p class="why-resepin-hint">Pilih satu, lihat cara Resepin membantumu.</p>
+          </div>
+          <div class="why-resepin-visual" aria-live="polite" aria-atomic="true">
+            <Transition name="why-photo">
+              <img :key="activeWhyChoice.image" :src="activeWhyChoice.image" :alt="activeWhyChoice.alt" loading="eager" decoding="async" />
+            </Transition>
+            <span class="why-resepin-visual-stamp" aria-hidden="true"><i>✳</i><b>DARI DAPUR<br/>UNTUKMU</b></span>
+            <span class="why-resepin-visual-caption"><i></i>{{ activeWhyChoice.imageLabel }}</span>
+          </div>
+          <article class="why-resepin-copy" aria-live="polite" aria-atomic="true">
+            <span class="why-resepin-copy-kicker"><i></i>{{ activeWhyChoice.kicker }}</span>
+            <div class="why-resepin-copy-stage">
+            <Transition name="why-copy">
+              <div :key="whyChoiceIndex" class="why-resepin-copy-content">
+                <h3>{{ activeWhyChoice.title }}</h3>
+                <p>{{ activeWhyChoice.copy }}</p>
+              </div>
+            </Transition>
+            </div>
+            <div class="why-resepin-actions">
+              <a class="why-resepin-action-primary" href="#/resep" @click.prevent="go('resep')">Temukan resep <span aria-hidden="true">↗</span></a>
+              <a href="#how-it-works" @click.prevent.stop="scrollToHomeSection('how-it-works')">Lihat tiga langkah <span aria-hidden="true">↘</span></a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+    </div>
+
     <!-- How It Works -->
     <section class="section how-it-works relative isolate overflow-clip [perspective:950px] [transform-origin:50%_0] [translate:var(--page-rise-x,0px)_var(--page-rise-y,0px)] [rotate:x_var(--page-rise-tilt,0deg)] [scale:var(--page-rise-scale,1)] [opacity:var(--page-rise-opacity,1)] [transform-style:preserve-3d] [transition:none] [padding:80px_0] [padding-top:clamp(5.5rem,9vw,8rem)] [padding-bottom:clamp(5rem,8vw,7rem)]" id="how-it-works">
       <div class="container relative z-[2] mx-auto w-full max-w-[1240px] px-6">
@@ -251,7 +294,7 @@
         </div>
         <div class="steps-grid grid grid-cols-1 items-stretch justify-center gap-5 md:grid-cols-3">
           <div class="step-card group relative flex h-full w-full max-w-none cursor-default flex-col overflow-hidden rounded-[28px] border border-[var(--border)] bg-[var(--bg-card)] p-0 text-center shadow-[0_12px_30px_rgba(45,0,0,.06)] [translate:var(--step-story-x,0px)_var(--step-story-y,0px)_var(--step-story-z,0px)] [rotate:x_var(--step-story-rotate,0deg)] [scale:var(--step-story-scale,1)] [opacity:var(--step-story-opacity,1)] [transform-style:preserve-3d] [transition:none] transition duration-500 hover:-translate-y-2 hover:border-[var(--primary)] hover:shadow-[var(--shadow-card)]" data-step="1">
-            <div class="step-visual step-visual--ingredients"><img class="transition-[transform,filter] duration-[800ms] ease-[cubic-bezier(.2,.75,.25,1)] group-hover:-translate-y-1 group-hover:scale-[1.055] group-hover:saturate-[1.12]" src="/assets/img/workflow-ingredients.svg" alt="" loading="lazy"/><span class="step-number [font-family:var(--font-display)] [font-size:3rem] [font-weight:900] [color:rgba(109,8,8,.16)] [position:absolute] [top:16px] [right:20px] [line-height:1]">01</span></div>
+            <div class="step-visual step-visual--ingredients"><img class="transition-[transform,filter] duration-[800ms] ease-[cubic-bezier(.2,.75,.25,1)] group-hover:-translate-y-1 group-hover:scale-[1.055] group-hover:saturate-[1.12]" src="/assets/img/workflow-ingredients.webp" alt="" loading="lazy"/><span class="step-number">01</span><span class="step-visual-chip" aria-hidden="true">Bahan segar</span></div>
             <div class="step-card-body">
               <div class="step-card-heading"><span class="step-kicker">Mulai dari dapurmu</span></div>
               <h3>Pilih bahanmu</h3>
@@ -261,7 +304,7 @@
           </div>
           <div class="step-connector hidden" aria-hidden="true"></div>
           <div class="step-card group relative flex h-full w-full max-w-none cursor-default flex-col overflow-hidden rounded-[28px] border border-[var(--border)] bg-[var(--bg-card)] p-0 text-center shadow-[0_12px_30px_rgba(45,0,0,.06)] [translate:var(--step-story-x,0px)_var(--step-story-y,0px)_var(--step-story-z,0px)] [rotate:x_var(--step-story-rotate,0deg)] [scale:var(--step-story-scale,1)] [opacity:var(--step-story-opacity,1)] [transform-style:preserve-3d] [transition:none] transition duration-500 hover:-translate-y-2 hover:border-[var(--primary)] hover:shadow-[var(--shadow-card)]" data-step="2">
-            <div class="step-visual step-visual--checklist"><img class="transition-[transform,filter] duration-[800ms] ease-[cubic-bezier(.2,.75,.25,1)] group-hover:-translate-y-1 group-hover:scale-[1.055] group-hover:saturate-[1.12]" src="/assets/img/workflow-checklist.svg" alt="" loading="lazy"/><span class="step-number [font-family:var(--font-display)] [font-size:3rem] [font-weight:900] [color:rgba(109,8,8,.16)] [position:absolute] [top:16px] [right:20px] [line-height:1]">02</span></div>
+            <div class="step-visual step-visual--checklist"><img class="transition-[transform,filter] duration-[800ms] ease-[cubic-bezier(.2,.75,.25,1)] group-hover:-translate-y-1 group-hover:scale-[1.055] group-hover:saturate-[1.12]" src="/assets/img/workflow-checklist.webp" alt="" loading="lazy"/><span class="step-number">02</span><span class="step-visual-chip" aria-hidden="true">Daftar bahan</span></div>
             <div class="step-card-body">
               <div class="step-card-heading"><span class="step-kicker">Cek sebentar</span></div>
               <h3>Periksa daftar bahanmu</h3>
@@ -271,7 +314,7 @@
           </div>
           <div class="step-connector hidden" aria-hidden="true"></div>
           <div class="step-card group relative flex h-full w-full max-w-none cursor-default flex-col overflow-hidden rounded-[28px] border border-[var(--border)] bg-[var(--bg-card)] p-0 text-center shadow-[0_12px_30px_rgba(45,0,0,.06)] [translate:var(--step-story-x,0px)_var(--step-story-y,0px)_var(--step-story-z,0px)] [rotate:x_var(--step-story-rotate,0deg)] [scale:var(--step-story-scale,1)] [opacity:var(--step-story-opacity,1)] [transform-style:preserve-3d] [transition:none] transition duration-500 hover:-translate-y-2 hover:border-[var(--primary)] hover:shadow-[var(--shadow-card)]" data-step="3">
-            <div class="step-visual step-visual--recipe"><img class="transition-[transform,filter] duration-[800ms] ease-[cubic-bezier(.2,.75,.25,1)] group-hover:-translate-y-1 group-hover:scale-[1.055] group-hover:saturate-[1.12]" src="/assets/img/workflow-cooking.svg" alt="" loading="lazy"/><span class="step-number [font-family:var(--font-display)] [font-size:3rem] [font-weight:900] [color:rgba(109,8,8,.16)] [position:absolute] [top:16px] [right:20px] [line-height:1]">03</span></div>
+            <div class="step-visual step-visual--recipe"><img class="transition-[transform,filter] duration-[800ms] ease-[cubic-bezier(.2,.75,.25,1)] group-hover:-translate-y-1 group-hover:scale-[1.055] group-hover:saturate-[1.12]" src="/assets/img/workflow-cooking.webp" alt="" loading="lazy"/><span class="step-number">03</span><span class="step-visual-chip" aria-hidden="true">Siap dimasak</span></div>
             <div class="step-card-body">
               <div class="step-card-heading"><span class="step-kicker">Saatnya memasak</span></div>
               <h3>Dapat Resep & Masak!</h3>

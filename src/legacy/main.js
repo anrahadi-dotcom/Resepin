@@ -332,8 +332,7 @@ function updateHomeScrollStory() {
     hero.classList.toggle('is-scroll-story', Boolean(scrollSequenceEnabled));
     if (scrollSequenceEnabled) {
       const storyStart = window.scrollY + home.getBoundingClientRect().top;
-      // Keep the first hero pinned with one centered recipe visual before the
-      // next hero takes over. The recipe itself stays visible throughout.
+      // Keep the hero artwork still while the next section rises over it.
       sequenceProgress = Math.min(1, Math.max(0, (window.scrollY - storyStart) / (viewport * 0.44)));
       const hintFade = Math.min(1, Math.max(0, (sequenceProgress - 0.94) / 0.06));
       if (scrollHint) {
@@ -343,8 +342,6 @@ function updateHomeScrollStory() {
         const cueColor = [246, 238, 219].map((channel, index) => Math.round(channel + ([109, 8, 8][index] - channel) * colorProgress));
         scrollHint.style.setProperty('--scroll-hint-color', `rgb(${cueColor.join(',')})`);
       }
-      // Keep the hero copy and the single recipe visual visible. Scrolling
-      // controls the pinned section handoff, not a per-card reveal sequence.
       hero.querySelectorAll('.hero-desc, .hero-cta, .hero-favorites').forEach(element => {
         element.style.removeProperty('--hero-seq-opacity');
         element.style.removeProperty('--hero-seq-y');
@@ -361,7 +358,9 @@ function updateHomeScrollStory() {
       });
     }
     const heroProgress = Math.min(1, Math.max(0, (window.innerHeight - hero.getBoundingClientRect().bottom) / Math.max(1, hero.offsetHeight)));
-    const foregroundProgress = scrollSequenceEnabled ? 0 : heroProgress;
+    // The hero now scrolls with the page. Keep its foreground movement tied to
+    // that same scroll progress instead of holding the artwork in place.
+    const foregroundProgress = heroProgress;
     hero.style.setProperty('--hero-scroll-progress', foregroundProgress.toFixed(3));
     heroCopy?.style.setProperty('--hero-copy-scroll-y', `${Math.round(foregroundProgress * -22)}px`);
     heroCopy?.style.setProperty('--hero-copy-scroll-opacity', (1 - foregroundProgress * 0.58).toFixed(3));
@@ -369,12 +368,49 @@ function updateHomeScrollStory() {
     favorites?.style.setProperty('--hero-favorites-scroll-opacity', (1 - foregroundProgress * 0.72).toFixed(3));
     scene?.style.setProperty('--hero-scene-scroll-y', `${Math.round(foregroundProgress * 48)}px`);
     favorites?.querySelectorAll('.hero-favorite-card').forEach(card => {
-      card.style.setProperty('--scroll-card-x', '0px');
-      card.style.setProperty('--scroll-card-y', `${(foregroundProgress * -16).toFixed(1)}px`);
-      card.style.setProperty('--scroll-card-scale', (1 + foregroundProgress * 0.035).toFixed(3));
-      card.style.setProperty('--scroll-card-rotation', '0deg');
-      card.style.setProperty('--scroll-card-depth', `${(foregroundProgress * 16).toFixed(1)}px`);
+      card.style.setProperty('--scroll-card-x', `${(foregroundProgress * 42).toFixed(1)}px`);
+      card.style.setProperty('--scroll-card-y', `${(foregroundProgress * 24).toFixed(1)}px`);
+      card.style.setProperty('--scroll-card-scale', (1 - foregroundProgress * 0.045).toFixed(3));
+      card.style.setProperty('--scroll-card-rotation', `${(foregroundProgress * 1.2).toFixed(2)}deg`);
+      card.style.setProperty('--scroll-card-depth', `${(foregroundProgress * 10).toFixed(1)}px`);
     });
+    hero.querySelectorAll('.hero-editorial-title > span').forEach((line, index) => {
+      const directions = [-1, 1, -0.55];
+      line.style.setProperty('--hero-line-scroll-x', `${(foregroundProgress * directions[index] * 34).toFixed(1)}px`);
+      line.style.setProperty('--hero-line-scroll-y', `${(foregroundProgress * (22 + index * 7)).toFixed(1)}px`);
+      line.style.setProperty('--hero-line-scroll-opacity', (1 - foregroundProgress * 0.32).toFixed(3));
+    });
+    hero.querySelector('.hero-editorial-title')?.style.setProperty('--hero-title-scroll-scale', (1.1 - foregroundProgress * 0.25).toFixed(3));
+  }
+
+  const whyStage = home.querySelector('.why-takeover-stage');
+  if (whyStage) {
+    const rect = whyStage.getBoundingClientRect();
+    const desktopStory = window.matchMedia?.('(min-width: 901px) and (min-height: 680px)').matches;
+    const enterProgress = Math.min(1, Math.max(0, (viewport - rect.top) / viewport));
+    const smooth = value => {
+      const progress = Math.min(1, Math.max(0, value));
+      return progress * progress * (3 - 2 * progress);
+    };
+    const whyTitle = whyStage.querySelector('.why-resepin-heading h2');
+    if (whyTitle) {
+      const heroTitle = home.querySelector('.hero-editorial-title');
+      const easedProgress = desktopStory ? smooth(enterProgress) : 1;
+      const titleRect = whyTitle.getBoundingClientRect();
+      const currentX = Number.parseFloat(whyTitle.style.getPropertyValue('--why-title-drop-x')) || 0;
+      const currentY = Number.parseFloat(whyTitle.style.getPropertyValue('--why-title-drop-y')) || 0;
+      const titleBaseLeft = titleRect.left - currentX;
+      const titleBaseTop = titleRect.top - currentY;
+      const startX = heroTitle
+        ? heroTitle.getBoundingClientRect().left - titleBaseLeft
+        : 0;
+      const startY = heroTitle
+        ? heroTitle.getBoundingClientRect().bottom - 2 - titleBaseTop
+        : -Math.max(120, viewport * .38);
+      whyTitle.style.setProperty('--why-title-drop-x', `${(startX * (1 - easedProgress)).toFixed(1)}px`);
+      whyTitle.style.setProperty('--why-title-drop-y', `${(startY * (1 - easedProgress)).toFixed(1)}px`);
+      whyTitle.style.setProperty('--why-title-scroll-scale', (.4 + easedProgress * .6).toFixed(3));
+    }
   }
 
   const stage = home.querySelector('.hero-collage-stage');
@@ -532,7 +568,7 @@ function ensureScrollProgress() {
 
 window.refreshMotionReveals = function refreshMotionReveals() {
   ensureScrollProgress();
-  const selector = '.section-header, .step-card, .recipe-card, .cat-card, .stats-banner, .footer-grid, .jelajahi-section, .scan-layout, .ingredients-panel, .camera-viewport, .ai-cta-card, .chat-container, .profile-card, .hero-followthrough-copy, .hero-followthrough-orbit, .hero-collage-stage';
+  const selector = '.section-header, .step-card, .recipe-card, .cat-card, .stats-banner, .footer-grid, .jelajahi-section, .scan-layout, .ingredients-panel, .camera-viewport, .ai-cta-card, .chat-container, .profile-card, .hero-followthrough-copy, .hero-followthrough-orbit, .hero-collage-stage, #page-home .why-resepin-visual, #page-home .why-resepin-copy, #page-home .why-resepin-actions';
   const targets = document.querySelectorAll(selector);
   if (!motionRevealObserver) {
     motionRevealObserver = new IntersectionObserver(entries => {
