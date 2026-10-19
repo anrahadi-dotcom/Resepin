@@ -314,7 +314,17 @@ function updateScrollProgress() {
 
 function updateHomeScrollStory() {
   const home = document.getElementById('page-home');
-  if (!home?.classList.contains('active') || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+  if (!home) return;
+  const howItWorks = home.querySelector('#how-it-works');
+  if (home.classList.contains('active') && howItWorks) {
+    // Let the paper outline span the hero and the complete Why story, ending
+    // exactly where the next standalone section begins.
+    const frameHeight = `${Math.max(0, howItWorks.offsetTop)}px`;
+    if (home.style.getPropertyValue('--home-paper-frame-height') !== frameHeight) {
+      home.style.setProperty('--home-paper-frame-height', frameHeight);
+    }
+  }
+  if (!home.classList.contains('active') || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
   const viewport = Math.max(1, window.innerHeight);
   const progressAt = (element, start = 0.94, finish = 0.34) => {
     const top = element.getBoundingClientRect().top;
