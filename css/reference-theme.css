@@ -7028,6 +7028,30 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   background: #2d0000;
 }
 
+/* Restore the continuous desktop hero-to-Why scroll takeover. */
+@media (min-width: 901px) and (min-height: 680px) and (prefers-reduced-motion: no-preference) {
+  #page-home > .hero.hero-paper-theme {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 2;
+  }
+  #page-home > .why-takeover-stage {
+    height: 230svh !important;
+    margin: -16svh 0 16svh !important;
+  }
+  #page-home .why-takeover-stage > .why-resepin {
+    position: sticky !important;
+    top: 0 !important;
+    height: 100svh !important;
+    min-height: 100svh !important;
+  }
+}
+
+/* Tailwind's display utilities can override the browser's built-in hidden rule. */
+[hidden] {
+  display: none !important;
+}
+
 /* Scroll-led Why entrance: keep the heading's existing hero-to-Why motion,
    then bring each supporting element into the pinned scene in sequence. */
 #page-home .why-resepin-eyebrow,

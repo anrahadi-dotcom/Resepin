@@ -621,7 +621,7 @@ function ensureScrollProgress() {
 
 window.refreshMotionReveals = function refreshMotionReveals() {
   ensureScrollProgress();
-  const selector = '.section-header, .step-card, .recipe-card, .cat-card, .stats-banner, .footer-grid, .jelajahi-section, .scan-layout, .ingredients-panel, .camera-viewport, .ai-cta-card, .chat-container, .profile-card, .hero-followthrough-copy, .hero-followthrough-orbit, .hero-collage-stage, #page-home .why-resepin-visual, #page-home .why-resepin-copy, #page-home .why-resepin-actions';
+  const selector = '.section-header, .step-card, .recipe-card, .cat-card, .stats-banner, .footer-grid, .jelajahi-section, .scan-layout, .ingredients-panel, .camera-viewport, .ai-cta-card, .chat-container, .profile-card, .hero-followthrough-copy, .hero-followthrough-orbit, .hero-collage-stage';
   const targets = document.querySelectorAll(selector);
   if (!motionRevealObserver) {
     motionRevealObserver = new IntersectionObserver(entries => {
@@ -637,7 +637,8 @@ window.refreshMotionReveals = function refreshMotionReveals() {
                 if (event.target === element) element.classList.remove(animationClass);
               }, { once: true });
             };
-            if (isHomeMotionTarget) {
+            const scrollDrivenHomeElement = entry.target.matches('#page-home .step-card, #page-home .hero-collage-stage');
+            if (isHomeMotionTarget && !scrollDrivenHomeElement) {
               playTailwindMotion(entry.target);
             }
             if (entry.target.matches('#page-home .step-card')) {

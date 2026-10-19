@@ -63,6 +63,11 @@
       if (this.floatingChefChatOpen) requestAnimationFrame(() => { window.restoreChefChatHistory?.('miniChatMessages'); document.getElementById('miniChatInput')?.focus(); });
       else requestAnimationFrame(() => document.querySelector('.floating-chef-button')?.focus());
     },
+    closeFloatingChefChat() {
+      this.floatingChefChatOpen = false;
+      this.syncFloating();
+      requestAnimationFrame(() => document.querySelector('.floating-chef-button')?.focus());
+    },
     selectWhyChoice(index) { if (index >= 0 && index < this.whyChoices.length) { this.whyChoiceIndex = index; this.syncWhy(); } },
     toggleHeroIngredient(ingredient) {
       this.heroSelectedIngredients = this.heroSelectedIngredients.includes(ingredient) ? this.heroSelectedIngredients.filter(item => item !== ingredient) : [...this.heroSelectedIngredients, ingredient];
@@ -194,7 +199,7 @@
         if (event.key !== 'Escape') return;
         if (this.navSearchOpen) { this.navSearchOpen = false; this.syncNav(); document.querySelector('.nav-search-toggle')?.focus(); }
         if (this.menuOpen) { this.menuOpen = false; window.toggleMenu(false); this.syncNav(); document.getElementById('hamburgerBtn')?.focus(); }
-        if (this.floatingChefChatOpen) { this.floatingChefChatOpen = false; this.syncFloating(); document.querySelector('.floating-chef-button')?.focus(); }
+        if (this.floatingChefChatOpen) this.closeFloatingChefChat();
       });
       window.addEventListener('resepin:route', event => { this.activePage = event.detail?.page || this.activePage; this.floatingChefChatOpen = false; this.menuOpen = false; this.sync(); });
       const field = document.getElementById('heroIngredientSearch'); if (field) field.value = this.heroIngredientText;
