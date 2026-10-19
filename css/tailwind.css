@@ -46,6 +46,3 @@
 @import "./responsive.css" layer(components);
 @import "./reference-theme.css" layer(components);
 
-[v-cloak] {
-  @apply [display:none];
-}

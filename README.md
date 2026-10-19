@@ -55,7 +55,7 @@ Teman yang sudah menerima akses repo privat cukup menjalankan `git -C backend\sc
 
 ### Deploy ke Cloudflare Pages
 
-Frontend statis dibangun ke `dist/` dengan `npm run build` dan diunggah menggunakan Wrangler. Jalankan `npx wrangler pages deploy dist --project-name=resepin` setelah menghubungkan Wrangler ke akun Cloudflare.
+Frontend statis dibangun oleh Next.js ke `out/` dengan `npm run build` dan diunggah menggunakan Wrangler. Jalankan `npx wrangler pages deploy out --project-name=resepin` setelah menghubungkan Wrangler ke akun Cloudflare.
 
 Frontend tetap di Cloudflare Pages. Fungsi Pages untuk scan menjadi proxy ke layanan Python InstaCloud Free, yang memuat `backend/scan/models/best.pt` di server agar checkpoint tidak disajikan sebagai aset web. Deploy backend dari root repo dengan `npx -y insta@latest --agent deploy backend/scan --port 8080 --group scan-api --json`; `.dockerignore` di direktori itu membatasi arsip deploy ke file runtime dan model. `best.pt` tetap dikecualikan dari Git utama oleh `.gitignore`.
 
@@ -69,9 +69,12 @@ Frontend tetap di Cloudflare Pages. Fungsi Pages untuk scan menjadi proxy ke lay
 
 ## Struktur frontend
 
-- `index.html`: kerangka seluruh halaman aplikasi.
-- `src/app.js`: entry point Vue 3 untuk shell aplikasi dan interaksi hero.
-- `src/legacy/`: modul JavaScript lama yang masih menangani perilaku katalog, kamera, dan chat sambil dipindahkan ke komponen Vue.
+- `app/`: Next.js App Router, metadata halaman, dan React shell untuk aplikasi.
+- `index.html`: markup halaman yang dipakai sebagai sumber konten untuk shell React.
+- `src/app.js`: pengendali interaksi browser untuk navigasi, pencarian hero, pilihan Why, tema, dan chat mengambang.
+- `src/legacy/`: modul JavaScript browser untuk katalog resep, kamera, scan, animasi, dan chat; dimuat berurutan oleh React shell agar alur global yang sudah ada tetap hidup.
+- `next.config.mjs`: ekspor statis Next.js untuk Cloudflare Pages.
+- `scripts/prepare-next.mjs`: menyalin aset browser dan membangun Tailwind sebelum Next menjalankan build.
 - `functions/api/detect.js` dan `functions/api/health.js`: proxy Pages ke API scan di InstaCloud.
 - `backend/scan/`: server Python, dependensi, konfigurasi Docker, daftar kelas, dan checkout model privat untuk API scan InstaCloud.
 - `css/reference-theme.css`: token warna krem/cokelat, komponen, dan breakpoint tambahan.
@@ -86,7 +89,7 @@ Beranda → Scan Bahan → izinkan kamera → arahkan ke bahan → Ambil Foto �
 
 ## Pengembangan, build, dan pemeriksaan
 
-Frontend memakai Vue 3 yang disimpan di repo, HTML, dan CSS; skrip build hanya menyalin file statis ke `dist/` untuk Cloudflare Pages. Untuk menyiapkan deploy dan menjalankan cek lokal:
+Frontend memakai Next.js App Router dan React dengan ekspor statis ke `out/`, agar Pages Functions yang sudah ada tetap dapat melayani API. Jalankan `npm run dev` untuk pengembangan lokal dan `npm run build` untuk menyiapkan situs produksi. Untuk menjalankan cek:
 
 ```powershell
 npm test
@@ -105,9 +108,9 @@ npm run build
 - Foto katalog menetapkan dimensi intrinsik 800×600, sedangkan gambar modal mempertahankan rasio melalui kontainer dan CSS. Gambar hero bukan gambar konten dan memakai ukuran cover.
 - Petunjuk navbar tetap mengajarkan hover pada desktop dan klik pada perangkat sentuh; petunjuk menghilang setelah interaksi pertama.
 
-Antarmuka memakai Vue 3 yang disimpan di repo, HTML, dan CSS responsif. Server Python di `backend/scan/` memuat `models/best.pt` menggunakan Ultralytics/PyTorch saat server mulai; checkpoint ini berisi 30 kelas bahan berbahasa Indonesia, yang juga dicatat di `backend/scan/data_classes.yaml`. Foto kamera dikirim ke `/api/detect` dan diproses oleh server lokal saat pengembangan atau server InstaCloud setelah deploy. Aplikasi tidak menulis foto ke disk. Model mendeteksi objek sesuai kelas yang dipelajari; periksa hasilnya dan tambahkan bahan lain secara manual bila perlu. Mode Demo selalu menghasilkan bahan contoh dan bukan deteksi model.
+Antarmuka memakai Next.js App Router, React, HTML, dan CSS responsif. Animasi scroll dan modul browser lama tetap dipakai dari dalam shell React, sementara interaksi shell Vue diganti dengan pengendali JavaScript tanpa runtime Vue. Server Python di `backend/scan/` memuat `models/best.pt` menggunakan Ultralytics/PyTorch saat server mulai; checkpoint ini berisi 30 kelas bahan berbahasa Indonesia, yang juga dicatat di `backend/scan/data_classes.yaml`. Foto kamera dikirim ke `/api/detect` dan diproses oleh server lokal saat pengembangan atau server InstaCloud setelah deploy. Aplikasi tidak menulis foto ke disk. Model mendeteksi objek sesuai kelas yang dipelajari; periksa hasilnya dan tambahkan bahan lain secara manual bila perlu. Mode Demo selalu menghasilkan bahan contoh dan bukan deteksi model.
 
-Server deteksi lokal hanya bind ke `127.0.0.1`; image InstaCloud mengatur `HOST=0.0.0.0` dan `PORT=8080`. API memeriksa origin yang diizinkan, mendukung shared token antarserver, membatasi foto ke JPG/PNG/WebP hingga 10 MB, dan tidak menulis foto ke disk. Konfigurasikan `RESEPIN_SCAN_TOKEN` sebagai secret di backend InstaCloud dan Cloudflare Pages; set `RESEPIN_ALLOWED_ORIGINS=https://resepin-3k1.pages.dev` pada backend. Konfigurasikan `RESEPIN_SCAN_API_URL` di Pages dengan URL HTTPS servis InstaCloud. Jangan masukkan nilai secret ke Git, source frontend, atau HTML. Paket Free InstaCloud memberi kredit pemakaian bulanan dan menjeda project jika kredit habis; servis scale-to-zero bisa memerlukan waktu untuk bangun saat permintaan pertama. Chef memakai aturan JavaScript lokal terlebih dulu dan meneruskan pertanyaan yang belum dikenali ke Cloudflare Workers AI. Binding `AI` dikonfigurasi di `wrangler.jsonc`; tidak ada kunci API di browser. Workers AI memiliki alokasi gratis harian yang terbatas, sehingga jawaban AI bisa tidak tersedia saat kuota habis. Saat lokal, jalankan `npm run build` lalu `npx wrangler pages dev dist --ai=AI`; penggunaan binding AI lokal tetap memanggil layanan Cloudflare. Jika layanan gagal, Chef menampilkan jawaban fallback lokal. Maksimal enam pesan percakapan terakhir dikirim untuk konteks; jangan masukkan data pribadi/sensitif. Font masih dimuat dari Google Fonts.
+Server deteksi lokal hanya bind ke `127.0.0.1`; image InstaCloud mengatur `HOST=0.0.0.0` dan `PORT=8080`. API memeriksa origin yang diizinkan, mendukung shared token antarserver, membatasi foto ke JPG/PNG/WebP hingga 10 MB, dan tidak menulis foto ke disk. Konfigurasikan `RESEPIN_SCAN_TOKEN` sebagai secret di backend InstaCloud dan Cloudflare Pages; set `RESEPIN_ALLOWED_ORIGINS=https://resepin-3k1.pages.dev` pada backend. Konfigurasikan `RESEPIN_SCAN_API_URL` di Pages dengan URL HTTPS servis InstaCloud. Jangan masukkan nilai secret ke Git, source frontend, atau HTML. Paket Free InstaCloud memberi kredit pemakaian bulanan dan menjeda project jika kredit habis; servis scale-to-zero bisa memerlukan waktu untuk bangun saat permintaan pertama. Chef memakai aturan JavaScript lokal terlebih dulu dan meneruskan pertanyaan yang belum dikenali ke Cloudflare Workers AI. Binding `AI` dikonfigurasi di `wrangler.jsonc`; tidak ada kunci API di browser. Workers AI memiliki alokasi gratis harian yang terbatas, sehingga jawaban AI bisa tidak tersedia saat kuota habis. Saat lokal, jalankan `npm run build` lalu `npx wrangler pages dev out --ai=AI`; penggunaan binding AI lokal tetap memanggil layanan Cloudflare. Jika layanan gagal, Chef menampilkan jawaban fallback lokal. Maksimal enam pesan percakapan terakhir dikirim untuk konteks; jangan masukkan data pribadi/sensitif. Font masih dimuat dari Google Fonts.
 
 Pencarian bahan membandingkan bahan resep yang dinormalisasi, menerima sinonim dan toleransi typo kecil, lalu mengurutkan hasil berdasarkan kecocokan. Harga adalah perkiraan lokal, bukan harga real-time. Data katalog saat ini tidak punya takaran tepercaya untuk tiap bahan; karena itu penskalaan porsi disembunyikan alih-alih menampilkan jumlah karangan. Mode timer hanya muncul jika langkah resep punya durasi terstruktur. Penyimpanan resep memakai localStorage pada browser pengguna.
 

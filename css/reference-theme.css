@@ -5254,7 +5254,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 #page-home .hero-paper-scene {
   z-index: 0;
   overflow: hidden;
-  background: var(--hero-paper-edge) url("/assets/img/hero-rustic-fried-rice.webp") center 52% / cover no-repeat;
+  background: var(--hero-paper-edge);
   translate: none;
 }
 
@@ -5293,26 +5293,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     linear-gradient(180deg, rgba(28,9,8,.14), rgba(28,9,8,.28));
 }
 [data-theme="dark"] #page-home .hero-paper-scene::after { opacity: .08; mix-blend-mode: screen; }
-
-#page-home .hero-paper-scene .hero-topographic-map {
-  position: absolute;
-  z-index: 1;
-  inset: 12px;
-  width: calc(100% - 24px);
-  height: calc(100% - 24px);
-  overflow: visible;
-  color: var(--hero-paper-ink);
-  opacity: .105;
-  pointer-events: none;
-}
-#page-home .hero-paper-scene .hero-topographic-map path {
-  stroke-dasharray: 2600;
-  stroke-dashoffset: 2600;
-  animation: hero-topographic-draw 2.4s cubic-bezier(.2,.68,.2,1) forwards;
-}
-#page-home .hero-paper-scene .hero-topographic-map path:nth-child(2n) { animation-delay: .12s; }
-#page-home .hero-paper-scene .hero-topographic-map path:nth-child(3n) { animation-delay: .24s; }
-@keyframes hero-topographic-draw { to { stroke-dashoffset: 0; } }
 
 #page-home .hero-paper-edition,
 #page-home .hero-paper-note {
@@ -6378,8 +6358,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #page-home .hero-paper-scene .hero-topographic-map path,
-  #page-home .why-topographic-map path { animation: none !important; stroke-dashoffset: 0; }
   #page-home .hero-paper-theme .hero-favorite-card,
   #page-home .hero-paper-theme .hero-favorite-card img,
   #page-home .hero-paper-theme .hero-feature-orbit,
@@ -6679,19 +6657,13 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   margin-inline: auto;
   padding-inline: clamp(18px, 2.6vw, 34px);
 }
-#page-home .why-resepin::before,
-#page-home .why-resepin-lines {
+#page-home .why-resepin::before {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
 #page-home .why-resepin::before {
   content: "";
-}
-#page-home .why-resepin-lines {
-  opacity: .32;
-  background: repeating-radial-gradient(ellipse at 8% 22%, transparent 0 84px, rgba(45, 0, 0, .055) 85px 86px, transparent 87px 112px);
-  mask-image: linear-gradient(90deg, #000, transparent 66%);
 }
 #page-home .why-resepin-heading { position: relative; }
 #page-home .why-resepin-eyebrow,
@@ -6723,30 +6695,31 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 #page-home .why-resepin-options { display: grid; gap: 10px; align-content: center; }
 #page-home .why-resepin-option {
   display: grid;
-  min-height: 54px;
-  grid-template-columns: 27px minmax(0, 1fr) 18px;
+  min-height: 58px;
+  grid-template-columns: 32px minmax(0, 1fr) 18px;
   align-items: center;
-  gap: 10px;
-  padding: 0 16px;
+  gap: 12px;
+  padding: 0 17px 0 12px;
   border: 1px solid var(--why-line);
-  border-radius: 999px;
+  border-radius: 17px 17px 17px 7px;
   color: var(--why-ink);
-  background: var(--why-pill);
+  background: linear-gradient(115deg, color-mix(in srgb, var(--why-pill) 88%, white), color-mix(in srgb, var(--why-bg-b) 88%, transparent));
   text-align: left;
-  font: 600 .86rem/1.25 "DM Sans", sans-serif;
+  font: 650 .84rem/1.25 "DM Sans", sans-serif;
   cursor: pointer;
-  transition: color .28s ease, background .28s ease, border-color .28s ease, transform .28s cubic-bezier(.2,.75,.25,1), box-shadow .28s ease;
+  transition: color .32s ease, background .32s ease, border-color .32s ease, transform .32s cubic-bezier(.2,.75,.25,1), box-shadow .32s ease;
 }
-#page-home .why-resepin-option:hover { transform: translateX(5px); border-color: rgba(109, 8, 8, .38); }
+#page-home .why-resepin-option:hover { transform: translateX(5px); border-color: color-mix(in srgb, var(--primary) 46%, var(--why-line)); }
 #page-home .why-resepin-option.is-active {
-  transform: translateX(9px);
-  border-color: #6d0808;
-  color: #f6f1e4;
-  background: #6d0808;
-  box-shadow: 0 12px 28px rgba(45, 0, 0, .12);
+  transform: translateX(8px);
+  border-color: color-mix(in srgb, var(--primary) 75%, transparent);
+  color: var(--primary-light);
+  background: linear-gradient(115deg, var(--primary-dark), var(--primary));
+  box-shadow: 0 14px 30px rgba(45, 0, 0, .2), inset 0 1px 0 rgba(255,255,255,.13);
 }
-#page-home .why-resepin-option-number { color: currentColor; font-size: .62rem; font-weight: 800; letter-spacing: .09em; opacity: .67; }
+#page-home .why-resepin-option-number { display: grid; width: 30px; height: 30px; place-items: center; border: 1px solid currentColor; border-radius: 50%; color: currentColor; font-size: .62rem; font-weight: 800; letter-spacing: .05em; opacity: .72; }
 #page-home .why-resepin-option-arrow { justify-self: end; font-size: 1rem; opacity: .65; transition: transform .25s ease, opacity .25s ease; }
+#page-home .why-resepin-option.is-active .why-resepin-option-number { opacity: 1; background: rgba(238,234,215,.12); }
 #page-home .why-resepin-option.is-active .why-resepin-option-arrow { transform: translate(2px,-2px); opacity: 1; }
 #page-home .why-resepin-hint { max-width: 230px; margin: 9px 12px 0; color: var(--why-muted); font-size: .76rem; line-height: 1.6; }
 #page-home .why-resepin-visual {
@@ -6887,9 +6860,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
     radial-gradient(ellipse at 51% 53%, rgba(170, 177, 164, .13), transparent 38%),
     radial-gradient(ellipse at 13% 78%, rgba(182, 91, 77, .06), transparent 34%);
 }
-[data-theme="dark"] #page-home .why-resepin-lines {
-  background: repeating-radial-gradient(ellipse at 8% 22%, transparent 0 84px, rgba(243, 237, 223, .055) 85px 86px, transparent 87px 112px);
-}
 [data-theme="dark"] #page-home .why-resepin-option.is-active {
   border-color: #f3eddf;
   color: #2d0000;
@@ -6945,13 +6915,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   isolation: isolate;
   --home-paper-outline: rgba(45,0,0,.15);
   background-color: var(--hero-paper-edge);
-  background-image:
-    linear-gradient(105deg, rgba(242,237,223,.50) 0%, rgba(242,237,223,.38) 39%, rgba(242,237,223,.48) 100%),
-    url("/assets/img/hero-rustic-fried-rice.webp");
-  background-position: center, center 52%;
-  background-size: auto, cover;
-  background-repeat: no-repeat;
-  background-attachment: scroll, fixed;
+  background-image: none;
 }
 #page-home::before {
   position: absolute;
@@ -7049,47 +7013,51 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 #page-home .how-it-works::before {
   display: none;
 }
-#page-home .why-resepin-lines {
-  display: none;
-}
-#page-home .why-topographic-map {
-  position: absolute;
-  z-index: 0;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  color: var(--why-ink);
-  opacity: .105;
-  pointer-events: none;
-}
-#page-home .why-topographic-map path {
-  stroke-dasharray: 2600;
-  stroke-dashoffset: 2600;
-  animation: hero-topographic-draw 2.4s cubic-bezier(.2,.68,.2,1) forwards;
-}
-#page-home .why-topographic-map path:nth-child(2n) { animation-delay: .12s; }
-#page-home .why-topographic-map path:nth-child(3n) { animation-delay: .24s; }
-[data-theme="dark"] #page-home .why-topographic-map { opacity: .15; }
 [data-theme="dark"] #page-home .why-resepin {
   background: transparent;
 }
 [data-theme="dark"] #page-home {
   --home-paper-outline: rgba(238,234,215,.19);
   background-color: #1c0908;
-  background-image:
-    linear-gradient(105deg, rgba(28,9,8,.76) 0%, rgba(28,9,8,.58) 42%, rgba(28,9,8,.68) 100%),
-    url("/assets/img/hero-rustic-fried-rice.webp");
-  background-position: center, center 52%;
-  background-size: auto, cover;
-  background-repeat: no-repeat;
-  background-attachment: scroll, fixed;
+  background-image: none;
 }
 [data-theme="dark"] #page-home .hero-paper-scene::before {
   background: transparent;
 }
 [data-theme="dark"] #page-home .how-it-works {
   background: #2d0000;
+}
+
+/* Scroll-led Why entrance: keep the heading's existing hero-to-Why motion,
+   then bring each supporting element into the pinned scene in sequence. */
+#page-home .why-resepin-eyebrow,
+#page-home .why-resepin-index,
+#page-home .why-resepin-option,
+#page-home .why-resepin-hint,
+#page-home .why-resepin-visual,
+#page-home .why-resepin-copy-kicker,
+#page-home .why-resepin-copy-content,
+#page-home .why-resepin-actions {
+  translate: var(--why-enter-x, 0px) var(--why-enter-y, 0px);
+  opacity: var(--why-enter-opacity, 1);
+  will-change: translate, opacity;
+}
+#page-home .why-resepin-visual {
+  scale: var(--why-enter-scale, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  #page-home .why-resepin-eyebrow,
+  #page-home .why-resepin-index,
+  #page-home .why-resepin-option,
+  #page-home .why-resepin-hint,
+  #page-home .why-resepin-visual,
+  #page-home .why-resepin-copy-kicker,
+  #page-home .why-resepin-copy-content,
+  #page-home .why-resepin-actions {
+    translate: none !important;
+    scale: 1 !important;
+    opacity: 1 !important;
+  }
 }
 [data-theme="dark"] #page-home .how-it-works {
   background: #2d0000;

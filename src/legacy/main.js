@@ -231,6 +231,7 @@ function renderLocationRoute() {
     window.resepinApp.menuOpen = false;
   }
   showPage(page);
+  window.dispatchEvent(new CustomEvent('resepin:route', { detail: { page } }));
   if (recipe) openRecipeModal(recipe.title, recipe.time, recipe.servings, recipe.ingredients, recipe.steps, { updateRoute: false });
   else {
     closeRecipeModal({ preserveRoute: true });
@@ -403,6 +404,48 @@ function updateHomeScrollStory() {
       return progress * progress * (3 - 2 * progress);
     };
     const whyTitle = whyStage.querySelector('.why-resepin-heading h2');
+    const whyOptions = Array.from(whyStage.querySelectorAll('.why-resepin-option'));
+    const revealTargets = [
+      ...whyOptions,
+      ...whyStage.querySelectorAll('.why-resepin-eyebrow, .why-resepin-index, .why-resepin-hint, .why-resepin-visual, .why-resepin-copy-kicker, .why-resepin-copy-content, .why-resepin-actions')
+    ];
+    const reveal = (element, progress, start, finish, x, y, scale = 1) => {
+      if (!element) return;
+      const phase = Math.min(1, Math.max(0, (progress - start) / (finish - start)));
+      const eased = smooth(phase);
+      element.style.setProperty('--why-enter-x', `${((1 - eased) * x).toFixed(1)}px`);
+      element.style.setProperty('--why-enter-y', `${((1 - eased) * y).toFixed(1)}px`);
+      element.style.setProperty('--why-enter-opacity', (0.04 + eased * 0.96).toFixed(3));
+      if (element.classList.contains('why-resepin-visual')) {
+        element.style.setProperty('--why-enter-scale', (scale + eased * (1 - scale)).toFixed(3));
+      }
+    };
+    if (desktopStory) {
+      // The pinned Why scene has 130vh of travel after it reaches the top.
+      // Spread its supporting content over the whole takeover, not just the
+      // brief moment when the section first enters the viewport.
+      const stageStart = viewport * .84;
+      const stageTravel = Math.max(1, rect.height - stageStart);
+      const storyProgress = Math.min(1, Math.max(0, (stageStart - rect.top) / stageTravel));
+      reveal(whyStage.querySelector('.why-resepin-eyebrow'), storyProgress, .035, .20, -24, 10);
+      reveal(whyStage.querySelector('.why-resepin-index'), storyProgress, .07, .24, 24, 10);
+      whyOptions.forEach((option, index) => {
+        const start = .08 + index * .055;
+        reveal(option, storyProgress, start, start + .27, -58, 12);
+      });
+      reveal(whyStage.querySelector('.why-resepin-hint'), storyProgress, .27, .48, -20, 12);
+      reveal(whyStage.querySelector('.why-resepin-visual'), storyProgress, .16, .58, 0, 58, .92);
+      reveal(whyStage.querySelector('.why-resepin-copy-kicker'), storyProgress, .29, .56, 42, 14);
+      reveal(whyStage.querySelector('.why-resepin-copy-content'), storyProgress, .37, .73, 58, 18);
+      reveal(whyStage.querySelector('.why-resepin-actions'), storyProgress, .52, .84, 34, 16);
+    } else {
+      revealTargets.forEach(element => {
+        element.style.removeProperty('--why-enter-x');
+        element.style.removeProperty('--why-enter-y');
+        element.style.removeProperty('--why-enter-opacity');
+        element.style.removeProperty('--why-enter-scale');
+      });
+    }
     if (whyTitle) {
       const heroTitle = home.querySelector('.hero-editorial-title');
       const easedProgress = desktopStory ? smooth(enterProgress) : 1;
@@ -1827,7 +1870,7 @@ document.addEventListener('keydown', (e) => {
 // ============================================================
 // INIT
 // ============================================================
-document.addEventListener('DOMContentLoaded', () => {
+function initializeResepinLegacyApp() {
   initRecipeIntro();
   window.addEventListener('popstate', renderLocationRoute);
   window.addEventListener('hashchange', renderLocationRoute);
@@ -1870,4 +1913,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (Math.abs(distance) > 70) moveCookingStep(distance < 0 ? 1 : -1);
     swipeStartX = null;
   }, { passive: true });
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeResepinLegacyApp, { once: true });
+} else {
+  initializeResepinLegacyApp();
+}

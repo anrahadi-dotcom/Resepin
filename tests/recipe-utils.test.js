@@ -73,11 +73,11 @@ test('recipe catalog has forty complete entries with available local photos', ()
   }
 });
 
-test('critical static UI controls stay accessible and independent of external Vue CDN', () => {
+test('critical static UI controls stay accessible without a Vue runtime', () => {
   const html = readFileSync(resolve(root, 'index.html'), 'utf8');
   const main = readFileSync(resolve(root, 'src/legacy/main.js'), 'utf8');
-  assert.match(html, /assets\/vendor\/vue-3\.5\.22\.global\.prod\.js" defer/);
-  assert.ok(existsSync(resolve(root, 'assets/vendor/vue-3.5.22.global.prod.js')));
+  assert.doesNotMatch(html, /vue-3|v-(?:if|for|model|show)\b|\{\{/i);
+  assert.match(html, /data-app-event-click="go\('home'\)"/);
   assert.doesNotMatch(html, /unpkg\.com\/vue/);
   assert.match(html, /id="galleryIngredientUpload" type="file" accept="image\/\*"/);
   assert.doesNotMatch(html, /id="galleryIngredientUpload"[^>]*capture=/);
@@ -92,7 +92,7 @@ test('critical static UI controls stay accessible and independent of external Vu
   assert.match(main, /href="#\/resep\/\$\{recipeSlug\(r\)\}"/);
   assert.match(main, /checkScanBackendAvailability/);
   assert.match(html, /id="navIngredientSearch"/);
-  assert.match(html, /id="heroIngredientSearch" v-model="heroIngredientText"/);
+  assert.match(html, /id="heroIngredientSearch" type="search"/);
   assert.doesNotMatch(html, /class="hero-search-form/);
   assert.match(html, /class="[^"]*\bbtn-scan-nav\b[^"]*" aria-label="Scan bahan"/);
   assert.doesNotMatch(html, /class="nav-wordmark"/);

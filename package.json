@@ -3,12 +3,18 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node scripts/build.mjs",
+    "dev": "node scripts/prepare-next.mjs && next dev",
+    "build": "node scripts/prepare-next.mjs && next build",
     "test": "node --test tests/*.test.js",
     "qa:offline": "node tools/chef-qa/run-offline-qa.mjs"
   },
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.3",
     "tailwindcss": "^4.3.3"
+  },
+  "dependencies": {
+    "next": "16.4.2",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   }
 }

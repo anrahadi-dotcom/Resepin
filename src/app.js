@@ -1,62 +1,22 @@
-/* Vue 3 owns the application shell and ingredient search in the hero. */
-const { createApp } = Vue;
+/* Client-side interactions for the Next.js rendered Resepin shell. */
+(() => {
+  const popularIngredients = ['Telur', 'Ayam', 'Tahu', 'Nasi', 'Tempe'];
+  const heroIngredientOptions = ['Nasi', 'Telur', 'Cabai', 'Tahu', 'Ayam', 'Tempe', 'Jagung', 'Wortel'];
+  const whyChoices = [
+    { label: 'Mulai dari bahanmu', kicker: 'Dari isi dapurmu', title: 'Nggak perlu mulai dari nol.', copy: 'Sebutkan bahan yang masih ada. Resepin bantu menyusun ide masakan dari isi dapurmu, jadi kamu tahu apa yang bisa dimasak hari ini.', image: '/assets/img/workflow-ingredients.webp', imageLabel: 'Bahan segar yang sudah tersedia', alt: 'Tomat, wortel, bayam, bawang, dan ayam di atas meja dapur.' },
+    { label: 'Resep yang fleksibel', kicker: 'Kamu yang pegang kendali', title: 'Sesuaikan sebelum mulai.', copy: 'Cek daftar bahan dan ubah kalau ada yang kurang pas. Resep terasa lebih masuk akal untuk bahan dan kebutuhanmu.', image: '/assets/img/workflow-checklist.webp', imageLabel: 'Rencana masak yang bisa disesuaikan', alt: 'Catatan daftar bahan dengan wortel, bayam, dan persiapan memasak.' },
+    { label: 'Ada teman masak', kicker: 'Teman di dapur', title: 'Kalau bingung, tinggal tanya.', copy: 'Tanya Chef Resepin soal variasi, pengganti bahan, atau tips saat memasak. Biar langkah berikutnya terasa lebih jelas.', image: '/assets/img/chef-hero.jpg', imageLabel: 'Teman untuk bertanya di dapur', alt: 'Koki menyiapkan hidangan di dapur.' },
+    { label: 'Langkah yang jelas', kicker: 'Dari rencana ke meja makan', title: 'Ikuti satu langkah tiap waktu.', copy: 'Lihat urutan memasak dengan jelas, dari persiapan sampai sajian siap. Kamu bisa fokus memasak tanpa menebak langkah berikutnya.', image: '/assets/img/workflow-checklist.webp', imageLabel: 'Daftar persiapan sebelum memasak', alt: 'Daftar bahan dan sayuran yang sudah disiapkan untuk memasak.' },
+    { label: 'Kurangi bahan terbuang', kicker: 'Pakai yang sudah ada', title: 'Bahan tersisa tetap berarti.', copy: 'Mulai dari bahan yang hampir terlupa di kulkas. Resepin bantu mengubahnya jadi menu rumahan yang layak dinikmati.', image: '/assets/img/workflow-cooking.webp', imageLabel: 'Bahan sederhana jadi hidangan', alt: 'Hidangan nasi hangat yang disiapkan dari bahan dapur.' }
+  ];
 
-createApp({
-  data() {
-    return {
-      heroIngredientText: '',
-      heroSelectedIngredients: [],
-      heroSearchMessage: '',
-      heroInView: true,
-      heroVisibilityObserver: null,
-      heroIngredientOptions: ['Nasi', 'Telur', 'Cabai', 'Tahu', 'Ayam', 'Tempe', 'Jagung', 'Wortel'],
-      heroDropActive: false,
-      heroCardDrag: null,
-      heroFavoriteOrder: [19, 23],
-      heroFavoriteTimer: null,
-      popularIngredients: ['Telur', 'Ayam', 'Tahu', 'Nasi', 'Tempe'],
-      activePage: 'home',
-      menuOpen: false,
-      navSearchOpen: false,
-      impactYear: 2000,
-      whyChoiceIndex: 0,
-      whyChoices: [
-        {
-          label: 'Mulai dari bahanmu',
-          kicker: 'Dari isi dapurmu',
-          title: 'Nggak perlu mulai dari nol.',
-          copy: 'Sebutkan bahan yang masih ada. Resepin bantu menyusun ide masakan dari isi dapurmu, jadi kamu tahu apa yang bisa dimasak hari ini.',
-          image: '/assets/img/workflow-ingredients.webp',
-          imageLabel: 'Bahan segar yang sudah tersedia',
-          alt: 'Tomat, wortel, bayam, bawang, dan ayam di atas meja dapur.'
-        },
-        {
-          label: 'Resep yang fleksibel',
-          kicker: 'Kamu yang pegang kendali',
-          title: 'Sesuaikan sebelum mulai.',
-          copy: 'Cek daftar bahan dan ubah kalau ada yang kurang pas. Resep terasa lebih masuk akal untuk bahan dan kebutuhanmu.',
-          image: '/assets/img/workflow-checklist.webp',
-          imageLabel: 'Rencana masak yang bisa disesuaikan',
-          alt: 'Catatan daftar bahan dengan wortel, bayam, dan persiapan memasak.'
-        },
-        {
-          label: 'Ada teman masak',
-          kicker: 'Teman di dapur',
-          title: 'Kalau bingung, tinggal tanya.',
-          copy: 'Tanya Chef Resepin soal variasi, pengganti bahan, atau tips saat memasak. Biar langkah berikutnya terasa lebih jelas.',
-          image: '/assets/img/workflow-cooking.webp',
-          imageLabel: 'Ide masak siap disajikan',
-          alt: 'Semangkuk nasi goreng hangat dengan telur dan daun bawang.'
-        }
-      ],
-      floatingChefChatOpen: false
-    };
-  },
-  computed: {
-    activeWhyChoice() {
-      return this.whyChoices[this.whyChoiceIndex] || this.whyChoices[0];
-    },
-    heroSearchIngredients() {
+  const app = {
+    heroIngredientText: '', heroSelectedIngredients: [], heroSearchMessage: '',
+    heroIngredientOptions, popularIngredients, activePage: 'home', menuOpen: false,
+    navSearchOpen: false, whyChoiceIndex: 0, floatingChefChatOpen: false,
+    heroFavoriteOrder: [19, 23], heroFavoriteTimer: null, heroVisibilityObserver: null,
+    heroCardDrag: null, whyChoices,
+    get heroSearchIngredients() {
       const typed = this.heroIngredientText.split(/[,;\n]+/).map(value => value.trim()).filter(Boolean);
       const unique = new Map();
       [...this.heroSelectedIngredients, ...typed].forEach(value => {
@@ -65,290 +25,56 @@ createApp({
       });
       return [...unique.values()];
     },
-    heroRecipeSuggestion() {
-      const ingredients = this.heroSearchIngredients;
-      if (!ingredients.length || typeof RECIPES_DB === 'undefined') return null;
-      const normalize = value => value.toLocaleLowerCase('id').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-      return RECIPES_DB.map(recipe => {
-        const matchedIngredients = ingredients.filter(selected =>
-          recipe.ingredients.some(ingredient => normalize(ingredient).includes(normalize(selected)))
-        );
-        return { recipe, matchedCount: matchedIngredients.length };
-      }).filter(result => result.matchedCount > 0)
-        .sort((a, b) => b.matchedCount - a.matchedCount || (Number.parseInt(a.recipe.time, 10) || 999) - (Number.parseInt(b.recipe.time, 10) || 999))
-        .map(result => ({ ...result.recipe, matchedCount: result.matchedCount }))[0] || null;
+    get activeWhyChoice() { return this.whyChoices[this.whyChoiceIndex] || this.whyChoices[0]; },
+    get heroFavoriteRecipes() { return this.heroFavoriteOrder.map(id => RECIPES_DB.find(recipe => recipe.id === id)).filter(Boolean); },
+    get heroFeaturedRecipe() { return this.heroFavoriteRecipes[0] || RECIPES_DB[0]; },
+    get heroRecipeSuggestion() {
+      const selected = this.heroSearchIngredients;
+      if (!selected.length) return null;
+      const normalize = value => String(value).toLocaleLowerCase('id').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      return RECIPES_DB.map(recipe => ({ recipe, matches: selected.filter(item => recipe.ingredients.some(ingredient => normalize(ingredient).includes(normalize(item)))).length }))
+        .filter(item => item.matches)
+        .sort((a, b) => b.matches - a.matches || (parseInt(a.recipe.time, 10) || 999) - (parseInt(b.recipe.time, 10) || 999))
+        .map(item => ({ ...item.recipe, matchedCount: item.matches }))[0] || null;
     },
-    heroRecipeMatchCount() {
-      return this.heroRecipeSuggestion?.matchedCount || 0;
-    },
-    impactTonnage() {
-      // The Bappenas study publishes an annual chart, not a year-by-year data table.
-      // Use rounded visual estimates between the chart's 2000 and 2018 endpoints.
-      if (this.impactYear >= 2019) return '≈ 46';
-      const progress = (this.impactYear - 2000) / 18;
-      return `≈ ${Math.round(23 + progress * 25)}`;
-    },
-    heroRecipeImage() {
-      if (!this.heroRecipeSuggestion || typeof RECIPE_IMAGES === 'undefined') return '/assets/img/chef-hero.jpg';
-      const imageSlug = RECIPE_IMAGES[this.heroRecipeSuggestion.id];
-      return imageSlug ? `/assets/img/${imageSlug}.jpg` : '/assets/img/chef-hero.jpg';
-    },
-    heroFavoriteRecipes() {
-      return this.heroFavoriteOrder.map(id => RECIPES_DB.find(recipe => recipe.id === id)).filter(Boolean);
-    },
-    heroFeaturedRecipe() {
-      return this.heroFavoriteRecipes[0] || null;
-    }
-  },
-  watch: {
-    floatingChefChatOpen(isOpen, wasOpen) {
-      if (!isOpen && wasOpen) this.$nextTick(() => document.querySelector('.floating-chef-button')?.focus());
-    }
-  },
-  mounted() {
-    window.resepinApp = this;
-    document.addEventListener('click', this.closeMenuOnOutside);
-    document.addEventListener('keydown', this.closeMenuOnEscape);
-    this.whyChoices.forEach(choice => {
-      const image = new Image();
-      image.decoding = 'async';
-      image.src = choice.image;
-    });
-    this.$nextTick(() => {
-      window.refreshMotionReveals?.();
-      const hero = document.querySelector('#page-home .hero');
-      if (hero && 'IntersectionObserver' in window) {
-        this.heroVisibilityObserver = new IntersectionObserver(([entry]) => {
-          this.heroInView = entry.isIntersecting;
-        }, { threshold: 0.05 });
-        this.heroVisibilityObserver.observe(hero);
-      }
-      this.heroFavoriteTimer = window.setInterval(() => {
-        if (this.activePage !== 'home' || !this.heroInView || document.hidden || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
-        this.shuffleHeroFavorites();
-      }, 5200);
-    });
-  },
-  beforeUnmount() {
-    if (this.heroFavoriteTimer) window.clearInterval(this.heroFavoriteTimer);
-    this.heroVisibilityObserver?.disconnect();
-    document.removeEventListener('click', this.closeMenuOnOutside);
-    document.removeEventListener('keydown', this.closeMenuOnEscape);
-  },
-  methods: {
-    selectWhyChoice(index) {
-      if (index < 0 || index >= this.whyChoices.length || index === this.whyChoiceIndex) return;
-      this.whyChoiceIndex = index;
-    },
-    searchHeroDemo() {
-      this.heroIngredientText = '';
-      this.heroSearchMessage = '';
-      this.$nextTick(() => this.submitHeroSearch());
-    },
-    scrollToHomeSection(sectionId) {
-      const section = document.getElementById(sectionId);
-      if (!section) return;
-      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      section.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    get heroRecipeImage() {
+      const recipe = this.heroRecipeSuggestion;
+      if (!recipe) return '/assets/img/chef-hero.jpg';
+      const slug = RECIPE_IMAGES[recipe.id];
+      return slug ? `/assets/img/${slug}.jpg` : '/assets/img/chef-hero.jpg';
     },
     go(page) {
-      this.floatingChefChatOpen = false;
-      this.menuOpen = false;
-      this.navSearchOpen = false;
-      if (page === 'home') {
-        this.heroIngredientText = '';
-        this.heroSelectedIngredients = [];
-        this.heroSearchMessage = '';
-      }
+      this.floatingChefChatOpen = false; this.menuOpen = false; this.navSearchOpen = false;
+      if (page === 'home') { this.heroIngredientText = ''; this.heroSelectedIngredients = []; this.heroSearchMessage = ''; }
       window.navigateToPage(page);
-      this.$nextTick(() => {
-        if (page === 'chef') window.restoreChefChatHistory?.('chatMessages');
-        window.refreshMotionReveals?.();
-      });
+      this.sync();
+      requestAnimationFrame(() => { window.refreshMotionReveals?.(); if (page === 'chef') window.restoreChefChatHistory?.('chatMessages'); });
     },
     toggleMenu() {
-      this.menuOpen = !this.menuOpen;
-      this.navSearchOpen = false;
-      window.toggleMenu(this.menuOpen);
-      if (this.menuOpen) this.$nextTick(() => document.querySelector('#navLinks .nav-link')?.focus());
+      this.menuOpen = !this.menuOpen; this.navSearchOpen = false; window.toggleMenu?.(this.menuOpen); this.sync();
+      if (this.menuOpen) requestAnimationFrame(() => document.querySelector('#navLinks .nav-link')?.focus());
     },
     toggleNavSearch() {
-      this.navSearchOpen = !this.navSearchOpen;
-      if (this.navSearchOpen) this.$nextTick(() => document.getElementById('heroIngredientSearch')?.focus());
-    },
-    closeMenuOnOutside(event) {
-      if (event.target.closest?.('#navbar')) return;
-      if (this.navSearchOpen) this.navSearchOpen = false;
-      if (this.menuOpen) {
-        this.menuOpen = false;
-        window.toggleMenu(false);
-      }
-    },
-    closeMenuOnEscape(event) {
-      if (event.key !== 'Escape') return;
-      if (this.navSearchOpen) {
-        this.navSearchOpen = false;
-        this.$nextTick(() => document.querySelector('.nav-search-toggle')?.focus());
-        return;
-      }
-      if (!this.menuOpen) return;
-      this.menuOpen = false;
-      window.toggleMenu(false);
-      this.$nextTick(() => document.getElementById('hamburgerBtn')?.focus());
+      this.navSearchOpen = !this.navSearchOpen; this.sync();
+      if (this.navSearchOpen) requestAnimationFrame(() => document.getElementById('heroIngredientSearch')?.focus());
     },
     toggleFloatingChefChat() {
-      this.floatingChefChatOpen = !this.floatingChefChatOpen;
-      if (this.floatingChefChatOpen) {
-        this.$nextTick(() => {
-          window.restoreChefChatHistory?.('miniChatMessages');
-          document.getElementById('miniChatInput')?.focus();
-        });
-      }
+      this.floatingChefChatOpen = !this.floatingChefChatOpen; this.sync();
+      if (this.floatingChefChatOpen) requestAnimationFrame(() => { window.restoreChefChatHistory?.('miniChatMessages'); document.getElementById('miniChatInput')?.focus(); });
+      else requestAnimationFrame(() => document.querySelector('.floating-chef-button')?.focus());
     },
-    toggleTheme() {
-      window.toggleTheme();
-    },
-    closeModalAndGo(page) {
-      window.closeRecipeModal();
-      this.go(page);
-    },
+    selectWhyChoice(index) { if (index >= 0 && index < this.whyChoices.length) { this.whyChoiceIndex = index; this.syncWhy(); } },
     toggleHeroIngredient(ingredient) {
-      this.heroSelectedIngredients = this.heroSelectedIngredients.includes(ingredient)
-        ? this.heroSelectedIngredients.filter(item => item !== ingredient)
-        : [...this.heroSelectedIngredients, ingredient];
-      this.heroSearchMessage = '';
+      this.heroSelectedIngredients = this.heroSelectedIngredients.includes(ingredient) ? this.heroSelectedIngredients.filter(item => item !== ingredient) : [...this.heroSelectedIngredients, ingredient];
+      this.heroSearchMessage = ''; this.syncSearch();
     },
-    removeHeroIngredient(ingredient) {
-      this.heroSelectedIngredients = this.heroSelectedIngredients.filter(item => item !== ingredient);
-    },
-    startHeroIngredientDrag(event, ingredient) {
-      this.heroDropActive = true;
-      event.dataTransfer.effectAllowed = 'copy';
-      event.dataTransfer.setData('text/plain', ingredient);
-    },
-    endHeroIngredientDrag() {
-      this.heroDropActive = false;
-    },
-    heroFavoriteImage(recipe) {
-      const imageSlug = typeof RECIPE_IMAGES === 'undefined' ? null : RECIPE_IMAGES[recipe.id];
-      return imageSlug ? `/assets/img/${imageSlug}.jpg` : '/assets/img/chef-hero.jpg';
-    },
-    shuffleHeroFavorites() {
-      const [first, ...rest] = this.heroFavoriteOrder;
-      this.heroFavoriteOrder = [...rest, first];
-    },
-    openHeroFavorite(recipeId) {
-      const recipeIndex = RECIPES_DB.findIndex(recipe => recipe.id === recipeId);
-      if (recipeIndex >= 0) window.openRecipeByIndex(recipeIndex);
-    },
-    openCollageRecipe(recipeId, event) {
-      if (event.currentTarget.dataset.dragged === 'true') {
-        delete event.currentTarget.dataset.dragged;
-        return;
-      }
-      this.openHeroFavorite(recipeId);
-    },
-    dropHeroIngredient(event) {
-      const ingredient = event.dataTransfer.getData('text/plain');
-      if (this.heroIngredientOptions.includes(ingredient) && !this.heroSelectedIngredients.includes(ingredient)) {
-        this.heroSelectedIngredients = [...this.heroSelectedIngredients, ingredient];
-      }
-      this.heroDropActive = false;
-    },
-    startHeroCardDrag(event) {
-      if (event.button !== 0 || event.target.closest('a')) return;
-      const element = event.currentTarget;
-      const stage = element.closest('.hero-collage-stage');
-      if (!stage) return;
-      const rect = element.getBoundingClientRect();
-      const stageRect = stage.getBoundingClientRect();
-      const originX = Number.parseFloat(element.style.getPropertyValue('--drag-x')) || 0;
-      const originY = Number.parseFloat(element.style.getPropertyValue('--drag-y')) || 0;
-      this.heroCardDrag = {
-        element, pointerId: event.pointerId, startX: event.clientX, startY: event.clientY,
-        originX, originY,
-        minX: stageRect.left - (rect.left - originX),
-        maxX: stageRect.right - (rect.right - originX),
-        minY: stageRect.top - (rect.top - originY),
-        maxY: stageRect.bottom - (rect.bottom - originY)
-      };
-      stage.classList.add('has-active-drag');
-      element.classList.add('is-dragging');
-      element.setPointerCapture(event.pointerId);
-    },
-    moveHeroCardDrag(event) {
-      const drag = this.heroCardDrag;
-      if (!drag || drag.element !== event.currentTarget || drag.pointerId !== event.pointerId) {
-        if (event.pointerType === 'mouse' && !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
-          const rect = event.currentTarget.getBoundingClientRect();
-          const x = (event.clientX - rect.left) / rect.width - 0.5;
-          const y = (event.clientY - rect.top) / rect.height - 0.5;
-          event.currentTarget.style.setProperty('--tilt-x', `${(x * 7).toFixed(2)}deg`);
-          event.currentTarget.style.setProperty('--tilt-y', `${(y * -7).toFixed(2)}deg`);
-          event.currentTarget.style.setProperty('--shine-x', `${((x + 0.5) * 100).toFixed(1)}%`);
-          event.currentTarget.style.setProperty('--shine-y', `${((y + 0.5) * 100).toFixed(1)}%`);
-          event.currentTarget.classList.add('is-pointer-tracking');
-        }
-        return;
-      }
-      event.preventDefault();
-      const x = Math.max(drag.minX, Math.min(drag.maxX, drag.originX + event.clientX - drag.startX));
-      const y = Math.max(drag.minY, Math.min(drag.maxY, drag.originY + event.clientY - drag.startY));
-      if (Math.abs(x - drag.originX) > 4 || Math.abs(y - drag.originY) > 4) drag.element.dataset.dragged = 'true';
-      drag.element.style.setProperty('--drag-x', `${x}px`);
-      drag.element.style.setProperty('--drag-y', `${y}px`);
-    },
-    resetHeroCardTilt(event) {
-      if (this.heroCardDrag?.element === event.currentTarget) return;
-      event.currentTarget.style.setProperty('--tilt-x', '0deg');
-      event.currentTarget.style.setProperty('--tilt-y', '0deg');
-      event.currentTarget.classList.remove('is-pointer-tracking');
-    },
-    endHeroCardDrag(event) {
-      const drag = this.heroCardDrag;
-      if (!drag || drag.element !== event.currentTarget || drag.pointerId !== event.pointerId) return;
-      drag.element.classList.remove('is-dragging');
-      drag.element.closest('.hero-collage-stage')?.classList.remove('has-active-drag');
-      if (drag.element.hasPointerCapture(event.pointerId)) drag.element.releasePointerCapture(event.pointerId);
-      this.heroCardDrag = null;
-    },
-    nudgeHeroCard(event) {
-      const keys = { ArrowUp: [0, -22], ArrowDown: [0, 22], ArrowLeft: [-22, 0], ArrowRight: [22, 0] };
-      if (event.key === 'Home') {
-        event.currentTarget.style.setProperty('--drag-x', '0px');
-        event.currentTarget.style.setProperty('--drag-y', '0px');
-        return;
-      }
-      const delta = keys[event.key];
-      if (!delta) return;
-      event.preventDefault();
-      const element = event.currentTarget;
-      const x = Number.parseFloat(element.style.getPropertyValue('--drag-x')) || 0;
-      const y = Number.parseFloat(element.style.getPropertyValue('--drag-y')) || 0;
-      element.style.setProperty('--drag-x', `${x + delta[0]}px`);
-      element.style.setProperty('--drag-y', `${y + delta[1]}px`);
-    },
-    resetHeroGallery() {
-      document.querySelectorAll('.hero-collage-stage').forEach(stage => stage.classList.remove('has-active-drag'));
-      document.querySelectorAll('.hero-collage-stage .collage-card').forEach(card => {
-        card.style.setProperty('--drag-x', '0px');
-        card.style.setProperty('--drag-y', '0px');
-        card.classList.remove('is-dragging');
-      });
-      this.heroCardDrag = null;
-    },
+    removeHeroIngredient(ingredient) { this.heroSelectedIngredients = this.heroSelectedIngredients.filter(item => item !== ingredient); this.syncSearch(); },
     submitHeroSearch() {
       const ingredients = this.heroSearchIngredients;
-      if (!ingredients.length) {
-        this.heroSearchMessage = 'Masukkan atau pilih minimal satu bahan.';
-        return;
-      }
-      const url = new URL(window.location.href);
-      url.searchParams.delete('bahan');
-      ingredients.forEach(ingredient => url.searchParams.append('bahan', ingredient));
+      if (!ingredients.length) { this.heroSearchMessage = 'Masukkan atau pilih minimal satu bahan.'; this.syncSearch(); return; }
+      const url = new URL(window.location.href); url.searchParams.delete('bahan'); ingredients.forEach(item => url.searchParams.append('bahan', item));
       window.history.replaceState(window.history.state, '', url);
-      const recipeSearch = document.getElementById('recipeSearch');
-      if (recipeSearch) recipeSearch.value = ingredients.join(', ');
+      const input = document.getElementById('recipeSearch'); if (input) input.value = ingredients.join(', ');
       this.go('resep');
     },
     findRecipesFromScan() {
@@ -356,5 +82,169 @@ createApp({
       window.prepareScanRecipeSearch?.();
       this.go('resep');
     },
-  }
-}).mount('#app');
+    searchHeroDemo() { this.heroIngredientText = ''; this.heroSearchMessage = ''; this.submitHeroSearch(); },
+    scrollToHomeSection(id) {
+      const target = document.getElementById(id); if (!target) return;
+      target.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    },
+    closeModalAndGo(page) { closeRecipeModal(); this.go(page); },
+    openHeroFavorite(id) { const index = RECIPES_DB.findIndex(recipe => recipe.id === id); if (index >= 0) openRecipeByIndex(index); },
+    shuffleHeroFavorites() { const [first, ...rest] = this.heroFavoriteOrder; this.heroFavoriteOrder = [...rest, first]; this.renderHero(); },
+    heroFavoriteImage(recipe) { const slug = RECIPE_IMAGES[recipe.id]; return slug ? `/assets/img/${slug}.jpg` : '/assets/img/chef-hero.jpg'; },
+    sync() { this.syncNav(); this.syncSearch(); this.syncFloating(); this.syncHero(); },
+    syncNav() {
+      const wrap = document.querySelector('.nav-search-wrap'); wrap?.classList.toggle('is-open', this.navSearchOpen);
+      const search = document.getElementById('navIngredientSearch');
+      if (search) { search.setAttribute('aria-hidden', String(!this.navSearchOpen)); if (this.navSearchOpen) search.removeAttribute('inert'); else search.setAttribute('inert', ''); }
+      const searchButton = document.querySelector('.nav-search-toggle');
+      if (searchButton) { searchButton.setAttribute('aria-expanded', String(this.navSearchOpen)); searchButton.setAttribute('aria-label', this.navSearchOpen ? 'Tutup pencarian resep' : 'Buka pencarian resep'); }
+      const hamburger = document.getElementById('hamburgerBtn');
+      if (hamburger) { hamburger.setAttribute('aria-expanded', String(this.menuOpen)); hamburger.setAttribute('aria-label', this.menuOpen ? 'Tutup menu navigasi' : 'Buka menu navigasi'); }
+      document.querySelector('.nav-container')?.classList.toggle('menu-open', this.menuOpen);
+    },
+    syncSearch() {
+      const input = document.getElementById('heroIngredientSearch'); if (input && input.value !== this.heroIngredientText) input.value = this.heroIngredientText;
+      const selected = this.heroSearchIngredients;
+      const count = document.querySelector('.nav-search-count b'); if (count) count.textContent = String(selected.length);
+      document.querySelectorAll('.hero-ingredient-chip').forEach(button => {
+        const ingredient = button.dataset.ingredient; const active = this.heroSelectedIngredients.includes(ingredient);
+        button.classList.toggle('active', active); button.setAttribute('aria-pressed', String(active));
+        const mark = button.querySelector('.nav-chip-mark'); if (mark) mark.textContent = active ? '✓' : '+';
+      });
+      const submit = document.querySelector('.nav-search-submit'); if (submit) submit.disabled = selected.length === 0;
+      const message = document.querySelector('.nav-search-message');
+      if (message) { message.textContent = this.heroSearchMessage; message.hidden = !this.heroSearchMessage; }
+      this.renderSuggestion();
+    },
+    renderSuggestion() {
+      const layout = document.querySelector('.nav-search-layout');
+      if (!layout) return;
+      let button = layout.querySelector('button.nav-search-preview');
+      let empty = layout.querySelector('.nav-search-preview-empty');
+      const recipe = this.heroRecipeSuggestion;
+      if (!recipe) {
+        button?.remove();
+        if (!empty) { empty = document.createElement('div'); empty.className = 'nav-search-preview nav-search-preview-empty'; empty.innerHTML = '<span class="nav-preview-doodle" aria-hidden="true">✳</span><small>IDE MASAK MENUNGGU</small><strong>Pilih bahan<br>di dapurmu.</strong><span>Rekomendasi akan muncul di sini.</span>'; layout.append(empty); }
+        return;
+      }
+      empty?.remove();
+      if (!button) { button = document.createElement('button'); layout.append(button); }
+      button.className = 'nav-search-preview'; button.type = 'button'; button.setAttribute('aria-label', `Lihat resep ${recipe.title}, cocok dengan ${recipe.matchedCount} bahan`);
+      button.innerHTML = `<img src="${this.heroRecipeImage}" alt="${escapeHtml(recipe.title)}"><span class="nav-search-preview-shade"></span><span class="nav-search-preview-top"><i></i> IDE PALING COCOK</span><span class="nav-search-preview-copy"><small>${recipe.matchedCount} bahanmu cocok</small><strong>${escapeHtml(recipe.title)}</strong><span>${escapeHtml(recipe.time)} <b>·</b> ${escapeHtml(recipe.difficulty)}</span></span><span class="nav-search-preview-arrow" aria-hidden="true">↗</span>`;
+      if (empty) empty.replaceWith(button);
+      button.onclick = () => this.openHeroFavorite(recipe.id);
+    },
+    syncFloating() {
+      const chat = document.getElementById('floatingChefChat');
+      if (chat) { chat.hidden = this.activePage === 'chef' || !this.floatingChefChatOpen; chat.setAttribute('aria-hidden', String(chat.hidden)); }
+      const button = document.querySelector('.floating-chef-button');
+      if (button) { button.hidden = this.activePage === 'chef'; button.setAttribute('aria-expanded', String(this.floatingChefChatOpen)); button.setAttribute('aria-label', this.floatingChefChatOpen ? 'Tutup chat Chef Resepin' : 'Buka chat Chef Resepin'); }
+      document.querySelector('.floating-chef-tooltip')?.toggleAttribute('hidden', this.floatingChefChatOpen);
+    },
+    syncWhy() {
+      const choice = this.activeWhyChoice;
+      const options = [...document.querySelectorAll('.why-resepin-option')];
+      options.forEach((button, index) => { const active = index === this.whyChoiceIndex; button.classList.toggle('is-active', active); button.setAttribute('aria-pressed', String(active)); });
+      const visual = document.querySelector('.why-resepin-visual');
+      if (visual) {
+        const image = visual.querySelector('img'); if (image) { image.src = choice.image; image.alt = choice.alt; }
+        const caption = visual.querySelector('.why-resepin-visual-caption'); if (caption) caption.innerHTML = `<i></i>${escapeHtml(choice.imageLabel)}`;
+      }
+      const copy = document.querySelector('.why-resepin-copy');
+      if (copy) { const kicker = copy.querySelector('.why-resepin-copy-kicker'); if (kicker) kicker.innerHTML = `<i></i>${escapeHtml(choice.kicker)}`; const title = copy.querySelector('h3'); if (title) title.textContent = choice.title; const body = copy.querySelector('p'); if (body) body.textContent = choice.copy; }
+    },
+    syncHero() { this.renderHero(); },
+    renderHero() {
+      const recipe = this.heroFeaturedRecipe; const card = document.querySelector('.hero-favorite-card'); if (!recipe || !card) return;
+      card.setAttribute('aria-label', `Buka resep ${recipe.title}, ${recipe.time}, ${recipe.difficulty}`);
+      const image = card.querySelector('img'); if (image) image.src = this.heroFavoriteImage(recipe);
+      const title = card.querySelector('.hero-favorite-copy strong'); if (title) title.textContent = recipe.title;
+      const meta = card.querySelector('.hero-favorite-copy small'); if (meta) meta.innerHTML = `${escapeHtml(recipe.time)} <i aria-hidden="true">·</i> ${escapeHtml(recipe.servings)}`;
+      const chips = card.querySelector('.hero-favorite-ingredients'); if (chips) chips.innerHTML = recipe.ingredients.slice(0, 2).map(item => `<i>${escapeHtml(item)}</i>`).join('');
+    },
+    bind() {
+      document.addEventListener('click', event => {
+        const element = event.target.closest('[data-app-event-click]'); if (!element) return;
+        if (element.hasAttribute('data-app-prevent')) event.preventDefault();
+        if (element.hasAttribute('data-app-stop')) event.stopPropagation();
+        const expression = element.getAttribute('data-app-event-click');
+        const locals = { $event: event, ingredient: element.dataset.ingredient, index: Number(element.dataset.index || 0), heroFeaturedRecipe: this.heroFeaturedRecipe, heroRecipeSuggestion: this.heroRecipeSuggestion };
+        try { Function('app', 'locals', `with (app) { with (locals) { ${/^[\w$]+$/.test(expression) ? `${expression}($event)` : expression}; } }`)(this, locals); this.sync(); }
+        catch (error) { console.error('[Resepin] Aksi gagal:', expression, error); }
+      });
+      ['pointermove', 'pointerleave', 'pointerup', 'pointercancel', 'keydown'].forEach(type => document.addEventListener(type, event => {
+        const element = event.target.closest(`[data-app-event-${type}]`); if (!element) return;
+        if (element.hasAttribute('data-app-key-esc') && event.key !== 'Escape') return;
+        const expression = element.getAttribute(`data-app-event-${type}`);
+        const locals = { $event: event, ingredient: element.dataset.ingredient, index: Number(element.dataset.index || 0), heroFeaturedRecipe: this.heroFeaturedRecipe };
+        try { Function('app', 'locals', `with (app) { with (locals) { ${/^[\w$]+$/.test(expression) ? `${expression}($event)` : expression}; } }`)(this, locals); }
+        catch (error) { console.error('[Resepin] Aksi gagal:', expression, error); }
+      }, true));
+      document.addEventListener('submit', event => {
+        if (event.target.matches('#navIngredientSearch')) { event.preventDefault(); this.submitHeroSearch(); }
+      });
+      document.addEventListener('input', event => {
+        if (event.target.id === 'heroIngredientSearch') { this.heroIngredientText = event.target.value; this.heroSearchMessage = ''; this.syncSearch(); }
+        if (event.target.id === 'impactYearSlider') this.updateImpact(event.target.value);
+      });
+      document.addEventListener('click', event => {
+        if (!event.target.closest('#navbar')) { this.navSearchOpen = false; if (this.menuOpen) { this.menuOpen = false; window.toggleMenu(false); } this.syncNav(); }
+      });
+      document.addEventListener('keydown', event => {
+        if (event.key !== 'Escape') return;
+        if (this.navSearchOpen) { this.navSearchOpen = false; this.syncNav(); document.querySelector('.nav-search-toggle')?.focus(); }
+        if (this.menuOpen) { this.menuOpen = false; window.toggleMenu(false); this.syncNav(); document.getElementById('hamburgerBtn')?.focus(); }
+        if (this.floatingChefChatOpen) { this.floatingChefChatOpen = false; this.syncFloating(); document.querySelector('.floating-chef-button')?.focus(); }
+      });
+      window.addEventListener('resepin:route', event => { this.activePage = event.detail?.page || this.activePage; this.floatingChefChatOpen = false; this.menuOpen = false; this.sync(); });
+      const field = document.getElementById('heroIngredientSearch'); if (field) field.value = this.heroIngredientText;
+    },
+    renderRepeats() {
+      const popular = document.querySelector('.hero-popular-ingredients');
+      if (popular) {
+        const label = popular.querySelector('.hero-popular-label');
+        popular.replaceChildren(label);
+        this.popularIngredients.forEach(ingredient => {
+          const button = document.createElement('button'); button.type = 'button'; button.className = 'hero-ingredient-chip [flex:0_0_auto] [padding:6px_11px] [color:#fff] [background:rgba(0,0,0,.34)] [border:1px_solid_rgba(238,234,215,.42)] [border-radius:999px] [font:500_.78rem_var(--font-body)] [cursor:pointer]';
+          button.dataset.ingredient = ingredient; button.dataset.appEventClick = 'toggleHeroIngredient(ingredient)'; button.setAttribute('aria-pressed', 'false'); button.innerHTML = `<span class="nav-chip-mark" aria-hidden="true">+</span>${escapeHtml(ingredient)}`; popular.append(button);
+        });
+      }
+      const options = document.querySelector('.why-resepin-options');
+      if (options) {
+        const template = options.querySelector('.why-resepin-option'); const hint = options.querySelector('.why-resepin-hint');
+        options.replaceChildren();
+        this.whyChoices.forEach((choice, index) => {
+          const button = template.cloneNode(true); button.dataset.index = String(index); button.dataset.appEventClick = 'selectWhyChoice(index)';
+          button.classList.toggle('is-active', index === 0); button.setAttribute('aria-pressed', String(index === 0));
+          const number = button.querySelector('.why-resepin-option-number'); if (number) number.textContent = `0${index + 1}`;
+          const label = button.querySelectorAll('span')[1]; if (label) label.textContent = choice.label;
+          options.append(button);
+        });
+        if (hint) options.append(hint);
+      }
+    },
+    updateImpact(year) {
+      const value = Number(year); const output = document.querySelector('.impact-number');
+      if (output) output.textContent = `≈ ${value >= 2019 ? 46 : Math.round(23 + ((value - 2000) / 18) * 25)}`;
+      const slider = document.getElementById('impactYearSlider');
+      if (slider) { const tonnage = value >= 2019 ? 46 : Math.round(23 + ((value - 2000) / 18) * 25); slider.setAttribute('aria-valuetext', `${value}, ≈ ${tonnage} juta ton per tahun`); slider.style.setProperty('--slider-progress', `${((value - 2000) / 19) * 100}%`); }
+      const yearLabel = document.querySelector('.impact-figure-top span span'); if (yearLabel) yearLabel.textContent = String(value);
+    },
+    start() {
+      this.activePage = document.querySelector('.page.active[role="main"]')?.id?.replace('page-', '') || 'home';
+      this.renderRepeats(); this.bind(); this.sync(); this.syncWhy(); this.updateImpact(document.getElementById('impactYearSlider')?.value || 2000);
+      this.whyChoices.forEach(choice => { const image = new Image(); image.decoding = 'async'; image.src = choice.image; });
+      const hero = document.querySelector('#page-home .hero');
+      if (hero && 'IntersectionObserver' in window) {
+        this.heroVisibilityObserver = new IntersectionObserver(([entry]) => { this.heroInView = entry.isIntersecting; }, { threshold: .05 }); this.heroVisibilityObserver.observe(hero);
+      }
+      this.heroFavoriteTimer = window.setInterval(() => {
+        if (this.activePage !== 'home' || !this.heroInView || document.hidden || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        this.shuffleHeroFavorites();
+      }, 5200);
+    }
+  };
+
+  window.resepinApp = app;
+  app.start();
+})();
