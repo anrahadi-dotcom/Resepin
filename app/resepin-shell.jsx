@@ -2,23 +2,30 @@
 
 import { useEffect } from 'react';
 
+const scriptLoads = globalThis.__resepScriptLoads || (globalThis.__resepScriptLoads = new Map());
 const scripts = [
   '/src/legacy/recipes.js',
   '/src/legacy/chef-prompts.js',
-  '/src/legacy/main.js',
   '/src/legacy/chatbot.js',
+  '/src/legacy/main.js',
   '/src/app.js'
 ];
 
 function loadClassicScript(src) {
-  return new Promise((resolve, reject) => {
+  if (scriptLoads.has(src)) return scriptLoads.get(src);
+  const alreadyLoaded = [...document.scripts].some(script => script.dataset.resepinSrc === src && script.dataset.loaded === 'true');
+  if (alreadyLoaded) return Promise.resolve();
+  const loading = new Promise((resolve, reject) => {
     const script = document.createElement('script');
     script.src = src;
     script.async = false;
-    script.onload = resolve;
-    script.onerror = () => reject(new Error(`Gagal memuat ${src}`));
+    script.dataset.resepinSrc = src;
+    script.onload = () => { script.dataset.loaded = 'true'; resolve(); };
+    script.onerror = () => { scriptLoads.delete(src); reject(new Error(`Gagal memuat ${src}`)); };
     document.body.appendChild(script);
   });
+  scriptLoads.set(src, loading);
+  return loading;
 }
 
 export default function ResepinShell({ markup }) {

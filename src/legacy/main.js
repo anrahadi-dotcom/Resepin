@@ -327,6 +327,10 @@ function updateHomeScrollStory() {
   }
   if (!home.classList.contains('active') || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
   const viewport = Math.max(1, window.innerHeight);
+  const smoothProgress = value => {
+    const progress = Math.min(1, Math.max(0, value));
+    return progress * progress * (3 - 2 * progress);
+  };
   const progressAt = (element, start = 0.94, finish = 0.34) => {
     const top = element.getBoundingClientRect().top;
     return Math.min(1, Math.max(0, (viewport * start - top) / (viewport * (start - finish))));
@@ -334,9 +338,15 @@ function updateHomeScrollStory() {
 
   const hero = home.querySelector('.hero');
   const scene = home.querySelector('.hero-scene');
-  const heroCopy = home.querySelector('.hero-copy');
+  const heroCopy = home.querySelector('.hero-content, .hero-copy');
   const favorites = home.querySelector('.hero-favorites');
   const scrollHint = home.querySelector('.hero-scroll-hint');
+  const whyStage = home.querySelector('.why-takeover-stage');
+  const desktopStory = window.matchMedia?.('(min-width: 901px) and (min-height: 680px)').matches && whyStage;
+  const whyStageTop = whyStage?.getBoundingClientRect().top ?? viewport;
+  const takeoverProgress = desktopStory
+    ? Math.min(1, Math.max(0, (viewport * .84 - whyStageTop) / (viewport * .84)))
+    : 0;
   if (hero) {
     const scrollSequenceEnabled = window.matchMedia?.('(min-width: 901px) and (min-height: 680px)').matches;
     let sequenceProgress = 0;
@@ -369,14 +379,18 @@ function updateHomeScrollStory() {
       });
     }
     const heroProgress = Math.min(1, Math.max(0, (window.innerHeight - hero.getBoundingClientRect().bottom) / Math.max(1, hero.offsetHeight)));
-    // The hero now scrolls with the page. Keep its foreground movement tied to
-    // that same scroll progress instead of holding the artwork in place.
-    const foregroundProgress = heroProgress;
+    // On desktop, the hero is pinned beneath the Why stage. Drive its exit from
+    // the takeover itself, since the sticky hero's bounds do not move with scroll.
+    const foregroundProgress = desktopStory ? takeoverProgress : heroProgress;
+    const heroExitProgress = desktopStory ? smoothProgress(foregroundProgress / .52) : foregroundProgress;
     hero.style.setProperty('--hero-scroll-progress', foregroundProgress.toFixed(3));
-    heroCopy?.style.setProperty('--hero-copy-scroll-y', `${Math.round(foregroundProgress * -22)}px`);
-    heroCopy?.style.setProperty('--hero-copy-scroll-opacity', (1 - foregroundProgress * 0.58).toFixed(3));
+    if (heroCopy) {
+      heroCopy.style.opacity = (1 - heroExitProgress).toFixed(3);
+      heroCopy.style.translate = `0 ${Math.round(foregroundProgress * -22)}px`;
+      heroCopy.style.pointerEvents = heroExitProgress > .98 ? 'none' : '';
+    }
     favorites?.style.setProperty('--hero-favorites-scroll-y', `${Math.round(foregroundProgress * 34)}px`);
-    favorites?.style.setProperty('--hero-favorites-scroll-opacity', (1 - foregroundProgress * 0.72).toFixed(3));
+    favorites?.style.setProperty('--hero-favorites-scroll-opacity', (desktopStory ? 1 : 1 - foregroundProgress).toFixed(3));
     scene?.style.setProperty('--hero-scene-scroll-y', `${Math.round(foregroundProgress * 48)}px`);
     favorites?.querySelectorAll('.hero-favorite-card').forEach(card => {
       card.style.setProperty('--scroll-card-x', `${(foregroundProgress * 42).toFixed(1)}px`);
@@ -394,15 +408,11 @@ function updateHomeScrollStory() {
     hero.querySelector('.hero-editorial-title')?.style.setProperty('--hero-title-scroll-scale', (1.1 - foregroundProgress * 0.25).toFixed(3));
   }
 
-  const whyStage = home.querySelector('.why-takeover-stage');
   if (whyStage) {
     const rect = whyStage.getBoundingClientRect();
-    const desktopStory = window.matchMedia?.('(min-width: 901px) and (min-height: 680px)').matches;
-    const enterProgress = Math.min(1, Math.max(0, (viewport - rect.top) / viewport));
-    const smooth = value => {
-      const progress = Math.min(1, Math.max(0, value));
-      return progress * progress * (3 - 2 * progress);
-    };
+    const enterProgress = desktopStory
+      ? takeoverProgress
+      : Math.min(1, Math.max(0, (viewport - rect.top) / viewport));
     const whyTitle = whyStage.querySelector('.why-resepin-heading h2');
     const whyOptions = Array.from(whyStage.querySelectorAll('.why-resepin-option'));
     const revealTargets = [
@@ -412,7 +422,7 @@ function updateHomeScrollStory() {
     const reveal = (element, progress, start, finish, x, y, scale = 1) => {
       if (!element) return;
       const phase = Math.min(1, Math.max(0, (progress - start) / (finish - start)));
-      const eased = smooth(phase);
+      const eased = smoothProgress(phase);
       element.style.setProperty('--why-enter-x', `${((1 - eased) * x).toFixed(1)}px`);
       element.style.setProperty('--why-enter-y', `${((1 - eased) * y).toFixed(1)}px`);
       element.style.setProperty('--why-enter-opacity', (0.04 + eased * 0.96).toFixed(3));
@@ -421,23 +431,20 @@ function updateHomeScrollStory() {
       }
     };
     if (desktopStory) {
-      // The pinned Why scene has 130vh of travel after it reaches the top.
-      // Spread its supporting content over the whole takeover, not just the
-      // brief moment when the section first enters the viewport.
-      const stageStart = viewport * .84;
-      const stageTravel = Math.max(1, rect.height - stageStart);
-      const storyProgress = Math.min(1, Math.max(0, (stageStart - rect.top) / stageTravel));
-      reveal(whyStage.querySelector('.why-resepin-eyebrow'), storyProgress, .035, .20, -24, 10);
-      reveal(whyStage.querySelector('.why-resepin-index'), storyProgress, .07, .24, 24, 10);
+      // Let the hero clear first, then stage the Why panel over the same
+      // takeover distance so its controls do not appear on top of the hero.
+      const storyProgress = takeoverProgress;
+      reveal(whyStage.querySelector('.why-resepin-eyebrow'), storyProgress, .48, .65, -24, 10);
+      reveal(whyStage.querySelector('.why-resepin-index'), storyProgress, .48, .65, 24, 10);
       whyOptions.forEach((option, index) => {
-        const start = .08 + index * .055;
-        reveal(option, storyProgress, start, start + .27, -58, 12);
+        const start = .52 + index * .055;
+        reveal(option, storyProgress, start, start + .25, -58, 12);
       });
-      reveal(whyStage.querySelector('.why-resepin-hint'), storyProgress, .27, .48, -20, 12);
-      reveal(whyStage.querySelector('.why-resepin-visual'), storyProgress, .16, .58, 0, 58, .92);
-      reveal(whyStage.querySelector('.why-resepin-copy-kicker'), storyProgress, .29, .56, 42, 14);
-      reveal(whyStage.querySelector('.why-resepin-copy-content'), storyProgress, .37, .73, 58, 18);
-      reveal(whyStage.querySelector('.why-resepin-actions'), storyProgress, .52, .84, 34, 16);
+      reveal(whyStage.querySelector('.why-resepin-hint'), storyProgress, .58, .78, -20, 12);
+      reveal(whyStage.querySelector('.why-resepin-visual'), storyProgress, .45, .82, 0, 58, .92);
+      reveal(whyStage.querySelector('.why-resepin-copy-kicker'), storyProgress, .57, .76, 42, 14);
+      reveal(whyStage.querySelector('.why-resepin-copy-content'), storyProgress, .63, .88, 58, 18);
+      reveal(whyStage.querySelector('.why-resepin-actions'), storyProgress, .74, .98, 34, 16);
     } else {
       revealTargets.forEach(element => {
         element.style.removeProperty('--why-enter-x');
@@ -448,7 +455,8 @@ function updateHomeScrollStory() {
     }
     if (whyTitle) {
       const heroTitle = home.querySelector('.hero-editorial-title');
-      const easedProgress = desktopStory ? smooth(enterProgress) : 1;
+      const titleProgress = desktopStory ? Math.min(1, Math.max(0, (enterProgress - .12) / .88)) : 1;
+      const easedProgress = desktopStory ? smoothProgress(titleProgress) : 1;
       const titleRect = whyTitle.getBoundingClientRect();
       const currentX = Number.parseFloat(whyTitle.style.getPropertyValue('--why-title-drop-x')) || 0;
       const currentY = Number.parseFloat(whyTitle.style.getPropertyValue('--why-title-drop-y')) || 0;
@@ -463,6 +471,7 @@ function updateHomeScrollStory() {
       whyTitle.style.setProperty('--why-title-drop-x', `${(startX * (1 - easedProgress)).toFixed(1)}px`);
       whyTitle.style.setProperty('--why-title-drop-y', `${(startY * (1 - easedProgress)).toFixed(1)}px`);
       whyTitle.style.setProperty('--why-title-scroll-scale', (.4 + easedProgress * .6).toFixed(3));
+      whyTitle.style.setProperty('--why-title-scroll-opacity', easedProgress.toFixed(3));
     }
   }
 

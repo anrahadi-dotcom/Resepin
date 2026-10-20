@@ -6983,7 +6983,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
 #page-home .why-resepin-heading h2 {
   translate: var(--why-title-drop-x, 0px) var(--why-title-drop-y, 0px);
   scale: var(--why-title-scroll-scale, 1);
-  opacity: 1;
+  opacity: var(--why-title-scroll-opacity, 1);
   transform-origin: left top;
   will-change: translate, scale;
 }

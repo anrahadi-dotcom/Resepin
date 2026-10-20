@@ -1,5 +1,9 @@
 /* Client-side interactions for the Next.js rendered Resepin shell. */
 (() => {
+  const getEventElement = event => event.target instanceof Element
+    ? event.target
+    : event.target?.parentElement || null;
+
   const popularIngredients = ['Telur', 'Ayam', 'Tahu', 'Nasi', 'Tempe'];
   const heroIngredientOptions = ['Nasi', 'Telur', 'Cabai', 'Tahu', 'Ayam', 'Tempe', 'Jagung', 'Wortel'];
   const whyChoices = [
@@ -167,9 +171,30 @@
       const meta = card.querySelector('.hero-favorite-copy small'); if (meta) meta.innerHTML = `${escapeHtml(recipe.time)} <i aria-hidden="true">·</i> ${escapeHtml(recipe.servings)}`;
       const chips = card.querySelector('.hero-favorite-ingredients'); if (chips) chips.innerHTML = recipe.ingredients.slice(0, 2).map(item => `<i>${escapeHtml(item)}</i>`).join('');
     },
+    moveHeroCardDrag(event) {
+      const card = getEventElement(event)?.closest('.hero-favorite-card');
+      if (!card || event.pointerType !== 'mouse' || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const rect = card.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / Math.max(1, rect.width) - .5;
+      const y = (event.clientY - rect.top) / Math.max(1, rect.height) - .5;
+      card.style.setProperty('--tilt-x', `${(x * 7).toFixed(2)}deg`);
+      card.style.setProperty('--tilt-y', `${(y * -7).toFixed(2)}deg`);
+      card.style.setProperty('--shine-x', `${((x + .5) * 100).toFixed(1)}%`);
+      card.style.setProperty('--shine-y', `${((y + .5) * 100).toFixed(1)}%`);
+      card.classList.add('is-pointer-tracking');
+    },
+    resetHeroCardTilt(event) {
+      const card = getEventElement(event)?.closest('.hero-favorite-card');
+      if (!card) return;
+      card.style.setProperty('--tilt-x', '0deg');
+      card.style.setProperty('--tilt-y', '0deg');
+      card.style.setProperty('--shine-x', '50%');
+      card.style.setProperty('--shine-y', '50%');
+      card.classList.remove('is-pointer-tracking');
+    },
     bind() {
       document.addEventListener('click', event => {
-        const element = event.target.closest('[data-app-event-click]'); if (!element) return;
+        const element = getEventElement(event)?.closest('[data-app-event-click]'); if (!element) return;
         if (element.hasAttribute('data-app-prevent')) event.preventDefault();
         if (element.hasAttribute('data-app-stop')) event.stopPropagation();
         const expression = element.getAttribute('data-app-event-click');
@@ -178,7 +203,7 @@
         catch (error) { console.error('[Resepin] Aksi gagal:', expression, error); }
       });
       ['pointermove', 'pointerleave', 'pointerup', 'pointercancel', 'keydown'].forEach(type => document.addEventListener(type, event => {
-        const element = event.target.closest(`[data-app-event-${type}]`); if (!element) return;
+        const element = getEventElement(event)?.closest(`[data-app-event-${type}]`); if (!element) return;
         if (element.hasAttribute('data-app-key-esc') && event.key !== 'Escape') return;
         const expression = element.getAttribute(`data-app-event-${type}`);
         const locals = { $event: event, ingredient: element.dataset.ingredient, index: Number(element.dataset.index || 0), heroFeaturedRecipe: this.heroFeaturedRecipe };
@@ -193,7 +218,7 @@
         if (event.target.id === 'impactYearSlider') this.updateImpact(event.target.value);
       });
       document.addEventListener('click', event => {
-        if (!event.target.closest('#navbar')) { this.navSearchOpen = false; if (this.menuOpen) { this.menuOpen = false; window.toggleMenu(false); } this.syncNav(); }
+        if (!getEventElement(event)?.closest('#navbar')) { this.navSearchOpen = false; if (this.menuOpen) { this.menuOpen = false; window.toggleMenu(false); } this.syncNav(); }
       });
       document.addEventListener('keydown', event => {
         if (event.key !== 'Escape') return;
