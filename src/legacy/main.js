@@ -423,6 +423,24 @@ function updateHomeScrollStory() {
       whyTitle.style.setProperty('--why-title-scroll-scale', (.4 + easedProgress * .6).toFixed(3));
       whyTitle.style.setProperty('--why-title-scroll-opacity', '1');
     }
+
+    whyStage.querySelectorAll('.why-resepin-option').forEach((option, index) => {
+      const currentY = Number.parseFloat(option.style.getPropertyValue('--why-option-scroll-y')) || 0;
+      const currentScale = Number.parseFloat(option.style.getPropertyValue('--why-option-scroll-scale')) || 1;
+      const bounds = option.getBoundingClientRect();
+      const baseTop = bounds.top - currentY - bounds.height * (1 - currentScale) / 2;
+      const cardProgress = desktopStory
+        ? Math.min(1, Math.max(0, (enterProgress - index * .075) / (1 - index * .075)))
+        : Math.min(1, Math.max(0, (viewport * .98 - baseTop) / (viewport * .42)));
+      const easedCardProgress = smoothProgress(cardProgress);
+      const direction = index % 2 === 0 ? -1 : 1;
+      option.style.setProperty('--why-option-scroll-x', `${((1 - easedCardProgress) * direction * 26).toFixed(1)}px`);
+      option.style.setProperty('--why-option-scroll-y', `${((1 - easedCardProgress) * 46).toFixed(1)}px`);
+      option.style.setProperty('--why-option-scroll-rotation', `${((1 - easedCardProgress) * direction * 2.6).toFixed(2)}deg`);
+      option.style.setProperty('--why-option-scroll-scale', (.96 + easedCardProgress * .04).toFixed(3));
+      option.style.setProperty('--why-option-scroll-opacity', easedCardProgress.toFixed(3));
+      option.style.setProperty('--why-option-pointer-events', easedCardProgress > .18 ? 'auto' : 'none');
+    });
   }
 
   const stage = home.querySelector('.hero-collage-stage');

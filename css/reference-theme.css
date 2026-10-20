@@ -6708,6 +6708,12 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   font: 650 .84rem/1.25 "DM Sans", sans-serif;
   cursor: pointer;
   transition: color .32s ease, background .32s ease, border-color .32s ease, transform .32s cubic-bezier(.2,.75,.25,1), box-shadow .32s ease;
+  translate: var(--why-option-scroll-x, 0px) var(--why-option-scroll-y, 0px);
+  rotate: var(--why-option-scroll-rotation, 0deg);
+  scale: var(--why-option-scroll-scale, 1);
+  opacity: var(--why-option-scroll-opacity, 1);
+  pointer-events: var(--why-option-pointer-events, auto);
+  will-change: translate, rotate, scale, opacity;
 }
 #page-home .why-resepin-option:hover { transform: translateX(5px); border-color: color-mix(in srgb, var(--primary) 46%, var(--why-line)); }
 #page-home .why-resepin-option.is-active {
