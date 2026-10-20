@@ -1076,6 +1076,9 @@ function initQuickPromptDragging() {
   }, true);
 }
 
+// main.js runs before this file; bind here once its shared UI helpers exist.
+if (typeof document !== 'undefined') initQuickPromptDragging();
+
 function formatBotText(text) {
   return escapeHtml(text)
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')

@@ -471,7 +471,7 @@ function updateHomeScrollStory() {
       whyTitle.style.setProperty('--why-title-drop-x', `${(startX * (1 - easedProgress)).toFixed(1)}px`);
       whyTitle.style.setProperty('--why-title-drop-y', `${(startY * (1 - easedProgress)).toFixed(1)}px`);
       whyTitle.style.setProperty('--why-title-scroll-scale', (.4 + easedProgress * .6).toFixed(3));
-      whyTitle.style.setProperty('--why-title-scroll-opacity', easedProgress.toFixed(3));
+      whyTitle.style.setProperty('--why-title-scroll-opacity', '1');
     }
   }
 
@@ -1888,7 +1888,7 @@ function initializeResepinLegacyApp() {
   try { assumePantryBasics = localStorage.getItem('resep-assume-pantry-basics') === 'true'; } catch (_) { /* Keep the conservative default for this session. */ }
   const pantryToggle = document.getElementById('assumePantryBasics');
   if (pantryToggle) pantryToggle.checked = assumePantryBasics;
-  initQuickPromptDragging();
+  if (typeof initQuickPromptDragging === 'function') initQuickPromptDragging();
   initParticles();
   initScrollEffects();
   initNavHint();

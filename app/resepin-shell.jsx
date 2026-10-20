@@ -6,8 +6,8 @@ const scriptLoads = globalThis.__resepScriptLoads || (globalThis.__resepScriptLo
 const scripts = [
   '/src/legacy/recipes.js',
   '/src/legacy/chef-prompts.js',
-  '/src/legacy/chatbot.js',
   '/src/legacy/main.js',
+  '/src/legacy/chatbot.js',
   '/src/app.js'
 ];
 
