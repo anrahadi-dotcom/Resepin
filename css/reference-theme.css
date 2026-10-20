@@ -6967,7 +6967,8 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   display: none;
 }
 #page-home .why-resepin {
-  background: transparent;
+  /* The page paper stays the same, but this layer masks the pinned hero as Why rises. */
+  background: var(--bg);
 }
 /* Scroll-linked editorial movement: the hero exits naturally while Why enters. */
 #page-home .hero-editorial-title > span {
@@ -7014,7 +7015,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   display: none;
 }
 [data-theme="dark"] #page-home .why-resepin {
-  background: transparent;
+  background: var(--bg);
 }
 [data-theme="dark"] #page-home {
   --home-paper-outline: rgba(238,234,215,.19);
@@ -7052,37 +7053,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   display: none !important;
 }
 
-/* Scroll-led Why entrance: keep the heading's existing hero-to-Why motion,
-   then bring each supporting element into the pinned scene in sequence. */
-#page-home .why-resepin-eyebrow,
-#page-home .why-resepin-index,
-#page-home .why-resepin-option,
-#page-home .why-resepin-hint,
-#page-home .why-resepin-visual,
-#page-home .why-resepin-copy-kicker,
-#page-home .why-resepin-copy-content,
-#page-home .why-resepin-actions {
-  translate: var(--why-enter-x, 0px) var(--why-enter-y, 0px);
-  opacity: var(--why-enter-opacity, 1);
-  will-change: translate, opacity;
-}
-#page-home .why-resepin-visual {
-  scale: var(--why-enter-scale, 1);
-}
-@media (prefers-reduced-motion: reduce) {
-  #page-home .why-resepin-eyebrow,
-  #page-home .why-resepin-index,
-  #page-home .why-resepin-option,
-  #page-home .why-resepin-hint,
-  #page-home .why-resepin-visual,
-  #page-home .why-resepin-copy-kicker,
-  #page-home .why-resepin-copy-content,
-  #page-home .why-resepin-actions {
-    translate: none !important;
-    scale: 1 !important;
-    opacity: 1 !important;
-  }
-}
 [data-theme="dark"] #page-home .how-it-works {
   background: #2d0000;
 }
