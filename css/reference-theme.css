@@ -6692,18 +6692,22 @@ html { scroll-behavior: smooth; scroll-padding-top: 82px; }
   align-items: center;
   gap: clamp(28px, 4.4vw, 64px);
 }
-#page-home .why-resepin-options { display: grid; gap: 10px; align-content: center; }
+#page-home .why-resepin-options { position: relative; z-index: 4; display: grid; gap: 10px; align-content: center; }
 #page-home .why-resepin-option {
   display: grid;
-  min-height: 58px;
+  width: max-content;
+  max-width: 100%;
+  min-height: 64px;
   grid-template-columns: 32px minmax(0, 1fr) 18px;
   align-items: center;
   gap: 12px;
-  padding: 0 17px 0 12px;
+  justify-self: start;
+  padding: 0 21px 0 14px;
   border: 1px solid var(--why-line);
-  border-radius: 17px 17px 17px 7px;
+  border-radius: 999px;
   color: var(--why-ink);
-  background: linear-gradient(115deg, color-mix(in srgb, var(--why-pill) 88%, white), color-mix(in srgb, var(--why-bg-b) 88%, transparent));
+  background: linear-gradient(110deg, color-mix(in srgb, #fffaf0 92%, var(--why-pill)), color-mix(in srgb, var(--why-bg-b) 88%, white));
+  box-shadow: 0 11px 26px rgba(45, 0, 0, .09), inset 0 1px 0 rgba(255,255,255,.74);
   text-align: left;
   font: 650 .84rem/1.25 "DM Sans", sans-serif;
   cursor: pointer;

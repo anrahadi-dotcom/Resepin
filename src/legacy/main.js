@@ -429,15 +429,20 @@ function updateHomeScrollStory() {
       const currentScale = Number.parseFloat(option.style.getPropertyValue('--why-option-scroll-scale')) || 1;
       const bounds = option.getBoundingClientRect();
       const baseTop = bounds.top - currentY - bounds.height * (1 - currentScale) / 2;
+      const stagger = index * .105;
       const cardProgress = desktopStory
-        ? Math.min(1, Math.max(0, (enterProgress - index * .075) / (1 - index * .075)))
+        ? Math.min(1, Math.max(0, ((viewport - rect.top) / Math.max(viewport, whyStage.offsetHeight) - stagger) / (1 - stagger)))
         : Math.min(1, Math.max(0, (viewport * .98 - baseTop) / (viewport * .42)));
       const easedCardProgress = smoothProgress(cardProgress);
       const direction = index % 2 === 0 ? -1 : 1;
-      option.style.setProperty('--why-option-scroll-x', `${((1 - easedCardProgress) * direction * 26).toFixed(1)}px`);
-      option.style.setProperty('--why-option-scroll-y', `${((1 - easedCardProgress) * 46).toFixed(1)}px`);
-      option.style.setProperty('--why-option-scroll-rotation', `${((1 - easedCardProgress) * direction * 2.6).toFixed(2)}deg`);
-      option.style.setProperty('--why-option-scroll-scale', (.96 + easedCardProgress * .04).toFixed(3));
+      const spread = desktopStory ? Math.min(184, window.innerWidth * .12) : 0;
+      const landingX = desktopStory ? spread * [.78, 1.12, .46, .91, .61][index] : 0;
+      const landingY = desktopStory ? [-4, 1, 4, -2, 2][index] : 0;
+      const landingRotation = desktopStory ? [-2.4, 2.1, -1.7, 2.3, -1.3][index] : 0;
+      option.style.setProperty('--why-option-scroll-x', `${(landingX + (1 - easedCardProgress) * direction * 64).toFixed(1)}px`);
+      option.style.setProperty('--why-option-scroll-y', `${(landingY + (1 - easedCardProgress) * 88).toFixed(1)}px`);
+      option.style.setProperty('--why-option-scroll-rotation', `${(landingRotation + (1 - easedCardProgress) * direction * 3.8).toFixed(2)}deg`);
+      option.style.setProperty('--why-option-scroll-scale', (.9 + easedCardProgress * .1).toFixed(3));
       option.style.setProperty('--why-option-scroll-opacity', easedCardProgress.toFixed(3));
       option.style.setProperty('--why-option-pointer-events', easedCardProgress > .18 ? 'auto' : 'none');
     });
