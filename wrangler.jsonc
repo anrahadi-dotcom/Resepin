@@ -1,6 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "resepin",
+  "account_id": "220434127822aa240b8dc71d3991b6e7",
   "pages_build_output_dir": "./dist",
   "compatibility_date": "2026-10-13",
   "ai": {
