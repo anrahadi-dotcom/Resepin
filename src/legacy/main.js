@@ -18,7 +18,10 @@ let currentRecipeSort = 'match';
 let assumePantryBasics = true;
 let scanBackendAvailable = null;
 let cameraStream = null;
-let demoRunning = false;
+let scanPreviewObjectUrl = null;
+let scanRequestSequence = 0;
+let activeScanController = null;
+let scanDropDepth = 0;
 let currentChatRecipeIdx = null;
 let awaitingSubstitutionIngredient = false;
 let selectedExploreCategory = 'bali';
@@ -234,7 +237,11 @@ function navigateToPage(page, { replace = false } = {}) {
 window.navigateToPage = navigateToPage;
 
 function showPage(pageId) {
-  if (pageId !== 'scan' && cameraStream) stopCamera();
+  if (pageId !== 'scan') {
+    if (cameraStream) stopCamera();
+    else beginScanRequest();
+    releaseScanPreview();
+  }
   // Hide all pages
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   // Show target page
@@ -422,11 +429,6 @@ async function startCamera() {
     return;
   }
 
-  if (scanBackendAvailable === false) {
-    updateDetectionStatus('idle', 'Scan foto belum aktif di versi ini. Coba Mode Demo atau tambah bahan manual.');
-    return;
-  }
-
   if (!window.isSecureContext && !['localhost', '127.0.0.1'].includes(window.location.hostname)) {
     updateDetectionStatus('idle', 'Kamera butuh koneksi aman (HTTPS). Unggah foto atau tambahkan bahan secara manual.');
     showToast('Kamera hanya tersedia di HTTPS atau localhost.', 'error');
@@ -434,23 +436,37 @@ async function startCamera() {
   }
 
   if (!navigator.mediaDevices?.getUserMedia) {
-    const message = 'Kamera tidak tersedia di browser ini. Kamu tetap bisa mencoba contoh atau menambahkan bahan secara manual.';
+    const message = 'Kamera tidak tersedia di browser ini. Unggah foto atau tambahkan bahan secara manual.';
     updateDetectionStatus('idle', message);
-    showToast('Kamera tidak tersedia. Coba contoh atau input manual.', 'error');
+    showToast('Kamera tidak tersedia. Unggah foto atau input bahan manual.', 'error');
     return;
   }
 
+  const requestId = beginScanRequest();
   try {
+    removePhotoDetectedIngredients();
+    releaseScanPreview();
+    document.getElementById('detectionBoxes')?.replaceChildren();
+    document.getElementById('confidenceBar').style.display = 'none';
     btn.textContent = 'Meminta izin...';
     btn.disabled = true;
+    updateDetectionStatus('active', 'Meminta izin kamera…');
 
-    cameraStream = await navigator.mediaDevices.getUserMedia({
+    const stream = await navigator.mediaDevices.getUserMedia({
       video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
     });
+    if (requestId !== scanRequestSequence) {
+      stream.getTracks().forEach(track => track.stop());
+      btn.textContent = 'Buka kamera';
+      btn.style.background = '';
+      btn.disabled = false;
+      return;
+    }
+    cameraStream = stream;
 
     feed.srcObject = cameraStream;
     feed.style.display = 'block';
-    placeholder.style.display = 'none';
+    placeholder.hidden = true;
     overlay.style.display = 'block';
 
     const captureBtn = document.getElementById('captureBtn');
@@ -463,17 +479,19 @@ async function startCamera() {
     updateDetectionStatus('active', 'Kamera aktif — arahkan ke bahan makanan');
 
   } catch (err) {
+    if (requestId !== scanRequestSequence) return;
     btn.textContent = 'Buka kamera';
     btn.disabled = false;
     const message = ['NotAllowedError', 'PermissionDeniedError'].includes(err?.name)
-      ? 'Izin kamera belum diberikan. Kamu tetap bisa mencoba contoh atau menambahkan bahan secara manual.'
-      : 'Kamera tidak dapat digunakan saat ini. Kamu tetap bisa mencoba contoh atau menambahkan bahan secara manual.';
-    updateDetectionStatus('idle', message);
-    showToast('Kamera tidak aktif. Coba contoh atau input manual.', 'error');
+      ? 'Izin kamera belum diberikan. Unggah foto atau tambahkan bahan secara manual.'
+      : 'Kamera tidak dapat digunakan saat ini. Unggah foto atau tambahkan bahan secara manual.';
+    updateDetectionStatus('error', message);
+    showToast('Kamera tidak aktif. Unggah foto atau input bahan manual.', 'error');
   }
 }
 
-function stopCamera() {
+function stopCamera({ updateStatus = true } = {}) {
+  beginScanRequest();
   cameraStream?.getTracks().forEach(track => track.stop());
   cameraStream = null;
   const feed = document.getElementById('cameraFeed');
@@ -482,63 +500,11 @@ function stopCamera() {
   const button = document.getElementById('startCamBtn');
   const capture = document.getElementById('captureBtn');
   if (feed) { feed.pause(); feed.srcObject = null; feed.style.display = 'none'; }
-  if (placeholder) placeholder.style.display = '';
-  if (overlay) overlay.style.display = 'none';
+  if (placeholder && !scanPreviewObjectUrl) placeholder.hidden = false;
+  if (overlay) overlay.style.display = scanPreviewObjectUrl ? 'block' : 'none';
   if (capture) capture.disabled = true;
   if (button) { button.textContent = 'Buka kamera'; button.style.background = ''; button.disabled = false; }
-  updateDetectionStatus('idle', 'Kamera dimatikan. Kamu tetap bisa mencoba contoh atau menambahkan bahan secara manual.');
-}
-
-function runDemo() {
-  if (demoRunning) return;
-  demoRunning = true;
-
-  const placeholder = document.getElementById('cameraPlaceholder');
-  const overlay = document.getElementById('scanOverlay');
-  const detBoxes = document.getElementById('detectionBoxes');
-
-  // Show scan UI
-  placeholder.style.display = 'none';
-  overlay.style.display = 'block';
-  detBoxes.innerHTML = '';
-
-  updateDetectionStatus('active', 'Menyiapkan contoh bahan...');
-
-  const demoItems = [
-    { name: 'Jagung', box: { top: '15%', left: '8%', width: '38%', height: '38%' } },
-    { name: 'Wortel', box: { top: '45%', left: '25%', width: '35%', height: '32%' } },
-    { name: 'Bawang Merah', box: { top: '20%', left: '55%', width: '30%', height: '28%' } },
-    { name: 'Bawang Putih', box: { top: '55%', left: '60%', width: '25%', height: '25%' } },
-  ];
-
-  // Animate detection box appearance + ingredient adding
-  demoItems.forEach((item, idx) => {
-    setTimeout(() => {
-      // Create bounding box
-      const box = document.createElement('div');
-      box.className = 'det-box';
-      box.style.cssText = `top:${item.box.top};left:${item.box.left};width:${item.box.width};height:${item.box.height}`;
-      const label = document.createElement('div');
-      label.className = 'det-box-label';
-      label.innerHTML = `${ingredientIconHTML(item.name)} ${escapeHtml(item.name)} · contoh`;
-      box.appendChild(label);
-      detBoxes.appendChild(box);
-      box.style.animation = 'slideIn 0.3s ease';
-
-      // Add to ingredient list
-      setTimeout(() => addIngredientItem(item.name, null), 300);
-
-      // Final state
-      if (idx === demoItems.length - 1) {
-        setTimeout(() => {
-          updateDetectionStatus('idle', `Contoh ${demoItems.length} bahan ditampilkan — ini bukan hasil deteksi kamera.`);
-          document.getElementById('confidenceBar').style.display = 'none';
-          demoRunning = false;
-          document.getElementById('captureBtn').disabled = !cameraStream;
-        }, 500);
-      }
-    }, 800 + idx * 1000);
-  });
+  if (updateStatus) updateDetectionStatus('idle', 'Kamera dimatikan. Unggah foto atau tambahkan bahan secara manual.');
 }
 
 async function captureAndDetect() {
@@ -550,8 +516,9 @@ async function captureAndDetect() {
   }
 
   const button = document.getElementById('captureBtn');
+  const requestId = beginScanRequest();
   button.disabled = true;
-  updateDetectionStatus('active', 'Memeriksa foto dengan model bahan...');
+  updateDetectionStatus('active', 'Mendeteksi bahan…');
   const imageScale = Math.min(1, 1600 / Math.max(video.videoWidth, video.videoHeight));
   canvas.width = Math.round(video.videoWidth * imageScale);
   canvas.height = Math.round(video.videoHeight * imageScale);
@@ -560,69 +527,256 @@ async function captureAndDetect() {
     const imageBlob = await new Promise((resolve, reject) => {
       canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('Foto tidak bisa disiapkan.')), 'image/jpeg', 0.82);
     });
-    await submitPhotoForDetection(imageBlob, canvas.width, canvas.height, 'bahan.jpg');
+    await submitPhotoForDetection(imageBlob, canvas.width, canvas.height, 'bahan.jpg', requestId);
   } catch (error) {
-    updateDetectionStatus('idle', error.message || 'Deteksi gagal. Pastikan server Resepin dan model PyTorch siap.');
-    showToast(error.message || 'Deteksi bahan gagal.', 'error');
+    if (requestId === scanRequestSequence) {
+      updateDetectionStatus('error', error.message || 'Deteksi gagal. Coba lagi atau tambah bahan manual.');
+      showToast(error.message || 'Deteksi bahan gagal.', 'error');
+    }
   } finally {
-    button.disabled = false;
+    if (requestId === scanRequestSequence) button.disabled = false;
   }
 }
 
-async function submitPhotoForDetection(imageBlob, width, height, filename) {
-  if (imageBlob.size > 3_900_000) throw new Error('Foto masih terlalu besar setelah diperkecil. Coba gambar yang lebih sederhana.');
+function beginScanRequest() {
+  scanRequestSequence += 1;
+  activeScanController?.abort();
+  activeScanController = null;
+  return scanRequestSequence;
+}
+
+async function submitPhotoForDetection(imageBlob, width, height, filename, requestId) {
+  if (requestId !== scanRequestSequence) return;
+  if (imageBlob.size > 3_900_000) throw new Error('Foto tidak bisa diperkecil cukup kecil. Coba gambar lain atau tambah bahan manual.');
   const boxes = document.getElementById('detectionBoxes');
   boxes.replaceChildren();
-  updateDetectionStatus('active', 'Memeriksa foto dengan model bahan...');
+  updateDetectionStatus('active', 'Mendeteksi bahan…');
   const formData = new FormData();
   formData.append('file', imageBlob, filename);
-  const response = await fetch('/api/detect', { method: 'POST', body: formData });
-  const result = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(result.detail || 'Deteksi belum tersedia. Tambahkan bahan secara manual.');
-  const matches = Array.isArray(result.detections) ? result.detections : [];
-  matches.forEach(({ label, confidence, bbox }) => {
-    const [x1, y1, x2, y2] = bbox;
-    const box = document.createElement('div');
-    box.className = 'det-box';
-    box.style.cssText = `left:${x1 / width * 100}%;top:${y1 / height * 100}%;width:${(x2 - x1) / width * 100}%;height:${(y2 - y1) / height * 100}%`;
-    const caption = document.createElement('div');
-    caption.className = 'det-box-label';
-    caption.innerHTML = `${ingredientIconHTML(label)} ${escapeHtml(label)} ${Math.round(confidence * 100)}%`;
-    box.appendChild(caption);
-    boxes.appendChild(box);
-    addIngredientItem(label, Math.round(confidence * 100));
-  });
-  if (matches.length) {
-    const confidence = Math.round(matches.reduce((sum, item) => sum + item.confidence, 0) / matches.length * 100);
-    updateDetectionStatus('detected', `${matches.length} bahan terdeteksi. Periksa hasilnya sebelum mencari resep.`);
-    showConfidenceBar(confidence);
-    showToast('Foto berhasil dipindai.', 'success');
-  } else updateDetectionStatus('idle', 'Belum menemukan bahan yang didukung. Coba foto lain atau tambah bahan secara manual.');
+  const controller = new AbortController();
+  let timedOut = false;
+  const timeout = window.setTimeout(() => { timedOut = true; controller.abort(); }, 30000);
+  activeScanController = controller;
+  try {
+    const response = await fetch('/api/detect', { method: 'POST', body: formData, signal: controller.signal });
+    const result = await response.json().catch(() => ({}));
+    if (requestId !== scanRequestSequence) return;
+    if (!response.ok) throw new Error(result.detail || 'Server pemindai tidak tersedia. Tambah bahan manual atau coba lagi nanti.');
+    const matches = Array.isArray(result.detections) ? result.detections.filter(item =>
+      item && typeof item.label === 'string' && Number.isFinite(item.confidence) &&
+      Array.isArray(item.bbox) && item.bbox.length === 4 && item.bbox.every(Number.isFinite)
+    ) : [];
+    removePhotoDetectedIngredients();
+    matches.forEach(({ label, confidence, bbox }) => {
+      const box = document.createElement('div');
+      box.className = 'det-box';
+      box.style.cssText = getDetectionBoxStyle(bbox, width, height);
+      const caption = document.createElement('div');
+      caption.className = 'det-box-label';
+      caption.innerHTML = `${ingredientIconHTML(label)} ${escapeHtml(label)} ${Math.round(confidence * 100)}%`;
+      box.appendChild(caption);
+      boxes.appendChild(box);
+      addIngredientItem(label, Math.round(confidence * 100), 'photo');
+    });
+    if (matches.length) {
+      const confidence = Math.round(matches.reduce((sum, item) => sum + item.confidence, 0) / matches.length * 100);
+      updateDetectionStatus('detected', `${matches.length} bahan terdeteksi dari foto. Periksa dan koreksi daftar bahan.`);
+      showConfidenceBar(confidence);
+      showToast('Foto berhasil dipindai.', 'success');
+    } else {
+      boxes.replaceChildren();
+      updateDetectionStatus('error', 'Tidak ada bahan terdeteksi, coba foto lain atau tambah manual.');
+    }
+  } catch (error) {
+    if (requestId !== scanRequestSequence) return;
+    const message = timedOut
+      ? 'Pemindaian terlalu lama. Coba lagi atau tambah bahan secara manual.'
+      : error?.name === 'AbortError'
+        ? 'Pemindaian dihentikan. Coba lagi atau tambah bahan secara manual.'
+        : error instanceof TypeError
+          ? 'Server pemindai tidak tersedia. Coba lagi nanti atau tambah bahan secara manual.'
+          : error.message || 'Foto gagal diproses. Coba gambar lain atau tambah bahan manual.';
+    updateDetectionStatus('error', message);
+    throw new Error(message);
+  } finally {
+    window.clearTimeout(timeout);
+    if (activeScanController === controller) activeScanController = null;
+  }
 }
 
 async function handleGalleryUpload(input) {
   const file = input.files?.[0];
   if (!file) return;
   input.value = '';
-  if (!['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif', 'image/bmp'].includes(file.type)) { showToast('Pilih foto JPG, PNG, WebP, AVIF, GIF, atau BMP.', 'error'); return; }
-  if (file.size > 15_000_000) { showToast('Ukuran foto maksimal 15 MB.', 'error'); return; }
+  await processUploadedScanImage(file);
+}
+
+async function processUploadedScanImage(file) {
+  const allowedMimeTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
+  const extensionAllowed = /\.(jpe?g|png|webp)$/i.test(file.name || '');
+  const mimeAllowed = !file.type || allowedMimeTypes.has(file.type.toLowerCase());
+  if (!extensionAllowed || !mimeAllowed) {
+    const message = 'Format belum didukung. Pilih gambar JPG, PNG, atau WebP.';
+    updateDetectionStatus('error', message);
+    showToast(message, 'error');
+    return;
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    const message = 'Ukuran gambar maksimal 5 MB. Pilih file yang lebih kecil.';
+    updateDetectionStatus('error', message);
+    showToast(message, 'error');
+    return;
+  }
+
+  if (cameraStream) stopCamera({ updateStatus: false });
+  const requestId = beginScanRequest();
+  const cameraButton = document.getElementById('startCamBtn');
+  if (cameraButton) {
+    cameraButton.textContent = 'Buka kamera';
+    cameraButton.style.background = '';
+    cameraButton.disabled = false;
+  }
+  removePhotoDetectedIngredients();
+  releaseScanPreview({ restorePlaceholder: false });
+  const preview = document.getElementById('scanImagePreview');
+  const placeholder = document.getElementById('cameraPlaceholder');
+  const feed = document.getElementById('cameraFeed');
+  const overlay = document.getElementById('scanOverlay');
+  const canvas = document.getElementById('cameraCanvas');
+  const actions = document.getElementById('scanImageActions');
+  scanPreviewObjectUrl = URL.createObjectURL(file);
+  preview.alt = `Pratinjau gambar bahan ${file.name}`;
+  preview.src = scanPreviewObjectUrl;
+  preview.hidden = false;
+  placeholder.hidden = true;
+  feed.style.display = 'none';
+  overlay.style.display = 'block';
+  actions.hidden = false;
+  document.getElementById('detectionBoxes')?.replaceChildren();
+  document.getElementById('confidenceBar').style.display = 'none';
+  updateDetectionStatus('active', 'Mendeteksi bahan…');
+
   try {
-    const bitmap = typeof createImageBitmap === 'function' ? await createImageBitmap(file) : await loadGalleryImage(file);
-    const canvas = document.getElementById('cameraCanvas');
-    const scale = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
-    canvas.width = Math.round(bitmap.width * scale);
-    canvas.height = Math.round(bitmap.height * scale);
-    canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-    bitmap.close?.();
+    try {
+      await waitForImage(preview);
+    } catch {
+      releaseScanPreview();
+      throw new Error('File gambar rusak atau tidak dapat dibaca. Pilih gambar lain atau tambah bahan manual.');
+    }
+    if (requestId !== scanRequestSequence) return;
+    const scale = Math.min(1, 1600 / Math.max(preview.naturalWidth, preview.naturalHeight));
+    canvas.width = Math.max(1, Math.round(preview.naturalWidth * scale));
+    canvas.height = Math.max(1, Math.round(preview.naturalHeight * scale));
+    canvas.getContext('2d').drawImage(preview, 0, 0, canvas.width, canvas.height);
     const blob = await new Promise((resolve, reject) => canvas.toBlob(value => value ? resolve(value) : reject(new Error('Foto tidak bisa disiapkan.')), 'image/jpeg', .82));
-    await submitPhotoForDetection(blob, canvas.width, canvas.height, 'galeri.jpg');
+    if (requestId !== scanRequestSequence) return;
+    await submitPhotoForDetection(blob, canvas.width, canvas.height, 'gambar.jpg', requestId);
   } catch (error) {
-    updateDetectionStatus('idle', error.message || 'Foto tidak dapat dibaca. Coba file gambar lain atau input manual.');
-    showToast(error.message || 'Foto gagal diproses.', 'error');
+    if (requestId !== scanRequestSequence) return;
+    const message = error.message || 'Foto tidak dapat dibaca. Coba gambar lain atau tambah bahan manual.';
+    updateDetectionStatus('error', message);
+    showToast(message, 'error');
   }
 }
 
+function waitForImage(image) {
+  if (image.complete && image.naturalWidth > 0) return Promise.resolve(image);
+  if (typeof image.decode === 'function') return image.decode().then(() => image);
+  return new Promise((resolve, reject) => {
+    image.addEventListener('load', () => resolve(image), { once: true });
+    image.addEventListener('error', () => reject(new Error('File gambar rusak atau tidak dapat dibaca.')), { once: true });
+  });
+}
+
+function getDetectionBoxStyle(bbox, sourceWidth, sourceHeight) {
+  const [x1, y1, x2, y2] = bbox;
+  const viewport = document.getElementById('cameraViewport');
+  const viewportWidth = viewport?.clientWidth || sourceWidth;
+  const viewportHeight = viewport?.clientHeight || sourceHeight;
+  const scale = Math.min(viewportWidth / sourceWidth, viewportHeight / sourceHeight);
+  const offsetX = (viewportWidth - sourceWidth * scale) / 2;
+  const offsetY = (viewportHeight - sourceHeight * scale) / 2;
+  const left = offsetX + x1 * scale;
+  const top = offsetY + y1 * scale;
+  const width = Math.max(0, (x2 - x1) * scale);
+  const height = Math.max(0, (y2 - y1) * scale);
+  return `left:${left / viewportWidth * 100}%;top:${top / viewportHeight * 100}%;width:${width / viewportWidth * 100}%;height:${height / viewportHeight * 100}%`;
+}
+
+function removePhotoDetectedIngredients() {
+  const remaining = detectedIngredients.filter(item => item.source !== 'photo');
+  if (remaining.length === detectedIngredients.length) return;
+  detectedIngredients = remaining;
+  renderIngredientList();
+  updateIngredientCount();
+}
+
+function releaseScanPreview({ restorePlaceholder = true } = {}) {
+  if (scanPreviewObjectUrl) URL.revokeObjectURL(scanPreviewObjectUrl);
+  scanPreviewObjectUrl = null;
+  const preview = document.getElementById('scanImagePreview');
+  if (preview) { preview.removeAttribute('src'); preview.hidden = true; }
+  const actions = document.getElementById('scanImageActions');
+  if (actions) actions.hidden = true;
+  document.getElementById('cameraViewport')?.classList.remove('is-drop-target');
+  scanDropDepth = 0;
+  if (!cameraStream) {
+    const overlay = document.getElementById('scanOverlay');
+    if (overlay) overlay.style.display = 'none';
+    if (restorePlaceholder) {
+      const placeholder = document.getElementById('cameraPlaceholder');
+      if (placeholder) placeholder.hidden = false;
+    }
+  }
+}
+
+function clearScanImage() {
+  beginScanRequest();
+  removePhotoDetectedIngredients();
+  document.getElementById('detectionBoxes')?.replaceChildren();
+  document.getElementById('confidenceBar').style.display = 'none';
+  releaseScanPreview();
+  updateDetectionStatus('idle', 'Gambar dihapus. Ambil foto, unggah gambar, atau tambah bahan manual.');
+}
+
+function bindScanUploadInteractions() {
+  const viewport = document.getElementById('cameraViewport');
+  const fileInput = document.getElementById('galleryIngredientUpload');
+  if (!viewport || !fileInput || viewport.dataset.uploadBound === 'true') return;
+  viewport.dataset.uploadBound = 'true';
+  document.getElementById('uploadImageBtn')?.addEventListener('click', () => fileInput.click());
+  document.getElementById('replaceScanImageBtn')?.addEventListener('click', () => fileInput.click());
+  document.getElementById('clearScanImageBtn')?.addEventListener('click', clearScanImage);
+  viewport.addEventListener('dragenter', event => {
+    event.preventDefault();
+    scanDropDepth += 1;
+    viewport.classList.add('is-drop-target');
+  });
+  viewport.addEventListener('dragover', event => {
+    event.preventDefault();
+    if (event.dataTransfer) event.dataTransfer.dropEffect = 'copy';
+  });
+  viewport.addEventListener('dragleave', event => {
+    event.preventDefault();
+    scanDropDepth = Math.max(0, scanDropDepth - 1);
+    if (!scanDropDepth) viewport.classList.remove('is-drop-target');
+  });
+  viewport.addEventListener('drop', event => {
+    event.preventDefault();
+    scanDropDepth = 0;
+    viewport.classList.remove('is-drop-target');
+    const file = [...(event.dataTransfer?.files || [])].find(item => item.type.startsWith('image/') || /\.(jpe?g|png|webp)$/i.test(item.name));
+    if (file) processUploadedScanImage(file);
+    else {
+      const message = 'Lepas gambar JPG, PNG, atau WebP di area pratinjau.';
+      updateDetectionStatus('error', message);
+      showToast(message, 'error');
+    }
+  });
+}
+
 async function checkScanBackendAvailability() {
+  const requestSequenceAtStart = scanRequestSequence;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 3500);
   let ready = false;
@@ -641,36 +795,25 @@ async function checkScanBackendAvailability() {
     clearTimeout(timeout);
   }
   scanBackendAvailable = ready;
-  const cameraButton = document.getElementById('startCamBtn');
-  const galleryLabel = document.getElementById('galleryUploadLabel');
   const statusMessage = ready
-    ? 'Pemindai foto tersedia. Kamu bisa memakai kamera atau galeri, Mode Demo, maupun input manual.'
-    : 'Scan foto belum aktif di versi ini. Coba Mode Demo atau tambah bahan manual.';
-  if (cameraButton) cameraButton.hidden = !ready;
-  if (galleryLabel) galleryLabel.hidden = !ready;
+    ? 'Pemindai foto tersedia. Gunakan kamera, unggah gambar, atau tambah bahan manual.'
+    : 'Server pemindai belum merespons. Kamu tetap bisa unggah gambar atau tambah bahan manual.';
   const description = document.getElementById('scanAvailabilityNote');
   if (description) description.textContent = ready
     ? 'Foto akan diperiksa oleh model bahan yang tersedia di server. Periksa hasilnya dan lengkapi daftar secara manual.'
-    : 'Pemindai foto belum tersedia di server ini. Mode Demo dan input manual tetap bisa digunakan.';
-  updateDetectionStatus(ready ? 'idle' : 'unavailable', statusMessage);
+    : 'Kamera dan unggah gambar tetap tersedia. Jika server pemindai belum siap, bahan bisa ditambahkan secara manual.';
+  if (requestSequenceAtStart === scanRequestSequence && document.getElementById('detectionStatus')?.dataset.state !== 'active') {
+    updateDetectionStatus(ready ? 'idle' : 'unavailable', statusMessage);
+  }
   return ready;
-}
-
-function loadGalleryImage(file) {
-  return new Promise((resolve, reject) => {
-    const objectUrl = URL.createObjectURL(file);
-    const image = new Image();
-    image.onload = () => { URL.revokeObjectURL(objectUrl); resolve(image); };
-    image.onerror = () => { URL.revokeObjectURL(objectUrl); reject(new Error('Foto tidak dapat dibaca. Coba JPG atau PNG.')); };
-    image.src = objectUrl;
-  });
 }
 
 function updateDetectionStatus(type, message) {
   const el = document.getElementById('detectionStatus');
   if (!el) return;
-  const dotClass = type === 'active' ? 'active' : type === 'detected' ? 'detected' : 'idle';
+  const dotClass = type === 'active' ? 'active' : type === 'detected' ? 'detected' : type === 'error' ? 'error' : 'idle';
   el.dataset.state = type;
+  document.getElementById('scanOverlay')?.classList.toggle('is-detecting', type === 'active');
   el.replaceChildren();
   const row = document.createElement('div');
   row.className = 'status-idle';
@@ -696,11 +839,11 @@ function showConfidenceBar(pct) {
 // ============================================================
 // INGREDIENT MANAGEMENT
 // ============================================================
-function addIngredientItem(name, conf) {
+function addIngredientItem(name, conf, source = 'manual') {
   const cleanName = String(name || '').trim().replace(/\s+/g, ' ');
   if (!cleanName || detectedIngredients.some(i => i.name.toLocaleLowerCase('id') === cleanName.toLocaleLowerCase('id'))) return;
 
-  const ingredient = { name: cleanName, conf };
+  const ingredient = { name: cleanName, conf, source };
   detectedIngredients.push(ingredient);
 
   renderIngredientList();
@@ -753,7 +896,7 @@ function renderIngredientList() {
     name.textContent = item.name;
     const confidence = document.createElement('span');
     confidence.className = 'ing-conf';
-    confidence.textContent = item.conf ? ('Kepercayaan: ' + item.conf + '%') : 'Diinput manual';
+    confidence.textContent = item.source === 'photo' ? 'Terdeteksi dari foto' : 'Diinput manual';
     info.append(name, confidence);
     const remove = document.createElement('button');
     remove.className = 'ing-remove';
@@ -774,8 +917,7 @@ function createEmptyEl() {
   div.innerHTML = `
     <div class="ip-empty-icon"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-search"/></svg></div>
     <h4>Belum ada bahan</h4>
-    <p>Coba contoh bahan tanpa membuka kamera, atau tambahkan bahan secara manual.</p>
-    <button class="btn-primary ip-empty-example" type="button" onclick="runDemo()">Coba contoh</button>
+    <p>Ambil foto, unggah gambar, atau tambah bahan secara manual.</p>
   `;
   return div;
 }
@@ -787,9 +929,7 @@ function updateIngredientCount() {
 
   const findBtn = document.getElementById('findRecipesBtn');
   findBtn.disabled = count === 0;
-  if (count > 0) {
-    findBtn.innerHTML = `<svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-pot"/></svg> Cari Resep (<span id="ingredientCountBtn">${count}</span> bahan)`;
-  }
+  findBtn.innerHTML = `<svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-pot"/></svg> Cari Resep (<span id="ingredientCountBtn">${count}</span> bahan)`;
 }
 
 // ============================================================
@@ -1414,6 +1554,13 @@ document.addEventListener('keydown', (e) => {
 // INIT
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
+  bindScanUploadInteractions();
+  window.addEventListener('pagehide', () => {
+    beginScanRequest();
+    cameraStream?.getTracks().forEach(track => track.stop());
+    cameraStream = null;
+    releaseScanPreview();
+  }, { once: true });
   window.addEventListener('popstate', renderLocationRoute);
   window.addEventListener('hashchange', renderLocationRoute);
   initTheme();
@@ -1424,15 +1571,13 @@ document.addEventListener('DOMContentLoaded', () => {
   initParticles();
   initScrollEffects();
   initNavHint();
+  const initialScanCheckSequence = scanRequestSequence;
   checkScanBackendAvailability().catch(() => {
+    if (initialScanCheckSequence !== scanRequestSequence || document.getElementById('detectionStatus')?.dataset.state === 'active') return;
     scanBackendAvailable = false;
-    const cameraButton = document.getElementById('startCamBtn');
-    const galleryLabel = document.getElementById('galleryUploadLabel');
-    if (cameraButton) cameraButton.hidden = true;
-    if (galleryLabel) galleryLabel.hidden = true;
     const description = document.getElementById('scanAvailabilityNote');
-    if (description) description.textContent = 'Scan foto belum aktif di versi ini. Coba Mode Demo atau tambah bahan manual.';
-    updateDetectionStatus('unavailable', 'Scan foto belum aktif di versi ini. Coba Mode Demo atau tambah bahan manual.');
+    if (description) description.textContent = 'Kamera dan unggah gambar tetap tersedia. Jika server pemindai belum siap, bahan bisa ditambahkan secara manual.';
+    updateDetectionStatus('unavailable', 'Server pemindai belum merespons. Kamu tetap bisa unggah gambar atau tambah bahan manual.');
   });
   renderPersonalStats();
   const requestedIngredients = new URLSearchParams(window.location.search).getAll('bahan').map(value => value.trim()).filter(Boolean);

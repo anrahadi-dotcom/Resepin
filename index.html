@@ -323,7 +323,7 @@
       <div class="scan-layout">
         <!-- Camera Section -->
         <div class="camera-section">
-          <div class="camera-viewport" id="cameraViewport">
+          <div class="camera-viewport" id="cameraViewport" role="region" aria-label="Area pratinjau bahan. Lepas gambar JPG, PNG, atau WebP di sini, atau gunakan tombol Unggah Gambar.">
             <video id="cameraFeed" autoplay muted playsinline></video>
             <canvas id="cameraCanvas"></canvas>
             <!-- Scan overlay -->
@@ -334,36 +334,39 @@
               <div class="scan-corner-br"></div>
               <div class="scan-laser" id="scanLaser"></div>
             </div>
-            <!-- Detection boxes (simulated) -->
+            <img id="scanImagePreview" class="scan-image-preview" alt="Pratinjau foto bahan" hidden />
+            <!-- Detection boxes from a real photo scan -->
             <div class="detection-boxes" id="detectionBoxes"></div>
             <!-- Camera placeholder -->
             <div class="camera-placeholder" id="cameraPlaceholder">
               <div class="cp-icon"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-camera"/></svg></div>
-              <p>Gunakan kamera untuk mengenali bahan</p>
+              <p>Ambil atau unggah foto bahan</p>
               <p class="cp-sub">atau pilih bahan secara manual</p>
             </div>
+          </div>
+          <div class="scan-image-actions" id="scanImageActions" hidden>
+            <button class="cam-btn capture" type="button" id="replaceScanImageBtn" aria-label="Ganti gambar bahan">Ganti gambar</button>
+            <button class="cam-btn capture" type="button" id="clearScanImageBtn" aria-label="Hapus gambar bahan">Hapus gambar</button>
           </div>
           <div class="camera-controls">
             <button class="cam-btn primary" id="startCamBtn" onclick="startCamera()">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
               Buka kamera
             </button>
-            <label class="cam-btn gallery-upload" id="galleryUploadLabel">Unggah dari galeri
-              <input class="visually-hidden" id="galleryIngredientUpload" type="file" accept="image/*" onchange="handleGalleryUpload(this)" />
-            </label>
-            <button class="cam-btn demo" onclick="runDemo()">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5,3 19,12 5,21"/></svg>
-              Coba contoh
-            </button>
             <button class="cam-btn capture" id="captureBtn" onclick="captureAndDetect()" disabled>
               <svg class="ui-icon" aria-hidden="true"><use href="#ui-icon-camera"/></svg> Ambil Foto
             </button>
+            <input class="visually-hidden" id="galleryIngredientUpload" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" aria-hidden="true" tabindex="-1" onchange="handleGalleryUpload(this)" />
+            <button class="cam-btn capture upload-image-btn" id="uploadImageBtn" type="button" aria-label="Unggah gambar bahan">
+              <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M20 16.5v2.25A1.25 1.25 0 0 1 18.75 20h-13.5A1.25 1.25 0 0 1 4 18.75V16.5"/></svg>
+              Unggah Gambar
+            </button>
           </div>
-          <p class="cp-sub" id="scanAvailabilityNote">Memeriksa ketersediaan pemindai foto…</p>
-          <div class="detection-status" id="detectionStatus">
+          <p class="cp-sub" id="scanAvailabilityNote" aria-live="polite">Memeriksa ketersediaan pemindai foto…</p>
+          <div class="detection-status" id="detectionStatus" role="status" aria-live="polite" aria-atomic="true">
             <div class="status-idle">
               <div class="status-dot idle"></div>
-              <span>Menunggu kamera aktif...</span>
+                <span>Belum ada foto. Ambil foto, unggah gambar, atau tambah bahan manual.</span>
             </div>
           </div>
         </div>
@@ -379,8 +382,7 @@
             <div class="ip-empty" id="ipEmpty">
               <div class="ip-empty-icon"><svg class="ui-icon ui-icon-large" aria-hidden="true"><use href="#ui-icon-search"/></svg></div>
               <h4>Belum ada bahan</h4>
-              <p>Coba contoh bahan tanpa membuka kamera, atau tambahkan bahan secara manual.</p>
-              <button class="btn-primary ip-empty-example" type="button" onclick="runDemo()">Coba contoh</button>
+              <p>Ambil foto, unggah gambar, atau tambah bahan secara manual.</p>
             </div>
           </div>
 
